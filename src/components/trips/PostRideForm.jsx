@@ -188,7 +188,7 @@ export default function PostRideForm() {
   return (
     <div className="space-y-6 max-w-4xl mx-auto relative">
       {error && (
-        <Alert variant="destructive" className="rounded-2xl">
+        <Alert variant="destructive" className="rounded-2xl border-red-200">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>{error}</AlertDescription>
         </Alert>
@@ -196,7 +196,7 @@ export default function PostRideForm() {
 
       <form onSubmit={handleSubmit}>
         <div className="space-y-8">
-          <Card className="border-border shadow-sm bg-white rounded-3xl">
+          <Card className="border-gray-200 shadow-sm bg-white rounded-3xl">
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-secondary">
                 <div className="p-2 bg-primary/10 rounded-2xl">
@@ -279,7 +279,7 @@ export default function PostRideForm() {
             </CardContent>
           </Card>
 
-          <Card className="border-border shadow-sm bg-white rounded-3xl">
+          <Card className="border-gray-200 shadow-sm bg-white rounded-3xl">
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-secondary">
                 <div className="p-2 bg-primary/10 rounded-2xl">
@@ -338,7 +338,7 @@ export default function PostRideForm() {
             </CardContent>
           </Card>
 
-          <Card className="border-border shadow-sm bg-white rounded-3xl">
+          <Card className="border-gray-200 shadow-sm bg-white rounded-3xl">
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-secondary">
                 <div className="p-2 bg-primary/10 rounded-2xl">

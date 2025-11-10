@@ -16,7 +16,7 @@ export default function TripsPage() {
         </div>
 
         <Tabs defaultValue="find" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-card p-1 rounded-3xl">
+          <TabsList className="grid w-full grid-cols-2 bg-gray-100 p-1 rounded-3xl">
             <TabsTrigger value="find" className="py-2.5 text-base flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-md rounded-3xl">
               <Search className="w-5 h-5"/> find a ride
             </TabsTrigger>
@@ -32,7 +32,7 @@ export default function TripsPage() {
           </TabsContent>
         </Tabs>
 
-        <footer className="mt-12 pt-6 border-t border-border text-center text-sm text-gray-500">
+        <footer className="mt-12 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
           © {new Date().getFullYear()} Cruise Kauaʻi. All rights reserved.
         </footer>
       </div>

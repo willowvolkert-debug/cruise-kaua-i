@@ -184,7 +184,7 @@ export default function FindRide() {
 
   return (
     <div className="space-y-6 relative">
-      <Card className="shadow-lg border-border bg-white rounded-3xl">
+      <Card className="shadow-lg border-gray-200 bg-white rounded-3xl">
         <CardHeader>
           <CardTitle className="text-2xl text-secondary">find a ride</CardTitle>
         </CardHeader>
@@ -258,7 +258,7 @@ export default function FindRide() {
       </Card>
 
       {error && (
-        <Alert variant="destructive" className="rounded-2xl">
+        <Alert variant="destructive" className="rounded-2xl border-red-200">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>{error}</AlertDescription>
         </Alert>
@@ -270,7 +270,7 @@ export default function FindRide() {
             Object.entries(ridesByDate)
               .sort(([a], [b]) => new Date(a) - new Date(b))
               .map(([date, dateRides]) => (
-                <Card key={date} className="shadow-md border-border bg-white rounded-3xl">
+                <Card key={date} className="shadow-md border-gray-200 bg-white rounded-3xl">
                   <CardHeader>
                     <CardTitle className="text-lg text-secondary flex items-center gap-2">
                       <Calendar className="w-5 h-5 text-primary" />
@@ -319,7 +319,7 @@ export default function FindRide() {
                 </Card>
               ))
           ) : (
-            <Card className="border-border rounded-3xl bg-white">
+            <Card className="border-gray-200 rounded-3xl bg-white">
               <CardContent className="p-12 text-center">
                 <MapPin className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-secondary mb-2">no rides found</h3>

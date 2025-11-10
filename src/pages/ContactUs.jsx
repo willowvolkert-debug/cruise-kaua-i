@@ -78,7 +78,7 @@ export default function ContactUsPage() {
         </div>
 
         {submitted ? (
-          <Card className="shadow-lg border-border bg-card rounded-3xl">
+          <Card className="shadow-lg border-gray-200 bg-white rounded-3xl">
             <CardContent className="p-12 text-center">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MessageSquare className="w-8 h-8 text-primary" />
@@ -90,13 +90,11 @@ export default function ContactUsPage() {
             </CardContent>
           </Card>
         ) : (
-          <Card className="shadow-lg border-border bg-card rounded-3xl">
+          <Card className="shadow-lg border-gray-200 bg-white rounded-3xl">
             <CardHeader>
               <CardTitle className="text-xl text-secondary">send us a message</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Note: The outline removes the <form> tag and adds onClick to the button.
-                  The handleSubmit function is adapted to this by allowing 'e' to be optional or a click event. */}
               <div className="space-y-2">
                 <Label htmlFor="subject">subject *</Label>
                 <Input
@@ -149,7 +147,7 @@ export default function ContactUsPage() {
           </Card>
         )}
 
-        <footer className="pt-6 border-t border-border text-center text-sm text-gray-500">
+        <footer className="pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
           © {new Date().getFullYear()} Cruise Kauaʻi. All rights reserved.
         </footer>
       </div>
