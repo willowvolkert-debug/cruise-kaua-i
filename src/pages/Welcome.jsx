@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -26,19 +27,19 @@ export default function WelcomePage() {
         {step === 1 && (
           <Card className="shadow-xl border-gray-200 rounded-3xl bg-white">
             <CardContent className="p-8 md:p-12 text-center space-y-6">
-              <div className="w-20 h-20 bg-gradient-to-br from-primary to-green-400 rounded-full mx-auto flex items-center justify-center">
+              <div className="w-20 h-20 bg-gradient-to-br from-primary to-orange-400 rounded-full mx-auto flex items-center justify-center">
                 <Ship className="w-12 h-12 text-white" />
               </div>
               <h1 className="text-4xl font-bold text-secondary">Welcome to Cruise Kauaʻi!</h1>
               <p className="text-xl text-gray-700 leading-relaxed">
-                Making transportation on Kauaʻi more <span className="font-semibold text-primary">social</span>, 
+                Making transportation on Kauaʻi more <span className="font-semibold text-gray-500">social</span>, 
                 <span className="font-semibold text-blue-600"> affordable</span>, and 
                 <span className="font-semibold text-green-600"> sustainable</span>.
               </p>
               <p className="text-gray-600">
                 Share rides with kamaʻāina (residents) and malihini (visitors) to reduce the number of cars on our roads.
               </p>
-              <Button onClick={() => setStep(2)} size="lg" className="bg-orange-400 hover:bg-orange-500 text-white px-8 py-6 text-lg rounded-2xl">
+              <Button onClick={() => setStep(2)} size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 py-6 text-lg rounded-2xl">
                 Get Started
               </Button>
             </CardContent>

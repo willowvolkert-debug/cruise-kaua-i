@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Send, X, AlertTriangle } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { format } from "date-fns";
@@ -21,7 +22,7 @@ const detectPhoneNumber = (text) => {
   return patterns.some(pattern => pattern.test(text));
 };
 
-export default function ChatModal({ isOpen, onClose, booking, otherPartyName }) {
+export default function ChatModal({ isOpen, onClose, booking, otherPartyName, otherPartyPicture }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
@@ -107,8 +108,9 @@ export default function ChatModal({ isOpen, onClose, booking, otherPartyName }) 
 
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-secondary flex items-center gap-3">
-            <Avatar className="w-10 h-10 bg-gradient-to-br from-primary to-secondary">
-              <AvatarFallback className="text-white font-semibold">
+            <Avatar className="w-10 h-10">
+              <AvatarImage src={otherPartyPicture} />
+              <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-white font-semibold">
                 {getInitials(otherPartyName)}
               </AvatarFallback>
             </Avatar>

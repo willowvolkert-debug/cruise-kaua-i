@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +20,7 @@ export default function InboxPage() {
     const [activeBookings, setActiveBookings] = useState([]);
     const [pendingRequests, setPendingRequests] = useState([]);
     const [upcomingRides, setUpcomingRides] = useState([]);
+    const [ridesNeedingReview, setRidesNeedingReview] = useState([]);
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [showReportModal, setShowReportModal] = useState(false);
@@ -28,6 +28,7 @@ export default function InboxPage() {
     const [showRiderRequestModal, setShowRiderRequestModal] = useState(false);
     const [selectedBooking, setSelectedBooking] = useState(null);
     const [selectedChatName, setSelectedChatName] = useState('');
+    const [selectedChatPicture, setSelectedChatPicture] = useState('');
     const [notificationsEnabled, setNotificationsEnabled] = useState(false);
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [bookingToCancel, setBookingToCancel] = useState(null);
@@ -35,6 +36,7 @@ export default function InboxPage() {
     const [reviewData, setReviewData] = useState({ rating: 0, comment: '' });
     const [currentReviewUser, setCurrentReviewUser] = useState(null);
     const [currentReviewRide, setCurrentReviewRide] = useState(null);
+    const [allUsers, setAllUsers] = useState([]);
 
     useEffect(() => {
         loadData();
@@ -54,7 +56,7 @@ export default function InboxPage() {
             
             if (permission === 'granted') {
                 await base44.auth.updateMe({ notifications_enabled: true });
-                alert("Notifications enabled! You'll receive updates about your trips.");
+                alert("Notifications enabled! You'll receive updates about your trips and messages.");
             }
         }
     };
@@ -64,6 +66,9 @@ export default function InboxPage() {
         try {
             const currentUser = await base44.auth.me();
             setUser(currentUser);
+
+            const allUsersList = await base44.entities.User.list();
+            setAllUsers(allUsersList);
 
             const allRides = await base44.entities.Ride.list();
             const allBookings = await base44.entities.RideBooking.list();
@@ -80,16 +85,15 @@ export default function InboxPage() {
                 b.booking_status === 'confirmed'
             );
 
-            // Check for completed rides that need reviews
             const now = new Date();
-            const ridesNeedingReview = [];
+            const needsReview = [];
+            const stillActive = [];
             
             for (const booking of userActiveBookings) {
                 const ride = allRides.find(r => r.id === booking.ride_id);
                 if (ride) {
                     const rideDateTime = new Date(`${ride.departure_date}T${ride.departure_time || '23:59'}`);
                     if (rideDateTime < now) {
-                        // Ride has passed, check if user has already rated
                         const allRatings = await base44.entities.Rating.list();
                         const userRating = allRatings.find(r => 
                             r.ride_id === ride.id && 
@@ -97,25 +101,32 @@ export default function InboxPage() {
                         );
                         
                         if (!userRating) {
-                            ridesNeedingReview.push({ booking, ride });
+                            needsReview.push({ booking, ride });
                         }
+                    } else {
+                        stillActive.push(booking);
                     }
                 }
             }
 
-            // Auto-show review modal for first completed ride
-            if (ridesNeedingReview.length > 0) {
-                const { booking, ride } = ridesNeedingReview[0];
+            setRidesNeedingReview(needsReview);
+            setActiveBookings(stillActive);
+
+            if (needsReview.length > 0 && !showReviewModal) {
+                const { booking, ride } = needsReview[0];
                 const isDriver = ride.driver_id === currentUser.id;
-                const otherUsername = isDriver ? booking.passenger_username : booking.driver_username;
-                const otherName = isDriver ? booking.passenger_name : "Driver";
+                const otherUserId = isDriver ? booking.passenger_id : ride.driver_id;
+                const otherUser = allUsersList.find(u => u.id === otherUserId);
+                const otherUsername = otherUser?.username || (isDriver ? booking.passenger_name : "Driver");
                 
-                setCurrentReviewUser({ username: otherUsername || otherName, id: isDriver ? booking.passenger_id : ride.driver_id });
+                setCurrentReviewUser({ 
+                    username: otherUsername, 
+                    id: otherUserId 
+                });
                 setCurrentReviewRide(ride);
                 setShowReviewModal(true);
             }
 
-            // Get upcoming rides
             const myUpcomingRides = allRides.filter(r => {
                 if (r.driver_id !== currentUser.id) return false;
                 if (r.status !== 'active') return false;
@@ -123,7 +134,7 @@ export default function InboxPage() {
                 return rideDateTime > now;
             });
             
-            const myUpcomingBookings = userActiveBookings
+            const myUpcomingBookings = stillActive
                 .map(b => allRides.find(r => r.id === b.ride_id))
                 .filter(ride => {
                     if (!ride) return false;
@@ -135,7 +146,6 @@ export default function InboxPage() {
                 .map(id => [...myUpcomingRides, ...myUpcomingBookings].find(ride => ride.id === id));
 
             setUpcomingRides(uniqueUpcomingRides.sort((a,b) => new Date(`${a.departure_date}T${a.departure_time}`) - new Date(`${b.departure_date}T${b.departure_time}`)));
-            setActiveBookings(userActiveBookings);
 
         } catch (e) {
             console.error(e);
@@ -166,9 +176,10 @@ export default function InboxPage() {
         loadData();
     };
 
-    const handleOpenChat = (booking, otherPartyName) => {
+    const handleOpenChat = (booking, otherPartyName, otherPartyPicture) => {
         setSelectedBooking(booking);
         setSelectedChatName(otherPartyName);
+        setSelectedChatPicture(otherPartyPicture);
         setShowChatModal(true);
     };
 
@@ -312,15 +323,23 @@ export default function InboxPage() {
         }
     };
 
+    const getUserById = (userId) => {
+        return allUsers.find(u => u.id === userId);
+    };
+
     const recentChats = activeBookings
         .filter(booking => booking.messages && booking.messages.length > 0)
         .map(booking => {
             const isDriver = user?.id === booking.driver_id;
-            const otherPartyUsername = isDriver ? booking.passenger_username : booking.driver_username;
+            const otherUserId = isDriver ? booking.passenger_id : booking.driver_id;
+            const otherUser = getUserById(otherUserId);
+            const otherPartyUsername = otherUser?.username || (isDriver ? booking.passenger_name : "Driver");
+            const otherPartyPicture = otherUser?.profile_picture_url || '';
             const lastMessage = booking.messages[booking.messages.length - 1];
             return {
                 id: booking.id,
-                name: otherPartyUsername || (isDriver ? booking.passenger_name : "Driver"),
+                name: otherPartyUsername,
+                picture: otherPartyPicture,
                 lastMessage: lastMessage.message,
                 timestamp: lastMessage.timestamp,
                 booking: booking
@@ -330,15 +349,15 @@ export default function InboxPage() {
 
     return (
         <div className="p-4 md:p-8 bg-white">
-            <div className="max-w-4xl mx-auto space-y-8">
-                <div className="flex items-center justify-between">
+            <div className="max-w-4xl mx-auto space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <h1 className="text-3xl font-bold text-secondary">inbox</h1>
                         <p className="text-gray-600">manage your trip communications and leave ratings</p>
                     </div>
                     <Button
                         onClick={() => setShowReportModal(true)}
-                        className="bg-orange-500 hover:bg-orange-600 text-white rounded-2xl"
+                        className="bg-orange-500 hover:bg-orange-600 text-white rounded-2xl w-full sm:w-auto"
                     >
                         <AlertTriangle className="w-4 h-4 mr-2" />
                         report
@@ -372,6 +391,58 @@ export default function InboxPage() {
                     </AlertDescription>
                 </Alert>
 
+                {ridesNeedingReview.length > 0 && (
+                    <Card className="shadow-lg border-orange-300 bg-orange-50 rounded-3xl">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-orange-900">
+                                <Star className="w-6 h-6 text-orange-600"/>
+                                needs review ({ridesNeedingReview.length})
+                            </CardTitle>
+                            <p className="text-sm text-orange-700">review your past trips before booking more!</p>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                            {ridesNeedingReview.map(({ booking, ride }) => {
+                                const isDriver = ride.driver_id === user?.id;
+                                const otherUserId = isDriver ? booking.passenger_id : ride.driver_id;
+                                const otherUser = getUserById(otherUserId);
+                                const otherUsername = otherUser?.username || (isDriver ? booking.passenger_name : "Driver");
+                                
+                                return (
+                                    <div key={booking.id} className="bg-white rounded-lg p-4 border border-orange-200">
+                                        <div className="space-y-2">
+                                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                <Calendar className="w-4 h-4" />
+                                                <span>{format(new Date(ride.departure_date), "MMM d, yyyy")}</span>
+                                                <Clock className="w-4 h-4 ml-2" />
+                                                <span>{ride.departure_time}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <MapPin className="w-4 h-4 text-primary" />
+                                                <span className="font-semibold text-secondary">
+                                                    {ride.departure_location} → {ride.destination}
+                                                </span>
+                                            </div>
+                                            <p className="text-sm text-gray-600">
+                                                Trip with @{otherUsername}
+                                            </p>
+                                            <Button
+                                                onClick={() => {
+                                                    setCurrentReviewUser({ username: otherUsername, id: otherUserId });
+                                                    setCurrentReviewRide(ride);
+                                                    setShowReviewModal(true);
+                                                }}
+                                                className="w-full bg-primary hover:bg-primary/90 rounded-2xl mt-2"
+                                            >
+                                                leave review
+                                            </Button>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </CardContent>
+                    </Card>
+                )}
+
                 {upcomingRides.length > 0 && (
                     <Card className="shadow-lg border-blue-200 bg-blue-50 rounded-3xl">
                         <CardHeader>
@@ -384,7 +455,13 @@ export default function InboxPage() {
                             {upcomingRides.map(ride => {
                                 const isDriver = ride.driver_id === user?.id;
                                 const bookingsForRide = activeBookings.filter(b => b.ride_id === ride.id && b.booking_status === 'confirmed');
-                                const participants = bookingsForRide.map(b => b.passenger_username || b.passenger_name).filter(Boolean).join(', ');
+                                const participants = bookingsForRide
+                                    .map(b => {
+                                        const otherUser = getUserById(b.passenger_id);
+                                        return otherUser?.username || b.passenger_name;
+                                    })
+                                    .filter(Boolean)
+                                    .join(', ');
                                 
                                 return (
                                     <div key={ride.id} className="bg-white rounded-lg p-4 border border-blue-200">
@@ -409,7 +486,10 @@ export default function InboxPage() {
                                                 </p>
                                             ) : (
                                                 <p className="text-sm text-gray-600">
-                                                    Riding with: {ride.driver_username ? `@${ride.driver_username}` : ride.driver_name || 'Driver'}
+                                                    Riding with: @{(() => {
+                                                        const driverUser = getUserById(ride.driver_id);
+                                                        return driverUser?.username || ride.driver_name || 'Driver';
+                                                    })()}
                                                 </p>
                                             )}
                                         </div>
@@ -463,7 +543,7 @@ export default function InboxPage() {
                     </Card>
                 )}
 
-                <Card className="shadow-md border-border bg-white rounded-3xl">
+                <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2 text-secondary">
                             <MessageSquare className="w-6 h-6 text-primary"/>
@@ -477,10 +557,12 @@ export default function InboxPage() {
                             <div className="space-y-4">
                                 {activeBookings.map(booking => {
                                     const isDriver = user.id === booking.driver_id;
-                                    const otherPartyUsername = isDriver ? booking.passenger_username : booking.driver_username;
+                                    const otherUserId = isDriver ? booking.passenger_id : booking.driver_id;
+                                    const otherUser = getUserById(otherUserId);
+                                    const otherPartyUsername = otherUser?.username || (isDriver ? booking.passenger_name : "Driver");
+                                    const otherPartyPicture = otherUser?.profile_picture_url || '';
                                     const otherPartyName = isDriver ? booking.passenger_name : "Driver";
                                     
-                                    // Get ride details
                                     const ride = upcomingRides.find(r => r.id === booking.ride_id);
 
                                     return (
@@ -504,20 +586,20 @@ export default function InboxPage() {
                                             
                                             <p className="text-sm text-gray-700 mb-2">
                                                 {isDriver 
-                                                    ? `Driving with @${otherPartyUsername || otherPartyName}`
-                                                    : `Riding with @${otherPartyUsername || otherPartyName}, ${booking.seats_booked} seat(s) booked`
+                                                    ? `Driving with @${otherPartyUsername}`
+                                                    : `Riding with @${otherPartyUsername}, ${booking.seats_booked} seat(s) booked`
                                                 }
                                             </p>
                                             
-                                            <div className="flex items-center justify-between">
-                                                <Badge variant="outline" className="mb-2 rounded-2xl border-gray-300">
+                                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                                                <Badge variant="outline" className="mb-2 rounded-2xl border-gray-300 w-fit">
                                                     <Clock className="w-3 h-3 mr-1" />
                                                     {booking.booking_status}
                                                 </Badge>
                                                 
                                                 <Button
-                                                    onClick={() => handleOpenChat(booking, otherPartyUsername || otherPartyName)}
-                                                    className="bg-primary hover:bg-primary/90 px-6 py-2 rounded-2xl"
+                                                    onClick={() => handleOpenChat(booking, otherPartyUsername, otherPartyPicture)}
+                                                    className="bg-primary hover:bg-primary/90 px-6 py-2 rounded-2xl w-full sm:w-auto"
                                                 >
                                                     <MessageSquare className="w-4 h-4 mr-2" />
                                                     Chat Here
@@ -546,7 +628,7 @@ export default function InboxPage() {
                     </CardContent>
                 </Card>
 
-                <Card className="shadow-md border-border bg-white rounded-3xl">
+                <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2 text-secondary">
                             <Bot className="w-6 h-6 text-primary"/>
@@ -559,11 +641,12 @@ export default function InboxPage() {
                                 {recentChats.map((chat) => (
                                     <button
                                         key={chat.id}
-                                        onClick={() => handleOpenChat(chat.booking, chat.name)}
+                                        onClick={() => handleOpenChat(chat.booking, chat.name, chat.picture)}
                                         className="w-full flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-md transition-shadow text-left"
                                     >
-                                        <Avatar className="w-12 h-12 bg-gradient-to-r from-primary to-secondary">
-                                            <AvatarFallback className="text-white font-semibold">
+                                        <Avatar className="w-12 h-12">
+                                            <AvatarImage src={chat.picture} />
+                                            <AvatarFallback className="bg-gradient-to-r from-primary to-secondary text-white font-semibold">
                                                 {getInitials(chat.name)}
                                             </AvatarFallback>
                                         </Avatar>
@@ -586,8 +669,8 @@ export default function InboxPage() {
                     </CardContent>
                 </Card>
 
-                <footer className="pt-6 border-t border-border text-center text-sm text-gray-500">
-                    © {new Date().getFullYear()} Cruise Kauaʻi. All rights reserved.
+                <footer className="pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
+                    © {new Date().getFullYear()} Cruise Hawaiʻi. Specializing in carpooling and ridesharing across Hawaiʻi.
                 </footer>
 
                 <ChatModal
@@ -595,6 +678,7 @@ export default function InboxPage() {
                     onClose={() => setShowChatModal(false)}
                     booking={selectedBooking}
                     otherPartyName={selectedChatName}
+                    otherPartyPicture={selectedChatPicture}
                 />
 
                 <RiderRequestModal
