@@ -25,7 +25,7 @@ const RatingsList = ({ ratings, title }) => (
     <div className="space-y-4">
         <h4 className="font-semibold text-secondary">{title} ({ratings.length})</h4>
         {ratings.length > 0 ? ratings.map(rating => (
-            <div key={rating.id} className="p-4 bg-muted/50 rounded-2xl">
+            <div key={rating.id} className="p-4 bg-gray-50 rounded-2xl border border-gray-200">
                 <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                         {Array(rating.rating_value).fill(0).map((_, i) => <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
@@ -610,7 +610,7 @@ export default function AccountPage() {
                     </CardContent>
                 </Card>
 
-                <footer className="pt-6 border-t border-border text-center text-sm text-gray-500">
+                <footer className="pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
                     © {new Date().getFullYear()} Cruise Kauaʻi. All rights reserved.
                 </footer>
             </div>

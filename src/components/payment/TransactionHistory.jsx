@@ -21,7 +21,6 @@ export default function TransactionHistory() {
       setCurrentUser(user);
 
       const allTransactions = await base44.entities.Transaction.list('-created_date');
-      // Get transactions where user is either payer or recipient
       const userTransactions = allTransactions.filter(
         t => t.payer_id === user.id || t.recipient_id === user.id
       );
@@ -40,15 +39,15 @@ export default function TransactionHistory() {
   const getStatusColor = (status) => {
     switch (status) {
       case 'completed':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800 border-green-200';
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-blue-100 text-blue-800 border-blue-200';
       case 'failed':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800 border-red-200';
       case 'refunded':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800 border-gray-200';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
@@ -58,7 +57,7 @@ export default function TransactionHistory() {
 
   if (transactions.length === 0) {
     return (
-      <Card className="border-dashed">
+      <Card className="border-dashed border-gray-200">
         <CardContent className="p-8 text-center">
           <CreditCard className="w-12 h-12 text-gray-300 mx-auto mb-4" />
           <p className="text-gray-500">No transactions yet</p>
@@ -69,15 +68,13 @@ export default function TransactionHistory() {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-semibold text-secondary">transaction history</h3>
-      
       <div className="space-y-3">
         {transactions.map(transaction => {
           const type = getTransactionType(transaction);
           const isPayment = type === 'payment';
           
           return (
-            <Card key={transaction.id}>
+            <Card key={transaction.id} className="border-gray-200">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
@@ -114,8 +111,7 @@ export default function TransactionHistory() {
                   </div>
                 </div>
                 
-                {/* Transaction details */}
-                <div className="mt-3 pt-3 border-t border-border text-sm text-gray-600">
+                <div className="mt-3 pt-3 border-t border-gray-200 text-sm text-gray-600">
                   <div className="flex justify-between">
                     <span>Ride amount:</span>
                     <span>${transaction.ride_amount.toFixed(2)}</span>

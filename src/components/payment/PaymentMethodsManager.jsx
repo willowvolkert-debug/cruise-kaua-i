@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -129,7 +130,7 @@ export default function PaymentMethodsManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-semibold text-secondary">payment methods</h3>
-        <Button onClick={() => setShowAddModal(true)} className="bg-primary hover:bg-primary/90">
+        <Button onClick={() => setShowAddModal(true)} className="bg-primary hover:bg-primary/90 rounded-2xl">
           <Plus className="w-4 h-4 mr-2" />
           add card
         </Button>
@@ -138,11 +139,11 @@ export default function PaymentMethodsManager() {
       {isLoading ? (
         <p>Loading payment methods...</p>
       ) : paymentMethods.length === 0 ? (
-        <Card className="border-dashed">
+        <Card className="border-dashed border-gray-200">
           <CardContent className="p-8 text-center">
             <CreditCard className="w-12 h-12 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-500 mb-4">No payment methods added yet</p>
-            <Button onClick={() => setShowAddModal(true)} variant="outline">
+            <Button onClick={() => setShowAddModal(true)} variant="outline" className="rounded-2xl">
               <Plus className="w-4 h-4 mr-2" />
               add your first card
             </Button>
@@ -151,7 +152,7 @@ export default function PaymentMethodsManager() {
       ) : (
         <div className="grid gap-4">
           {paymentMethods.map(method => (
-            <Card key={method.id} className={method.is_default ? "border-primary border-2" : ""}>
+            <Card key={method.id} className={method.is_default ? "border-primary border-2" : "border-gray-200"}>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
@@ -164,7 +165,7 @@ export default function PaymentMethodsManager() {
                           {method.card_brand} •••• {method.card_last4}
                         </p>
                         {method.is_default && (
-                          <Badge className="bg-primary">
+                          <Badge className="bg-primary rounded-2xl">
                             <Star className="w-3 h-3 mr-1" />
                             default
                           </Badge>
@@ -181,6 +182,7 @@ export default function PaymentMethodsManager() {
                         variant="outline"
                         size="sm"
                         onClick={() => handleSetDefault(method.id)}
+                        className="rounded-2xl border-gray-300"
                       >
                         set as default
                       </Button>
@@ -189,7 +191,7 @@ export default function PaymentMethodsManager() {
                       variant="ghost"
                       size="icon"
                       onClick={() => handleRemove(method.id)}
-                      className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                      className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-2xl"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -203,7 +205,7 @@ export default function PaymentMethodsManager() {
 
       {/* Add Card Modal */}
       <Dialog open={showAddModal} onOpenChange={setShowAddModal}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md rounded-3xl">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-secondary">
               add payment method
@@ -219,6 +221,7 @@ export default function PaymentMethodsManager() {
                 value={newCard.name}
                 onChange={handleInputChange}
                 required
+                className="rounded-2xl"
               />
             </div>
 
@@ -231,6 +234,7 @@ export default function PaymentMethodsManager() {
                 onChange={handleInputChange}
                 maxLength="19"
                 required
+                className="rounded-2xl"
               />
             </div>
 
@@ -244,6 +248,7 @@ export default function PaymentMethodsManager() {
                   onChange={handleInputChange}
                   maxLength="7"
                   required
+                  className="rounded-2xl"
                 />
               </div>
               <div className="space-y-2">
@@ -255,6 +260,7 @@ export default function PaymentMethodsManager() {
                   onChange={handleInputChange}
                   maxLength="4"
                   required
+                  className="rounded-2xl"
                 />
               </div>
             </div>
@@ -269,14 +275,14 @@ export default function PaymentMethodsManager() {
                 type="button"
                 variant="outline"
                 onClick={() => setShowAddModal(false)}
-                className="flex-1"
+                className="flex-1 rounded-2xl border-gray-300"
               >
                 cancel
               </Button>
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 bg-primary hover:bg-primary/90"
+                className="flex-1 bg-primary hover:bg-primary/90 rounded-2xl"
               >
                 {isSubmitting ? 'adding...' : 'add card'}
               </Button>
