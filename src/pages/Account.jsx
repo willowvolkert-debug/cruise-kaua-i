@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -289,12 +288,12 @@ export default function AccountPage() {
                                             <div className="flex items-center gap-2">
                                                 <MessageCircle className="w-4 h-4 text-gray-500"/>
                                                 <span className="text-sm text-gray-600">chattiness:</span>
-                                                <Badge variant="outline" className="rounded-2xl">{user.preferences_chattiness}</Badge>
+                                                <Badge variant="outline" className="rounded-2xl border-gray-300">{user.preferences_chattiness}</Badge>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <Wind className="w-4 h-4 text-gray-500"/>
                                                 <span className="text-sm text-gray-600">scents:</span>
-                                                <Badge variant="outline" className="rounded-2xl">{user.preferences_scents}</Badge>
+                                                <Badge variant="outline" className="rounded-2xl border-gray-300">{user.preferences_scents}</Badge>
                                             </div>
                                         </div>
                                     </>
@@ -329,7 +328,7 @@ export default function AccountPage() {
                                 <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
                                     <span className="font-medium">driver's license</span>
                                     {user.drivers_license_verified ? (
-                                        <Badge variant="default" className="bg-primary rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>verified</Badge>
+                                        <Badge variant="default" className="bg-primary rounded-2xl border-primary"><ShieldCheck className="w-4 h-4 mr-1"/>verified</Badge>
                                     ) : user.drivers_license_pending_review ? (
                                         <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 rounded-2xl">
                                             <Clock className="w-4 h-4 mr-1"/>pending review
@@ -350,7 +349,7 @@ export default function AccountPage() {
                                     <span className="font-medium">vehicle</span>
                                     {user.vehicle_verified ? (
                                         <Link to={createPageUrl("VehicleDetails")}>
-                                            <Badge variant="default" className="bg-primary cursor-pointer hover:bg-primary/90 rounded-2xl">
+                                            <Badge variant="default" className="bg-primary border-primary cursor-pointer hover:bg-primary/90 rounded-2xl">
                                                 <ShieldCheck className="w-4 h-4 mr-1"/>verified
                                             </Badge>
                                         </Link>
@@ -376,10 +375,10 @@ export default function AccountPage() {
                                         <span className="font-medium">terms of service</span>
                                     </div>
                                     {user.terms_accepted ? (
-                                        <Badge variant="default" className="bg-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
+                                        <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
                                     ) : (
                                         <Link to={createPageUrl("TermsOfService")}>
-                                            <Button size="sm" variant="outline" className="rounded-2xl">review & accept</Button>
+                                            <Button size="sm" variant="outline" className="rounded-2xl border-gray-300">review & accept</Button>
                                         </Link>
                                     )}
                                 </div>
@@ -389,10 +388,10 @@ export default function AccountPage() {
                                         <span className="font-medium">privacy policy</span>
                                     </div>
                                     {user.privacy_policy_accepted ? (
-                                        <Badge variant="default" className="bg-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
+                                        <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
                                     ) : (
                                         <Link to={createPageUrl("PrivacyPolicy")}>
-                                            <Button size="sm" variant="outline" className="rounded-2xl">review & accept</Button>
+                                            <Button size="sm" variant="outline" className="rounded-2xl border-gray-300">review & accept</Button>
                                         </Link>
                                     )}
                                 </div>
@@ -402,10 +401,10 @@ export default function AccountPage() {
                                         <span className="font-medium">community agreement</span>
                                     </div>
                                     {user.community_agreement_accepted ? (
-                                        <Badge variant="default" className="bg-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
+                                        <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
                                     ) : (
                                         <Link to={createPageUrl("CommunityAgreement")}>
-                                            <Button size="sm" variant="outline" className="rounded-2xl">review & accept</Button>
+                                            <Button size="sm" variant="outline" className="rounded-2xl border-gray-300">review & accept</Button>
                                         </Link>
                                     )}
                                 </div>
@@ -439,7 +438,7 @@ export default function AccountPage() {
 
                         <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
                             <CardHeader 
-                                className="cursor-pointer hover:bg-muted/50 transition-colors rounded-t-3xl"
+                                className="cursor-pointer hover:bg-gray-50 transition-colors rounded-t-3xl"
                                 onClick={() => setShowPayoutSection(!showPayoutSection)}
                             >
                                 <CardTitle className="text-xl text-secondary flex items-center justify-between">
@@ -466,7 +465,7 @@ export default function AccountPage() {
                                                 </div>
                                             </div>
 
-                                            <Alert className="rounded-2xl">
+                                            <Alert className="rounded-2xl border-gray-200">
                                                 <AlertDescription className="text-sm">
                                                     Update your bank information below if needed.
                                                 </AlertDescription>
@@ -480,7 +479,7 @@ export default function AccountPage() {
                                                         value={bankDetails.account_holder_name}
                                                         onChange={(e) => setBankDetails({...bankDetails, account_holder_name: e.target.value})}
                                                         placeholder="Full name on account"
-                                                        className="rounded-2xl"
+                                                        className="rounded-2xl border-gray-300"
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
@@ -491,7 +490,7 @@ export default function AccountPage() {
                                                         onChange={(e) => setBankDetails({...bankDetails, routing_number: e.target.value})}
                                                         placeholder="9-digit routing number"
                                                         maxLength="9"
-                                                        className="rounded-2xl"
+                                                        className="rounded-2xl border-gray-300"
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
@@ -501,11 +500,11 @@ export default function AccountPage() {
                                                         value={bankDetails.account_number}
                                                         onChange={(e) => setBankDetails({...bankDetails, account_number: e.target.value})}
                                                         placeholder="Account number"
-                                                        className="rounded-2xl"
+                                                        className="rounded-2xl border-gray-300"
                                                     />
                                                 </div>
                                                 {payoutError && (
-                                                    <Alert variant="destructive" className="rounded-2xl">
+                                                    <Alert variant="destructive" className="rounded-2xl border-red-200">
                                                         <AlertDescription>{payoutError}</AlertDescription>
                                                     </Alert>
                                                 )}
@@ -520,7 +519,7 @@ export default function AccountPage() {
                                         </div>
                                     ) : (
                                         <div className="space-y-4">
-                                            <Alert className="rounded-2xl">
+                                            <Alert className="rounded-2xl border-gray-200">
                                                 <AlertDescription>
                                                     Link your bank account to receive payouts from rides.
                                                 </AlertDescription>
@@ -535,7 +534,7 @@ export default function AccountPage() {
                                                         onChange={(e) => setBankDetails({...bankDetails, account_holder_name: e.target.value})}
                                                         placeholder="Full name on account"
                                                         required
-                                                        className="rounded-2xl"
+                                                        className="rounded-2xl border-gray-300"
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
@@ -547,7 +546,7 @@ export default function AccountPage() {
                                                         placeholder="9-digit routing number"
                                                         maxLength="9"
                                                         required
-                                                        className="rounded-2xl"
+                                                        className="rounded-2xl border-gray-300"
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
@@ -558,7 +557,7 @@ export default function AccountPage() {
                                                         onChange={(e) => setBankDetails({...bankDetails, account_number: e.target.value})}
                                                         placeholder="Account number"
                                                         required
-                                                        className="rounded-2xl"
+                                                        className="rounded-2xl border-gray-300"
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
@@ -569,11 +568,11 @@ export default function AccountPage() {
                                                         onChange={(e) => setBankDetails({...bankDetails, account_number_confirm: e.target.value})}
                                                         placeholder="Re-enter account number"
                                                         required
-                                                        className="rounded-2xl"
+                                                        className="rounded-2xl border-gray-300"
                                                     />
                                                 </div>
                                                 {payoutError && (
-                                                    <Alert variant="destructive" className="rounded-2xl">
+                                                    <Alert variant="destructive" className="rounded-2xl border-red-200">
                                                         <AlertDescription>{payoutError}</AlertDescription>
                                                     </Alert>
                                                 )}
@@ -611,7 +610,7 @@ export default function AccountPage() {
                 </Card>
 
                 <footer className="pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
-                    © {new Date().getFullYear()} Cruise Kauaʻi. All rights reserved.
+                    © {new Date().getFullYear()} Cruise Hawaiʻi. Specializing in carpooling and ridesharing across Hawaiʻi.
                 </footer>
             </div>
 
