@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MessageSquare, Send, CheckCircle } from "lucide-react"; // CheckCircle is no longer used in the success state, but MessageSquare is. Keep both for now unless explicitly told to remove CheckCircle.
+import { MessageSquare } from "lucide-react";
 
 export default function ContactUsPage() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -17,7 +16,7 @@ export default function ContactUsPage() {
     priority: 'medium'
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false); // This acts as 'success' from the outline
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -32,9 +31,6 @@ export default function ContactUsPage() {
   }, []);
 
   const handleSubmit = async (e) => {
-    // If the button's type is "submit" and it's inside a <form>, e.preventDefault() stops the form's default submission.
-    // If it's a button with an onClick and no form, e.preventDefault() would stop any default button behavior, which is usually none for a generic button.
-    // Given the outline removes the <form> tag, this line is less critical for preventing page reload, but still harmless.
     if (e && typeof e.preventDefault === 'function') {
       e.preventDefault();
     }
@@ -56,11 +52,11 @@ export default function ContactUsPage() {
         status: 'pending'
       });
 
-      setSubmitted(true); // Set to true on success
-      setFormData({ subject: '', message: '', priority: 'medium' }); // Reset form data
+      setSubmitted(true);
+      setFormData({ subject: '', message: '', priority: 'medium' });
 
       setTimeout(() => {
-        setSubmitted(false); // Reset submitted state after 3 seconds
+        setSubmitted(false);
       }, 3000);
     } catch (error) {
       console.error("Error submitting inquiry:", error);
@@ -137,7 +133,7 @@ export default function ContactUsPage() {
               </div>
 
               <Button
-                onClick={handleSubmit} // Changed from type="submit" to onClick
+                onClick={handleSubmit}
                 disabled={isSubmitting}
                 className="w-full bg-primary hover:bg-primary/90 rounded-2xl"
               >
@@ -148,7 +144,7 @@ export default function ContactUsPage() {
         )}
 
         <footer className="pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} Cruise Kauaʻi. All rights reserved.
+          © {new Date().getFullYear()} Cruise Hawaiʻi. Specializing in carpooling and ridesharing across Hawaiʻi.
         </footer>
       </div>
     </div>

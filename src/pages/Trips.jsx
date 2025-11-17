@@ -33,7 +33,7 @@ export default function TripsPage() {
         </Tabs>
 
         <footer className="mt-12 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} Cruise Kauaʻi. All rights reserved.
+          © {new Date().getFullYear()} Cruise Hawaiʻi. Specializing in carpooling and ridesharing across Hawaiʻi.
         </footer>
       </div>
     </div>

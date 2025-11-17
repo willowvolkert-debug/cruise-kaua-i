@@ -9,7 +9,7 @@ import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import CommunityAgreement from './pages/CommunityAgreement';
 import Payout from './pages/Payout';
-import Layout from './Layout.jsx';
+import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
@@ -29,5 +29,5 @@ export const PAGES = {
 export const pagesConfig = {
     mainPage: "Trips",
     Pages: PAGES,
-    Layout: Layout,
+    Layout: __Layout,
 };
