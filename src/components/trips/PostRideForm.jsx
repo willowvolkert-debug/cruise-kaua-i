@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, DollarSign, Car, X, Plus, AlertCircle, Clock } from "lucide-react";
+import { MapPin, DollarSign, Car, X, Plus, AlertCircle, Clock, Users } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function PostRideForm() {
@@ -25,6 +24,9 @@ export default function PostRideForm() {
     is_last_minute: false,
     seats_available: 1,
     price_per_seat: 0,
+    price_per_seat_local: 0,
+    price_per_seat_tourist: 0,
+    rider_preference: 'both_fine',
     description: '',
     car_model: '',
   });
@@ -142,15 +144,27 @@ export default function PostRideForm() {
     
     setIsSubmitting(true);
     try {
-      await base44.entities.Ride.create({
+      const ridePayload = {
         ...rideData,
         driver_id: currentUser.id,
         driver_name: currentUser.full_name,
+        driver_license_state: currentUser.drivers_license_state || 'HI',
         stops: stops.filter(s => s.trim() !== ''),
         seats_available: parseInt(rideData.seats_available),
-        price_per_seat: parseFloat(rideData.price_per_seat),
         status: 'active'
-      });
+      };
+
+      if (rideData.rider_preference === 'both_fine') {
+        ridePayload.price_per_seat_local = parseFloat(rideData.price_per_seat_local);
+        ridePayload.price_per_seat_tourist = parseFloat(rideData.price_per_seat_tourist);
+        delete ridePayload.price_per_seat;
+      } else {
+        ridePayload.price_per_seat = parseFloat(rideData.price_per_seat);
+        delete ridePayload.price_per_seat_local;
+        delete ridePayload.price_per_seat_tourist;
+      }
+
+      await base44.entities.Ride.create(ridePayload);
       
       setRideData({
         departure_location: '',
@@ -161,6 +175,9 @@ export default function PostRideForm() {
         is_last_minute: false,
         seats_available: 1,
         price_per_seat: 0,
+        price_per_seat_local: 0,
+        price_per_seat_tourist: 0,
+        rider_preference: 'both_fine',
         description: '',
         car_model: '',
       });
@@ -359,25 +376,75 @@ export default function PostRideForm() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="seats">seats available</Label>
-                  <Select
-                    value={rideData.seats_available.toString()}
-                    onValueChange={(value) => handleInputChange('seats_available', parseInt(value))}
-                  >
-                    <SelectTrigger className="rounded-2xl">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-2xl">
-                      {Array.from({ length: 8 }, (_, i) => (
-                        <SelectItem key={i + 1} value={(i + 1).toString()}>
-                          {i + 1} seat{i > 0 ? 's' : ''}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+              <div className="space-y-2">
+                <Label htmlFor="seats">seats available</Label>
+                <Select
+                  value={rideData.seats_available.toString()}
+                  onValueChange={(value) => handleInputChange('seats_available', parseInt(value))}
+                >
+                  <SelectTrigger className="rounded-2xl">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-2xl">
+                    {Array.from({ length: 8 }, (_, i) => (
+                      <SelectItem key={i + 1} value={(i + 1).toString()}>
+                        {i + 1} seat{i > 0 ? 's' : ''}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="riderPreference" className="flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  who can ride with me
+                </Label>
+                <Select
+                  value={rideData.rider_preference}
+                  onValueChange={(value) => handleInputChange('rider_preference', value)}
+                >
+                  <SelectTrigger className="rounded-2xl">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-2xl">
+                    <SelectItem value="locals_only">locals only</SelectItem>
+                    <SelectItem value="tourists_only">tourists only</SelectItem>
+                    <SelectItem value="both_fine">both are fine</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {rideData.rider_preference === 'both_fine' ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="priceLocal">ride price for locals ($)</Label>
+                    <Input
+                      id="priceLocal"
+                      type="number"
+                      min="0"
+                      step="1"
+                      value={rideData.price_per_seat_local}
+                      onChange={(e) => handleInputChange('price_per_seat_local', e.target.value)}
+                      required
+                      className="rounded-2xl"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="priceTourist">ride price for tourists ($)</Label>
+                    <Input
+                      id="priceTourist"
+                      type="number"
+                      min="0"
+                      step="1"
+                      value={rideData.price_per_seat_tourist}
+                      onChange={(e) => handleInputChange('price_per_seat_tourist', e.target.value)}
+                      required
+                      className="rounded-2xl"
+                    />
+                  </div>
                 </div>
+              ) : (
                 <div className="space-y-2">
                   <Label htmlFor="price">price per seat ($)</Label>
                   <Input
@@ -391,7 +458,7 @@ export default function PostRideForm() {
                     className="rounded-2xl"
                   />
                 </div>
-              </div>
+              )}
             </CardContent>
           </Card>
         </div>

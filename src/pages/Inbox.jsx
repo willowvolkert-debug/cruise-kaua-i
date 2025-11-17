@@ -51,13 +51,23 @@ export default function InboxPage() {
 
     const requestNotifications = async () => {
         if ('Notification' in window) {
-            const permission = await Notification.requestPermission();
-            setNotificationsEnabled(permission === 'granted');
-            
-            if (permission === 'granted') {
-                await base44.auth.updateMe({ notifications_enabled: true });
-                alert("Notifications enabled! You'll receive updates about your trips and messages.");
+            try {
+                const permission = await Notification.requestPermission();
+                setNotificationsEnabled(permission === 'granted');
+                
+                if (permission === 'granted') {
+                    await base44.auth.updateMe({ notifications_enabled: true });
+                    alert("Notifications enabled! You'll receive updates about your trips and messages.");
+                    loadData();
+                } else {
+                    alert("Notification permission was denied. You can enable it later in your browser settings.");
+                }
+            } catch (error) {
+                console.error("Error requesting notifications:", error);
+                alert("There was an error enabling notifications. Please try again or check your browser settings.");
             }
+        } else {
+            alert("Your browser doesn't support notifications.");
         }
     };
 
@@ -190,10 +200,12 @@ export default function InboxPage() {
 
     const handleAcceptRequest = async (booking) => {
         try {
+            const ride = await base44.entities.Ride.get(booking.ride_id);
             const paymentMethod = await base44.entities.PaymentMethod.get(booking.payment_method_id);
             
             const baseAmount = booking.total_amount;
-            const connectFee = baseAmount * 0.10;
+            const connectFeeRate = ride.driver_license_state === 'HI' ? 0.10 : 0.30;
+            const connectFee = baseAmount * connectFeeRate;
             const totalAmount = baseAmount + connectFee;
 
             const chargeId = `ch_${Date.now()}`;
@@ -228,7 +240,6 @@ export default function InboxPage() {
                 messages: [initialMessage]
             });
 
-            const ride = await base44.entities.Ride.get(booking.ride_id);
             if (ride) {
                 const updatedSeats = ride.seats_available - booking.seats_booked;
                 await base44.entities.Ride.update(ride.id, {
