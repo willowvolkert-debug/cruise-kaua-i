@@ -7,14 +7,16 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, DollarSign, Car, X, Plus, AlertCircle, Clock, Users } from "lucide-react";
+import { MapPin, DollarSign, Car, X, Plus, AlertCircle, Clock, Users, HelpCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import PostRideTutorial from "../tutorial/PostRideTutorial";
 
 export default function PostRideForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [error, setError] = useState(null);
   const [stops, setStops] = useState(['']);
+  const [showTutorial, setShowTutorial] = useState(false);
   const [rideData, setRideData] = useState({
     departure_location: '',
     destination: '',
@@ -195,6 +197,19 @@ export default function PostRideForm() {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto relative">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-2xl font-bold text-secondary">share your ride</h2>
+        <Button
+          onClick={() => setShowTutorial(true)}
+          variant="outline"
+          size="sm"
+          className="rounded-2xl border-gray-300"
+        >
+          <HelpCircle className="w-4 h-4 mr-2" />
+          how to post
+        </Button>
+      </div>
+
       {error && (
         <Alert variant="destructive" className="rounded-2xl border-red-200">
           <AlertCircle className="h-4 w-4" />
@@ -465,6 +480,11 @@ export default function PostRideForm() {
           {isSubmitting ? 'posting...' : 'go'}
         </Button>
       </div>
-    </div>
-  );
-}
+
+      <PostRideTutorial
+        isOpen={showTutorial}
+        onClose={() => setShowTutorial(false)}
+      />
+      </div>
+      );
+      }

@@ -13,7 +13,13 @@ export default function WelcomePage() {
   const handleComplete = async () => {
     try {
       await base44.auth.updateMe({ has_seen_welcome: true });
-      navigate(createPageUrl("Account"));
+      navigate(createPageUrl("Trips"));
+      
+      // Open tutorial after a short delay
+      setTimeout(() => {
+        const tutorialEvent = new CustomEvent('openTutorial');
+        window.dispatchEvent(tutorialEvent);
+      }, 500);
     } catch (error) {
       console.error("Error updating welcome status:", error);
     }

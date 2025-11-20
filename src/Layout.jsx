@@ -5,6 +5,7 @@ import { Car, User, MessageSquare, ShieldCheck, Share2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ShareAppModal from "./components/sidebar/ShareAppModal";
+import AppTutorial from "./components/tutorial/AppTutorial";
 import {
   Sidebar,
   SidebarContent,
@@ -137,6 +138,7 @@ export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = React.useState(null);
   const [showShareModal, setShowShareModal] = React.useState(false);
+  const [showTutorial, setShowTutorial] = React.useState(false);
 
   React.useEffect(() => {
     const loadUser = async () => {
@@ -146,12 +148,19 @@ export default function Layout({ children, currentPageName }) {
 
         if (!user.has_seen_welcome && location.pathname !== createPageUrl("Welcome")) {
           navigate(createPageUrl("Welcome"));
+        } else if (user.has_seen_welcome && !user.has_seen_tutorial && location.pathname === createPageUrl("Trips")) {
+          setShowTutorial(true);
         }
       } catch (e) {
         console.error("Error loading user:", e);
       }
     };
     loadUser();
+
+    // Listen for tutorial trigger
+    const handleOpenTutorial = () => setShowTutorial(true);
+    window.addEventListener('openTutorial', handleOpenTutorial);
+    return () => window.removeEventListener('openTutorial', handleOpenTutorial);
   }, [location.pathname, navigate]);
 
   return (
@@ -220,6 +229,11 @@ export default function Layout({ children, currentPageName }) {
         isOpen={showShareModal} 
         onClose={() => setShowShareModal(false)}
         currentUser={currentUser}
+      />
+
+      <AppTutorial
+        isOpen={showTutorial}
+        onClose={() => setShowTutorial(false)}
       />
     </SidebarProvider>
   );
