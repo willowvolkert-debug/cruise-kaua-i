@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { User, MessageSquare, ShieldCheck, Share2 } from "lucide-react";
+import { User, MessageSquare, ShieldCheck, Share2, MapPin } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ShareAppModal from "./components/sidebar/ShareAppModal";
@@ -26,7 +26,7 @@ const navigationItems = [
   {
     title: "trips",
     url: createPageUrl("Trips"),
-    icon: Car,
+    icon: MapPin,
   },
   {
     title: "account",
