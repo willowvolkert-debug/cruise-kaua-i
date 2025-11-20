@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -56,10 +55,7 @@ export default function FindRide() {
           return;
         }
 
-        if (!user.notifications_enabled) {
-          setError("Please enable notifications before booking rides. Check your Inbox page for the notification prompt.");
-          return;
-        }
+
 
         if (user.pending_ratings && user.pending_ratings.length > 0) {
           setError("Please complete your pending trip ratings in the Inbox before booking new rides.");
@@ -145,10 +141,7 @@ export default function FindRide() {
       return;
     }
 
-    if (!currentUser.notifications_enabled) {
-      setError("Please enable notifications before booking rides.");
-      return;
-    }
+
     
     if (currentUser.pending_ratings && currentUser.pending_ratings.length > 0) {
       setError("Please complete your pending trip ratings in the Inbox before booking new rides.");

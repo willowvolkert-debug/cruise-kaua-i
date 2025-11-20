@@ -428,10 +428,7 @@ export default function AccountPage() {
 
                     <div className="space-y-8">
                         <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
-                            <CardHeader>
-                                <CardTitle className="text-xl text-secondary">payment methods</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-6">
+                            <CardContent className="space-y-6 pt-6">
                                 <PaymentMethodsManager />
                             </CardContent>
                         </Card>

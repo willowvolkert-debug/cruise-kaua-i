@@ -59,7 +59,7 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto bg-white rounded-3xl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-secondary text-center">
             a rider has requested a seat in your car!
@@ -112,7 +112,7 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
 
             {/* Preferences */}
             {riderProfile && (
-              <div className="bg-muted/50 rounded-lg p-4">
+              <div className="bg-gray-50 rounded-2xl p-4 border border-gray-200">
                 <h4 className="font-semibold text-secondary mb-3">Preferences</h4>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -134,7 +134,7 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
             )}
 
             {/* Booking Details */}
-            <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+            <div className="bg-gray-50 rounded-2xl p-4 space-y-2 border border-gray-200">
               <h4 className="font-semibold text-secondary">Request Details</h4>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Seats requested:</span>
@@ -152,7 +152,7 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
                 <h4 className="font-semibold text-secondary mb-3">Recent Reviews</h4>
                 <div className="space-y-3 max-h-40 overflow-y-auto">
                   {riderRatings.slice(0, 5).map(rating => (
-                    <div key={rating.id} className="p-3 bg-muted/30 rounded-lg">
+                    <div key={rating.id} className="p-3 bg-gray-50 rounded-2xl border border-gray-200">
                       <div className="flex items-center gap-2 mb-1">
                         {Array(rating.rating_value).fill(0).map((_, i) => (
                           <Star key={i} className="w-3 h-3 text-yellow-400 fill-yellow-400" />
@@ -176,7 +176,7 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
                 onClick={handleReject}
                 disabled={isProcessing}
                 variant="outline"
-                className="flex-1 border-red-300 text-red-600 hover:bg-red-50"
+                className="flex-1 border-red-300 text-red-600 hover:bg-red-50 rounded-2xl"
               >
                 <X className="w-4 h-4 mr-2" />
                 reject request
@@ -184,7 +184,7 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
               <Button
                 onClick={handleAccept}
                 disabled={isProcessing}
-                className="flex-1 bg-primary hover:bg-primary/90"
+                className="flex-1 bg-primary hover:bg-primary/90 rounded-2xl"
               >
                 <Check className="w-4 h-4 mr-2" />
                 accept request

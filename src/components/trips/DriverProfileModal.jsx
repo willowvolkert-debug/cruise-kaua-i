@@ -56,7 +56,7 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg bg-white rounded-3xl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-secondary">Driver Profile</DialogTitle>
         </DialogHeader>
@@ -104,7 +104,7 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide }
             )}
 
             {/* Ride Details */}
-            <div className="bg-muted/50 rounded-lg p-4 space-y-3">
+            <div className="bg-gray-50 rounded-2xl p-4 space-y-3 border border-gray-200">
               <h4 className="font-semibold text-secondary">Trip Details</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
@@ -140,7 +140,7 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide }
                 <h4 className="font-semibold text-secondary mb-3">Recent Reviews</h4>
                 <div className="space-y-3 max-h-32 overflow-y-auto">
                   {driverRatings.slice(0, 3).map(rating => (
-                    <div key={rating.id} className="p-3 bg-muted/30 rounded-lg">
+                    <div key={rating.id} className="p-3 bg-gray-50 rounded-2xl border border-gray-200">
                       <div className="flex items-center gap-2 mb-1">
                         {Array(rating.rating_value).fill(0).map((_, i) => (
                           <Star key={i} className="w-3 h-3 text-yellow-400 fill-yellow-400" />
@@ -162,7 +162,7 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide }
             <div className="flex justify-center pt-4">
               <Button
                 onClick={handleBookRide}
-                className="px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
+                className="px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-2xl"
               >
                 Book This Ride
               </Button>

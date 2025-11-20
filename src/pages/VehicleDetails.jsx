@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -245,17 +244,18 @@ export default function VehicleDetailsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="policy">upload a photo of your auto policy</Label>
+                <Label htmlFor="policy">upload a photo of your auto insurance card *</Label>
                 <Input
                   id="policy"
                   type="file"
                   accept="image/*"
                   onChange={handlePolicyImageUpload}
                   className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
+                  required={!user?.auto_policy_photo_url}
                 />
-                <p className="text-xs text-gray-500">Upload a photo of your auto insurance policy</p>
+                <p className="text-xs text-gray-500">Upload a clear photo of your auto insurance card (both front and back)</p>
                 {user?.auto_policy_photo_url && (
-                  <p className="text-xs text-primary">✓ Policy photo already uploaded. Upload a new one to replace it.</p>
+                  <p className="text-xs text-primary">✓ Insurance card photo already uploaded. Upload a new one to replace it.</p>
                 )}
               </div>
 

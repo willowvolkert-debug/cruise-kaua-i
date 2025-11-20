@@ -375,23 +375,7 @@ export default function InboxPage() {
                     </Button>
                 </div>
 
-                {!notificationsEnabled && (
-                    <Alert className="bg-blue-50 border-blue-200 rounded-2xl">
-                        <Bell className="h-5 w-5 text-blue-500" />
-                        <AlertTitle className="text-blue-800 font-bold">enable notifications</AlertTitle>
-                        <AlertDescription className="text-blue-700">
-                            Enable push notifications to stay updated on your trips and messages.
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={requestNotifications}
-                                className="ml-4 rounded-2xl border-blue-300"
-                            >
-                                enable now
-                            </Button>
-                        </AlertDescription>
-                    </Alert>
-                )}
+
 
                 <Alert className="bg-teal-50 border-primary/50 text-secondary rounded-2xl">
                     <Bot className="h-5 w-5 text-primary" />

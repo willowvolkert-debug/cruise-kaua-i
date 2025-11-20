@@ -1,9 +1,8 @@
-
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Car, Shield, MessageSquare, Users, DollarSign, Clock, Leaf, HandHeart, CheckCircle, Ship } from "lucide-react";
+import { Car, Shield, MessageSquare, Users, DollarSign, Clock, Leaf, HandHeart, CheckCircle, Ship, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
@@ -92,14 +91,21 @@ export default function WelcomePage() {
                   <Users className="w-8 h-8 text-blue-600 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Book a Trip</h3>
-                    <p className="text-gray-600">Search for rides, view driver profiles, and request seats. Payment is processed automatically when your request is accepted.</p>
+                    <p className="text-gray-600">Search for rides by date and view available trips. Click on any ride to see the driver's profile, ratings, and vehicle details. Request seats and payment is processed automatically when the driver accepts your request. Chat with your driver in the Inbox to coordinate pickup details.</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-green-50 rounded-2xl border border-green-200">
                   <Car className="w-8 h-8 text-green-600 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Post a Ride</h3>
-                    <p className="text-gray-600">Share your upcoming trips, set your price per seat, and connect with riders going your way.</p>
+                    <p className="text-gray-600">Share your upcoming trips by entering your route, date, and time. Set your price per seat (or different prices for locals vs tourists). Choose your rider preferences and specify if you allow bags. When riders request to join, you'll see their profile and can accept or reject. Once accepted, coordinate through in-app messaging.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4 p-4 bg-orange-50 rounded-2xl border border-orange-200">
+                  <AlertCircle className="w-8 h-8 text-orange-600 flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="font-semibold text-lg text-secondary">Beta Testing Notice</h3>
+                    <p className="text-gray-600">Cruise Kauaʻi is currently in beta testing. If you experience any glitches or issues, please fill out a Contact Us form. Your feedback helps us improve the platform for everyone!</p>
                   </div>
                 </div>
               </div>

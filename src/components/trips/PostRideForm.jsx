@@ -52,11 +52,6 @@ export default function PostRideForm() {
           return;
         }
 
-        if (!user.notifications_enabled) {
-          setError("Please enable notifications before posting rides. Check your Inbox page for the notification prompt.");
-          return;
-        }
-
         if (user.pending_ratings && user.pending_ratings.length > 0) {
           setError("Please complete your pending trip ratings in the Inbox before posting new rides.");
           return;
@@ -122,10 +117,7 @@ export default function PostRideForm() {
       return;
     }
 
-    if (!currentUser.notifications_enabled) {
-      setError("Please enable notifications before posting rides.");
-      return;
-    }
+
     
     if (currentUser.pending_ratings && currentUser.pending_ratings.length > 0) {
       setError("Please complete your pending trip ratings before posting new rides.");
@@ -197,7 +189,6 @@ export default function PostRideForm() {
                       currentUser?.terms_accepted && 
                       currentUser?.privacy_policy_accepted && 
                       currentUser?.community_agreement_accepted &&
-                      currentUser?.notifications_enabled &&
                       currentUser?.drivers_license_verified && 
                       currentUser?.vehicle_verified && 
                       (!currentUser?.pending_ratings || currentUser.pending_ratings.length === 0);
