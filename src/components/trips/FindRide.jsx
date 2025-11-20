@@ -6,7 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, Calendar, Users, AlertCircle, User as UserIcon, Bell, HelpCircle } from "lucide-react";
+import { MapPin, Calendar, Users, AlertCircle, User as UserIcon, Bell, HelpCircle, Star } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { format } from "date-fns";
 import { sendNotification } from "../utils/notifications";
@@ -36,6 +37,8 @@ export default function FindRide() {
   const [error, setError] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [driverProfiles, setDriverProfiles] = useState({});
+  const [driverRatings, setDriverRatings] = useState({});
 
   useEffect(() => {
     const init = async () => {
@@ -101,6 +104,26 @@ export default function FindRide() {
       setRides(filtered);
       setFilteredRides(filtered);
       setHasSearched(true);
+
+      // Load driver profiles and ratings
+      const allUsers = await base44.entities.User.list();
+      const allRatings = await base44.entities.Rating.list();
+      
+      const profiles = {};
+      const ratings = {};
+      
+      filtered.forEach(ride => {
+        const driver = allUsers.find(u => u.id === ride.driver_id);
+        if (driver) profiles[ride.driver_id] = driver;
+        
+        const driverRatings = allRatings.filter(r => 
+          r.rated_user_id === ride.driver_id && r.trip_role === 'driver'
+        );
+        ratings[ride.driver_id] = driverRatings;
+      });
+      
+      setDriverProfiles(profiles);
+      setDriverRatings(ratings);
     } catch (error) {
       console.error("Error searching rides:", error);
       setError("Error searching for rides. Please try again.");
@@ -316,18 +339,33 @@ export default function FindRide() {
                                 <p className="text-xs text-gray-500">per seat</p>
                               </div>
                             </div>
-                            
+
                             <div className="flex justify-between items-center">
-                              <div className="flex items-center gap-2">
-                                <UserIcon className="w-4 h-4 text-gray-400" />
-                                <span className="text-sm text-gray-600">{ride.driver_name}</span>
+                              <div className="flex items-center gap-3">
+                                <Avatar className="w-10 h-10 bg-gradient-to-r from-primary to-secondary">
+                                  <AvatarImage src={driverProfiles[ride.driver_id]?.profile_picture_url} />
+                                  <AvatarFallback className="text-white font-semibold text-sm">
+                                    {ride.driver_name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <span className="text-sm font-medium text-gray-700">{ride.driver_name}</span>
+                                  {driverRatings[ride.driver_id]?.length > 0 && (
+                                    <div className="flex items-center gap-1">
+                                      <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                                      <span className="text-xs text-gray-600">
+                                        {(driverRatings[ride.driver_id].reduce((sum, r) => sum + r.rating_value, 0) / driverRatings[ride.driver_id].length).toFixed(1)}
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                               <div className="flex items-center gap-2">
                                 <Users className="w-4 h-4 text-gray-400" />
                                 <span className="text-sm text-gray-600">{ride.seats_available} seats</span>
                               </div>
                             </div>
-                            
+
                             <p className="text-xs text-gray-500 mt-2 hover:text-primary">
                               Click to view driver profile →
                             </p>
