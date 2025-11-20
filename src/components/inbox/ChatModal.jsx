@@ -84,6 +84,11 @@ export default function ChatModal({ isOpen, onClose, booking, otherPartyName, ot
       await base44.entities.RideBooking.update(booking.id, {
         messages: updatedMessages
       });
+
+      sendNotification(
+        `New message from ${currentUser.username || currentUser.full_name}`,
+        newMessage.substring(0, 50) + (newMessage.length > 50 ? '...' : '')
+      );
     } catch (error) {
       console.error("Error sending message:", error);
     }
