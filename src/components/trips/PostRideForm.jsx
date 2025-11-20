@@ -31,6 +31,7 @@ export default function PostRideForm() {
     rider_preference: 'both_fine',
     description: '',
     car_model: '',
+    offers_detour_service: false
   });
 
   useEffect(() => {
@@ -174,6 +175,7 @@ export default function PostRideForm() {
         rider_preference: 'both_fine',
         description: '',
         car_model: '',
+        offers_detour_service: false
       });
       setStops(['']);
       
@@ -287,6 +289,27 @@ export default function PostRideForm() {
                   <Plus className="w-4 h-4 mr-2" />
                   add stop
                 </Button>
+              </div>
+
+              <div className="space-y-3">
+                <Label className="text-lg font-semibold text-secondary">detours (optional)</Label>
+                <p className="text-sm text-gray-600">would you like to drive riders to their end destination off the highway for an added fee?</p>
+                <div className="flex gap-3">
+                  <Button
+                    type="button"
+                    onClick={() => setRideData({ ...rideData, offers_detour_service: true })}
+                    className={`flex-1 ${rideData.offers_detour_service ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+                  >
+                    YES
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => setRideData({ ...rideData, offers_detour_service: false })}
+                    className={`flex-1 ${!rideData.offers_detour_service ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+                  >
+                    NO
+                  </Button>
+                </div>
               </div>
 
               <div className="space-y-2">

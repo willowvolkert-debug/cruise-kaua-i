@@ -156,11 +156,18 @@ export default function FindRide() {
   };
 
   const handleConfirmBooking = async (bookingData) => {
+    let initialMessage = bookingData.description;
+    
+    if (bookingData.wants_detour_service && bookingData.detour_destination) {
+      initialMessage = `${bookingData.description}\n\n🚗 DETOUR SERVICE REQUESTED: I would like to be driven to my final destination: ${bookingData.detour_destination}`;
+    }
+
     const finalBookingData = {
       ...bookingData,
       passenger_id: currentUser.id,
       driver_id: selectedRide.driver_id,
       booking_status: 'pending',
+      description: initialMessage,
       messages: []
     };
     
