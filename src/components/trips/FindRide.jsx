@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { MapPin, Calendar, Users, AlertCircle, User as UserIcon, Bell, HelpCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { format } from "date-fns";
-import { sendNotification } from "../../utils/notifications";
+import { sendNotification } from "../utils/notifications";
 import DriverProfileModal from "./DriverProfileModal";
 import BookingModal from "../rides/BookingModal";
 import FindRideTutorial from "../tutorial/FindRideTutorial";

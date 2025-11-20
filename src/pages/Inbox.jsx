@@ -13,7 +13,7 @@ import ChatModal from "../components/inbox/ChatModal";
 import RiderRequestModal from "../components/inbox/RiderRequestModal";
 import CancelBookingModal from "../components/rides/CancelBookingModal";
 import { format } from "date-fns";
-import { sendNotification } from "../utils/notifications";
+import { sendNotification } from "../components/utils/notifications";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 

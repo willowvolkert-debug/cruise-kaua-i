@@ -18,7 +18,7 @@ import PaymentMethodsManager from "../components/payment/PaymentMethodsManager";
 import TransactionHistory from "../components/payment/TransactionHistory";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import EnableNotificationsModal from "../components/notifications/EnableNotificationsModal";
-import { requestNotificationPermission } from "../utils/notifications";
+import { requestNotificationPermission } from "../components/utils/notifications";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
