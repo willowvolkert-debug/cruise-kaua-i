@@ -179,22 +179,20 @@ export default function FindRide() {
 
   return (
     <div className="space-y-6 relative">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold text-secondary">find a ride</h2>
-        <Button
-          onClick={() => setShowTutorial(true)}
-          variant="outline"
-          size="sm"
-          className="rounded-2xl border-gray-300"
-        >
-          <HelpCircle className="w-4 h-4 mr-2" />
-          how to find
-        </Button>
-      </div>
-
       <Card className="shadow-lg border-gray-200 bg-white rounded-3xl">
         <CardHeader>
-          <CardTitle className="text-2xl text-secondary">search for rides</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-2xl text-secondary">find a ride</CardTitle>
+            <Button
+              onClick={() => setShowTutorial(true)}
+              variant="outline"
+              size="sm"
+              className="rounded-2xl border-gray-300"
+            >
+              <HelpCircle className="w-4 h-4 mr-2" />
+              how to find
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
