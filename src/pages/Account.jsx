@@ -17,6 +17,8 @@ import LicenseVerificationModal from "../components/account/LicenseVerificationM
 import PaymentMethodsManager from "../components/payment/PaymentMethodsManager";
 import TransactionHistory from "../components/payment/TransactionHistory";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import EnableNotificationsModal from "../components/notifications/EnableNotificationsModal";
+import { requestNotificationPermission } from "../utils/notifications";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -51,6 +53,8 @@ export default function AccountPage() {
     const [showPayoutSection, setShowPayoutSection] = useState(false);
     const [isSubmittingPayout, setIsSubmittingPayout] = useState(false);
     const [payoutError, setPayoutError] = useState(null);
+    const [showNotificationModal, setShowNotificationModal] = useState(false);
+    const [notificationsEnabled, setNotificationsEnabled] = useState(false);
     const [bankDetails, setBankDetails] = useState({
         account_holder_name: '',
         routing_number: '',
@@ -60,6 +64,9 @@ export default function AccountPage() {
 
     useEffect(() => {
         loadData();
+        if ('Notification' in window) {
+            setNotificationsEnabled(Notification.permission === 'granted');
+        }
     }, []);
 
     const loadData = async () => {
@@ -125,6 +132,17 @@ export default function AccountPage() {
 
     const handleLicenseVerificationSuccess = () => {
         loadData();
+    };
+
+    const handleEnableNotifications = async () => {
+        const granted = await requestNotificationPermission();
+        if (granted) {
+            setNotificationsEnabled(true);
+            await base44.auth.updateMe({ notifications_enabled: true });
+            alert("Notifications enabled! You'll receive updates about your trips.");
+        } else {
+            setShowNotificationModal(true);
+        }
     };
 
     const handleBankDetailsSubmit = async () => {
@@ -322,6 +340,29 @@ export default function AccountPage() {
 
                 <div className="grid md:grid-cols-3 gap-8">
                     <div className="md:col-span-2 space-y-8">
+                        <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
+                            <CardHeader><CardTitle className="text-xl text-secondary">notifications</CardTitle></CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
+                                    <span className="font-medium">push notifications</span>
+                                    {notificationsEnabled ? (
+                                        <Badge variant="default" className="bg-primary rounded-2xl border-primary">
+                                            <ShieldCheck className="w-4 h-4 mr-1"/>enabled
+                                        </Badge>
+                                    ) : (
+                                        <Button 
+                                            size="sm" 
+                                            variant="outline"
+                                            onClick={handleEnableNotifications}
+                                            className="rounded-2xl border-gray-300"
+                                        >
+                                            enable now
+                                        </Button>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+
                         <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
                             <CardHeader><CardTitle className="text-xl text-secondary">verification</CardTitle></CardHeader>
                             <CardContent className="space-y-4">
@@ -616,6 +657,11 @@ export default function AccountPage() {
                 onClose={() => setShowLicenseModal(false)}
                 onSuccess={handleLicenseVerificationSuccess}
             />
-        </div>
-    );
-}
+
+            <EnableNotificationsModal
+                isOpen={showNotificationModal}
+                onClose={() => setShowNotificationModal(false)}
+            />
+            </div>
+            );
+            }

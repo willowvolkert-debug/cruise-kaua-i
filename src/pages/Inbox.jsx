@@ -13,6 +13,7 @@ import ChatModal from "../components/inbox/ChatModal";
 import RiderRequestModal from "../components/inbox/RiderRequestModal";
 import CancelBookingModal from "../components/rides/CancelBookingModal";
 import { format } from "date-fns";
+import { sendNotification } from "../utils/notifications";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -248,6 +249,11 @@ export default function InboxPage() {
                 });
             }
 
+            sendNotification(
+                'Ride Request Accepted!',
+                `${booking.passenger_name} can now join your trip.`
+            );
+
             alert(`Request accepted! Payment of $${totalAmount.toFixed(2)} has been processed successfully.`);
             setShowRiderRequestModal(false);
             loadData();
@@ -262,6 +268,11 @@ export default function InboxPage() {
             await base44.entities.RideBooking.update(booking.id, {
                 booking_status: 'rejected'
             });
+
+            sendNotification(
+                'Ride Request Rejected',
+                'A rider request has been declined.'
+            );
 
             alert("Request rejected. The rider has been notified.");
             setShowRiderRequestModal(false);

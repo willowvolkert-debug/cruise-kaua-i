@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { MapPin, Calendar, Users, AlertCircle, User as UserIcon, Bell, HelpCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { format } from "date-fns";
+import { sendNotification } from "../../utils/notifications";
 import DriverProfileModal from "./DriverProfileModal";
 import BookingModal from "../rides/BookingModal";
 import FindRideTutorial from "../tutorial/FindRideTutorial";
@@ -164,6 +165,11 @@ export default function FindRide() {
     };
     
     await base44.entities.RideBooking.create(finalBookingData);
+
+    sendNotification(
+      'Ride Request Sent!',
+      `Your request to join the ride has been sent to the driver.`
+    );
 
     alert("Request sent to driver! You'll be notified when they respond.");
     setShowBookingModal(false);

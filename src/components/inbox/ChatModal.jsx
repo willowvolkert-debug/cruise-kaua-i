@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Send, X, AlertTriangle } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { format } from "date-fns";
+import { sendNotification } from "../../utils/notifications";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
