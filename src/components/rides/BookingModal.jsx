@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { base44 } from "@/api/base44Client";
-import { DollarSign, CreditCard, Plus } from "lucide-react";
+import { DollarSign, CreditCard, Plus, Navigation } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -16,7 +16,9 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
     seats_booked: 1, 
     description: '', 
     has_luggage: false,
-    payment_method_id: null 
+    payment_method_id: null,
+    wants_detour_service: false,
+    detour_destination: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
@@ -30,7 +32,9 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
           seats_booked: 1, 
           description: '', 
           has_luggage: false,
-          payment_method_id: null 
+          payment_method_id: null,
+          wants_detour_service: false,
+          detour_destination: ''
         });
     }
   }, [isOpen]);
@@ -71,15 +75,17 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
     }
     
     setIsSubmitting(true);
+    const detourFee = bookingData.wants_detour_service ? 5 : 0;
     const bookingDetails = {
       ...bookingData,
       passenger_name: currentUser.full_name,
       passenger_username: currentUser.username,
       ride_id: ride.id,
-      total_amount: (bookingData.seats_booked || 0) * (ride?.price_per_seat || 0),
+      total_amount: (bookingData.seats_booked || 0) * (ride?.price_per_seat || 0) + detourFee,
       seats_booked: parseInt(bookingData.seats_booked),
       payment_status: 'pending',
       booking_status: 'pending',
+      detour_fee: detourFee
     };
     await onConfirmBooking(bookingDetails);
     setIsSubmitting(false);
@@ -87,7 +93,8 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
 
   if (!ride) return null;
   
-  const baseAmount = (bookingData.seats_booked || 0) * (ride?.price_per_seat || 0);
+  const detourFee = bookingData.wants_detour_service ? 5 : 0;
+  const baseAmount = (bookingData.seats_booked || 0) * (ride?.price_per_seat || 0) + detourFee;
   const connectFee = baseAmount * 0.10;
   const totalAmount = baseAmount + connectFee;
 
@@ -136,6 +143,47 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               </Label>
             </div>
 
+            {ride.offers_detour_service && (
+              <div className="space-y-3 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="flex items-start gap-2">
+                  <Navigation className="w-5 h-5 text-green-600 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-green-900">detour service available</p>
+                    <p className="text-sm text-green-700">this driver is willing to drive you to a final destination off the highway for an added fee. would you like this additional service for $5?</p>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <Button
+                    type="button"
+                    onClick={() => setBookingData(p => ({ ...p, wants_detour_service: true }))}
+                    className={`flex-1 ${bookingData.wants_detour_service ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+                  >
+                    YES
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => setBookingData(p => ({ ...p, wants_detour_service: false, detour_destination: '' }))}
+                    className={`flex-1 ${!bookingData.wants_detour_service ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+                  >
+                    NO
+                  </Button>
+                </div>
+                {bookingData.wants_detour_service && (
+                  <div className="space-y-2">
+                    <Label htmlFor="detour-destination">where is your final destination? *</Label>
+                    <Textarea
+                      id="detour-destination"
+                      value={bookingData.detour_destination}
+                      onChange={(e) => setBookingData(p => ({ ...p, detour_destination: e.target.value }))}
+                      placeholder="e.g., Princeville Resort"
+                      required={bookingData.wants_detour_service}
+                      className="h-20"
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label>payment method *</Label>
               {paymentMethods.length === 0 ? (
@@ -180,8 +228,14 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
             <div className="bg-yellow-50 rounded-lg p-4 space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-700">Ride cost:</span>
-                <span className="font-medium">${baseAmount.toFixed(2)}</span>
+                <span className="font-medium">${((bookingData.seats_booked || 0) * (ride?.price_per_seat || 0)).toFixed(2)}</span>
               </div>
+              {bookingData.wants_detour_service && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-700">Detour service:</span>
+                  <span className="font-medium">${detourFee.toFixed(2)}</span>
+                </div>
+              )}
               <div className="flex justify-between text-sm">
                 <span className="text-gray-700">Connect fee (10%):</span>
                 <span className="font-medium">${connectFee.toFixed(2)}</span>

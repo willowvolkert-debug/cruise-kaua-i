@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { MapPin, Clock, DollarSign, Users, Car, Wind, MessageCircle, Sparkles } from "lucide-react";
+import { MapPin, Clock, DollarSign, Users, Car, Wind, MessageCircle, Sparkles, Navigation } from "lucide-react";
 import { format } from "date-fns";
 
 export default function RideCard({ ride, onBookRide, showBookButton = true }) {
@@ -38,6 +38,7 @@ export default function RideCard({ ride, onBookRide, showBookButton = true }) {
             <div className="flex flex-wrap gap-2 mb-4">
                 <Badge variant="outline" className="border-primary/50 text-primary"><Users className="w-3 h-3 mr-1" />{ride.seats_available} seats left</Badge>
                 {ride.is_flexible && <Badge variant="outline" className="border-amber-500/50 text-amber-600"><Clock className="w-3 h-3 mr-1" />Flexible</Badge>}
+                {ride.offers_detour_service && <Badge variant="outline" className="border-green-500/50 text-green-600"><Navigation className="w-3 h-3 mr-1" />Detours +$5</Badge>}
             </div>
         </div>
 
