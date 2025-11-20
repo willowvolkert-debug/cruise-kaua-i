@@ -14,7 +14,7 @@ import { format } from "date-fns";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
-export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide }) {
+export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, currentUser }) {
   const [driverProfile, setDriverProfile] = useState(null);
   const [driverRatings, setDriverRatings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -123,7 +123,7 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide }
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Price per seat:</span>
-                  <span className="font-medium">${ride.price_per_seat}</span>
+                  <span className="font-medium">${currentUser?.driver_license_state === 'HI' ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0)}</span>
                 </div>
                 {ride.car_model && (
                   <div className="flex justify-between">

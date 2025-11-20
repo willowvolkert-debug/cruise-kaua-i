@@ -94,7 +94,8 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   if (!ride) return null;
   
   const detourFee = bookingData.wants_detour_service ? 5 : 0;
-  const pricePerSeat = ride.price_per_seat || ride.price_per_seat_tourist || ride.price_per_seat_local || 0;
+  const isLocal = currentUser?.driver_license_state === 'HI';
+  const pricePerSeat = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);
   const baseAmount = (bookingData.seats_booked || 0) * pricePerSeat + detourFee;
   const connectFee = baseAmount * 0.10;
   const totalAmount = baseAmount + connectFee;

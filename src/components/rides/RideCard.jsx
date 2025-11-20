@@ -6,10 +6,11 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { MapPin, Clock, DollarSign, Users, Car, Wind, MessageCircle, Sparkles, Navigation } from "lucide-react";
 import { format } from "date-fns";
 
-export default function RideCard({ ride, onBookRide, showBookButton = true }) {
+export default function RideCard({ ride, onBookRide, showBookButton = true, currentUser }) {
   const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
   
-  const displayPrice = ride.price_per_seat || ride.price_per_seat_tourist || ride.price_per_seat_local || 0;
+  const isLocal = currentUser?.driver_license_state === 'HI';
+  const displayPrice = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);
   
   return (
     <Card className="hover:shadow-xl transition-all duration-300 border-border shadow-lg bg-white flex flex-col">

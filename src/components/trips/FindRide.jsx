@@ -312,7 +312,7 @@ export default function FindRide() {
                                 <p className="text-sm text-gray-600">{ride.departure_location} → {ride.destination}</p>
                               </div>
                               <div className="text-right">
-                                <p className="font-bold text-lg text-primary">${ride.price_per_seat || ride.price_per_seat_tourist || ride.price_per_seat_local || 0}</p>
+                                <p className="font-bold text-lg text-primary">${currentUser?.driver_license_state === 'HI' ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0)}</p>
                                 <p className="text-xs text-gray-500">per seat</p>
                               </div>
                             </div>
@@ -365,6 +365,7 @@ export default function FindRide() {
         onClose={() => setShowDriverProfile(false)}
         ride={selectedRide}
         onBookRide={handleBookRide}
+        currentUser={currentUser}
       />
 
       <BookingModal
