@@ -6,11 +6,12 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, Calendar, Users, AlertCircle, User as UserIcon, Bell } from "lucide-react";
+import { MapPin, Calendar, Users, AlertCircle, User as UserIcon, Bell, HelpCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { format } from "date-fns";
 import DriverProfileModal from "./DriverProfileModal";
 import BookingModal from "../rides/BookingModal";
+import FindRideTutorial from "../tutorial/FindRideTutorial";
 
 export default function FindRide() {
   const [searchData, setSearchData] = useState({
@@ -33,6 +34,7 @@ export default function FindRide() {
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [error, setError] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+  const [showTutorial, setShowTutorial] = useState(false);
 
   useEffect(() => {
     const init = async () => {
@@ -177,9 +179,22 @@ export default function FindRide() {
 
   return (
     <div className="space-y-6 relative">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-2xl font-bold text-secondary">find a ride</h2>
+        <Button
+          onClick={() => setShowTutorial(true)}
+          variant="outline"
+          size="sm"
+          className="rounded-2xl border-gray-300"
+        >
+          <HelpCircle className="w-4 h-4 mr-2" />
+          how to find
+        </Button>
+      </div>
+
       <Card className="shadow-lg border-gray-200 bg-white rounded-3xl">
         <CardHeader>
-          <CardTitle className="text-2xl text-secondary">find a ride</CardTitle>
+          <CardTitle className="text-2xl text-secondary">search for rides</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -346,6 +361,11 @@ export default function FindRide() {
         onClose={() => setShowBookingModal(false)}
         ride={selectedRide}
         onConfirmBooking={handleConfirmBooking}
+      />
+
+      <FindRideTutorial
+        isOpen={showTutorial}
+        onClose={() => setShowTutorial(false)}
       />
     </div>
   );
