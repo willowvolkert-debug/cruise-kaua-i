@@ -9,6 +9,8 @@ import { format } from "date-fns";
 export default function RideCard({ ride, onBookRide, showBookButton = true }) {
   const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
   
+  const displayPrice = ride.price_per_seat || ride.price_per_seat_tourist || ride.price_per_seat_local || 0;
+  
   return (
     <Card className="hover:shadow-xl transition-all duration-300 border-border shadow-lg bg-white flex flex-col">
       <CardHeader className="p-6">
@@ -24,7 +26,7 @@ export default function RideCard({ ride, onBookRide, showBookButton = true }) {
                 </div>
             </div>
             <div className="text-right">
-                <p className="text-2xl font-bold text-secondary">${ride.price_per_seat}</p>
+                <p className="text-2xl font-bold text-secondary">${displayPrice}</p>
                 <p className="text-sm text-gray-500">per seat</p>
             </div>
         </div>

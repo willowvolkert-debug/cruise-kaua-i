@@ -94,7 +94,8 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   if (!ride) return null;
   
   const detourFee = bookingData.wants_detour_service ? 5 : 0;
-  const baseAmount = (bookingData.seats_booked || 0) * (ride?.price_per_seat || 0) + detourFee;
+  const pricePerSeat = ride.price_per_seat || ride.price_per_seat_tourist || ride.price_per_seat_local || 0;
+  const baseAmount = (bookingData.seats_booked || 0) * pricePerSeat + detourFee;
   const connectFee = baseAmount * 0.10;
   const totalAmount = baseAmount + connectFee;
 
@@ -228,7 +229,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
             <div className="bg-yellow-50 rounded-lg p-4 space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-700">Ride cost:</span>
-                <span className="font-medium">${((bookingData.seats_booked || 0) * (ride?.price_per_seat || 0)).toFixed(2)}</span>
+                <span className="font-medium">${((bookingData.seats_booked || 0) * pricePerSeat).toFixed(2)}</span>
               </div>
               {bookingData.wants_detour_service && (
                 <div className="flex justify-between text-sm">
