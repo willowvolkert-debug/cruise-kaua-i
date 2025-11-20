@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Star, Check, X, Wind, MessageCircle } from "lucide-react";
 import { User, Rating, RideBooking } from "@/entities/all";
@@ -78,7 +78,8 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
 
             {/* Rider Info */}
             <div className="flex items-center gap-4">
-              <Avatar className="w-20 h-20 bg-gradient-to-r from-primary to-secondary">
+              <Avatar className="w-24 h-24 bg-gradient-to-r from-primary to-secondary">
+                <AvatarImage src={riderProfile?.profile_picture_url} />
                 <AvatarFallback className="text-white font-bold text-2xl">
                   {getInitials(booking.passenger_name)}
                 </AvatarFallback>
@@ -86,19 +87,17 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
               <div className="flex-1">
                 <h3 className="text-xl font-bold text-secondary">{booking.passenger_name}</h3>
                 {riderProfile && (
-                  <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
-                    <span>{riderProfile.gender}, {riderProfile.age} years old</span>
+                  <div className="space-y-1 mt-2">
+                    <div className="text-sm text-gray-600">
+                      <span>{riderProfile.gender}, {riderProfile.age} years old</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                      <span className="text-sm font-semibold">{averageRating}</span>
+                      <span className="text-sm text-gray-500">({riderRatings.length} reviews)</span>
+                    </div>
                   </div>
                 )}
-              </div>
-            </div>
-
-            {/* Ratings */}
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                <span className="text-lg font-semibold">{averageRating}</span>
-                <span className="text-gray-500">({riderRatings.length} reviews)</span>
               </div>
             </div>
 

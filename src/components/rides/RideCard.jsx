@@ -2,15 +2,19 @@ import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { MapPin, Clock, DollarSign, Users, Car, Wind, MessageCircle, Sparkles, Navigation } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { MapPin, Clock, DollarSign, Users, Car, Wind, MessageCircle, Sparkles, Navigation, Star } from "lucide-react";
 import { format } from "date-fns";
 
-export default function RideCard({ ride, onBookRide, showBookButton = true, currentUser }) {
+export default function RideCard({ ride, onBookRide, showBookButton = true, currentUser, driverProfile, driverRatings = [] }) {
   const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
   
   const isLocal = currentUser?.driver_license_state === 'HI';
   const displayPrice = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);
+  
+  const averageRating = driverRatings.length > 0 
+    ? (driverRatings.reduce((sum, r) => sum + r.rating_value, 0) / driverRatings.length).toFixed(1)
+    : null;
   
   return (
     <Card className="hover:shadow-xl transition-all duration-300 border-border shadow-lg bg-white flex flex-col">
@@ -47,12 +51,18 @@ export default function RideCard({ ride, onBookRide, showBookButton = true, curr
 
         <div className="flex items-center justify-between mt-4">
           <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10 bg-gradient-to-r from-primary to-secondary">
+            <Avatar className="h-12 w-12 bg-gradient-to-r from-primary to-secondary">
+              <AvatarImage src={driverProfile?.profile_picture_url} />
               <AvatarFallback className="text-white font-semibold">{getInitials(ride.driver_name)}</AvatarFallback>
             </Avatar>
             <div>
               <p className="font-medium text-secondary">{ride.driver_name}</p>
-              <p className="text-sm text-gray-500">Driver</p>
+              {averageRating && (
+                <div className="flex items-center gap-1">
+                  <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                  <span className="text-sm text-gray-600">{averageRating} ({driverRatings.length})</span>
+                </div>
+              )}
             </div>
           </div>
           
