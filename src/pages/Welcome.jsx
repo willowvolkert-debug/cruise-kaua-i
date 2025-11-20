@@ -35,14 +35,14 @@ export default function WelcomePage() {
               <div className="w-20 h-20 bg-gradient-to-br from-primary to-orange-400 rounded-full mx-auto flex items-center justify-center">
                 <Ship className="w-12 h-12 text-white" />
               </div>
-              <h1 className="text-4xl font-bold text-secondary">Welcome to Cruise Kauaʻi!</h1>
+              <h1 className="text-4xl font-bold text-secondary">Welcome to Cruise Kauaʻi! 🌺</h1>
               <p className="text-xl text-gray-700 leading-relaxed">
                 Making transportation on Kauaʻi more <span className="font-semibold text-gray-500">social</span>, 
                 <span className="font-semibold text-blue-600"> affordable</span>, and 
-                <span className="font-semibold text-green-600"> sustainable</span>.
+                <span className="font-semibold text-green-600"> sustainable</span>!
               </p>
               <p className="text-gray-600">
-                Share rides with kamaʻāina (residents) and malihini (visitors) to reduce the number of cars on our roads.
+                Share rides with kamaʻāina (residents) and malihini (visitors) to reduce the number of cars on our roads. Because let's face it – solo driving is SO last season! 🚗💨
               </p>
               <Button onClick={() => setStep(2)} size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 py-6 text-lg rounded-2xl">
                 Get Started
@@ -55,27 +55,27 @@ export default function WelcomePage() {
         {step === 2 && (
           <Card className="shadow-xl border-gray-200 rounded-3xl bg-white">
             <CardContent className="p-8 md:p-12 space-y-6">
-              <h2 className="text-3xl font-bold text-secondary text-center">Build Your Profile</h2>
+              <h2 className="text-3xl font-bold text-secondary text-center">Build Your Profile! 🌟</h2>
               <div className="space-y-4">
                 <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <Shield className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Verify Your License</h3>
-                    <p className="text-gray-600">Upload photos of your driver's license for manual verification by our team.</p>
+                    <p className="text-gray-600">Upload photos of your driver's license for manual verification by our team. Don't worry, we won't judge your DMV photo! 😄</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <Car className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Add Vehicle Details</h3>
-                    <p className="text-gray-600">Share information about your vehicle, including photos and insurance.</p>
+                    <p className="text-gray-600">Share information about your ride – we mean your vehicle! Including photos and insurance info.</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <CheckCircle className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Maintain Good Ratings</h3>
-                    <p className="text-gray-600">Be respectful, punctual, and communicate clearly to build trust in our community.</p>
+                    <p className="text-gray-600">Be respectful, punctual, and communicate clearly to build trust in our community. Good vibes only! ✨</p>
                   </div>
                 </div>
               </div>
@@ -91,27 +91,27 @@ export default function WelcomePage() {
         {step === 3 && (
           <Card className="shadow-xl border-gray-200 rounded-3xl bg-white">
             <CardContent className="p-8 md:p-12 space-y-6">
-              <h2 className="text-3xl font-bold text-secondary text-center">How It Works</h2>
+              <h2 className="text-3xl font-bold text-secondary text-center">How It Works! 🚀</h2>
               <div className="space-y-4">
                 <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-2xl border border-blue-200">
                   <Users className="w-8 h-8 text-blue-600 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Book a Trip</h3>
-                    <p className="text-gray-600">Search for rides by date and view available trips. Click on any ride to see the driver's profile, ratings, and vehicle details. Request seats and payment is processed automatically when the driver accepts your request. Chat with your driver in the Inbox to coordinate pickup details.</p>
+                    <p className="text-gray-600">Search for rides by date and hop in! Click on any ride to see the driver's profile, ratings, and vehicle details. Request seats and payment is processed automatically when the driver accepts. Then chat in the Inbox to coordinate pickup details. Getting from A to B has never been easier (or more fun)! 🎉</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-green-50 rounded-2xl border border-green-200">
                   <Car className="w-8 h-8 text-green-600 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Post a Ride</h3>
-                    <p className="text-gray-600">Share your upcoming trips by entering your route, date, and time. Set your price per seat (or different prices for locals vs tourists). Choose your rider preferences and specify if you allow bags. When riders request to join, you'll see their profile and can accept or reject. Once accepted, coordinate through in-app messaging.</p>
+                    <p className="text-gray-600">Turn those empty seats into new friends (and gas money)! Post your upcoming trips, set your price per seat, choose your rider preferences, and wait for requests to roll in. Accept the riders you vibe with and coordinate through in-app messaging. Who knew commuting could be this social? 🤙</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-orange-50 rounded-2xl border border-orange-200">
                   <AlertCircle className="w-8 h-8 text-orange-600 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Beta Testing Notice</h3>
-                    <p className="text-gray-600">Cruise Kauaʻi is currently in beta testing. If you experience any glitches or issues, please fill out a Contact Us form. Your feedback helps us improve the platform for everyone!</p>
+                    <p className="text-gray-600">We're still working out the kinks – kind of like parallel parking on a steep hill! If you hit any bumps (pun intended), fill out a Contact Us form. Your feedback drives us forward! 🛠️</p>
                   </div>
                 </div>
               </div>
@@ -127,27 +127,27 @@ export default function WelcomePage() {
         {step === 4 && (
           <Card className="shadow-xl border-gray-200 rounded-3xl bg-white">
             <CardContent className="p-8 md:p-12 space-y-6">
-              <h2 className="text-3xl font-bold text-secondary text-center">Communication & Support</h2>
+              <h2 className="text-3xl font-bold text-secondary text-center">Communication & Support! 💬</h2>
               <div className="space-y-4">
                 <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <MessageSquare className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">In-App Messaging</h3>
-                    <p className="text-gray-600">Chat with drivers or riders directly in the app. Keep all communication within the platform for safety.</p>
+                    <p className="text-gray-600">Chat with drivers or riders directly in the app! Keep all communication within the platform for safety. No need to exchange numbers – we've got you covered! 📱</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <Clock className="w-8 h-8 text-orange-600 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Ride Cancellations</h3>
-                    <p className="text-gray-600">Cancel anytime with our flexible refund policy. Earlier cancellations receive higher refunds.</p>
+                    <p className="text-gray-600">Life happens! Cancel anytime with our flexible refund policy. The earlier you cancel, the more aloha you get back in your wallet. 💰</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <HandHeart className="w-8 h-8 text-pink-600 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Need Help?</h3>
-                    <p className="text-gray-600">Visit our Contact Us page for any questions or concerns. Our team is here to help!</p>
+                    <p className="text-gray-600">Hit a roadblock? Visit our Contact Us page for any questions or concerns. Our team is here to help you cruise smoothly! 🌊</p>
                   </div>
                 </div>
               </div>
@@ -163,7 +163,7 @@ export default function WelcomePage() {
         {step === 5 && (
           <Card className="shadow-xl border-gray-200 rounded-3xl bg-white">
             <CardContent className="p-8 md:p-12 space-y-6">
-              <h2 className="text-3xl font-bold text-secondary text-center">Our Community Values</h2>
+              <h2 className="text-3xl font-bold text-secondary text-center">Our Community Values! 🤝</h2>
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="flex flex-col items-center text-center p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <Shield className="w-10 h-10 text-primary mb-2" />
@@ -178,12 +178,12 @@ export default function WelcomePage() {
                 <div className="flex flex-col items-center text-center p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <DollarSign className="w-10 h-10 text-green-600 mb-2" />
                   <h3 className="font-semibold text-secondary">Shared Transportation Costs</h3>
-                  <p className="text-sm text-gray-600">Fair cost-sharing, not profit-making</p>
+                  <p className="text-sm text-gray-600">Split gas money, not hairs!</p>
                 </div>
                 <div className="flex flex-col items-center text-center p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <Leaf className="w-10 h-10 text-green-600 mb-2" />
-                  <h3 className="font-semibold text-secondary">Less Cars on the Road</h3>
-                  <p className="text-sm text-gray-600">Reduce traffic congestion on Kauaʻi</p>
+                  <h3 className="font-semibold text-secondary">Fewer Cars on the Road</h3>
+                  <p className="text-sm text-gray-600">Because Mother Nature called – she wants less traffic!</p>
                 </div>
                 <div className="flex flex-col items-center text-center p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <CheckCircle className="w-10 h-10 text-blue-600 mb-2" />
