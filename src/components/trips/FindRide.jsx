@@ -43,11 +43,42 @@ export default function FindRide() {
   const [driverRatings, setDriverRatings] = useState({});
   const [hasUnsupportedLocation, setHasUnsupportedLocation] = useState(false);
 
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+
   useEffect(() => {
     const init = async () => {
       try {
         const user = await base44.auth.me();
         setCurrentUser(user);
+
+        // Check for payment success in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookingId = urlParams.get('booking_id');
+        const paymentStatus = urlParams.get('payment');
+
+        if (bookingId && paymentStatus === 'success') {
+          // Handle successful payment
+          try {
+            await handlePaymentSuccess({ booking_id: bookingId });
+            setPaymentSuccess(true);
+            sendNotification(
+              'Payment Successful!',
+              'Your ride request has been sent to the driver.'
+            );
+            // Clean up URL
+            window.history.replaceState({}, '', window.location.pathname);
+          } catch (err) {
+            console.error("Error handling payment success:", err);
+          }
+        } else if (bookingId && paymentStatus === 'cancelled') {
+          // Payment was cancelled - delete the pending booking
+          try {
+            await base44.entities.RideBooking.delete(bookingId);
+          } catch (err) {
+            console.error("Error deleting cancelled booking:", err);
+          }
+          window.history.replaceState({}, '', window.location.pathname);
+        }
         
         if (!user.profile_picture_url) {
           setError("Please upload a profile picture before booking rides. Go to Account page.");
