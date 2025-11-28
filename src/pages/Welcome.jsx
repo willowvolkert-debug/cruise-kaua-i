@@ -92,18 +92,18 @@ export default function WelcomePage() {
           <Card className="shadow-xl border-gray-200 rounded-3xl bg-white">
             <CardContent className="p-8 md:p-12 space-y-6">
               <h2 className="text-3xl font-bold text-secondary text-center">How It Works! 🚀</h2>
-              <div className="space-y-4">
-                <div className="flex items-start gap-4 p-4 bg-orange-50 rounded-2xl border border-orange-300">
-                  <Smartphone className="w-8 h-8 text-orange-600 flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-lg text-secondary">Add Cruise Kauaʻi to your Home Screen</h3>
-                    <p className="text-gray-600">You must manually add this application to your home screen. Press the share button on your browser, scroll down to "Add to Home Screen" and press "Add" in the top right corner.</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-2xl border border-blue-200">
-                  <Users className="w-8 h-8 text-blue-600 flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-lg text-secondary">Book a Trip</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-start gap-4 p-4 bg-orange-50 rounded-2xl border border-orange-300">
+                          <Smartphone className="w-8 h-8 text-orange-600 flex-shrink-0 mt-1" />
+                          <div>
+                            <h3 className="font-semibold text-lg text-secondary">Add Cruise Kauaʻi to your Home Screen</h3>
+                            <p className="text-gray-600">You must manually add this application to your home screen. Press the share button on your browser, scroll down to "Add to Home Screen" and press "Add" in the top right corner.</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-2xl border border-blue-200">
+                          <Users className="w-8 h-8 text-blue-600 flex-shrink-0 mt-1" />
+                          <div>
+                            <h3 className="font-semibold text-lg text-secondary">Book a Trip</h3>
                     <p className="text-gray-600">Search for rides by date and hop in! Click on any ride to see the driver's profile, ratings, and vehicle details. Request seats and payment is processed automatically when the driver accepts. Then chat in the Inbox to coordinate pickup details. Getting from A to B has never been easier (or more fun)! 🎉</p>
                   </div>
                 </div>
