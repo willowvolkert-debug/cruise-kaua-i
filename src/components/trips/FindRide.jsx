@@ -233,6 +233,13 @@ export default function FindRide() {
 
   return (
     <div className="space-y-6 relative">
+      {error && (
+        <Alert variant="destructive" className="rounded-2xl border-red-200">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
       <Card className="shadow-lg border-gray-200 bg-white rounded-3xl">
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -316,13 +323,6 @@ export default function FindRide() {
           </div>
         </CardContent>
       </Card>
-
-      {error && (
-        <Alert variant="destructive" className="rounded-2xl border-red-200">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
 
       {hasSearched && (
         <div className="space-y-6">
