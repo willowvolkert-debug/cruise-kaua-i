@@ -35,6 +35,8 @@ export default function InboxPage() {
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [bookingToCancel, setBookingToCancel] = useState(null);
     const [showReviewModal, setShowReviewModal] = useState(false);
+    const [showPaymentModal, setShowPaymentModal] = useState(false);
+    const [pendingAcceptBooking, setPendingAcceptBooking] = useState(null);
     const [reviewData, setReviewData] = useState({ rating: 0, comment: '' });
     const [currentReviewUser, setCurrentReviewUser] = useState(null);
     const [currentReviewRide, setCurrentReviewRide] = useState(null);
