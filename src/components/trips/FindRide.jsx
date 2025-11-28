@@ -63,7 +63,10 @@ export default function FindRide() {
           return;
         }
 
-
+        if (!user.drivers_license_verified) {
+          setError("Please verify your driver's license before booking rides. Go to Account page.");
+          return;
+        }
 
         if (user.pending_ratings && user.pending_ratings.length > 0) {
           setError("Please complete your pending trip ratings in the Inbox before booking new rides.");
@@ -169,7 +172,10 @@ export default function FindRide() {
       return;
     }
 
-
+    if (!currentUser.drivers_license_verified) {
+      setError("Please verify your driver's license before booking rides.");
+      return;
+    }
     
     if (currentUser.pending_ratings && currentUser.pending_ratings.length > 0) {
       setError("Please complete your pending trip ratings in the Inbox before booking new rides.");
