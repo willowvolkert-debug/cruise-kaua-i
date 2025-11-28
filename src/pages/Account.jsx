@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import LicenseVerificationModal from "../components/account/LicenseVerificationModal";
-import PaymentMethodsManager from "../components/payment/PaymentMethodsManager";
 import TransactionHistory from "../components/payment/TransactionHistory";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import EnableNotificationsModal from "../components/notifications/EnableNotificationsModal";
@@ -484,10 +483,6 @@ export default function AccountPage() {
                     </div>
 
                     <div className="space-y-8">
-                        <div className="space-y-6">
-                            <PaymentMethodsManager />
-                        </div>
-
                         <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
                             <CardHeader 
                                 className="cursor-pointer hover:bg-gray-50 transition-colors rounded-t-3xl"
