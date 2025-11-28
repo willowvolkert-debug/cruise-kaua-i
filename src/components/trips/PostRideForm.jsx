@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { MapPin, DollarSign, Car, X, Plus, AlertCircle, Clock, Users, HelpCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import PostRideTutorial from "../tutorial/PostRideTutorial";
+import LocationAutocomplete from "../shared/LocationAutocomplete";
 
 export default function PostRideForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -234,24 +235,20 @@ export default function PostRideForm() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="departure">coming from</Label>
-                  <Input
+                  <LocationAutocomplete
                     id="departure"
                     value={rideData.departure_location}
-                    onChange={(e) => handleInputChange('departure_location', e.target.value)}
+                    onChange={(value) => handleInputChange('departure_location', value)}
                     placeholder="e.g., Lihue"
-                    required
-                    className="rounded-2xl"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="destination">going to</Label>
-                  <Input
+                  <LocationAutocomplete
                     id="destination"
                     value={rideData.destination}
-                    onChange={(e) => handleInputChange('destination', e.target.value)}
+                    onChange={(value) => handleInputChange('destination', value)}
                     placeholder="e.g., Hanalei"
-                    required
-                    className="rounded-2xl"
                   />
                 </div>
               </div>
