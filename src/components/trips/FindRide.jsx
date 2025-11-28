@@ -239,6 +239,15 @@ export default function FindRide() {
 
   return (
     <div className="space-y-6 relative">
+      {paymentSuccess && (
+        <Alert className="rounded-2xl border-green-200 bg-green-50">
+          <CheckCircle className="h-4 w-4 text-green-600" />
+          <AlertDescription className="text-green-800">
+            Payment successful! Your ride request has been sent to the driver. They will be notified by email.
+          </AlertDescription>
+        </Alert>
+      )}
+
       {error && (
         <Alert variant="destructive" className="rounded-2xl border-red-200">
           <AlertCircle className="h-4 w-4" />
