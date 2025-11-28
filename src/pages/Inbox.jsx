@@ -203,16 +203,24 @@ export default function InboxPage() {
     };
 
     const handleAcceptRequest = async (booking) => {
+        // Store booking and show payment modal to rider
+        // For now, since the driver is accepting, we process payment from rider's saved card
+        setPendingAcceptBooking(booking);
+        setShowPaymentModal(true);
+        setShowRiderRequestModal(false);
+    };
+
+    const handlePaymentSuccess = async (paymentData) => {
+        const booking = pendingAcceptBooking;
+        if (!booking) return;
+
         try {
             const ride = await base44.entities.Ride.get(booking.ride_id);
-            const paymentMethod = await base44.entities.PaymentMethod.get(booking.payment_method_id);
             
             const baseAmount = booking.total_amount;
             const connectFeeRate = ride.driver_license_state === 'HI' ? 0.10 : 0.30;
             const connectFee = baseAmount * connectFeeRate;
             const totalAmount = baseAmount + connectFee;
-
-            const chargeId = `ch_${Date.now()}`;
 
             await base44.entities.Transaction.create({
                 booking_id: booking.id,
@@ -224,10 +232,10 @@ export default function InboxPage() {
                 ride_amount: baseAmount,
                 connect_fee: connectFee,
                 total_amount: totalAmount,
-                payment_method_last4: paymentMethod.card_last4,
-                payment_method_brand: paymentMethod.card_brand,
+                payment_method_last4: paymentData.last4,
+                payment_method_brand: paymentData.brand,
                 transaction_status: 'completed',
-                stripe_charge_id: chargeId
+                stripe_charge_id: paymentData.paymentIntentId
             });
 
             const initialMessage = {
@@ -240,7 +248,7 @@ export default function InboxPage() {
             await base44.entities.RideBooking.update(booking.id, {
                 booking_status: 'confirmed',
                 payment_status: 'paid',
-                stripe_charge_id: chargeId,
+                stripe_charge_id: paymentData.paymentIntentId,
                 messages: [initialMessage]
             });
 
@@ -258,7 +266,8 @@ export default function InboxPage() {
             );
 
             alert(`Request accepted! Payment of $${totalAmount.toFixed(2)} has been processed successfully.`);
-            setShowRiderRequestModal(false);
+            setShowPaymentModal(false);
+            setPendingAcceptBooking(null);
             loadData();
         } catch (error) {
             console.error("Error accepting request:", error);
