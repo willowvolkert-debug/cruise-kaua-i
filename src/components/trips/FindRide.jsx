@@ -14,6 +14,7 @@ import { sendNotification } from "../utils/notifications";
 import DriverProfileModal from "./DriverProfileModal";
 import BookingModal from "../rides/BookingModal";
 import FindRideTutorial from "../tutorial/FindRideTutorial";
+import LocationAutocomplete from "../shared/LocationAutocomplete";
 
 export default function FindRide() {
   const [searchData, setSearchData] = useState({
@@ -234,22 +235,20 @@ export default function FindRide() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="from">coming from (optional)</Label>
-              <Input
+              <LocationAutocomplete
                 id="from"
                 placeholder="e.g., Lihue"
                 value={searchData.departure_location}
-                onChange={(e) => handleInputChange('departure_location', e.target.value)}
-                className="rounded-2xl"
+                onChange={(value) => handleInputChange('departure_location', value)}
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="to">going to (optional)</Label>
-              <Input
+              <LocationAutocomplete
                 id="to"
                 placeholder="e.g., Hanalei"
                 value={searchData.destination}
-                onChange={(e) => handleInputChange('destination', e.target.value)}
-                className="rounded-2xl"
+                onChange={(value) => handleInputChange('destination', value)}
               />
             </div>
           </div>
