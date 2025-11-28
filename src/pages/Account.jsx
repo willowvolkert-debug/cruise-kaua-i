@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, Star, Edit, Save, MessageCircle, Wind, Upload, Clock, FileText, Shield, HandHeart, Camera, ChevronRight, ChevronDown, DollarSign, MapPin } from "lucide-react";
+import { ShieldCheck, Star, Edit, Save, MessageCircle, Wind, Upload, Clock, FileText, Shield, HandHeart, Camera, ChevronRight, ChevronDown, DollarSign } from "lucide-react";
 import { format } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -382,22 +382,6 @@ export default function AccountPage() {
                                                 verify now
                                             </Button>
                                         )}
-                                    </div>
-                                    <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
-                                        <div className="flex items-center gap-2">
-                                            <MapPin className="w-4 h-4 text-gray-500" />
-                                            <span className="font-medium">Hawaii ID</span>
-                                            <span className="text-xs text-gray-500">(qualifies for local pricing)</span>
-                                        </div>
-                                        <input
-                                            type="checkbox"
-                                            checked={user.has_hawaii_id || false}
-                                            onChange={async (e) => {
-                                                await base44.auth.updateMe({ has_hawaii_id: e.target.checked });
-                                                loadData();
-                                            }}
-                                            className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary"
-                                        />
                                     </div>
                                     <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
                                         <span className="font-medium">vehicle</span>
