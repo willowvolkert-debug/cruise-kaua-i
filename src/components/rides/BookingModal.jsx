@@ -6,25 +6,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { base44 } from "@/api/base44Client";
-import { DollarSign, CreditCard, Plus, Navigation, Star } from "lucide-react";
+import { CreditCard, Navigation, Star, Loader2 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
+import { createRideCheckout } from "@/functions/createRideCheckout";
 
 export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }) {
   const [bookingData, setBookingData] = useState({ 
     seats_booked: 1, 
     description: '', 
     has_luggage: false,
-    payment_method_id: null,
     wants_detour_service: false,
     detour_destination: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  const [paymentMethods, setPaymentMethods] = useState([]);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const [driverProfile, setDriverProfile] = useState(null);
   const [driverRatings, setDriverRatings] = useState([]);
 
@@ -35,7 +30,6 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
           seats_booked: 1, 
           description: '', 
           has_luggage: false,
-          payment_method_id: null,
           wants_detour_service: false,
           detour_destination: ''
         });
@@ -46,18 +40,6 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
     try {
       const user = await base44.auth.me();
       setCurrentUser(user);
-
-      // Load user's payment methods
-      const allMethods = await base44.entities.PaymentMethod.list();
-      const userMethods = allMethods.filter(pm => pm.user_id === user.id);
-      setPaymentMethods(userMethods);
-
-      // Auto-select default payment method
-      const defaultMethod = userMethods.find(pm => pm.is_default);
-      if (defaultMethod) {
-        setSelectedPaymentMethod(defaultMethod);
-        setBookingData(prev => ({ ...prev, payment_method_id: defaultMethod.id }));
-      }
 
       // Load driver profile and ratings
       if (ride?.driver_id) {
@@ -80,37 +62,46 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
     e.preventDefault();
     if (!currentUser) return;
 
-    if (paymentMethods.length === 0) {
-      alert("Please add a payment method in your Account page before booking a ride.");
-      return;
-    }
-
-    if (!bookingData.payment_method_id) {
-      alert("Please select a payment method.");
+    if (!bookingData.description) {
+      alert("Please tell the driver why you need a ride.");
       return;
     }
     
     setIsSubmitting(true);
-    const detourFee = bookingData.wants_detour_service ? 5 : 0;
-    const isLocal = currentUser?.has_hawaii_id === true;
-    const pricePerSeat = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);
-    const baseAmount = (bookingData.seats_booked || 0) * pricePerSeat + detourFee;
-    const connectFee = baseAmount * 0.10;
-    const totalAmount = baseAmount + connectFee;
     
-    const bookingDetails = {
-      ...bookingData,
-      passenger_name: currentUser.full_name,
-      passenger_username: currentUser.username,
-      ride_id: ride.id,
-      total_amount: totalAmount,
-      seats_booked: parseInt(bookingData.seats_booked),
-      payment_status: 'pending',
-      booking_status: 'pending',
-      detour_fee: detourFee
-    };
-    await onConfirmBooking(bookingDetails);
-    setIsSubmitting(false);
+    try {
+      const detourFee = bookingData.wants_detour_service ? 5 : 0;
+      const isLocal = currentUser?.has_hawaii_id === true;
+      const pricePerSeat = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);
+      const baseAmount = (bookingData.seats_booked || 0) * pricePerSeat;
+
+      // Create checkout session
+      const { data } = await createRideCheckout({
+        ride_id: ride.id,
+        seats_booked: parseInt(bookingData.seats_booked),
+        base_amount: baseAmount,
+        detour_fee: detourFee,
+        description: bookingData.description,
+        has_luggage: bookingData.has_luggage,
+        wants_detour_service: bookingData.wants_detour_service,
+        detour_destination: bookingData.detour_destination,
+        driver_id: ride.driver_id,
+        driver_username: driverProfile?.username || '',
+        success_url: window.location.origin + window.location.pathname,
+        cancel_url: window.location.origin + window.location.pathname
+      });
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      // Redirect to Stripe Checkout
+      window.location.href = data.checkout_url;
+    } catch (error) {
+      console.error("Error creating checkout:", error);
+      alert("Error creating payment: " + error.message);
+      setIsSubmitting(false);
+    }
   };
 
   if (!ride) return null;
