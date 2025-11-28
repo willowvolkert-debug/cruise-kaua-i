@@ -552,7 +552,7 @@ export default function InboxPage() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-yellow-700 mb-4">
+                            <p className="text-gray-600 mb-4">
                                 Waiting for drivers to accept your ride requests
                             </p>
                             <div className="space-y-3">
