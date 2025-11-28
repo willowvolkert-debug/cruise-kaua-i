@@ -38,6 +38,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   }, [isOpen, ride]);
 
   const loadData = async () => {
+    setIsLoading(true);
     try {
       const user = await base44.auth.me();
       setCurrentUser(user);
@@ -51,16 +52,19 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         ]);
         
         const driver = allUsers.find(u => u.id === ride.driver_id);
+        console.log("Driver found:", driver);
         setDriverProfile(driver);
 
         const ratings = allRatings.filter(r => 
           r.rated_user_id === ride.driver_id && r.trip_role === 'driver'
         );
+        console.log("Driver ratings:", ratings);
         setDriverRatings(ratings);
       }
     } catch (error) {
       console.error("Error loading data:", error);
     }
+    setIsLoading(false);
   };
   
   const handleRequestToBook = async (e) => {
