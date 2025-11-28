@@ -247,7 +247,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               </div>
             )}
 
-            <div className="bg-yellow-50 rounded-lg p-4 space-y-2">
+            <div className="bg-gray-50 rounded-lg p-4 space-y-2 border border-gray-200">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-700">Ride cost:</span>
                 <span className="font-medium">${((bookingData.seats_booked || 0) * pricePerSeat).toFixed(2)}</span>
@@ -262,7 +262,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                 <span className="text-gray-700">Connect fee (10%):</span>
                 <span className="font-medium">${connectFee.toFixed(2)}</span>
               </div>
-              <div className="border-t border-yellow-200 pt-2 flex justify-between">
+              <div className="border-t border-gray-200 pt-2 flex justify-between">
                 <span className="font-semibold text-secondary">Total:</span>
                 <div className="flex items-center gap-2">
                   <span className="text-xl font-bold text-primary">
