@@ -480,7 +480,16 @@ export default function AdminPage() {
                           </Badge>
                         )}
                         {user.role === 'admin' && (
-                          <Badge className="bg-blue-100 text-blue-800">admin</Badge>
+                          <Badge className="bg-purple-100 text-purple-800">admin</Badge>
+                        )}
+                        {user.role === 'driver' && (
+                          <Badge className="bg-green-100 text-green-800">driver</Badge>
+                        )}
+                        {user.role === 'rider' && (
+                          <Badge className="bg-blue-100 text-blue-800">rider</Badge>
+                        )}
+                        {(!user.role || user.role === 'user') && (
+                          <Badge className="bg-gray-100 text-gray-600">user</Badge>
                         )}
                       </div>
                     </div>
