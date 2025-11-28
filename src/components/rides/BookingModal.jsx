@@ -24,7 +24,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   const [driverRatings, setDriverRatings] = useState([]);
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && ride) {
         loadData();
         setBookingData({ 
           seats_booked: 1, 
@@ -34,7 +34,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
           detour_destination: ''
         });
     }
-  }, [isOpen]);
+  }, [isOpen, ride]);
 
   const loadData = async () => {
     try {
