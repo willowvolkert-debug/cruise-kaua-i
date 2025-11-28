@@ -68,8 +68,8 @@ export default function FindRide() {
           return;
         }
 
-        if (!user.bank_account_linked) {
-          setError("Please link your bank account before booking rides. Go to Account page.");
+        if (user.role !== 'rider' && user.role !== 'driver' && user.role !== 'admin') {
+          setError("Your account must be upgraded to rider status before booking rides. Please complete your profile and license verification.");
           return;
         }
 
@@ -182,8 +182,8 @@ export default function FindRide() {
       return;
     }
 
-    if (!currentUser.bank_account_linked) {
-      setError("Please link your bank account before booking rides.");
+    if (currentUser.role !== 'rider' && currentUser.role !== 'driver' && currentUser.role !== 'admin') {
+      setError("Your account must be upgraded to rider status before booking rides.");
       return;
     }
     
