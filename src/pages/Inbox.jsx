@@ -12,6 +12,7 @@ import ReportModal from "../components/inbox/ReportModal";
 import ChatModal from "../components/inbox/ChatModal";
 import RiderRequestModal from "../components/inbox/RiderRequestModal";
 import CancelBookingModal from "../components/rides/CancelBookingModal";
+import StripePaymentModal from "../components/payment/StripePaymentModal";
 import { format } from "date-fns";
 import { sendNotification } from "../components/utils/notifications";
 
