@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -92,19 +91,20 @@ export default function AdminPage() {
 
     setIsProcessing(true);
     try {
+      // License approval upgrades user to "rider" role
       await base44.entities.User.update(selectedUser.id, {
         drivers_license_verified: true,
         drivers_license_pending_review: false,
-        can_drive: true
+        role: 'rider'
       });
 
       if ('Notification' in window && Notification.permission === 'granted') {
         new Notification('License Verified!', {
-          body: `${selectedUser.full_name}'s driver's license has been verified.`,
+          body: `${selectedUser.full_name}'s driver's license has been verified. They are now a rider.`,
         });
       }
 
-      alert(`License approved for ${selectedUser.full_name}. They can now post rides.`);
+      alert(`License approved for ${selectedUser.full_name}. Their account has been upgraded to RIDER and they can now book rides.`);
       setShowLicenseModal(false);
       loadData();
     } catch (error) {
@@ -142,12 +142,21 @@ export default function AdminPage() {
 
     setIsProcessing(true);
     try {
+      // Vehicle approval upgrades rider to "driver" role if they have bank info
+      const isFullyVerifiedDriver = selectedUser.drivers_license_verified && selectedUser.bank_account_linked;
+      
       await base44.entities.User.update(selectedUser.id, {
         vehicle_verified: true,
-        vehicle_pending_review: false
+        vehicle_pending_review: false,
+        can_drive: true,
+        role: isFullyVerifiedDriver ? 'driver' : selectedUser.role
       });
 
-      alert(`Vehicle approved for ${selectedUser.full_name}.`);
+      if (isFullyVerifiedDriver) {
+        alert(`Vehicle approved for ${selectedUser.full_name}. Their account has been upgraded to DRIVER and they can now post rides!`);
+      } else {
+        alert(`Vehicle approved for ${selectedUser.full_name}. They still need to complete bank account setup to become a driver.`);
+      }
       setShowVehicleModal(false);
       loadData();
     } catch (error) {
