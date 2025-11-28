@@ -811,8 +811,8 @@ export default function InboxPage() {
                         <DialogContent className="sm:max-w-md bg-white rounded-3xl">
                             <div className="flex flex-col items-center justify-center py-8">
                                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-                                <p className="text-lg font-semibold text-secondary">Processing Payment...</p>
-                                <p className="text-sm text-gray-600">Charging the rider's saved card</p>
+                                <p className="text-lg font-semibold text-secondary">Processing...</p>
+                                            <p className="text-sm text-gray-600">Confirming the booking</p>
                             </div>
                         </DialogContent>
                     </Dialog>
