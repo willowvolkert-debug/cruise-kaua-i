@@ -685,27 +685,27 @@ export default function AccountPage() {
                     <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
                         <CardHeader><CardTitle className="text-xl text-secondary">legal agreements</CardTitle></CardHeader>
                         <CardContent className="space-y-4">
-                            <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
-                                <div className="flex items-center gap-2">
-                                    <FileText className="w-4 h-4 text-gray-500" />
-                                    <span className="font-medium">terms of service</span>
-                                </div>
-                                <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
-                            </div>
-                            <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
-                                <div className="flex items-center gap-2">
-                                    <Shield className="w-4 h-4 text-gray-500" />
-                                    <span className="font-medium">privacy policy</span>
-                                </div>
-                                <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
-                            </div>
-                            <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
-                                <div className="flex items-center gap-2">
-                                    <HandHeart className="w-4 h-4 text-gray-500" />
-                                    <span className="font-medium">community agreement</span>
-                                </div>
-                                <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
-                            </div>
+                            <Link to={createPageUrl("TermsOfService")} className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-colors cursor-pointer">
+                                            <div className="flex items-center gap-2">
+                                                <FileText className="w-4 h-4 text-gray-500" />
+                                                <span className="font-medium">terms of service</span>
+                                            </div>
+                                            <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
+                                        </Link>
+                                        <Link to={createPageUrl("PrivacyPolicy")} className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-colors cursor-pointer">
+                                            <div className="flex items-center gap-2">
+                                                <Shield className="w-4 h-4 text-gray-500" />
+                                                <span className="font-medium">privacy policy</span>
+                                            </div>
+                                            <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
+                                        </Link>
+                                        <Link to={createPageUrl("CommunityAgreement")} className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-colors cursor-pointer">
+                                            <div className="flex items-center gap-2">
+                                                <HandHeart className="w-4 h-4 text-gray-500" />
+                                                <span className="font-medium">community agreement</span>
+                                            </div>
+                                            <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
+                                        </Link>
                         </CardContent>
                     </Card>
                 )}
