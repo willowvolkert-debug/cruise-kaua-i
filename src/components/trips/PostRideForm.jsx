@@ -72,6 +72,16 @@ export default function PostRideForm() {
           return;
         }
 
+        if (!user.bank_account_linked) {
+          setError("You must link your bank account before posting rides. Please add your payout information in your Account page.");
+          return;
+        }
+
+        if (user.role !== 'driver' && user.role !== 'admin') {
+          setError("You must be verified as a driver to post rides. Please complete all driver requirements in your Account page.");
+          return;
+        }
+
         if (user.vehicle_make && user.vehicle_model) {
           setRideData(prev => ({
             ...prev,
@@ -138,6 +148,16 @@ export default function PostRideForm() {
       setError("You must verify your vehicle before posting rides.");
       return;
     }
+
+    if (!currentUser.bank_account_linked) {
+      setError("You must link your bank account before posting rides.");
+      return;
+    }
+
+    if (currentUser.role !== 'driver' && currentUser.role !== 'admin') {
+      setError("You must be verified as a driver to post rides.");
+      return;
+    }
     
     setIsSubmitting(true);
     try {
@@ -197,6 +217,8 @@ export default function PostRideForm() {
                       currentUser?.community_agreement_accepted &&
                       currentUser?.drivers_license_verified && 
                       currentUser?.vehicle_verified && 
+                      currentUser?.bank_account_linked &&
+                      (currentUser?.role === 'driver' || currentUser?.role === 'admin') &&
                       (!currentUser?.pending_ratings || currentUser.pending_ratings.length === 0);
 
   return (
