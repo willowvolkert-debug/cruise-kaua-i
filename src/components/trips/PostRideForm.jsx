@@ -236,7 +236,7 @@ export default function PostRideForm() {
         </Button>
       </div>
 
-      {error && (
+      {error && currentUser?.profile_complete && currentUser?.drivers_license_verified && (
         <Alert variant="destructive" className="rounded-2xl border-red-200">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>{error}</AlertDescription>
