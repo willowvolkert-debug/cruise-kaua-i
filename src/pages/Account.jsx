@@ -132,8 +132,8 @@ export default function AccountPage() {
         const updatedUser = await base44.auth.me();
         if (isProfileComplete && updatedUser.drivers_license_verified && 
             updatedUser.terms_accepted && updatedUser.privacy_policy_accepted && 
-            updatedUser.community_agreement_accepted && updatedUser.role === 'user') {
-            await base44.auth.updateMe({ role: 'rider' });
+            updatedUser.community_agreement_accepted && (!updatedUser.user_type || updatedUser.user_type === 'new')) {
+            await base44.auth.updateMe({ user_type: 'rider' });
         }
 
         await loadData();
@@ -147,8 +147,8 @@ export default function AccountPage() {
         const updatedUser = await base44.auth.me();
         if (updatedUser.profile_complete && updatedUser.drivers_license_verified && 
             updatedUser.terms_accepted && updatedUser.privacy_policy_accepted && 
-            updatedUser.community_agreement_accepted && updatedUser.role === 'user') {
-            await base44.auth.updateMe({ role: 'rider' });
+            updatedUser.community_agreement_accepted && (!updatedUser.user_type || updatedUser.user_type === 'new')) {
+            await base44.auth.updateMe({ user_type: 'rider' });
         }
     };
 

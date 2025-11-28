@@ -68,7 +68,7 @@ export default function FindRide() {
           return;
         }
 
-        if (user.role !== 'rider' && user.role !== 'driver' && user.role !== 'admin') {
+        if (user.user_type !== 'rider' && user.user_type !== 'driver' && user.role !== 'admin') {
           setError("Your account must be upgraded to rider status before booking rides. Please complete your profile and license verification.");
           return;
         }
@@ -182,7 +182,7 @@ export default function FindRide() {
       return;
     }
 
-    if (currentUser.role !== 'rider' && currentUser.role !== 'driver' && currentUser.role !== 'admin') {
+    if (currentUser.user_type !== 'rider' && currentUser.user_type !== 'driver' && currentUser.role !== 'admin') {
       setError("Your account must be upgraded to rider status before booking rides.");
       return;
     }
