@@ -64,9 +64,7 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
     <>
       <SidebarHeader className="border-b border-gray-200 p-6 bg-white">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 bg-gradient-to-br from-orange-400 via-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-md">
-          </div>
-          <div>
+            <div>
             <h2 className="font-bold text-blue-500 text-2xl tracking-wide">cruise kauaʻi</h2>
             <p className="text-xs text-gray-500">sharing aloha one ride at a time</p>
           </div>
@@ -208,13 +206,9 @@ export default function Layout({ children, currentPageName }) {
         <main className="flex-1 flex flex-col">
           <header className="bg-white border-b border-gray-200 px-6 py-4 md:hidden">
             <div className="flex items-center gap-4">
-              <SidebarTrigger className="hover:bg-gray-100 p-2 rounded-2xl transition-colors duration-200" />
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-orange-400 via-red-500 to-red-600 rounded-xl flex items-center justify-center">
-                </div>
+                <SidebarTrigger className="hover:bg-gray-100 p-2 rounded-2xl transition-colors duration-200" />
                 <h1 className="text-xl font-bold text-secondary">cruise kauaʻi</h1>
               </div>
-            </div>
           </header>
 
           <div className="flex-1 overflow-auto bg-white">
