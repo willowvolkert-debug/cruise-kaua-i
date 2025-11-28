@@ -22,11 +22,11 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
       
       setIsLoading(true);
       try {
-        const allUsers = await User.list();
+        const allUsers = await base44.entities.User.list();
         const rider = allUsers.find(u => u.id === booking.passenger_id);
         setRiderProfile(rider);
 
-        const allRatings = await Rating.list();
+        const allRatings = await base44.entities.Rating.list();
         const ratings = allRatings.filter(r => 
           r.rated_user_id === booking.passenger_id && r.trip_role === 'passenger'
         );
