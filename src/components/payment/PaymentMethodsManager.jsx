@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { CreditCard, Plus, Trash2, Star, Lock } from "lucide-react";
+import { CreditCard, Plus, Trash2, Star, Lock, Loader2 } from "lucide-react";
+import { createSetupIntent } from "@/functions/createSetupIntent";
+import { savePaymentMethod } from "@/functions/savePaymentMethod";
+
+const STRIPE_PUBLISHABLE_KEY = "pk_test_51SC94PLTsbLecFgZNL9kvcsgP3kOkf1P7DvUaW00zboNcA2yPiUAomnAFYYdlNynuQfGF8oBfh4RyaPlQuK0jCWK005GMUb5Qf";
 import {
   Dialog,
   DialogContent,
@@ -70,23 +73,79 @@ export default function PaymentMethodsManager() {
     setIsSubmitting(true);
 
     try {
-      const last4 = newCard.number.replace(/\s/g, '').slice(-4);
+      // Load Stripe.js if not already loaded
+      if (!window.Stripe) {
+        const script = document.createElement('script');
+        script.src = 'https://js.stripe.com/v3/';
+        script.async = true;
+        await new Promise((resolve, reject) => {
+          script.onload = resolve;
+          script.onerror = reject;
+          document.body.appendChild(script);
+        });
+      }
+
+      const stripe = window.Stripe(STRIPE_PUBLISHABLE_KEY);
+
+      // Create setup intent on backend
+      const { data: setupData } = await createSetupIntent({});
+      
+      if (setupData.error) {
+        throw new Error(setupData.error);
+      }
+
       const [exp_month, exp_year] = newCard.expiry.split(' / ');
 
-      // In production, this would tokenize with Stripe first
-      const stripePaymentMethodId = `pm_${Date.now()}`; // Simulated
+      // Create payment method with Stripe
+      const { paymentMethod, error: pmError } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: {
+          number: newCard.number.replace(/\s/g, ''),
+          exp_month: parseInt(exp_month),
+          exp_year: parseInt('20' + exp_year),
+          cvc: newCard.cvc
+        },
+        billing_details: {
+          name: newCard.name
+        }
+      });
+
+      if (pmError) {
+        throw new Error(pmError.message);
+      }
+
+      // Confirm setup intent
+      const { setupIntent, error: confirmError } = await stripe.confirmCardSetup(
+        setupData.clientSecret,
+        {
+          payment_method: paymentMethod.id
+        }
+      );
+
+      if (confirmError) {
+        throw new Error(confirmError.message);
+      }
+
+      // Save payment method details to our database
+      const { data: savedMethod } = await savePaymentMethod({ 
+        payment_method_id: paymentMethod.id 
+      });
+
+      if (savedMethod.error) {
+        throw new Error(savedMethod.error);
+      }
 
       const isFirstCard = paymentMethods.length === 0;
 
       await base44.entities.PaymentMethod.create({
         user_id: currentUser.id,
-        card_last4: last4,
-        card_brand: 'Visa', // In production, detect from card number
-        exp_month: exp_month,
-        exp_year: exp_year,
+        card_last4: savedMethod.card_last4,
+        card_brand: savedMethod.card_brand,
+        exp_month: savedMethod.exp_month,
+        exp_year: savedMethod.exp_year,
         cardholder_name: newCard.name,
-        is_default: isFirstCard, // First card is automatically default
-        stripe_payment_method_id: stripePaymentMethodId
+        is_default: isFirstCard,
+        stripe_payment_method_id: savedMethod.stripe_payment_method_id
       });
 
       setNewCard({ name: '', number: '', expiry: '', cvc: '' });
@@ -94,7 +153,7 @@ export default function PaymentMethodsManager() {
       loadData();
     } catch (error) {
       console.error("Error adding payment method:", error);
-      alert("Error adding payment method. Please try again.");
+      alert("Error adding payment method: " + error.message);
     }
 
     setIsSubmitting(false);
