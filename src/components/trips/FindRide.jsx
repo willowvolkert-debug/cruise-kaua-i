@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, Calendar, Users, AlertCircle, User as UserIcon, Bell, HelpCircle, Star } from "lucide-react";
+import { MapPin, Calendar, Users, AlertCircle, HelpCircle, Star, CheckCircle } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { format } from "date-fns";
@@ -15,6 +15,7 @@ import DriverProfileModal from "./DriverProfileModal";
 import BookingModal from "../rides/BookingModal";
 import FindRideTutorial from "../tutorial/FindRideTutorial";
 import LocationAutocomplete from "../shared/LocationAutocomplete";
+import { handlePaymentSuccess } from "@/functions/handlePaymentSuccess";
 
 export default function FindRide() {
   const [searchData, setSearchData] = useState({
