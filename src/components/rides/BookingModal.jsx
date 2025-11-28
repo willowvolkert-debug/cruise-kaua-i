@@ -43,11 +43,15 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
 
       // Load driver profile and ratings
       if (ride?.driver_id) {
-        const allUsers = await base44.entities.User.list();
+        // Fetch users and ratings in parallel
+        const [allUsers, allRatings] = await Promise.all([
+          base44.entities.User.list(),
+          base44.entities.Rating.list()
+        ]);
+        
         const driver = allUsers.find(u => u.id === ride.driver_id);
         setDriverProfile(driver);
 
-        const allRatings = await base44.entities.Rating.list();
         const ratings = allRatings.filter(r => 
           r.rated_user_id === ride.driver_id && r.trip_role === 'driver'
         );
