@@ -6,7 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { base44 } from "@/api/base44Client";
-import { DollarSign, CreditCard, Plus, Navigation } from "lucide-react";
+import { DollarSign, CreditCard, Plus, Navigation, Star } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -24,6 +25,8 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   const [currentUser, setCurrentUser] = useState(null);
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+  const [driverProfile, setDriverProfile] = useState(null);
+  const [driverRatings, setDriverRatings] = useState([]);
 
   useEffect(() => {
     if (isOpen) {
@@ -54,6 +57,19 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
       if (defaultMethod) {
         setSelectedPaymentMethod(defaultMethod);
         setBookingData(prev => ({ ...prev, payment_method_id: defaultMethod.id }));
+      }
+
+      // Load driver profile and ratings
+      if (ride?.driver_id) {
+        const allUsers = await base44.entities.User.list();
+        const driver = allUsers.find(u => u.id === ride.driver_id);
+        setDriverProfile(driver);
+
+        const allRatings = await base44.entities.Rating.list();
+        const ratings = allRatings.filter(r => 
+          r.rated_user_id === ride.driver_id && r.trip_role === 'driver'
+        );
+        setDriverRatings(ratings);
       }
     } catch (error) {
       console.error("Error loading data:", error);
@@ -116,6 +132,31 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         </DialogHeader>
 
         <form onSubmit={handleRequestToBook} className="space-y-4 pt-4">
+            {/* Driver Info */}
+            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl border border-gray-200">
+              <Avatar className="w-12 h-12">
+                <AvatarImage src={driverProfile?.profile_picture_url} />
+                <AvatarFallback className="bg-gradient-to-r from-primary to-secondary text-white font-bold">
+                  {ride?.driver_name?.split(' ').map(n => n[0]).join('').toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <p className="font-semibold text-secondary">{ride?.driver_name}</p>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  {driverRatings.length > 0 && (
+                    <div className="flex items-center gap-1">
+                      <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                      <span>
+                        {(driverRatings.reduce((sum, r) => sum + r.rating_value, 0) / driverRatings.length).toFixed(1)}
+                      </span>
+                      <span className="text-gray-400">({driverRatings.length})</span>
+                    </div>
+                  )}
+                  {ride?.car_model && <span>• {ride.car_model}</span>}
+                </div>
+              </div>
+            </div>
+
             <div className="space-y-2">
                 <Label htmlFor="seats">seats required</Label>
                 <Select value={bookingData.seats_booked.toString()} onValueChange={(v) => setBookingData(p=>({...p, seats_booked: parseInt(v, 10)}))}>
