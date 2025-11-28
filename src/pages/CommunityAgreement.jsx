@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,6 +22,15 @@ export default function CommunityAgreementPage() {
     setIsSubmitting(true);
     try {
       await base44.auth.updateMe({ community_agreement_accepted: true });
+      
+      // Auto-upgrade to rider if all requirements met
+      const updatedUser = await base44.auth.me();
+      if (updatedUser.profile_complete && updatedUser.drivers_license_verified && 
+          updatedUser.terms_accepted && updatedUser.privacy_policy_accepted && 
+          updatedUser.community_agreement_accepted && updatedUser.role === 'user') {
+        await base44.auth.updateMe({ role: 'rider' });
+      }
+      
       navigate(createPageUrl("Account"));
     } catch (error) {
       console.error("Error accepting community agreement:", error);
