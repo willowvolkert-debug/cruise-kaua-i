@@ -35,8 +35,7 @@ export default function InboxPage() {
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [bookingToCancel, setBookingToCancel] = useState(null);
     const [showReviewModal, setShowReviewModal] = useState(false);
-    const [showPaymentModal, setShowPaymentModal] = useState(false);
-    const [pendingAcceptBooking, setPendingAcceptBooking] = useState(null);
+    const [isProcessingPayment, setIsProcessingPayment] = useState(false);
     const [reviewData, setReviewData] = useState({ rating: 0, comment: '' });
     const [currentReviewUser, setCurrentReviewUser] = useState(null);
     const [currentReviewRide, setCurrentReviewRide] = useState(null);
@@ -203,24 +202,21 @@ export default function InboxPage() {
     };
 
     const handleAcceptRequest = async (booking) => {
-        // Store booking and show payment modal to rider
-        // For now, since the driver is accepting, we process payment from rider's saved card
-        setPendingAcceptBooking(booking);
-        setShowPaymentModal(true);
         setShowRiderRequestModal(false);
-    };
-
-    const handlePaymentSuccess = async (paymentData) => {
-        const booking = pendingAcceptBooking;
-        if (!booking) return;
+        setIsProcessingPayment(true);
 
         try {
+            // Process payment using rider's saved payment method
+            const { data: paymentResult } = await processRiderPayment({ booking_id: booking.id });
+
+            if (paymentResult.error) {
+                throw new Error(paymentResult.error);
+            }
+
             const ride = await base44.entities.Ride.get(booking.ride_id);
             
-            const baseAmount = booking.total_amount;
-            const connectFeeRate = ride.driver_license_state === 'HI' ? 0.10 : 0.30;
-            const connectFee = baseAmount * connectFeeRate;
-            const totalAmount = baseAmount + connectFee;
+            const totalAmount = paymentResult.amount;
+            const connectFee = paymentResult.connectFee;
 
             await base44.entities.Transaction.create({
                 booking_id: booking.id,
@@ -229,13 +225,13 @@ export default function InboxPage() {
                 payer_name: booking.passenger_name,
                 recipient_id: booking.driver_id,
                 recipient_name: user.full_name,
-                ride_amount: baseAmount,
+                ride_amount: booking.total_amount,
                 connect_fee: connectFee,
                 total_amount: totalAmount,
-                payment_method_last4: paymentData.last4,
-                payment_method_brand: paymentData.brand,
+                payment_method_last4: paymentResult.last4,
+                payment_method_brand: paymentResult.brand,
                 transaction_status: 'completed',
-                stripe_charge_id: paymentData.paymentIntentId
+                stripe_charge_id: paymentResult.paymentIntentId
             });
 
             const initialMessage = {
@@ -248,7 +244,7 @@ export default function InboxPage() {
             await base44.entities.RideBooking.update(booking.id, {
                 booking_status: 'confirmed',
                 payment_status: 'paid',
-                stripe_charge_id: paymentData.paymentIntentId,
+                stripe_charge_id: paymentResult.paymentIntentId,
                 messages: [initialMessage]
             });
 
@@ -265,13 +261,13 @@ export default function InboxPage() {
                 `${booking.passenger_name} can now join your trip.`
             );
 
-            alert(`Request accepted! Payment of $${totalAmount.toFixed(2)} has been processed successfully.`);
-            setShowPaymentModal(false);
-            setPendingAcceptBooking(null);
+            alert(`Request accepted! Payment of $${totalAmount.toFixed(2)} has been charged to the rider's card.`);
             loadData();
         } catch (error) {
             console.error("Error accepting request:", error);
-            alert("Error processing payment. Please try again.");
+            alert("Error processing payment: " + error.message);
+        } finally {
+            setIsProcessingPayment(false);
         }
     };
 
@@ -720,18 +716,16 @@ export default function InboxPage() {
                     recentChats={recentChats}
                 />
 
-                {pendingAcceptBooking && (
-                    <StripePaymentModal
-                        isOpen={showPaymentModal}
-                        onClose={() => {
-                            setShowPaymentModal(false);
-                            setPendingAcceptBooking(null);
-                        }}
-                        amount={pendingAcceptBooking.total_amount * 1.10}
-                        bookingId={pendingAcceptBooking.id}
-                        rideId={pendingAcceptBooking.ride_id}
-                        onSuccess={handlePaymentSuccess}
-                    />
+                {isProcessingPayment && (
+                    <Dialog open={true}>
+                        <DialogContent className="sm:max-w-md bg-white rounded-3xl">
+                            <div className="flex flex-col items-center justify-center py-8">
+                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+                                <p className="text-lg font-semibold text-secondary">Processing Payment...</p>
+                                <p className="text-sm text-gray-600">Charging the rider's saved card</p>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
                 )}
 
                 <Dialog open={showReviewModal} onOpenChange={setShowReviewModal}>
