@@ -720,6 +720,20 @@ export default function InboxPage() {
                     recentChats={recentChats}
                 />
 
+                {pendingAcceptBooking && (
+                    <StripePaymentModal
+                        isOpen={showPaymentModal}
+                        onClose={() => {
+                            setShowPaymentModal(false);
+                            setPendingAcceptBooking(null);
+                        }}
+                        amount={pendingAcceptBooking.total_amount * 1.10}
+                        bookingId={pendingAcceptBooking.id}
+                        rideId={pendingAcceptBooking.ride_id}
+                        onSuccess={handlePaymentSuccess}
+                    />
+                )}
+
                 <Dialog open={showReviewModal} onOpenChange={setShowReviewModal}>
                     <DialogContent className="sm:max-w-md bg-white rounded-3xl">
                         <DialogHeader>
