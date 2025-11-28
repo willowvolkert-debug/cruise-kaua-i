@@ -224,47 +224,6 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               </div>
             )}
 
-            <div className="space-y-2">
-              <Label>payment method *</Label>
-              {paymentMethods.length === 0 ? (
-                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <p className="text-sm text-yellow-800 mb-3">
-                    No payment methods available. Add one to continue.
-                  </p>
-                  <Link to={createPageUrl("Account")}>
-                    <Button type="button" size="sm" variant="outline" className="w-full">
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Payment Method
-                    </Button>
-                  </Link>
-                </div>
-              ) : (
-                <Select 
-                  value={bookingData.payment_method_id || ''} 
-                  onValueChange={(v) => {
-                    const method = paymentMethods.find(pm => pm.id === v);
-                    setSelectedPaymentMethod(method);
-                    setBookingData(p => ({...p, payment_method_id: v}));
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select payment method" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {paymentMethods.map(method => (
-                      <SelectItem key={method.id} value={method.id}>
-                        <div className="flex items-center gap-2">
-                          <CreditCard className="w-4 h-4" />
-                          <span>{method.card_brand} •••• {method.card_last4}</span>
-                          {method.is_default && <Badge className="text-xs">default</Badge>}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            </div>
-
             <div className="bg-yellow-50 rounded-lg p-4 space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-700">Ride cost:</span>
@@ -290,18 +249,28 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               </div>
             </div>
 
-            <p className="text-sm text-gray-600">
-              Payment will be processed automatically when the driver accepts your request.
-            </p>
+            <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <CreditCard className="w-5 h-5 text-blue-600" />
+              <p className="text-sm text-blue-800">
+                You'll be redirected to Stripe to complete payment securely.
+              </p>
+            </div>
 
             <DialogFooter className="pt-4">
               <Button type="button" variant="outline" onClick={onClose}>cancel</Button>
               <Button 
                 type="submit" 
-                disabled={isSubmitting || paymentMethods.length === 0} 
+                disabled={isSubmitting} 
                 className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
-                {isSubmitting ? 'sending request...' : 'request to book'}
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    redirecting...
+                  </>
+                ) : (
+                  'proceed to payment'
+                )}
               </Button>
             </DialogFooter>
         </form>
