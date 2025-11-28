@@ -214,33 +214,9 @@ export default function InboxPage() {
         setIsProcessingPayment(true);
 
         try {
-            // Process payment using rider's saved payment method
-            const { data: paymentResult } = await processRiderPayment({ booking_id: booking.id });
-
-            if (paymentResult.error) {
-                throw new Error(paymentResult.error);
-            }
-
+            // Payment is already processed via Stripe Checkout
+            // Just confirm the booking
             const ride = await base44.entities.Ride.get(booking.ride_id);
-            
-            const totalAmount = paymentResult.amount;
-            const connectFee = paymentResult.connectFee;
-
-            await base44.entities.Transaction.create({
-                booking_id: booking.id,
-                ride_id: booking.ride_id,
-                payer_id: booking.passenger_id,
-                payer_name: booking.passenger_name,
-                recipient_id: booking.driver_id,
-                recipient_name: user.full_name,
-                ride_amount: booking.total_amount,
-                connect_fee: connectFee,
-                total_amount: totalAmount,
-                payment_method_last4: paymentResult.last4,
-                payment_method_brand: paymentResult.brand,
-                transaction_status: 'completed',
-                stripe_charge_id: paymentResult.paymentIntentId
-            });
 
             const initialMessage = {
                 sender_id: booking.passenger_id,
@@ -251,8 +227,6 @@ export default function InboxPage() {
 
             await base44.entities.RideBooking.update(booking.id, {
                 booking_status: 'confirmed',
-                payment_status: 'paid',
-                stripe_charge_id: paymentResult.paymentIntentId,
                 messages: [initialMessage]
             });
 
@@ -264,16 +238,45 @@ export default function InboxPage() {
                 });
             }
 
+            // Send confirmation email to rider
+            const riders = await base44.entities.User.list();
+            const rider = riders.find(u => u.id === booking.passenger_id);
+            if (rider?.email) {
+                try {
+                    await base44.integrations.Core.SendEmail({
+                        to: rider.email,
+                        subject: `🎉 Your ride request was accepted!`,
+                        body: `
+    Hi ${booking.passenger_name},
+
+    Great news! Your ride request has been accepted by the driver.
+
+    Trip Details:
+    ${ride.departure_location} → ${ride.destination}
+    Date: ${ride.departure_date}
+    Time: ${ride.departure_time}
+
+    Please log into Cruise Kauaʻi to chat with your driver.
+
+    Mahalo,
+    Cruise Kauaʻi Team
+                        `.trim()
+                    });
+                } catch (emailError) {
+                    console.error("Error sending confirmation email:", emailError);
+                }
+            }
+
             sendNotification(
                 'Ride Request Accepted!',
                 `${booking.passenger_name} can now join your trip.`
             );
 
-            alert(`Request accepted! Payment of $${totalAmount.toFixed(2)} has been charged to the rider's card.`);
+            alert(`Request accepted! The rider has already paid and will be notified.`);
             loadData();
         } catch (error) {
             console.error("Error accepting request:", error);
-            alert("Error processing payment: " + error.message);
+            alert("Error accepting request: " + error.message);
         } finally {
             setIsProcessingPayment(false);
         }
