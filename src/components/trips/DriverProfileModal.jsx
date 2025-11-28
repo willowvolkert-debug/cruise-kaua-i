@@ -6,10 +6,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Star, User, Calendar, Car } from "lucide-react";
-import { User as UserEntity, Rating } from "@/entities/all";
+import { base44 } from "@/api/base44Client";
 import { format } from "date-fns";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
@@ -26,12 +26,12 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
       setIsLoading(true);
       try {
         // Get driver profile
-        const allUsers = await UserEntity.list();
+        const allUsers = await base44.entities.User.list();
         const driver = allUsers.find(u => u.id === ride.driver_id);
         setDriverProfile(driver);
 
         // Get driver ratings
-        const allRatings = await Rating.list();
+        const allRatings = await base44.entities.Rating.list();
         const ratings = allRatings.filter(r => 
           r.rated_user_id === ride.driver_id && r.trip_role === 'driver'
         );
@@ -67,8 +67,9 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
           <div className="space-y-6 py-4">
             {/* Driver Info */}
             <div className="flex items-center gap-4">
-              <Avatar className="w-20 h-20 bg-gradient-to-r from-primary to-secondary">
-                <AvatarFallback className="text-white font-bold text-2xl">
+              <Avatar className="w-20 h-20">
+                <AvatarImage src={driverProfile?.profile_picture_url} />
+                <AvatarFallback className="bg-gradient-to-r from-primary to-secondary text-white font-bold text-2xl">
                   {getInitials(ride.driver_name)}
                 </AvatarFallback>
               </Avatar>
@@ -123,7 +124,7 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Price per seat:</span>
-                  <span className="font-medium">${currentUser?.driver_license_state === 'HI' ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0)}</span>
+                  <span className="font-medium">${currentUser?.has_hawaii_id ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0)}</span>
                 </div>
                 {ride.car_model && (
                   <div className="flex justify-between">
