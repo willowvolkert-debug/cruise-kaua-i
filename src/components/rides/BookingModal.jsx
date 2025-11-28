@@ -134,27 +134,41 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         <form onSubmit={handleRequestToBook} className="space-y-4 pt-4">
             {/* Driver Info */}
             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl border border-gray-200">
-              <Avatar className="w-12 h-12">
-                <AvatarImage src={driverProfile?.profile_picture_url} />
-                <AvatarFallback className="bg-gradient-to-r from-primary to-secondary text-white font-bold">
-                  {ride?.driver_name?.split(' ').map(n => n[0]).join('').toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1">
-                <p className="font-semibold text-secondary">{ride?.driver_name}</p>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  {driverRatings.length > 0 && (
-                    <div className="flex items-center gap-1">
-                      <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-                      <span>
-                        {(driverRatings.reduce((sum, r) => sum + r.rating_value, 0) / driverRatings.length).toFixed(1)}
-                      </span>
-                      <span className="text-gray-400">({driverRatings.length})</span>
-                    </div>
-                  )}
-                  {ride?.car_model && <span>• {ride.car_model}</span>}
+              {isLoading ? (
+                <div className="flex items-center gap-3 w-full">
+                  <div className="w-12 h-12 bg-gray-200 rounded-full animate-pulse" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-24 animate-pulse" />
+                    <div className="h-3 bg-gray-200 rounded w-32 animate-pulse" />
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <>
+                  <Avatar className="w-12 h-12">
+                    <AvatarImage src={driverProfile?.profile_picture_url} />
+                    <AvatarFallback className="bg-gradient-to-r from-primary to-secondary text-white font-bold">
+                      {ride?.driver_name?.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <p className="font-semibold text-secondary">{ride?.driver_name}</p>
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      {driverRatings.length > 0 ? (
+                        <div className="flex items-center gap-1">
+                          <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                          <span>
+                            {(driverRatings.reduce((sum, r) => sum + r.rating_value, 0) / driverRatings.length).toFixed(1)}
+                          </span>
+                          <span className="text-gray-400">({driverRatings.length} reviews)</span>
+                        </div>
+                      ) : (
+                        <span className="text-gray-400">No reviews yet</span>
+                      )}
+                      {ride?.car_model && <span>• {ride.car_model}</span>}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="space-y-2">
