@@ -21,6 +21,7 @@ const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpp
 export default function InboxPage() {
     const [activeBookings, setActiveBookings] = useState([]);
     const [pendingRequests, setPendingRequests] = useState([]);
+    const [myPendingBookings, setMyPendingBookings] = useState([]);
     const [upcomingRides, setUpcomingRides] = useState([]);
     const [ridesNeedingReview, setRidesNeedingReview] = useState([]);
     const [user, setUser] = useState(null);
@@ -92,6 +93,13 @@ export default function InboxPage() {
                 b.booking_status === 'pending'
             );
             setPendingRequests(pendingBookingRequests);
+
+            // Get rider's own pending booking requests
+            const riderPendingBookings = allBookings.filter(b => 
+                b.passenger_id === currentUser.id && 
+                b.booking_status === 'pending'
+            );
+            setMyPendingBookings(riderPendingBookings);
 
             const userActiveBookings = allBookings.filter(b => 
                 (b.passenger_id === currentUser.id || b.driver_id === currentUser.id) && 
@@ -294,6 +302,24 @@ export default function InboxPage() {
     const handleCancelBooking = (booking) => {
         setBookingToCancel(booking);
         setShowCancelModal(true);
+    };
+
+    const handleCancelPendingRequest = async (booking) => {
+        if (!confirm("Are you sure you want to cancel this ride request?")) return;
+        
+        try {
+            await base44.entities.RideBooking.update(booking.id, {
+                booking_status: 'cancelled',
+                cancellation_reason: 'Cancelled by rider before acceptance',
+                cancellation_date: new Date().toISOString()
+            });
+            
+            alert("Ride request cancelled successfully.");
+            loadData();
+        } catch (error) {
+            console.error("Error cancelling request:", error);
+            alert("Error cancelling request. Please try again.");
+        }
     };
 
     const handleConfirmCancel = async (booking, reason) => {
@@ -510,6 +536,67 @@ export default function InboxPage() {
                                     </div>
                                 );
                             })}
+                        </CardContent>
+                    </Card>
+                )}
+
+                {myPendingBookings.length > 0 && (
+                    <Card className="shadow-lg border-yellow-200 bg-yellow-50 rounded-3xl">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-secondary">
+                                <Clock className="w-6 h-6 text-yellow-600"/>
+                                your pending requests ({myPendingBookings.length})
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-yellow-700 mb-4">
+                                Waiting for drivers to accept your ride requests
+                            </p>
+                            <div className="space-y-3">
+                                {myPendingBookings.map(booking => {
+                                    const ride = upcomingRides.find(r => r.id === booking.ride_id) || 
+                                                 { departure_location: 'Unknown', destination: 'Unknown', departure_date: '', departure_time: '' };
+                                    const driverUser = getUserById(booking.driver_id);
+                                    const driverUsername = driverUser?.username || booking.driver_username || 'Driver';
+                                    
+                                    return (
+                                        <div key={booking.id} className="p-4 bg-white rounded-lg border border-yellow-200">
+                                            <div className="space-y-2">
+                                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                    <Calendar className="w-4 h-4" />
+                                                    <span>{ride.departure_date ? format(new Date(ride.departure_date), "MMM d, yyyy") : 'TBD'}</span>
+                                                    {ride.departure_time && (
+                                                        <>
+                                                            <Clock className="w-4 h-4 ml-2" />
+                                                            <span>{ride.departure_time}</span>
+                                                        </>
+                                                    )}
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <MapPin className="w-4 h-4 text-primary" />
+                                                    <span className="font-semibold text-secondary">
+                                                        {ride.departure_location} → {ride.destination}
+                                                    </span>
+                                                </div>
+                                                <p className="text-sm text-gray-600">
+                                                    Driver: @{driverUsername} • {booking.seats_booked} seat(s) • ${booking.total_amount}
+                                                </p>
+                                                <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-300 rounded-2xl">
+                                                    Awaiting driver approval
+                                                </Badge>
+                                                <Button
+                                                    onClick={() => handleCancelPendingRequest(booking)}
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="w-full mt-2 border-red-300 text-red-600 hover:bg-red-50 rounded-2xl"
+                                                >
+                                                    Cancel Request
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
                         </CardContent>
                     </Card>
                 )}
