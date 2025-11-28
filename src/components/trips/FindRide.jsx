@@ -434,7 +434,6 @@ export default function FindRide() {
         isOpen={showBookingModal}
         onClose={() => setShowBookingModal(false)}
         ride={selectedRide}
-        onConfirmBooking={handleConfirmBooking}
       />
 
       <FindRideTutorial
