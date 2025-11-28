@@ -340,16 +340,12 @@ export default function AccountPage() {
 
                 <div className="grid md:grid-cols-3 gap-8">
                     <div className="md:col-span-2 space-y-8">
-                        <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
-                            <CardHeader><CardTitle className="text-xl text-secondary">notifications</CardTitle></CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
-                                    <span className="font-medium">push notifications</span>
-                                    {notificationsEnabled ? (
-                                        <Badge variant="default" className="bg-primary rounded-2xl border-primary">
-                                            <ShieldCheck className="w-4 h-4 mr-1"/>enabled
-                                        </Badge>
-                                    ) : (
+                        {!notificationsEnabled && (
+                            <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
+                                <CardHeader><CardTitle className="text-xl text-secondary">notifications</CardTitle></CardHeader>
+                                <CardContent className="space-y-4">
+                                    <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
+                                        <span className="font-medium">push notifications</span>
                                         <Button 
                                             size="sm" 
                                             variant="outline"
@@ -358,104 +354,106 @@ export default function AccountPage() {
                                         >
                                             enable now
                                         </Button>
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Card>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
 
-                        <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
-                            <CardHeader><CardTitle className="text-xl text-secondary">verification</CardTitle></CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
-                                    <span className="font-medium">driver's license</span>
-                                    {user.drivers_license_verified ? (
-                                        <Badge variant="default" className="bg-primary rounded-2xl border-primary"><ShieldCheck className="w-4 h-4 mr-1"/>verified</Badge>
-                                    ) : user.drivers_license_pending_review ? (
-                                        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 rounded-2xl">
-                                            <Clock className="w-4 h-4 mr-1"/>pending review
-                                        </Badge>
-                                    ) : (
-                                        <Button 
-                                            size="sm" 
-                                            variant="outline"
-                                            onClick={() => setShowLicenseModal(true)}
-                                            className="rounded-2xl border-gray-300"
-                                        >
-                                            <Upload className="w-4 h-4 mr-2"/>
-                                            verify now
-                                        </Button>
-                                    )}
-                                </div>
-                                <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
-                                    <span className="font-medium">vehicle</span>
-                                    {user.vehicle_verified ? (
-                                        <Link to={createPageUrl("VehicleDetails")}>
-                                            <Badge variant="default" className="bg-primary border-primary cursor-pointer hover:bg-primary/90 rounded-2xl">
-                                                <ShieldCheck className="w-4 h-4 mr-1"/>verified
+                        {!(user.drivers_license_verified && user.vehicle_verified) && (
+                            <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
+                                <CardHeader><CardTitle className="text-xl text-secondary">verification</CardTitle></CardHeader>
+                                <CardContent className="space-y-4">
+                                    <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
+                                        <span className="font-medium">driver's license</span>
+                                        {user.drivers_license_verified ? (
+                                            <Badge variant="default" className="bg-primary rounded-2xl border-primary"><ShieldCheck className="w-4 h-4 mr-1"/>verified</Badge>
+                                        ) : user.drivers_license_pending_review ? (
+                                            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 rounded-2xl">
+                                                <Clock className="w-4 h-4 mr-1"/>pending review
                                             </Badge>
-                                        </Link>
-                                    ) : user.vehicle_pending_review ? (
-                                        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 rounded-2xl">
-                                            <Clock className="w-4 h-4 mr-1"/>pending review
-                                        </Badge>
-                                    ) : (
-                                        <Link to={createPageUrl("VehicleDetails")}>
-                                            <Button size="sm" variant="outline" className="rounded-2xl border-gray-300">enter details</Button>
-                                        </Link>
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Card>
+                                        ) : (
+                                            <Button 
+                                                size="sm" 
+                                                variant="outline"
+                                                onClick={() => setShowLicenseModal(true)}
+                                                className="rounded-2xl border-gray-300"
+                                            >
+                                                <Upload className="w-4 h-4 mr-2"/>
+                                                verify now
+                                            </Button>
+                                        )}
+                                    </div>
+                                    <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
+                                        <span className="font-medium">vehicle</span>
+                                        {user.vehicle_verified ? (
+                                            <Link to={createPageUrl("VehicleDetails")}>
+                                                <Badge variant="default" className="bg-primary border-primary cursor-pointer hover:bg-primary/90 rounded-2xl">
+                                                    <ShieldCheck className="w-4 h-4 mr-1"/>verified
+                                                </Badge>
+                                            </Link>
+                                        ) : user.vehicle_pending_review ? (
+                                            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 rounded-2xl">
+                                                <Clock className="w-4 h-4 mr-1"/>pending review
+                                            </Badge>
+                                        ) : (
+                                            <Link to={createPageUrl("VehicleDetails")}>
+                                                <Button size="sm" variant="outline" className="rounded-2xl border-gray-300">enter details</Button>
+                                            </Link>
+                                        )}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
 
-                        <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
-                            <CardHeader><CardTitle className="text-xl text-secondary">legal agreements</CardTitle></CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
-                                    <div className="flex items-center gap-2">
-                                        <FileText className="w-4 h-4 text-gray-500" />
-                                        <span className="font-medium">terms of service</span>
+                        {!agreementsComplete && (
+                            <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
+                                <CardHeader><CardTitle className="text-xl text-secondary">legal agreements</CardTitle></CardHeader>
+                                <CardContent className="space-y-4">
+                                    <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
+                                        <div className="flex items-center gap-2">
+                                            <FileText className="w-4 h-4 text-gray-500" />
+                                            <span className="font-medium">terms of service</span>
+                                        </div>
+                                        {user.terms_accepted ? (
+                                            <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
+                                        ) : (
+                                            <Link to={createPageUrl("TermsOfService")}>
+                                                <Button size="sm" variant="outline" className="rounded-2xl border-gray-300">review & accept</Button>
+                                            </Link>
+                                        )}
                                     </div>
-                                    {user.terms_accepted ? (
-                                        <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
-                                    ) : (
-                                        <Link to={createPageUrl("TermsOfService")}>
-                                            <Button size="sm" variant="outline" className="rounded-2xl border-gray-300">review & accept</Button>
-                                        </Link>
-                                    )}
-                                </div>
-                                <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
-                                    <div className="flex items-center gap-2">
-                                        <Shield className="w-4 h-4 text-gray-500" />
-                                        <span className="font-medium">privacy policy</span>
+                                    <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
+                                        <div className="flex items-center gap-2">
+                                            <Shield className="w-4 h-4 text-gray-500" />
+                                            <span className="font-medium">privacy policy</span>
+                                        </div>
+                                        {user.privacy_policy_accepted ? (
+                                            <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
+                                        ) : (
+                                            <Link to={createPageUrl("PrivacyPolicy")}>
+                                                <Button size="sm" variant="outline" className="rounded-2xl border-gray-300">review & accept</Button>
+                                            </Link>
+                                        )}
                                     </div>
-                                    {user.privacy_policy_accepted ? (
-                                        <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
-                                    ) : (
-                                        <Link to={createPageUrl("PrivacyPolicy")}>
-                                            <Button size="sm" variant="outline" className="rounded-2xl border-gray-300">review & accept</Button>
-                                        </Link>
-                                    )}
-                                </div>
-                                <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
-                                    <div className="flex items-center gap-2">
-                                        <HandHeart className="w-4 h-4 text-gray-500" />
-                                        <span className="font-medium">community agreement</span>
+                                    <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
+                                        <div className="flex items-center gap-2">
+                                            <HandHeart className="w-4 h-4 text-gray-500" />
+                                            <span className="font-medium">community agreement</span>
+                                        </div>
+                                        {user.community_agreement_accepted ? (
+                                            <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
+                                        ) : (
+                                            <Link to={createPageUrl("CommunityAgreement")}>
+                                                <Button size="sm" variant="outline" className="rounded-2xl border-gray-300">review & accept</Button>
+                                            </Link>
+                                        )}
                                     </div>
-                                    {user.community_agreement_accepted ? (
-                                        <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
-                                    ) : (
-                                        <Link to={createPageUrl("CommunityAgreement")}>
-                                            <Button size="sm" variant="outline" className="rounded-2xl border-gray-300">review & accept</Button>
-                                        </Link>
-                                    )}
-                                </div>
-                                {!agreementsComplete && (
                                     <div className="p-3 bg-blue-50 border border-blue-200 rounded-2xl text-blue-800 text-sm">
                                         <strong>Required:</strong> You must accept all agreements before booking or posting rides.
                                     </div>
-                                )}
-                            </CardContent>
-                        </Card>
+                                </CardContent>
+                            </Card>
+                        )}
 
                         <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
                             <CardHeader><CardTitle className="text-xl text-secondary">ride history</CardTitle></CardHeader>
@@ -646,6 +644,55 @@ export default function AccountPage() {
                         <RatingsList ratings={passengerRatings} title="as a passenger" />
                     </CardContent>
                 </Card>
+
+                {(user.drivers_license_verified && user.vehicle_verified) && (
+                    <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
+                        <CardHeader><CardTitle className="text-xl text-secondary">verification</CardTitle></CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
+                                <span className="font-medium">driver's license</span>
+                                <Badge variant="default" className="bg-primary rounded-2xl border-primary"><ShieldCheck className="w-4 h-4 mr-1"/>verified</Badge>
+                            </div>
+                            <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
+                                <span className="font-medium">vehicle</span>
+                                <Link to={createPageUrl("VehicleDetails")}>
+                                    <Badge variant="default" className="bg-primary border-primary cursor-pointer hover:bg-primary/90 rounded-2xl">
+                                        <ShieldCheck className="w-4 h-4 mr-1"/>verified
+                                    </Badge>
+                                </Link>
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
+
+                {agreementsComplete && (
+                    <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
+                        <CardHeader><CardTitle className="text-xl text-secondary">legal agreements</CardTitle></CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
+                                <div className="flex items-center gap-2">
+                                    <FileText className="w-4 h-4 text-gray-500" />
+                                    <span className="font-medium">terms of service</span>
+                                </div>
+                                <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
+                            </div>
+                            <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
+                                <div className="flex items-center gap-2">
+                                    <Shield className="w-4 h-4 text-gray-500" />
+                                    <span className="font-medium">privacy policy</span>
+                                </div>
+                                <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
+                            </div>
+                            <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
+                                <div className="flex items-center gap-2">
+                                    <HandHeart className="w-4 h-4 text-gray-500" />
+                                    <span className="font-medium">community agreement</span>
+                                </div>
+                                <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
 
                 <footer className="pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
                     © {new Date().getFullYear()} Cruise Hawaiʻi. Specializing in carpooling and ridesharing across Hawaiʻi.
