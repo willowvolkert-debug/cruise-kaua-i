@@ -40,6 +40,7 @@ export default function FindRide() {
   const [showTutorial, setShowTutorial] = useState(false);
   const [driverProfiles, setDriverProfiles] = useState({});
   const [driverRatings, setDriverRatings] = useState({});
+  const [hasUnsupportedLocation, setHasUnsupportedLocation] = useState(false);
 
   useEffect(() => {
     const init = async () => {
@@ -240,6 +241,7 @@ export default function FindRide() {
                 placeholder="e.g., Lihue"
                 value={searchData.departure_location}
                 onChange={(value) => handleInputChange('departure_location', value)}
+                onValidationChange={(isUnsupported) => setHasUnsupportedLocation(prev => isUnsupported || prev)}
               />
             </div>
             <div className="space-y-2">
@@ -249,6 +251,7 @@ export default function FindRide() {
                 placeholder="e.g., Hanalei"
                 value={searchData.destination}
                 onChange={(value) => handleInputChange('destination', value)}
+                onValidationChange={(isUnsupported) => setHasUnsupportedLocation(isUnsupported)}
               />
             </div>
           </div>
@@ -389,7 +392,7 @@ export default function FindRide() {
       <div className="fixed bottom-6 right-6 z-50">
         <Button
           onClick={handleGo}
-          disabled={isLoading}
+          disabled={isLoading || hasUnsupportedLocation}
           size="lg"
           className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-8 py-4 rounded-full shadow-lg"
         >

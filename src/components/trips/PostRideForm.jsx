@@ -18,6 +18,7 @@ export default function PostRideForm() {
   const [error, setError] = useState(null);
   const [stops, setStops] = useState(['']);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [hasUnsupportedLocation, setHasUnsupportedLocation] = useState(false);
   const [rideData, setRideData] = useState({
     departure_location: '',
     destination: '',
@@ -240,6 +241,7 @@ export default function PostRideForm() {
                     value={rideData.departure_location}
                     onChange={(value) => handleInputChange('departure_location', value)}
                     placeholder="e.g., Lihue"
+                    onValidationChange={(isUnsupported) => setHasUnsupportedLocation(prev => isUnsupported || prev)}
                   />
                 </div>
                 <div className="space-y-2">
@@ -249,6 +251,7 @@ export default function PostRideForm() {
                     value={rideData.destination}
                     onChange={(value) => handleInputChange('destination', value)}
                     placeholder="e.g., Hanalei"
+                    onValidationChange={(isUnsupported) => setHasUnsupportedLocation(isUnsupported)}
                   />
                 </div>
               </div>
@@ -493,7 +496,7 @@ export default function PostRideForm() {
       <div className="fixed bottom-6 right-6 z-50">
         <Button
           onClick={handleSubmit}
-          disabled={isSubmitting || !canPostRide}
+          disabled={isSubmitting || !canPostRide || hasUnsupportedLocation}
           size="lg"
           className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-8 py-4 rounded-full shadow-lg"
         >
