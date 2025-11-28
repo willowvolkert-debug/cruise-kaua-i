@@ -198,7 +198,7 @@ export default function FindRide() {
 
   const handleConfirmBooking = async (bookingData) => {
     let initialMessage = bookingData.description;
-    
+
     if (bookingData.wants_detour_service && bookingData.detour_destination) {
       initialMessage = `${bookingData.description}\n\n🚗 DETOUR SERVICE REQUESTED: I would like to be driven to my final destination: ${bookingData.detour_destination}`;
     }
@@ -209,10 +209,40 @@ export default function FindRide() {
       driver_id: selectedRide.driver_id,
       booking_status: 'pending',
       description: initialMessage,
-      messages: []
+      messages: [],
+      initial_notification_sent: true
     };
-    
+
     await base44.entities.RideBooking.create(finalBookingData);
+
+    // Send immediate notification email to driver
+    const driverProfile = driverProfiles[selectedRide.driver_id];
+    if (driverProfile?.email) {
+      try {
+        await base44.integrations.Core.SendEmail({
+          to: driverProfile.email,
+          subject: `🚗 New ride request from ${currentUser.full_name}!`,
+          body: `
+  Hi ${driverProfile.full_name || 'Driver'},
+
+  You have a new ride request!
+
+  Rider: ${currentUser.full_name} (@${currentUser.username || 'user'})
+  Seats requested: ${bookingData.seats_booked}
+  Amount: $${bookingData.total_amount}
+
+  ${initialMessage ? `Rider's message: "${initialMessage}"` : ''}
+
+  Please log into Cruise Kauaʻi to accept or decline this request.
+
+  Mahalo,
+  Cruise Kauaʻi Team
+          `.trim()
+        });
+      } catch (emailError) {
+        console.error("Error sending notification email:", emailError);
+      }
+    }
 
     sendNotification(
       'Ride Request Sent!',
