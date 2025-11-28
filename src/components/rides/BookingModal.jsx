@@ -19,6 +19,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
     detour_destination: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
   const [driverProfile, setDriverProfile] = useState(null);
   const [driverRatings, setDriverRatings] = useState([]);
