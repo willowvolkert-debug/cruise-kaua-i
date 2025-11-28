@@ -1,18 +1,39 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
-import { MapPin, Loader2 } from "lucide-react";
+import { MapPin, Loader2, AlertTriangle } from "lucide-react";
+
+// Locations north of Lumahaʻi Beach - no service area
+const UNSUPPORTED_LOCATIONS = [
+  "haena", "ha'ena", "hāʻena", "haʻena",
+  "kee", "ke'e", "kēʻe", "keʻe", "kee beach",
+  "tunnels", "tunnels beach", "makua beach",
+  "wainiha", "wainihā",
+  "napali", "na pali", "nā pali",
+  "kalalau", "hanakapi'ai", "hanakapiai",
+  "limahuli"
+];
+
+const isUnsupportedLocation = (location) => {
+  if (!location) return false;
+  const normalized = location.toLowerCase().trim();
+  return UNSUPPORTED_LOCATIONS.some(loc => 
+    normalized.includes(loc) || loc.includes(normalized)
+  );
+};
 
 export default function LocationAutocomplete({ 
   value, 
   onChange, 
   placeholder, 
   id,
-  className = ""
+  className = "",
+  onValidationChange
 }) {
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [inputValue, setInputValue] = useState(value || '');
+  const [isUnsupported, setIsUnsupported] = useState(false);
   const wrapperRef = useRef(null);
   const debounceRef = useRef(null);
 
@@ -81,6 +102,11 @@ export default function LocationAutocomplete({
   const handleInputChange = (e) => {
     const newValue = e.target.value;
     setInputValue(newValue);
+    
+    const unsupported = isUnsupportedLocation(newValue);
+    setIsUnsupported(unsupported);
+    onValidationChange?.(unsupported);
+    
     onChange(newValue);
     setShowSuggestions(true);
 
@@ -96,6 +122,11 @@ export default function LocationAutocomplete({
   const handleSuggestionClick = (suggestion) => {
     const shortName = suggestion.name.split(',')[0].trim();
     setInputValue(shortName);
+    
+    const unsupported = isUnsupportedLocation(shortName);
+    setIsUnsupported(unsupported);
+    onValidationChange?.(unsupported);
+    
     onChange(shortName);
     setShowSuggestions(false);
     setSuggestions([]);
@@ -110,17 +141,26 @@ export default function LocationAutocomplete({
           value={inputValue}
           onChange={handleInputChange}
           onFocus={() => inputValue && setShowSuggestions(true)}
-          className={`rounded-2xl pr-10 ${className}`}
+          className={`rounded-2xl pr-10 ${isUnsupported ? 'border-red-500 focus:ring-red-500' : ''} ${className}`}
           autoComplete="off"
         />
         <div className="absolute right-3 top-1/2 -translate-y-1/2">
           {isLoading ? (
             <Loader2 className="w-4 h-4 text-gray-400 animate-spin" />
+          ) : isUnsupported ? (
+            <AlertTriangle className="w-4 h-4 text-red-500" />
           ) : (
             <MapPin className="w-4 h-4 text-gray-400" />
           )}
         </div>
       </div>
+      
+      {isUnsupported && (
+        <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+          <AlertTriangle className="w-3 h-3" />
+          No service north of Lumahaʻi Beach
+        </p>
+      )}
 
       {showSuggestions && suggestions.length > 0 && (
         <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-2xl shadow-lg max-h-60 overflow-y-auto">
