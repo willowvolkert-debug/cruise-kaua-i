@@ -76,12 +76,18 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
     
     setIsSubmitting(true);
     const detourFee = bookingData.wants_detour_service ? 5 : 0;
+    const isLocal = currentUser?.has_hawaii_id === true;
+    const pricePerSeat = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);
+    const baseAmount = (bookingData.seats_booked || 0) * pricePerSeat + detourFee;
+    const connectFee = baseAmount * 0.10;
+    const totalAmount = baseAmount + connectFee;
+    
     const bookingDetails = {
       ...bookingData,
       passenger_name: currentUser.full_name,
       passenger_username: currentUser.username,
       ride_id: ride.id,
-      total_amount: (bookingData.seats_booked || 0) * (ride?.price_per_seat || 0) + detourFee,
+      total_amount: totalAmount,
       seats_booked: parseInt(bookingData.seats_booked),
       payment_status: 'pending',
       booking_status: 'pending',
@@ -94,7 +100,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   if (!ride) return null;
   
   const detourFee = bookingData.wants_detour_service ? 5 : 0;
-  const isLocal = currentUser?.driver_license_state === 'HI';
+  const isLocal = currentUser?.has_hawaii_id === true;
   const pricePerSeat = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);
   const baseAmount = (bookingData.seats_booked || 0) * pricePerSeat + detourFee;
   const connectFee = baseAmount * 0.10;
