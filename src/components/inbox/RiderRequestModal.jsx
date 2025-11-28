@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Star, Check, X, Wind, MessageCircle, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { format } from "date-fns";
-import StripePaymentModal from "../payment/StripePaymentModal";
+
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
