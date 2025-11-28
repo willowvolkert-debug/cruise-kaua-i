@@ -31,14 +31,74 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Only the driver can accept this request' }, { status: 403 });
         }
 
-        // Get rider's payment method
-        const paymentMethods = await base44.asServiceRole.entities.PaymentMethod.filter({ 
-            id: booking.payment_method_id 
-        });
-        const paymentMethod = paymentMethods[0];
-
+        // Get rider's payment method - search by user_id and is_default, or by specific ID
+        let paymentMethod;
+        if (booking.payment_method_id) {
+            const paymentMethods = await base44.asServiceRole.entities.PaymentMethod.filter({ 
+                id: booking.payment_method_id 
+            });
+            paymentMethod = paymentMethods[0];
+        }
+        
+        // If no specific payment method, get the rider's default payment method
         if (!paymentMethod) {
-            return Response.json({ error: 'Rider payment method not found' }, { status: 400 });
+            const riderPaymentMethods = await base44.asServiceRole.entities.PaymentMethod.filter({ 
+                user_id: booking.passenger_id,
+                is_default: true
+            });
+            paymentMethod = riderPaymentMethods[0];
+        }
+
+        // Still no payment method? Get any payment method for this rider
+        if (!paymentMethod) {
+            const allRiderPaymentMethods = await base44.asServiceRole.entities.PaymentMethod.filter({ 
+                user_id: booking.passenger_id
+            });
+            paymentMethod = allRiderPaymentMethods[0];
+        }
+
+        if (!paymentMethod || !paymentMethod.stripe_payment_method_id) {
+            return Response.json({ error: 'Rider has no valid payment method saved. Please ask them to add a card.' }, { status: 400 });
+        }
+
+        // Get rider info to find or create Stripe customer
+        const riders = await base44.asServiceRole.entities.User.filter({ id: booking.passenger_id });
+        const rider = riders[0];
+
+        if (!rider) {
+            return Response.json({ error: 'Rider not found' }, { status: 404 });
+        }
+
+        // Get or create Stripe customer for the rider
+        let customerId = rider.stripe_customer_id;
+        
+        if (!customerId) {
+            // Create a new Stripe customer
+            const customer = await stripe.customers.create({
+                email: rider.email,
+                name: rider.full_name,
+                metadata: {
+                    user_id: rider.id
+                }
+            });
+            customerId = customer.id;
+            
+            // Save customer ID to user record
+            await base44.asServiceRole.entities.User.update(rider.id, {
+                stripe_customer_id: customerId
+            });
+        }
+
+        // Attach payment method to customer if not already attached
+        try {
+            await stripe.paymentMethods.attach(paymentMethod.stripe_payment_method_id, {
+                customer: customerId
+            });
+        } catch (attachError) {
+            // If already attached, that's fine
+            if (!attachError.message.includes('already been attached')) {
+                console.error('Error attaching payment method:', attachError);
+            }
         }
 
         // Get ride details for fee calculation
@@ -54,12 +114,10 @@ Deno.serve(async (req) => {
         const paymentIntent = await stripe.paymentIntents.create({
             amount: Math.round(totalAmount * 100), // Convert to cents
             currency: 'usd',
+            customer: customerId,
             payment_method: paymentMethod.stripe_payment_method_id,
             confirm: true,
-            automatic_payment_methods: {
-                enabled: true,
-                allow_redirects: 'never'
-            },
+            off_session: true,
             metadata: {
                 booking_id: booking_id,
                 ride_id: booking.ride_id,
