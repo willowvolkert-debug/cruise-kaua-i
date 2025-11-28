@@ -120,18 +120,36 @@ export default function AccountPage() {
             profilePicUrl = uploadResult.file_url;
         }
 
+        const isProfileComplete = !!(editData.username && editData.bio && editData.age && editData.gender && profilePicUrl);
+
         await base44.auth.updateMe({
             ...editData,
             profile_picture_url: profilePicUrl,
-            profile_complete: !!(editData.username && editData.bio && editData.age && editData.gender && profilePicUrl)
+            profile_complete: isProfileComplete
         });
+
+        // Auto-upgrade to rider if all requirements met
+        const updatedUser = await base44.auth.me();
+        if (isProfileComplete && updatedUser.drivers_license_verified && 
+            updatedUser.terms_accepted && updatedUser.privacy_policy_accepted && 
+            updatedUser.community_agreement_accepted && updatedUser.role === 'user') {
+            await base44.auth.updateMe({ role: 'rider' });
+        }
+
         await loadData();
         setIsEditing(false);
         setProfilePicFile(null);
     };
 
-    const handleLicenseVerificationSuccess = () => {
-        loadData();
+    const handleLicenseVerificationSuccess = async () => {
+        await loadData();
+        // Auto-upgrade to rider if profile is complete and license is verified
+        const updatedUser = await base44.auth.me();
+        if (updatedUser.profile_complete && updatedUser.drivers_license_verified && 
+            updatedUser.terms_accepted && updatedUser.privacy_policy_accepted && 
+            updatedUser.community_agreement_accepted && updatedUser.role === 'user') {
+            await base44.auth.updateMe({ role: 'rider' });
+        }
     };
 
     const handleEnableNotifications = async () => {
