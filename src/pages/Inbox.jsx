@@ -544,7 +544,7 @@ export default function InboxPage() {
                 )}
 
                 {myPendingBookings.length > 0 && (
-                    <Card className="shadow-lg border-yellow-200 bg-yellow-50 rounded-3xl">
+                    <Card className="shadow-lg border-gray-200 bg-gray-50 rounded-3xl">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-secondary">
                                 <Clock className="w-6 h-6 text-yellow-600"/>
