@@ -106,11 +106,24 @@ export default function InboxPage() {
             );
             setMyPendingBookings(riderPendingBookings);
 
-            const userActiveBookings = allBookings.filter(b => 
-                (b.passenger_id === currentUser.id || b.driver_id === currentUser.id) && 
-                b.booking_status === 'confirmed' &&
-                b.payment_status === 'paid'
-            );
+            console.log("Current user ID:", currentUser.id);
+            console.log("All bookings:", allBookings.map(b => ({
+                id: b.id,
+                passenger_id: b.passenger_id,
+                driver_id: b.driver_id,
+                booking_status: b.booking_status,
+                payment_status: b.payment_status
+            })));
+            
+            const userActiveBookings = allBookings.filter(b => {
+                const isUserInvolved = b.passenger_id === currentUser.id || b.driver_id === currentUser.id;
+                const isConfirmed = b.booking_status === 'confirmed';
+                const isPaid = b.payment_status === 'paid';
+                console.log("Booking check:", b.id, { isUserInvolved, isConfirmed, isPaid, passenger_id: b.passenger_id, driver_id: b.driver_id });
+                return isUserInvolved && isConfirmed && isPaid;
+            });
+            
+            console.log("Filtered userActiveBookings:", userActiveBookings);
 
             const now = new Date();
             const needsReview = [];
