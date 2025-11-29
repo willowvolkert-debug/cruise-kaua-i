@@ -57,9 +57,10 @@ export default function FindRide() {
         const paymentStatus = urlParams.get('payment');
 
         if (bookingId && paymentStatus === 'success') {
-          // Handle successful payment
+          // Handle successful payment - get session_id from URL if available
+          const sessionId = urlParams.get('session_id');
           try {
-            await handlePaymentSuccess({ booking_id: bookingId });
+            await handlePaymentSuccess({ booking_id: bookingId, session_id: sessionId });
             setPaymentSuccess(true);
             sendNotification(
               'Payment Successful!',
