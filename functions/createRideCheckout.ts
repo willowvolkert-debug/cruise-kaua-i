@@ -102,7 +102,7 @@ Deno.serve(async (req) => {
                 driver_id: driver_id,
                 total_amount: totalAmount.toString()
             },
-            success_url: success_url + `?booking_id=${booking.id}&payment=success`,
+            success_url: success_url + `?booking_id=${booking.id}&payment=success&session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: cancel_url + `?booking_id=${booking.id}&payment=cancelled`
         });
 
