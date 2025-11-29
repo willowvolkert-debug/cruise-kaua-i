@@ -563,7 +563,7 @@ export default function InboxPage() {
                                     const driverUsername = driverUser?.username || booking.driver_username || 'Driver';
                                     
                                     return (
-                                        <div key={booking.id} className="p-4 bg-white rounded-lg border border-yellow-200">
+                                        <div key={booking.id} className="p-4 bg-white rounded-lg border border-gray-200">
                                             <div className="space-y-2">
                                                 <div className="flex items-center gap-2 text-sm text-gray-600">
                                                     <Calendar className="w-4 h-4" />
