@@ -108,7 +108,8 @@ export default function InboxPage() {
 
             const userActiveBookings = allBookings.filter(b => 
                 (b.passenger_id === currentUser.id || b.driver_id === currentUser.id) && 
-                b.booking_status === 'confirmed'
+                b.booking_status === 'confirmed' &&
+                b.payment_status === 'paid'
             );
 
             const now = new Date();
@@ -158,7 +159,7 @@ export default function InboxPage() {
                 if (r.driver_id !== currentUser.id) return false;
                 if (r.status !== 'active' && r.status !== 'full') return false;
                 const rideDateTime = new Date(`${r.departure_date}T${r.departure_time || '23:59'}`);
-                return rideDateTime > now;
+                return rideDateTime >= now;
             });
             
             // Rides where I'm a confirmed passenger (from stillActive bookings)
@@ -168,7 +169,7 @@ export default function InboxPage() {
                 .filter(ride => {
                     if (!ride) return false;
                     const rideDateTime = new Date(`${ride.departure_date}T${ride.departure_time || '23:59'}`);
-                    return rideDateTime > now;
+                    return rideDateTime >= now;
                 });
             
             const uniqueUpcomingRides = Array.from(new Set([...myUpcomingRides, ...myBookedRides].map(ride => ride.id)))
