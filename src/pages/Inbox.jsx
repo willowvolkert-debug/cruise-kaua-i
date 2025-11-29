@@ -88,9 +88,11 @@ export default function InboxPage() {
             const allBookings = await base44.entities.RideBooking.list();
 
             const myRideIds = allRides.filter(r => r.driver_id === currentUser.id).map(r => r.id);
+            // Only show pending requests where payment has been completed
             const pendingBookingRequests = allBookings.filter(b => 
                 myRideIds.includes(b.ride_id) && 
-                b.booking_status === 'pending'
+                b.booking_status === 'pending' &&
+                b.payment_status === 'paid'
             );
             setPendingRequests(pendingBookingRequests);
 
@@ -558,13 +560,6 @@ export default function InboxPage() {
                             </p>
                             <div className="space-y-3">
                                 {myPendingBookings.map(booking => {
-                                    // Look up ride from all rides, not just upcoming (since pending bookings aren't confirmed yet)
-                                    const allRidesData = upcomingRides;
-                                    let ride = allRidesData.find(r => r.id === booking.ride_id);
-                                    if (!ride) {
-                                        // Fetch ride info from booking metadata or show placeholder
-                                        ride = { departure_location: 'Loading...', destination: 'Loading...', departure_date: '', departure_time: '' };
-                                    }
                                     const driverUser = getUserById(booking.driver_id);
                                     const driverUsername = driverUser?.username || booking.driver_username || 'Driver';
                                     
