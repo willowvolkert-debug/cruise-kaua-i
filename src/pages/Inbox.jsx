@@ -94,10 +94,11 @@ export default function InboxPage() {
             );
             setPendingRequests(pendingBookingRequests);
 
-            // Get rider's own pending booking requests
+            // Get rider's own pending booking requests (only show if payment is completed)
             const riderPendingBookings = allBookings.filter(b => 
                 b.passenger_id === currentUser.id && 
-                b.booking_status === 'pending'
+                b.booking_status === 'pending' &&
+                b.payment_status === 'paid'
             );
             setMyPendingBookings(riderPendingBookings);
 
@@ -557,8 +558,13 @@ export default function InboxPage() {
                             </p>
                             <div className="space-y-3">
                                 {myPendingBookings.map(booking => {
-                                    const ride = upcomingRides.find(r => r.id === booking.ride_id) || 
-                                                 { departure_location: 'Unknown', destination: 'Unknown', departure_date: '', departure_time: '' };
+                                    // Look up ride from all rides, not just upcoming (since pending bookings aren't confirmed yet)
+                                    const allRidesData = upcomingRides;
+                                    let ride = allRidesData.find(r => r.id === booking.ride_id);
+                                    if (!ride) {
+                                        // Fetch ride info from booking metadata or show placeholder
+                                        ride = { departure_location: 'Loading...', destination: 'Loading...', departure_date: '', departure_time: '' };
+                                    }
                                     const driverUser = getUserById(booking.driver_id);
                                     const driverUsername = driverUser?.username || booking.driver_username || 'Driver';
                                     

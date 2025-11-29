@@ -103,7 +103,7 @@ export default function TransactionHistory() {
                   </div>
                   <div className="text-right">
                     <p className={`text-lg font-bold ${isPayment ? 'text-red-600' : 'text-green-600'}`}>
-                      {isPayment ? '-' : '+'}${transaction.total_amount.toFixed(2)}
+                      {isPayment ? '-' : '+'}${isPayment ? transaction.total_amount.toFixed(2) : transaction.ride_amount.toFixed(2)}
                     </p>
                     <Badge className={getStatusColor(transaction.transaction_status)}>
                       {transaction.transaction_status}
@@ -112,14 +112,21 @@ export default function TransactionHistory() {
                 </div>
                 
                 <div className="mt-3 pt-3 border-t border-gray-200 text-sm text-gray-600">
-                  <div className="flex justify-between">
-                    <span>Ride amount:</span>
-                    <span>${transaction.ride_amount.toFixed(2)}</span>
-                  </div>
-                  {isPayment && (
-                    <div className="flex justify-between">
-                      <span>Connect fee (10%):</span>
-                      <span>${transaction.connect_fee.toFixed(2)}</span>
+                  {isPayment ? (
+                    <>
+                      <div className="flex justify-between">
+                        <span>Ride amount (to driver):</span>
+                        <span>${transaction.ride_amount.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Connect fee:</span>
+                        <span>${transaction.connect_fee.toFixed(2)}</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex justify-between text-green-700">
+                      <span>Your payout:</span>
+                      <span>${transaction.ride_amount.toFixed(2)}</span>
                     </div>
                   )}
                 </div>
