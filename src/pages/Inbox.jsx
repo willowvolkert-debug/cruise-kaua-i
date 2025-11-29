@@ -584,7 +584,7 @@ export default function InboxPage() {
                                                 <p className="text-sm text-gray-600">
                                                     Driver: @{driverUsername} • {booking.seats_booked} seat(s) • ${booking.total_amount}
                                                 </p>
-                                                <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-300 rounded-2xl">
+                                                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 rounded-2xl">
                                                     Awaiting driver approval
                                                 </Badge>
                                                 <Button
