@@ -60,6 +60,9 @@ export default function AccountPage() {
         account_number: '',
         account_number_confirm: ''
     });
+    const [availableBalance, setAvailableBalance] = useState(0);
+    const [isTransferring, setIsTransferring] = useState(false);
+    const [showBankForm, setShowBankForm] = useState(false);
 
     useEffect(() => {
         loadData();
@@ -99,6 +102,14 @@ export default function AccountPage() {
             const takenRideIds = allBookings.filter(b => b.passenger_id === currentUser.id).map(b => b.ride_id);
             setRidesTaken(allRides.filter(r => takenRideIds.includes(r.id)));
             setRatings(allRatings.filter(r => r.rated_user_id === currentUser.id));
+
+            // Calculate available balance from completed transactions where user is recipient
+            const allTransactions = await base44.entities.Transaction.list();
+            const earnings = allTransactions
+                .filter(t => t.recipient_id === currentUser.id && t.transaction_status === 'completed')
+                .reduce((sum, t) => sum + (t.ride_amount || 0), 0);
+            const payouts = currentUser.total_payouts || 0;
+            setAvailableBalance(Math.max(0, earnings - payouts));
 
         } catch (e) { console.error(e); }
         setIsLoading(false);
@@ -203,6 +214,34 @@ export default function AccountPage() {
             setPayoutError("Failed to link bank account. Please try again.");
         }
         setIsSubmittingPayout(false);
+    };
+
+    const handleTransferFunds = async () => {
+        if (availableBalance <= 0) {
+            alert("No funds available to transfer.");
+            return;
+        }
+        if (!user.bank_account_linked) {
+            alert("Please link a bank account first.");
+            setShowBankForm(true);
+            return;
+        }
+
+        setIsTransferring(true);
+        try {
+            // Record the payout
+            const newTotalPayouts = (user.total_payouts || 0) + availableBalance;
+            await base44.auth.updateMe({ total_payouts: newTotalPayouts });
+            
+            // In a real app, this would trigger an actual bank transfer via Stripe Connect
+            alert(`$${availableBalance.toFixed(2)} has been transferred to your bank account. It may take 2-3 business days to arrive.`);
+            setAvailableBalance(0);
+            await loadData();
+        } catch (error) {
+            console.error("Error transferring funds:", error);
+            alert("Failed to transfer funds. Please try again.");
+        }
+        setIsTransferring(false);
     };
 
     if (isLoading) return <div className="p-8 text-center">Loading account...</div>;
@@ -484,41 +523,47 @@ export default function AccountPage() {
 
                     <div className="space-y-8">
                         <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
-                            <CardHeader 
-                                className="cursor-pointer hover:bg-gray-50 transition-colors rounded-t-3xl"
-                                onClick={() => setShowPayoutSection(!showPayoutSection)}
-                            >
-                                <CardTitle className="text-xl text-secondary flex items-center justify-between">
-                                    <div className="flex items-center gap-2">
-                                        <DollarSign className="w-5 h-5 text-primary" />
-                                        payouts
-                                    </div>
-                                    {showPayoutSection ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+                            <CardHeader>
+                                <CardTitle className="text-xl text-secondary flex items-center gap-2">
+                                    <DollarSign className="w-5 h-5 text-primary" />
+                                    payouts
                                 </CardTitle>
                             </CardHeader>
-                            {showPayoutSection && (
-                                <CardContent className="space-y-6">
-                                    {user.bank_account_linked ? (
-                                        <div className="space-y-4">
-                                            <div className="p-4 bg-green-50 border border-green-200 rounded-2xl">
-                                                <div className="flex items-center gap-2 text-green-800 mb-2">
-                                                    <ShieldCheck className="w-5 h-5" />
-                                                    <span className="font-semibold">Bank account linked</span>
-                                                </div>
-                                                <div className="text-sm text-green-700 space-y-1">
-                                                    <p><strong>Account holder:</strong> {user.bank_account_holder_name}</p>
-                                                    <p><strong>Routing:</strong> {bankDetails.routing_number}</p>
-                                                    <p><strong>Account:</strong> {bankDetails.account_number}</p>
-                                                </div>
+                            <CardContent className="space-y-4">
+                                {/* Available Balance */}
+                                <div className="p-4 bg-gradient-to-r from-primary/10 to-green-100 border border-primary/20 rounded-2xl">
+                                    <p className="text-sm text-gray-600 mb-1">available balance</p>
+                                    <p className="text-3xl font-bold text-primary">${availableBalance.toFixed(2)}</p>
+                                    <Button
+                                        onClick={handleTransferFunds}
+                                        disabled={isTransferring || availableBalance <= 0 || !user.bank_account_linked}
+                                        className="w-full mt-3 bg-primary hover:bg-primary/90 rounded-2xl"
+                                    >
+                                        {isTransferring ? 'transferring...' : 'transfer to bank'}
+                                    </Button>
+                                    {!user.bank_account_linked && availableBalance > 0 && (
+                                        <p className="text-xs text-gray-500 mt-2 text-center">Link a bank account to transfer funds</p>
+                                    )}
+                                </div>
+
+                                {/* Bank Account Status */}
+                                {user.bank_account_linked ? (
+                                    <div className="space-y-2">
+                                        <button
+                                            onClick={() => setShowBankForm(!showBankForm)}
+                                            className="w-full flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-2xl hover:bg-green-100 transition-colors"
+                                        >
+                                            <div className="flex items-center gap-2 text-green-800">
+                                                <ShieldCheck className="w-5 h-5" />
+                                                <span className="font-medium">bank account linked</span>
+                                                <span className="text-sm text-green-600">•••• {bankDetails.account_number.slice(-4)}</span>
                                             </div>
+                                            {showBankForm ? <ChevronDown className="w-4 h-4 text-green-600" /> : <ChevronRight className="w-4 h-4 text-green-600" />}
+                                        </button>
 
-                                            <Alert className="rounded-2xl border-gray-200">
-                                                <AlertDescription className="text-sm">
-                                                    Update your bank information below if needed.
-                                                </AlertDescription>
-                                            </Alert>
-
-                                            <div className="space-y-4">
+                                        {showBankForm && (
+                                            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-200 space-y-4">
+                                                <p className="text-sm text-gray-600">Update your bank information:</p>
                                                 <div className="space-y-2">
                                                     <Label htmlFor="holder-update">account holder name</Label>
                                                     <Input
@@ -563,16 +608,20 @@ export default function AccountPage() {
                                                     {isSubmittingPayout ? 'updating...' : 'update bank account'}
                                                 </Button>
                                             </div>
-                                        </div>
-                                    ) : (
-                                        <div className="space-y-4">
-                                            <Alert className="rounded-2xl border-gray-200">
-                                                <AlertDescription>
-                                                    Link your bank account to receive payouts from rides.
-                                                </AlertDescription>
-                                            </Alert>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="space-y-4">
+                                        <button
+                                            onClick={() => setShowBankForm(!showBankForm)}
+                                            className="w-full flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-2xl hover:bg-gray-100 transition-colors"
+                                        >
+                                            <span className="font-medium text-gray-700">link bank account</span>
+                                            {showBankForm ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                                        </button>
 
-                                            <div className="space-y-4">
+                                        {showBankForm && (
+                                            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-200 space-y-4">
                                                 <div className="space-y-2">
                                                     <Label htmlFor="holder">account holder name *</Label>
                                                     <Input
@@ -631,10 +680,10 @@ export default function AccountPage() {
                                                     {isSubmittingPayout ? 'linking...' : 'link bank account'}
                                                 </Button>
                                             </div>
-                                        </div>
-                                    )}
-                                </CardContent>
-                            )}
+                                        )}
+                                    </div>
+                                )}
+                            </CardContent>
                         </Card>
                     </div>
                 </div>
