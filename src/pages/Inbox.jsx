@@ -106,24 +106,11 @@ export default function InboxPage() {
             );
             setMyPendingBookings(riderPendingBookings);
 
-            console.log("Current user ID:", currentUser.id);
-            console.log("All bookings:", allBookings.map(b => ({
-                id: b.id,
-                passenger_id: b.passenger_id,
-                driver_id: b.driver_id,
-                booking_status: b.booking_status,
-                payment_status: b.payment_status
-            })));
-            
-            const userActiveBookings = allBookings.filter(b => {
-                const isUserInvolved = b.passenger_id === currentUser.id || b.driver_id === currentUser.id;
-                const isConfirmed = b.booking_status === 'confirmed';
-                const isPaid = b.payment_status === 'paid';
-                console.log("Booking check:", b.id, { isUserInvolved, isConfirmed, isPaid, passenger_id: b.passenger_id, driver_id: b.driver_id });
-                return isUserInvolved && isConfirmed && isPaid;
-            });
-            
-            console.log("Filtered userActiveBookings:", userActiveBookings);
+            const userActiveBookings = allBookings.filter(b => 
+                (b.passenger_id === currentUser.id || b.driver_id === currentUser.id) && 
+                b.booking_status === 'confirmed' &&
+                b.payment_status === 'paid'
+            );
 
             const now = new Date();
             const needsReview = [];
@@ -132,20 +119,12 @@ export default function InboxPage() {
             // Get ratings once for efficiency
             const allRatings = await base44.entities.Rating.list();
             
-            console.log("userActiveBookings count:", userActiveBookings.length);
-            console.log("userActiveBookings:", userActiveBookings);
-            
             for (const booking of userActiveBookings) {
                 const ride = allRides.find(r => r.id === booking.ride_id);
-                console.log("Processing booking:", booking.id, "ride found:", !!ride);
                 if (ride) {
                     // Add 4 hours buffer after departure time before requiring review
                     const rideDateTime = new Date(`${ride.departure_date}T${ride.departure_time || '23:59'}`);
                     const reviewThreshold = new Date(rideDateTime.getTime() + 4 * 60 * 60 * 1000); // 4 hours after departure
-                    
-                    console.log("Ride date:", ride.departure_date, "time:", ride.departure_time);
-                    console.log("Now:", now.toISOString(), "reviewThreshold:", reviewThreshold.toISOString());
-                    console.log("Is past review threshold:", now > reviewThreshold);
                     
                     if (now > reviewThreshold) {
                         const userRating = allRatings.find(r => 
@@ -164,9 +143,6 @@ export default function InboxPage() {
                     stillActive.push(booking);
                 }
             }
-            
-            console.log("stillActive count:", stillActive.length);
-            console.log("needsReview count:", needsReview.length);
 
             setRidesNeedingReview(needsReview);
             setActiveBookings(stillActive);
