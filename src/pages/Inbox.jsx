@@ -41,6 +41,7 @@ export default function InboxPage() {
     const [currentReviewUser, setCurrentReviewUser] = useState(null);
     const [currentReviewRide, setCurrentReviewRide] = useState(null);
     const [allUsers, setAllUsers] = useState([]);
+    const [allRidesData, setAllRidesData] = useState([]);
 
     useEffect(() => {
         loadData();
@@ -85,6 +86,7 @@ export default function InboxPage() {
             setAllUsers(allUsersList);
 
             const allRides = await base44.entities.Ride.list();
+            setAllRidesData(allRides);
             const allBookings = await base44.entities.RideBooking.list();
 
             const myRideIds = allRides.filter(r => r.driver_id === currentUser.id).map(r => r.id);
@@ -560,6 +562,7 @@ export default function InboxPage() {
                             </p>
                             <div className="space-y-3">
                                 {myPendingBookings.map(booking => {
+                                    const ride = allRidesData.find(r => r.id === booking.ride_id) || {};
                                     const driverUser = getUserById(booking.driver_id);
                                     const driverUsername = driverUser?.username || booking.driver_username || 'Driver';
                                     
@@ -579,7 +582,7 @@ export default function InboxPage() {
                                                 <div className="flex items-center gap-2">
                                                     <MapPin className="w-4 h-4 text-primary" />
                                                     <span className="font-semibold text-secondary">
-                                                        {ride.departure_location} → {ride.destination}
+                                                        {ride.departure_location || 'Loading...'} → {ride.destination || 'Loading...'}
                                                     </span>
                                                 </div>
                                                 <p className="text-sm text-gray-600">
