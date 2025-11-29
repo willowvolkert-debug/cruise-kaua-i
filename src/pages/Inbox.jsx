@@ -116,12 +116,17 @@ export default function InboxPage() {
             const needsReview = [];
             const stillActive = [];
             
+            // Get ratings once for efficiency
+            const allRatings = await base44.entities.Rating.list();
+            
             for (const booking of userActiveBookings) {
                 const ride = allRides.find(r => r.id === booking.ride_id);
                 if (ride) {
+                    // Add 4 hours buffer after departure time before requiring review
                     const rideDateTime = new Date(`${ride.departure_date}T${ride.departure_time || '23:59'}`);
-                    if (rideDateTime < now) {
-                        const allRatings = await base44.entities.Rating.list();
+                    const reviewThreshold = new Date(rideDateTime.getTime() + 4 * 60 * 60 * 1000); // 4 hours after departure
+                    
+                    if (now > reviewThreshold) {
                         const userRating = allRatings.find(r => 
                             r.ride_id === ride.id && 
                             r.rated_by_user_id === currentUser.id
