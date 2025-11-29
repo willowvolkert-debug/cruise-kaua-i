@@ -153,14 +153,17 @@ export default function InboxPage() {
                 setShowReviewModal(true);
             }
 
+            // Rides where I'm the driver
             const myUpcomingRides = allRides.filter(r => {
                 if (r.driver_id !== currentUser.id) return false;
-                if (r.status !== 'active') return false;
+                if (r.status !== 'active' && r.status !== 'full') return false;
                 const rideDateTime = new Date(`${r.departure_date}T${r.departure_time || '23:59'}`);
                 return rideDateTime > now;
             });
             
-            const myUpcomingBookings = stillActive
+            // Rides where I'm a confirmed passenger (from stillActive bookings)
+            const myBookedRides = stillActive
+                .filter(b => b.passenger_id === currentUser.id)
                 .map(b => allRides.find(r => r.id === b.ride_id))
                 .filter(ride => {
                     if (!ride) return false;
@@ -168,8 +171,8 @@ export default function InboxPage() {
                     return rideDateTime > now;
                 });
             
-            const uniqueUpcomingRides = Array.from(new Set([...myUpcomingRides, ...myUpcomingBookings].map(ride => ride.id)))
-                .map(id => [...myUpcomingRides, ...myUpcomingBookings].find(ride => ride.id === id));
+            const uniqueUpcomingRides = Array.from(new Set([...myUpcomingRides, ...myBookedRides].map(ride => ride.id)))
+                .map(id => [...myUpcomingRides, ...myBookedRides].find(ride => ride.id === id));
 
             setUpcomingRides(uniqueUpcomingRides.sort((a,b) => new Date(`${a.departure_date}T${a.departure_time}`) - new Date(`${b.departure_date}T${b.departure_time}`)));
 
