@@ -122,8 +122,10 @@ export default function InboxPage() {
             for (const booking of userActiveBookings) {
                 const ride = allRides.find(r => r.id === booking.ride_id);
                 if (ride) {
+                    // Parse ride date/time in Hawaii timezone (UTC-10)
                     // Add 4 hours buffer after departure time before requiring review
-                    const rideDateTime = new Date(`${ride.departure_date}T${ride.departure_time || '23:59'}`);
+                    const rideDateTimeStr = `${ride.departure_date}T${ride.departure_time || '23:59'}:00-10:00`;
+                    const rideDateTime = new Date(rideDateTimeStr);
                     const reviewThreshold = new Date(rideDateTime.getTime() + 4 * 60 * 60 * 1000); // 4 hours after departure
                     
                     if (now > reviewThreshold) {
