@@ -5,6 +5,9 @@ const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY"));
 const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
 
 Deno.serve(async (req) => {
+    // Initialize base44 client first (before reading body)
+    const base44 = createClientFromRequest(req);
+    
     try {
         const body = await req.text();
         const signature = req.headers.get('stripe-signature');
@@ -21,9 +24,6 @@ Deno.serve(async (req) => {
             console.error('Webhook signature verification failed:', err.message);
             return Response.json({ error: 'Invalid signature' }, { status: 400 });
         }
-
-        // Initialize base44 client with service role for webhook processing
-        const base44 = createClientFromRequest(req);
 
         if (event.type === 'checkout.session.completed') {
             const session = event.data.object;
