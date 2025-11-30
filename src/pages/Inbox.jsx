@@ -15,6 +15,7 @@ import CancelBookingModal from "../components/rides/CancelBookingModal";
 import PendingTripsCard from "../components/inbox/PendingTripsCard";
 import RejectionAlert from "../components/inbox/RejectionAlert";
 import RiderCancelModal from "../components/inbox/RiderCancelModal";
+import AdminMessageCard from "../components/inbox/AdminMessageCard";
 
 import { format } from "date-fns";
 import { sendNotification } from "../components/utils/notifications";
@@ -758,68 +759,12 @@ Cruise Kauaʻi Team
                     onMessageDriver={handleMessageDriverFromPending}
                 />
 
-                {adminMessages.length > 0 && (
-                    <Card className={`shadow-lg rounded-3xl ${adminMessages.some(m => !m.is_read) ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-gray-50'}`}>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-secondary">
-                                <ShieldAlert className={`w-6 h-6 ${adminMessages.some(m => !m.is_read) ? 'text-red-600' : 'text-gray-600'}`}/>
-                                messages from cruise kauaʻi team ({adminMessages.filter(m => !m.is_read).length} unread)
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                            {adminMessages.map(msg => (
-                                <div 
-                                    key={msg.id} 
-                                    className={`p-4 rounded-2xl border ${
-                                        !msg.is_read 
-                                            ? msg.message_type === 'warning' 
-                                                ? 'bg-yellow-50 border-yellow-300'
-                                                : msg.message_type === 'action_required'
-                                                    ? 'bg-red-50 border-red-300'
-                                                    : 'bg-blue-50 border-blue-300'
-                                            : 'bg-white border-gray-200'
-                                    }`}
-                                >
-                                    <div className="flex items-start justify-between gap-4">
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <p className="font-semibold text-secondary">{msg.subject}</p>
-                                                {!msg.is_read && (
-                                                    <Badge className={
-                                                        msg.message_type === 'warning' 
-                                                            ? 'bg-yellow-600'
-                                                            : msg.message_type === 'action_required'
-                                                                ? 'bg-red-600'
-                                                                : 'bg-blue-600'
-                                                    }>
-                                                        {msg.message_type === 'action_required' ? 'action required' : msg.message_type}
-                                                    </Badge>
-                                                )}
-                                            </div>
-                                            <p className="text-gray-700 text-sm whitespace-pre-wrap">{msg.message}</p>
-                                            <p className="text-xs text-gray-500 mt-2">
-                                                {format(new Date(msg.created_date), "MMM d, yyyy 'at' h:mm a")}
-                                            </p>
-                                        </div>
-                                        {!msg.is_read && (
-                                            <Button
-                                                size="sm"
-                                                variant="outline"
-                                                className="rounded-2xl border-gray-300"
-                                                onClick={async () => {
-                                                    await base44.entities.AdminMessage.update(msg.id, { is_read: true });
-                                                    loadData();
-                                                }}
-                                            >
-                                                mark as read
-                                            </Button>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                        </CardContent>
-                    </Card>
-                )}
+                {/* Admin Messages Card */}
+                <AdminMessageCard
+                    adminMessages={adminMessages}
+                    onMessageRead={loadData}
+                    onReplySuccess={loadData}
+                />
 
                 {ridesNeedingReview.length > 0 && (
                     <Card className="shadow-lg border-orange-300 bg-orange-50 rounded-3xl">
