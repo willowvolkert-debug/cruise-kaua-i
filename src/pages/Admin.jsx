@@ -94,12 +94,22 @@ export default function AdminPage() {
 
     setIsProcessing(true);
     try {
-      // License approval upgrades user to "rider" role
+      // Check if user meets all requirements for rider status
+      const profileComplete = selectedUser.username && selectedUser.bio && selectedUser.age && selectedUser.gender && selectedUser.profile_picture_url;
+      const agreementsComplete = selectedUser.terms_accepted && selectedUser.privacy_policy_accepted && selectedUser.community_agreement_accepted;
+      const notificationsEnabled = selectedUser.notifications_enabled;
+      
+      // Determine new user_type based on requirements
+      let newUserType = selectedUser.user_type || 'new';
+      if (profileComplete && agreementsComplete && notificationsEnabled) {
+        newUserType = 'rider';
+      }
+
       await base44.entities.User.update(selectedUser.id, {
         drivers_license_verified: true,
         drivers_license_pending_review: false,
         license_rejection_reason: null,
-        role: 'rider'
+        user_type: newUserType
       });
 
       // Send approval email notification
@@ -111,11 +121,15 @@ export default function AdminPage() {
 
       if ('Notification' in window && Notification.permission === 'granted') {
         new Notification('License Verified!', {
-          body: `${selectedUser.full_name}'s driver's license has been verified. They are now a rider.`,
+          body: `${selectedUser.full_name}'s driver's license has been verified.`,
         });
       }
 
-      alert(`License approved for ${selectedUser.full_name}. Their account has been upgraded to RIDER and they can now book rides.`);
+      const statusMsg = newUserType === 'rider' 
+        ? `License approved for ${selectedUser.full_name}. They are now a RIDER and can book rides.`
+        : `License approved for ${selectedUser.full_name}. They still need to complete their profile, accept agreements, or enable notifications to become a rider.`;
+      
+      alert(statusMsg);
       setShowLicenseModal(false);
       loadData();
     } catch (error) {
