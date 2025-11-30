@@ -18,53 +18,21 @@ import { sendNotification } from "../components/utils/notifications";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
-function DebugCard({ user, activeBookings, ridesNeedingReview }) {
-    const [myBookings, setMyBookings] = React.useState([]);
+// Helper to get current time in Hawaii (UTC-10)
+const getHawaiiNow = () => {
+    const now = new Date();
+    // Get UTC time, then subtract 10 hours for Hawaii
+    return new Date(now.getTime() - (now.getTimezoneOffset() * 60000) - (10 * 60 * 60 * 1000));
+};
 
-    React.useEffect(() => {
-        const load = async () => {
-            const bookings = await base44.entities.RideBooking.list();
-            if (user?.id) {
-                const mine = bookings.filter(b => 
-                    String(b.passenger_id) === String(user.id) || 
-                    String(b.driver_id) === String(user.id)
-                );
-                setMyBookings(mine);
-            }
-        };
-        load();
-    }, [user]);
-
-    return (
-            <Card className="shadow-md border-yellow-300 bg-yellow-50 rounded-3xl">
-                <CardHeader>
-                    <CardTitle className="text-sm text-yellow-800">Debug Info</CardTitle>
-                </CardHeader>
-                <CardContent className="text-xs text-yellow-700 space-y-1">
-                    <p>Your ID: {user?.id}</p>
-                    <p>Active bookings count: {activeBookings.length}</p>
-                    <p>Needs review count: {ridesNeedingReview.length}</p>
-                    {myBookings.map(b => {
-                        const ride = allRidesData.find(r => String(r.id) === String(b.ride_id));
-                        const rideFound = !!ride;
-                        let isPastThreshold = false;
-                        if (ride) {
-                            const now = new Date();
-                            const rideDateTimeStr = `${ride.departure_date}T${ride.departure_time || '23:59'}:00-10:00`;
-                            const rideDateTime = new Date(rideDateTimeStr);
-                            const reviewThreshold = new Date(rideDateTime.getTime() + 4 * 60 * 60 * 1000);
-                            isPastThreshold = now > reviewThreshold;
-                        }
-                        return (
-                            <p key={b.id} className="border-t pt-1 mt-1">
-                                rideFound: {String(rideFound)} | isPastThreshold: {String(isPastThreshold)} | dep: {ride?.departure_date} {ride?.departure_time}
-                            </p>
-                        );
-                    })}
-                </CardContent>
-            </Card>
-    );
-}
+// Helper to parse a ride date/time as Hawaii time and return comparable timestamp
+const parseRideDateTimeHST = (dateStr, timeStr) => {
+    // dateStr is "YYYY-MM-DD", timeStr is "HH:MM"
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const [hours, minutes] = (timeStr || '23:59').split(':').map(Number);
+    // Create date as if in Hawaii (just use the raw values)
+    return new Date(year, month - 1, day, hours, minutes, 0, 0);
+};
 
 export default function InboxPage() {
     const [activeBookings, setActiveBookings] = useState([]);
