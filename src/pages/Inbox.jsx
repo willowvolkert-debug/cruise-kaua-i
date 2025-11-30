@@ -418,7 +418,7 @@ export default function InboxPage() {
     const recentChats = activeBookings
         .filter(booking => booking.messages && booking.messages.length > 0)
         .map(booking => {
-            const isDriver = user?.id === booking.driver_id;
+            const isDriver = String(user?.id) === String(booking.driver_id);
             const otherUserId = isDriver ? booking.passenger_id : booking.driver_id;
             const otherUser = getUserById(otherUserId);
             const otherPartyUsername = otherUser?.username || (isDriver ? booking.passenger_name : "Driver");
