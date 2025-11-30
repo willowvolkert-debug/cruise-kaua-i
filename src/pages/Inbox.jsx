@@ -198,8 +198,13 @@ export default function InboxPage() {
                 const isDriver = String(b.driver_id) === String(currentUser.id);
                 const isConfirmed = b.booking_status === 'confirmed';
                 const isPaid = b.payment_status === 'paid';
+                
+                console.log(`Booking ${b.id}: passenger=${isPassenger}, driver=${isDriver}, confirmed=${isConfirmed}, paid=${isPaid}, pass? ${(isPassenger || isDriver) && isConfirmed && isPaid}`);
+                
                 return (isPassenger || isDriver) && isConfirmed && isPaid;
             });
+            
+            console.log("userActiveBookings count:", userActiveBookings.length);
 
             const needsReview = [];
             const stillActive = [];
