@@ -175,20 +175,28 @@ export default function AdminPage() {
 
     setIsProcessing(true);
     try {
-      // Vehicle approval upgrades rider to "driver" role if they have bank info
-      const isFullyVerifiedDriver = selectedUser.drivers_license_verified && selectedUser.bank_account_linked;
+      // Vehicle approval upgrades user to "driver" if they are already a rider
+      const isRider = selectedUser.user_type === 'rider';
+      const newUserType = isRider ? 'driver' : selectedUser.user_type;
       
       await base44.entities.User.update(selectedUser.id, {
         vehicle_verified: true,
         vehicle_pending_review: false,
         can_drive: true,
-        role: isFullyVerifiedDriver ? 'driver' : selectedUser.role
+        user_type: newUserType
       });
 
-      if (isFullyVerifiedDriver) {
+      // Send approval email notification
+      await base44.integrations.Core.SendEmail({
+        to: selectedUser.email,
+        subject: "🚗 Your vehicle has been approved! - Cruise Kauaʻi",
+        body: `Aloha ${selectedUser.full_name}!\n\nGreat news! Your vehicle has been verified and approved.\n\nYou can now post rides on Cruise Kauaʻi and start sharing the aloha with fellow travelers!\n\nMahalo for being part of our community,\nThe Cruise Kauaʻi Team`
+      });
+
+      if (newUserType === 'driver') {
         alert(`Vehicle approved for ${selectedUser.full_name}. Their account has been upgraded to DRIVER and they can now post rides!`);
       } else {
-        alert(`Vehicle approved for ${selectedUser.full_name}. They still need to complete bank account setup to become a driver.`);
+        alert(`Vehicle approved for ${selectedUser.full_name}. They need to complete rider requirements first (license, profile, agreements, notifications) before becoming a driver.`);
       }
       setShowVehicleModal(false);
       loadData();
