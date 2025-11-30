@@ -85,10 +85,26 @@ export default function ChatModal({ isOpen, onClose, booking, otherPartyName, ot
         messages: updatedMessages
       });
 
-      sendNotification(
-        `New message from ${currentUser.username || currentUser.full_name}`,
-        newMessage.substring(0, 50) + (newMessage.length > 50 ? '...' : '')
-      );
+      // Send email notification to the OTHER party, not the sender
+      const isDriver = currentUser.id === booking.driver_id;
+      const otherUserId = isDriver ? booking.passenger_id : booking.driver_id;
+      
+      // Fetch other user's email to send notification
+      const otherUsers = await base44.entities.User.filter({ id: otherUserId });
+      if (otherUsers && otherUsers.length > 0) {
+        const otherUser = otherUsers[0];
+        if (otherUser.email) {
+          try {
+            await base44.integrations.Core.SendEmail({
+              to: otherUser.email,
+              subject: `New message from @${currentUser.username || currentUser.full_name} - Cruise Kauaʻi`,
+              body: `Aloha ${otherUser.full_name},\n\nYou have a new message from @${currentUser.username || currentUser.full_name}:\n\n"${newMessage.substring(0, 200)}${newMessage.length > 200 ? '...' : ''}"\n\nLog into Cruise Kauaʻi to reply.\n\nMahalo,\nCruise Kauaʻi Team`
+            });
+          } catch (emailError) {
+            console.error("Error sending message notification:", emailError);
+          }
+        }
+      }
     } catch (error) {
       console.error("Error sending message:", error);
     }
