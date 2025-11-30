@@ -537,7 +537,7 @@ export default function InboxPage() {
                         </CardHeader>
                         <CardContent className="space-y-3">
                             {ridesNeedingReview.map(({ booking, ride }) => {
-                                const isDriver = ride.driver_id === user?.id;
+                                const isDriver = String(ride.driver_id) === String(user?.id);
                                 const otherUserId = isDriver ? booking.passenger_id : ride.driver_id;
                                 const otherUser = getUserById(otherUserId);
                                 const otherUsername = otherUser?.username || (isDriver ? booking.passenger_name : "Driver");
