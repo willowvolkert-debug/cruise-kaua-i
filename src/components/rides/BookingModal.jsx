@@ -45,21 +45,16 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
 
       // Load driver profile and ratings
       if (ride?.driver_id) {
-        // Fetch users and ratings in parallel
-        const [allUsers, allRatings] = await Promise.all([
-          base44.entities.User.list(),
-          base44.entities.Rating.list()
+        // Fetch driver profile and ratings using filter
+        const [drivers, ratings] = await Promise.all([
+          base44.entities.User.filter({ id: ride.driver_id }),
+          base44.entities.Rating.filter({ rated_user_id: ride.driver_id, trip_role: 'driver' })
         ]);
         
-        const driver = allUsers.find(u => u.id === ride.driver_id);
-        console.log("Driver found:", driver);
-        setDriverProfile(driver);
-
-        const ratings = allRatings.filter(r => 
-          r.rated_user_id === ride.driver_id && r.trip_role === 'driver'
-        );
-        console.log("Driver ratings:", ratings);
-        setDriverRatings(ratings);
+        if (drivers && drivers.length > 0) {
+          setDriverProfile(drivers[0]);
+        }
+        setDriverRatings(ratings || []);
       }
     } catch (error) {
       console.error("Error loading data:", error);
