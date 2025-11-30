@@ -14,11 +14,7 @@ Deno.serve(async (req) => {
 
         // Create a verification session using the provided verification flow
         const verificationSession = await stripe.identity.verificationSessions.create({
-            type: 'document',
             verification_flow: 'vf_1SZ2yuL2Hto7mYsihs9bBHbi',
-            provided_details: {
-                email: user.email,
-            },
             metadata: {
                 user_id: user.id,
                 user_email: user.email
