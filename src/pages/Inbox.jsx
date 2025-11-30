@@ -502,6 +502,7 @@ export default function InboxPage() {
                         <p>Pending requests (driver): {pendingRequests.length}</p>
                         <p>Your pending bookings: {myPendingBookings.length}</p>
                         <p>Upcoming rides: {upcomingRides.length}</p>
+                        <p>Needs review: {ridesNeedingReview.length}</p>
                     </CardContent>
                 </Card>
 
