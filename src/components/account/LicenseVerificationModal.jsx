@@ -16,17 +16,36 @@ export default function LicenseVerificationModal({ isOpen, onClose, onSuccess })
       const response = await createIdentityVerification({});
       
       if (response.data?.url) {
-        window.open(response.data.url, '_blank');
-        onClose();
+        // Open Stripe Identity verification in a popup window
+        const width = 500;
+        const height = 700;
+        const left = window.screenX + (window.outerWidth - width) / 2;
+        const top = window.screenY + (window.outerHeight - height) / 2;
+        
+        const popup = window.open(
+          response.data.url,
+          'stripe-identity-verification',
+          `width=${width},height=${height},left=${left},top=${top},scrollbars=yes,resizable=yes`
+        );
+
+        // Poll to check when popup closes
+        const checkPopup = setInterval(() => {
+          if (!popup || popup.closed) {
+            clearInterval(checkPopup);
+            setIsLoading(false);
+            if (onSuccess) onSuccess();
+            onClose();
+          }
+        }, 500);
       } else {
         setError("Failed to create verification session. Please try again.");
+        setIsLoading(false);
       }
     } catch (err) {
       console.error("Verification error:", err);
       setError("Failed to start verification. Please try again.");
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   };
 
   return (

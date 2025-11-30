@@ -12,21 +12,23 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        // Create a verification session using the provided flow ID
+        // Create a verification session using the provided verification flow
         const verificationSession = await stripe.identity.verificationSessions.create({
             type: 'document',
+            verification_flow: 'vf_1SZ2yuL2Hto7mYsihs9bBHbi',
             provided_details: {
                 email: user.email,
             },
             metadata: {
                 user_id: user.id,
                 user_email: user.email
-            },
-            options: {
-                document: {
-                    require_matching_selfie: true,
-                }
             }
+        });
+
+        // Mark user as having pending license review
+        await base44.asServiceRole.entities.User.update(user.id, {
+            drivers_license_pending_review: true,
+            stripe_verification_session_id: verificationSession.id
         });
 
         return Response.json({ 
