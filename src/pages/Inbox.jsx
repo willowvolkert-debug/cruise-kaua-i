@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Bot, MessageSquare, Star, Bell, Clock, AlertTriangle, ChevronRight, UserPlus, MapPin, Calendar } from "lucide-react";
+import { Bot, MessageSquare, Star, Bell, Clock, AlertTriangle, ChevronRight, UserPlus, MapPin, Calendar, ShieldAlert } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import ReportModal from "../components/inbox/ReportModal";
@@ -42,6 +42,7 @@ export default function InboxPage() {
     const [currentReviewRide, setCurrentReviewRide] = useState(null);
     const [allUsers, setAllUsers] = useState([]);
     const [allRidesData, setAllRidesData] = useState([]);
+    const [adminMessages, setAdminMessages] = useState([]);
 
     useEffect(() => {
         loadData();
@@ -186,6 +187,11 @@ export default function InboxPage() {
                 .map(id => [...myUpcomingRides, ...myBookedRides].find(ride => ride.id === id));
 
             setUpcomingRides(uniqueUpcomingRides.sort((a,b) => new Date(`${a.departure_date}T${a.departure_time}`) - new Date(`${b.departure_date}T${b.departure_time}`)));
+
+            // Load admin messages for this user
+            const allAdminMessages = await base44.entities.AdminMessage.list('-created_date');
+            const myAdminMessages = allAdminMessages.filter(m => m.recipient_id === currentUser.id);
+            setAdminMessages(myAdminMessages);
 
         } catch (e) {
             console.error(e);
@@ -452,6 +458,69 @@ export default function InboxPage() {
                         Keep all communication within the app.
                     </AlertDescription>
                 </Alert>
+
+                {adminMessages.length > 0 && (
+                    <Card className={`shadow-lg rounded-3xl ${adminMessages.some(m => !m.is_read) ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-gray-50'}`}>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-secondary">
+                                <ShieldAlert className={`w-6 h-6 ${adminMessages.some(m => !m.is_read) ? 'text-red-600' : 'text-gray-600'}`}/>
+                                messages from cruise kauaʻi team ({adminMessages.filter(m => !m.is_read).length} unread)
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                            {adminMessages.map(msg => (
+                                <div 
+                                    key={msg.id} 
+                                    className={`p-4 rounded-2xl border ${
+                                        !msg.is_read 
+                                            ? msg.message_type === 'warning' 
+                                                ? 'bg-yellow-50 border-yellow-300'
+                                                : msg.message_type === 'action_required'
+                                                    ? 'bg-red-50 border-red-300'
+                                                    : 'bg-blue-50 border-blue-300'
+                                            : 'bg-white border-gray-200'
+                                    }`}
+                                >
+                                    <div className="flex items-start justify-between gap-4">
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <p className="font-semibold text-secondary">{msg.subject}</p>
+                                                {!msg.is_read && (
+                                                    <Badge className={
+                                                        msg.message_type === 'warning' 
+                                                            ? 'bg-yellow-600'
+                                                            : msg.message_type === 'action_required'
+                                                                ? 'bg-red-600'
+                                                                : 'bg-blue-600'
+                                                    }>
+                                                        {msg.message_type === 'action_required' ? 'action required' : msg.message_type}
+                                                    </Badge>
+                                                )}
+                                            </div>
+                                            <p className="text-gray-700 text-sm whitespace-pre-wrap">{msg.message}</p>
+                                            <p className="text-xs text-gray-500 mt-2">
+                                                {format(new Date(msg.created_date), "MMM d, yyyy 'at' h:mm a")}
+                                            </p>
+                                        </div>
+                                        {!msg.is_read && (
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                className="rounded-2xl border-gray-300"
+                                                onClick={async () => {
+                                                    await base44.entities.AdminMessage.update(msg.id, { is_read: true });
+                                                    loadData();
+                                                }}
+                                            >
+                                                mark as read
+                                            </Button>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </CardContent>
+                    </Card>
+                )}
 
                 {ridesNeedingReview.length > 0 && (
                     <Card className="shadow-lg border-orange-300 bg-orange-50 rounded-3xl">
