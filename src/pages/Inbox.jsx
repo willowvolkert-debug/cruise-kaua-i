@@ -49,9 +49,10 @@ function DebugCard({ user, activeBookings, ridesNeedingReview }) {
                         const isDriver = String(b.driver_id) === String(user?.id);
                         const isConfirmed = b.booking_status === 'confirmed';
                         const isPaid = b.payment_status === 'paid';
+                        const passesFilter = (isPassenger || isDriver) && isConfirmed && isPaid;
                         return (
                             <p key={b.id} className="border-t pt-1 mt-1">
-                                isPassenger: {String(isPassenger)} | isDriver: {String(isDriver)} | isConfirmed: {String(isConfirmed)} | isPaid: {String(isPaid)}
+                                passesFilter: {String(passesFilter)} | ride_id: {b.ride_id}
                             </p>
                         );
                     })}
