@@ -329,7 +329,7 @@ export default function AccountPage() {
                                             <Textarea 
                                                 value={editData.bio} 
                                                 onChange={(e) => setEditData({...editData, bio: e.target.value})} 
-                                                placeholder="e.g., Love sharing rides and making the island greener!"
+                                                placeholder="Love sharing rides and making the island greener!"
                                                 className="rounded-2xl"
                                             />
                                         </div>

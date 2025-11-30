@@ -315,21 +315,21 @@ export default function PostRideForm() {
 
               <div className="space-y-3">
                 <Label className="text-lg font-semibold text-secondary">detours (optional)</Label>
-                <p className="text-sm text-gray-600">would you like to drive riders to their end destination off the highway for an added fee?</p>
+                <p className="text-sm text-gray-600">would you like to drive riders to their end destination off the highway for an added $5?</p>
                 <div className="flex gap-3">
                   <Button
                     type="button"
                     onClick={() => setRideData({ ...rideData, offers_detour_service: true })}
                     className={`flex-1 ${rideData.offers_detour_service ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
                   >
-                    YES
+                    yes
                   </Button>
                   <Button
                     type="button"
                     onClick={() => setRideData({ ...rideData, offers_detour_service: false })}
                     className={`flex-1 ${!rideData.offers_detour_service ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
                   >
-                    NO
+                    no
                   </Button>
                 </div>
               </div>
