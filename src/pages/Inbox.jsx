@@ -18,6 +18,45 @@ import { sendNotification } from "../components/utils/notifications";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
+function DebugCard({ user, activeBookings, upcomingRides }) {
+    const [allBookings, setAllBookings] = React.useState([]);
+    const [myBookings, setMyBookings] = React.useState([]);
+    
+    React.useEffect(() => {
+        const load = async () => {
+            const bookings = await base44.entities.RideBooking.list();
+            setAllBookings(bookings);
+            if (user?.id) {
+                const mine = bookings.filter(b => 
+                    String(b.passenger_id) === String(user.id) || 
+                    String(b.driver_id) === String(user.id)
+                );
+                setMyBookings(mine);
+            }
+        };
+        load();
+    }, [user]);
+    
+    return (
+        <Card className="shadow-md border-yellow-300 bg-yellow-50 rounded-3xl">
+            <CardHeader>
+                <CardTitle className="text-sm text-yellow-800">Debug Info</CardTitle>
+            </CardHeader>
+            <CardContent className="text-xs text-yellow-700 space-y-1">
+                <p>Your ID: {user?.id}</p>
+                <p>Total bookings in DB: {allBookings.length}</p>
+                <p>Your bookings (any status): {myBookings.length}</p>
+                <p>Active bookings (filtered): {activeBookings.length}</p>
+                {myBookings.map(b => (
+                    <p key={b.id} className="border-t pt-1 mt-1">
+                        ID: {b.id?.slice(-6)} | status: {b.booking_status} | payment: {b.payment_status} | passenger: {b.passenger_id?.slice(-6)} | driver: {b.driver_id?.slice(-6)}
+                    </p>
+                ))}
+            </CardContent>
+        </Card>
+    );
+}
+
 export default function InboxPage() {
     const [activeBookings, setActiveBookings] = useState([]);
     const [pendingRequests, setPendingRequests] = useState([]);
