@@ -419,12 +419,17 @@ export default function AccountPage() {
                             <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
                                 <CardHeader><CardTitle className="text-xl text-secondary">verification</CardTitle></CardHeader>
                                 <CardContent className="space-y-4">
+                                    {user.drivers_license_pending_review && !user.drivers_license_verified && (
+                                        <div className="p-3 bg-yellow-50 border border-yellow-300 rounded-2xl text-yellow-800 text-sm mb-3">
+                                            <strong>thanks!</strong> you will be able to book rides once your identity is verified. check back soon for approval!
+                                        </div>
+                                    )}
                                     <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
                                         <span className="font-medium">driver's license</span>
                                         {user.drivers_license_verified ? (
                                             <Badge variant="default" className="bg-primary rounded-2xl border-primary"><ShieldCheck className="w-4 h-4 mr-1"/>verified</Badge>
                                         ) : user.drivers_license_pending_review ? (
-                                            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 rounded-2xl">
+                                            <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-300 rounded-2xl">
                                                 <Clock className="w-4 h-4 mr-1"/>pending review
                                             </Badge>
                                         ) : (
