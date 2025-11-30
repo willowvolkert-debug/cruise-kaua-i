@@ -217,7 +217,15 @@ export default function AdminPage() {
     try {
       await base44.entities.User.update(selectedUser.id, {
         vehicle_verified: false,
-        vehicle_pending_review: false
+        vehicle_pending_review: false,
+        vehicle_rejection_reason: reason
+      });
+
+      // Send rejection email notification
+      await base44.integrations.Core.SendEmail({
+        to: selectedUser.email,
+        subject: "Vehicle Verification Update - Cruise Kauaʻi",
+        body: `Aloha ${selectedUser.full_name},\n\nWe were unable to verify your vehicle at this time.\n\nReason: ${reason}\n\nPlease update your vehicle information and try again. If you have questions, contact us through the app.\n\nMahalo,\nThe Cruise Kauaʻi Team`
       });
 
       alert(`Vehicle rejected for ${selectedUser.full_name}. Reason: ${reason}`);
