@@ -98,7 +98,15 @@ export default function AdminPage() {
       await base44.entities.User.update(selectedUser.id, {
         drivers_license_verified: true,
         drivers_license_pending_review: false,
+        license_rejection_reason: null,
         role: 'rider'
+      });
+
+      // Send approval email notification
+      await base44.integrations.Core.SendEmail({
+        to: selectedUser.email,
+        subject: "🎉 Your license has been approved! - Cruise Kauaʻi",
+        body: `Aloha ${selectedUser.full_name}!\n\nGreat news! Your driver's license has been verified and approved.\n\nYou can now book rides on Cruise Kauaʻi. Head to the app and start exploring available rides!\n\nMahalo for joining our community,\nThe Cruise Kauaʻi Team`
       });
 
       if ('Notification' in window && Notification.permission === 'granted') {
@@ -127,7 +135,15 @@ export default function AdminPage() {
     try {
       await base44.entities.User.update(selectedUser.id, {
         drivers_license_verified: false,
-        drivers_license_pending_review: false
+        drivers_license_pending_review: false,
+        license_rejection_reason: reason
+      });
+
+      // Send rejection email notification
+      await base44.integrations.Core.SendEmail({
+        to: selectedUser.email,
+        subject: "License Verification Update - Cruise Kauaʻi",
+        body: `Aloha ${selectedUser.full_name},\n\nWe were unable to verify your driver's license at this time.\n\nReason: ${reason}\n\nPlease update your verification documents and try again. If you have questions, contact us through the app.\n\nMahalo,\nThe Cruise Kauaʻi Team`
       });
 
       alert(`License rejected for ${selectedUser.full_name}. Reason: ${reason}`);
