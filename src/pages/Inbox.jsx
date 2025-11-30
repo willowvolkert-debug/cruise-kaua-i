@@ -513,7 +513,7 @@ export default function InboxPage() {
                 </Alert>
 
                 {/* Debug info - REMOVE AFTER TESTING */}
-                <DebugCard user={user} activeBookings={activeBookings} upcomingRides={upcomingRides} />
+                <DebugCard user={user} activeBookings={activeBookings} ridesNeedingReview={ridesNeedingReview} />
 
                 {adminMessages.length > 0 && (
                     <Card className={`shadow-lg rounded-3xl ${adminMessages.some(m => !m.is_read) ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-gray-50'}`}>
