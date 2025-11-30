@@ -756,7 +756,8 @@ export default function InboxPage() {
                                     const otherPartyPicture = otherUser?.profile_picture_url || '';
                                     const otherPartyName = isDriver ? booking.passenger_name : "Driver";
                                     
-                                    const ride = upcomingRides.find(r => r.id === booking.ride_id);
+                                    // Use allRidesData to find ride details (not upcomingRides which may not include all rides)
+                                    const ride = allRidesData.find(r => r.id === booking.ride_id);
 
                                     return (
                                         <div key={booking.id} className="p-4 bg-gray-50 rounded-2xl border border-gray-200">
