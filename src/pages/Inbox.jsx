@@ -192,18 +192,12 @@ export default function InboxPage() {
             );
             setPendingRequests(pendingBookingRequests);
 
-            console.log("Current user ID:", currentUser.id);
-            console.log("All bookings:", allBookings.map(b => ({ id: b.id, passenger_id: b.passenger_id, status: b.booking_status, payment: b.payment_status })));
-
             // Get rider's own pending booking requests (only show if payment is completed)
-            const riderPendingBookings = allBookings.filter(b => {
-                const isPassenger = String(b.passenger_id) === String(currentUser.id);
-                const isPending = b.booking_status === 'pending';
-                const isPaid = b.payment_status === 'paid';
-                console.log(`Booking ${b.id}: isPassenger=${isPassenger}, isPending=${isPending}, isPaid=${isPaid}`);
-                return isPassenger && isPending && isPaid;
-            });
-            console.log("Rider pending bookings:", riderPendingBookings);
+            const riderPendingBookings = allBookings.filter(b => 
+                String(b.passenger_id) === String(currentUser.id) && 
+                b.booking_status === 'pending' &&
+                b.payment_status === 'paid'
+            );
             setMyPendingBookings(riderPendingBookings);
 
             // Get rejected bookings for this rider (not yet dismissed)
@@ -215,27 +209,14 @@ export default function InboxPage() {
             setRejectedBookings(riderRejectedBookings);
 
             // Active bookings: confirmed status with paid payment for both drivers and riders
-            // DEBUG: Log all bookings to see what we're working with
-            console.log("ALL BOOKINGS RAW:", allBookings.map(b => ({
-                id: b.id,
-                passenger_id: b.passenger_id,
-                driver_id: b.driver_id,
-                status: b.booking_status,
-                payment: b.payment_status
-            })));
-            
             const userActiveBookings = allBookings.filter(b => {
                 const isPassenger = String(b.passenger_id) === String(currentUser.id);
                 const isDriver = String(b.driver_id) === String(currentUser.id);
                 const isConfirmed = b.booking_status === 'confirmed';
                 const isPaid = b.payment_status === 'paid';
                 
-                console.log(`Booking ${b.id}: passenger_id=${b.passenger_id}, currentUser.id=${currentUser.id}, isPassenger=${isPassenger}, driver=${isDriver}, confirmed=${isConfirmed}, paid=${isPaid}, pass? ${(isPassenger || isDriver) && isConfirmed && isPaid}`);
-                
                 return (isPassenger || isDriver) && isConfirmed && isPaid;
             });
-            
-            console.log("userActiveBookings count:", userActiveBookings.length);
 
             const needsReview = [];
             const stillActive = [];
