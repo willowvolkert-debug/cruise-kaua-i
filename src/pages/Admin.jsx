@@ -34,6 +34,7 @@ export default function AdminPage() {
   const [error, setError] = useState(null);
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [messageUser, setMessageUser] = useState(null);
+  const [hasHawaiiId, setHasHawaiiId] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -84,6 +85,7 @@ export default function AdminPage() {
 
   const handleViewLicense = (user) => {
     setSelectedUser(user);
+    setHasHawaiiId(user.has_hawaii_id || false);
     setShowLicenseModal(true);
   };
 
@@ -117,7 +119,8 @@ export default function AdminPage() {
         drivers_license_verified: true,
         drivers_license_pending_review: false,
         license_rejection_reason: null,
-        user_type: newUserType
+        user_type: newUserType,
+        has_hawaii_id: hasHawaiiId
       });
 
       // Send approval email notification
@@ -691,7 +694,22 @@ export default function AdminPage() {
                   <p className="text-sm text-blue-700 mt-3">
                     Please verify the user's identity in your <a href="https://dashboard.stripe.com/identity/verification-sessions" target="_blank" rel="noopener noreferrer" className="underline font-medium">Stripe Dashboard</a> before approving.
                   </p>
-                </div>
+                  </div>
+
+                  <div className="p-4 bg-green-50 border border-green-200 rounded-2xl">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={hasHawaiiId}
+                      onChange={(e) => setHasHawaiiId(e.target.checked)}
+                      className="w-5 h-5 rounded border-green-300 text-green-600 focus:ring-green-500"
+                    />
+                    <div>
+                      <span className="font-semibold text-green-900">Has Hawaiʻi ID for local pricing?</span>
+                      <p className="text-sm text-green-700">Check this if the user's license is from Hawaiʻi to enable local pricing.</p>
+                    </div>
+                  </label>
+                  </div>
 
                 <div className="flex gap-3 pt-4">
                   <Button
