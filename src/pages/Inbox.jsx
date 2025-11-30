@@ -573,6 +573,17 @@ export default function InboxPage() {
                     </AlertDescription>
                 </Alert>
 
+                {/* TEMPORARY DEBUG - REMOVE AFTER FIXING */}
+                <Card className="bg-yellow-100 border-yellow-400">
+                    <CardContent className="p-4 text-xs">
+                        <p><strong>Debug Info:</strong></p>
+                        <p>Your User ID: {user?.id}</p>
+                        <p>Active Bookings: {activeBookings.length}</p>
+                        <p>Rides Needing Review: {ridesNeedingReview.length}</p>
+                        <p>Loading: {isLoading ? 'Yes' : 'No'}</p>
+                    </CardContent>
+                </Card>
+
 
 
                 {adminMessages.length > 0 && (
