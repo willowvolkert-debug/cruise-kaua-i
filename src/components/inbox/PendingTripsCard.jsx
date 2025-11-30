@@ -6,13 +6,13 @@ import { Clock, MapPin, Calendar, MessageSquare, X } from "lucide-react";
 import { format } from "date-fns";
 
 export default function PendingTripsCard({ 
-  pendingBookings, 
-  allRidesData, 
+  pendingBookings = [], 
+  allRidesData = [], 
   getUserById, 
   onCancelRequest, 
   onMessageDriver 
 }) {
-  if (!pendingBookings || pendingBookings.length === 0) return null;
+  if (pendingBookings.length === 0) return null;
 
   return (
     <Card className="shadow-lg border-yellow-200 bg-yellow-50 rounded-3xl">
