@@ -176,7 +176,7 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
                 onClick={handleReject}
                 disabled={isProcessing}
                 variant="outline"
-                className="flex-1 border-red-300 text-red-600 hover:bg-red-50 rounded-2xl"
+                className="flex-1 border-blue-300 text-blue-600 hover:bg-blue-50 rounded-2xl"
               >
                 <X className="w-4 h-4 mr-2" />
                 reject request
