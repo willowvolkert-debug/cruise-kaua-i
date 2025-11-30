@@ -109,11 +109,14 @@ export default function InboxPage() {
 
             // Active bookings: confirmed status with paid payment for both drivers and riders
             const userActiveBookings = allBookings.filter(b => {
-                const isInvolved = b.passenger_id === currentUser.id || b.driver_id === currentUser.id;
+                const isPassenger = b.passenger_id === currentUser.id;
+                const isDriver = b.driver_id === currentUser.id;
                 const isConfirmed = b.booking_status === 'confirmed';
                 const isPaid = b.payment_status === 'paid';
-                return isInvolved && isConfirmed && isPaid;
+                console.log(`Booking ${b.id}: isPassenger=${isPassenger}, isDriver=${isDriver}, status=${b.booking_status}, payment=${b.payment_status}`);
+                return (isPassenger || isDriver) && isConfirmed && isPaid;
             });
+            console.log("User active bookings count:", userActiveBookings.length, userActiveBookings);
 
             const now = new Date();
             const needsReview = [];
