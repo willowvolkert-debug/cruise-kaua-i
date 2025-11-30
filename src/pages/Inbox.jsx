@@ -738,20 +738,24 @@ Cruise Kauaʻi Team
                 />
 
                 {/* Pending Trips Card for Riders */}
-                <PendingTripsCard
-                    pendingBookings={myPendingBookings}
-                    allRidesData={allRidesData}
-                    getUserById={getUserById}
-                    onCancelRequest={handleCancelPendingRequest}
-                    onMessageDriver={handleMessageDriverFromPending}
-                />
+                {myPendingBookings.length > 0 && (
+                    <PendingTripsCard
+                        pendingBookings={myPendingBookings}
+                        allRidesData={allRidesData}
+                        getUserById={getUserById}
+                        onCancelRequest={handleCancelPendingRequest}
+                        onMessageDriver={handleMessageDriverFromPending}
+                    />
+                )}
 
                 {/* Admin Messages Card */}
-                <AdminMessageCard
-                    adminMessages={adminMessages}
-                    onMessageRead={loadData}
-                    onReplySuccess={loadData}
-                />
+                {adminMessages.length > 0 && (
+                    <AdminMessageCard
+                        adminMessages={adminMessages}
+                        onMessageRead={loadData}
+                        onReplySuccess={loadData}
+                    />
+                )}
 
                 {ridesNeedingReview.length > 0 && (
                     <Card className="shadow-lg border-orange-300 bg-orange-50 rounded-3xl">
