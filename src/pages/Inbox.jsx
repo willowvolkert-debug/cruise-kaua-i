@@ -479,13 +479,15 @@ export default function InboxPage() {
                 {/* Debug info - REMOVE AFTER TESTING */}
                 <Card className="shadow-md border-yellow-300 bg-yellow-50 rounded-3xl">
                     <CardHeader>
-                        <CardTitle className="text-sm text-yellow-800">Debug Info (temp)</CardTitle>
+                        <CardTitle className="text-sm text-yellow-800">Debug Info</CardTitle>
                     </CardHeader>
                     <CardContent className="text-xs text-yellow-700 space-y-1">
                         <p>Your ID: {user?.id}</p>
                         <p>Active bookings: {activeBookings.length}</p>
-                        <p>Needs review: {ridesNeedingReview.length}</p>
                         <p>Upcoming rides: {upcomingRides.length}</p>
+                        {activeBookings.map(b => (
+                            <p key={b.id}>Booking: {b.id} - status: {b.booking_status} - paid: {b.payment_status}</p>
+                        ))}
                     </CardContent>
                 </Card>
 
