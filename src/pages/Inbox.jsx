@@ -258,12 +258,14 @@ export default function InboxPage() {
                 setShowReviewModal(true);
             }
 
+            const nowComparable = hawaiiNow.toComparable();
+            
             // Rides where I'm the driver
             const myUpcomingRides = allRides.filter(r => {
                 if (String(r.driver_id) !== String(currentUser.id)) return false;
                 if (r.status !== 'active' && r.status !== 'full') return false;
                 const rideDateTime = parseRideDateTimeHST(r.departure_date, r.departure_time);
-                return rideDateTime >= hawaiiNow;
+                return rideDateTime.toComparable() >= nowComparable;
             });
             
             // Rides where I'm a confirmed passenger (from stillActive bookings)
@@ -273,7 +275,7 @@ export default function InboxPage() {
                 .filter(ride => {
                     if (!ride) return false;
                     const rideDateTime = parseRideDateTimeHST(ride.departure_date, ride.departure_time);
-                    return rideDateTime >= hawaiiNow;
+                    return rideDateTime.toComparable() >= nowComparable;
                 });
             
             const uniqueUpcomingRides = Array.from(new Set([...myUpcomingRides, ...myBookedRides].map(ride => ride.id)))
