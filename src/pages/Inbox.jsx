@@ -171,7 +171,7 @@ export default function InboxPage() {
 
             // Rides where I'm the driver
             const myUpcomingRides = allRides.filter(r => {
-                if (r.driver_id !== currentUser.id) return false;
+                if (String(r.driver_id) !== String(currentUser.id)) return false;
                 if (r.status !== 'active' && r.status !== 'full') return false;
                 const rideDateTime = new Date(`${r.departure_date}T${r.departure_time || '23:59'}`);
                 return rideDateTime >= now;
@@ -179,7 +179,7 @@ export default function InboxPage() {
             
             // Rides where I'm a confirmed passenger (from stillActive bookings)
             const myBookedRides = stillActive
-                .filter(b => b.passenger_id === currentUser.id)
+                .filter(b => String(b.passenger_id) === String(currentUser.id))
                 .map(b => allRides.find(r => r.id === b.ride_id))
                 .filter(ride => {
                     if (!ride) return false;
