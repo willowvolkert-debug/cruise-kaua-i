@@ -192,12 +192,18 @@ export default function InboxPage() {
             );
             setPendingRequests(pendingBookingRequests);
 
+            console.log("Current user ID:", currentUser.id);
+            console.log("All bookings:", allBookings.map(b => ({ id: b.id, passenger_id: b.passenger_id, status: b.booking_status, payment: b.payment_status })));
+
             // Get rider's own pending booking requests (only show if payment is completed)
-            const riderPendingBookings = allBookings.filter(b => 
-                String(b.passenger_id) === String(currentUser.id) && 
-                b.booking_status === 'pending' &&
-                b.payment_status === 'paid'
-            );
+            const riderPendingBookings = allBookings.filter(b => {
+                const isPassenger = String(b.passenger_id) === String(currentUser.id);
+                const isPending = b.booking_status === 'pending';
+                const isPaid = b.payment_status === 'paid';
+                console.log(`Booking ${b.id}: isPassenger=${isPassenger}, isPending=${isPending}, isPaid=${isPaid}`);
+                return isPassenger && isPending && isPaid;
+            });
+            console.log("Rider pending bookings:", riderPendingBookings);
             setMyPendingBookings(riderPendingBookings);
 
             // Get rejected bookings for this rider (not yet dismissed)
