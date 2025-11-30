@@ -25,12 +25,17 @@ function DebugCard({ user, activeBookings, upcomingRides }) {
     React.useEffect(() => {
         const load = async () => {
             const bookings = await base44.entities.RideBooking.list();
+            const rides = await base44.entities.Ride.list();
             setAllBookings(bookings);
             if (user?.id) {
                 const mine = bookings.filter(b => 
                     String(b.passenger_id) === String(user.id) || 
                     String(b.driver_id) === String(user.id)
                 );
+                // Add ride info to each booking
+                mine.forEach(b => {
+                    b._ride = rides.find(r => String(r.id) === String(b.ride_id));
+                });
                 setMyBookings(mine);
             }
         };
@@ -49,7 +54,7 @@ function DebugCard({ user, activeBookings, upcomingRides }) {
                 <p>Active bookings (filtered): {activeBookings.length}</p>
                 {myBookings.map(b => (
                     <p key={b.id} className="border-t pt-1 mt-1">
-                        ID: {b.id?.slice(-6)} | status: {b.booking_status} | payment: {b.payment_status} | isConfirmed: {String(b.booking_status === 'confirmed')} | isPaid: {String(b.payment_status === 'paid')}
+                        ID: {b.id?.slice(-6)} | status: {b.booking_status} | payment: {b.payment_status} | ride: {b._ride?.departure_date} {b._ride?.departure_time}
                     </p>
                 ))}
             </CardContent>
