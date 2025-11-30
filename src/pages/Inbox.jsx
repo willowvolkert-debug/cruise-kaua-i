@@ -762,7 +762,7 @@ export default function InboxPage() {
 
                                     return (
                                         <div key={booking.id} className="p-4 bg-gray-50 rounded-2xl border border-gray-200">
-                                            {ride && (
+                                            {ride ? (
                                                 <div className="mb-3">
                                                     <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                                                         <Calendar className="w-4 h-4" />
@@ -776,6 +776,10 @@ export default function InboxPage() {
                                                             {ride.departure_location} → {ride.destination}
                                                         </span>
                                                     </div>
+                                                </div>
+                                            ) : (
+                                                <div className="mb-3 text-sm text-gray-500">
+                                                    Ride details loading...
                                                 </div>
                                             )}
                                             
