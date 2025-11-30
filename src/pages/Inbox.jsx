@@ -214,12 +214,8 @@ export default function InboxPage() {
             // Get current Hawaii time for comparison
             const hawaiiNow = getHawaiiNow();
 
-            console.log("Hawaii now:", hawaiiNow);
-
             for (const booking of userActiveBookings) {
                 const ride = allRides.find(r => String(r.id) === String(booking.ride_id));
-                
-                console.log(`Processing booking ${booking.id}, ride_id=${booking.ride_id}, ride found=${!!ride}`);
 
                 if (ride) {
                     // Parse ride date/time as Hawaii local time
@@ -230,8 +226,6 @@ export default function InboxPage() {
                     const nowComparable = hawaiiNow.toComparable();
                     const thresholdComparable = reviewThreshold.toComparable();
                     
-                    console.log(`Ride ${ride.id}: date=${ride.departure_date} time=${ride.departure_time}, nowComp=${nowComparable}, thresholdComp=${thresholdComparable}, isPast=${nowComparable > thresholdComparable}`);
-
                     if (nowComparable > thresholdComparable) {
                         const userRating = allRatings.find(r => 
                             String(r.ride_id) === String(ride.id) && 
@@ -239,24 +233,16 @@ export default function InboxPage() {
                         );
 
                         if (!userRating) {
-                            console.log(`-> needsReview (no rating yet)`);
                             needsReview.push({ booking, ride });
-                        } else {
-                            console.log(`-> already rated, skipping`);
                         }
                     } else {
-                        console.log(`-> stillActive`);
                         stillActive.push(booking);
                     }
                 } else {
                     // Ride not found but booking exists - still show it as active
-                    console.log(`-> stillActive (no ride found)`);
                     stillActive.push(booking);
                 }
             }
-            
-            console.log("Final stillActive count:", stillActive.length);
-            console.log("Final needsReview count:", needsReview.length);
             
             setRidesNeedingReview(needsReview);
             setActiveBookings(stillActive);
