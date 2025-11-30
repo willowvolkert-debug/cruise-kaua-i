@@ -136,6 +136,33 @@ export default function Layout({ children, currentPageName }) {
   const [currentUser, setCurrentUser] = React.useState(null);
   const [showShareModal, setShowShareModal] = React.useState(false);
   const [showTutorial, setShowTutorial] = React.useState(false);
+  const [touchStart, setTouchStart] = React.useState(null);
+  const [touchEnd, setTouchEnd] = React.useState(null);
+  const sidebarRef = React.useRef(null);
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchEnd - touchStart;
+    const isRightSwipe = distance > minSwipeDistance;
+    if (isRightSwipe && touchStart < 50) {
+      // Trigger sidebar open on right swipe from left edge
+      const trigger = document.querySelector('[data-sidebar="trigger"]');
+      if (trigger) trigger.click();
+    }
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
 
   React.useEffect(() => {
     const loadUser = async () => {
