@@ -12,6 +12,9 @@ import ReportModal from "../components/inbox/ReportModal";
 import ChatModal from "../components/inbox/ChatModal";
 import RiderRequestModal from "../components/inbox/RiderRequestModal";
 import CancelBookingModal from "../components/rides/CancelBookingModal";
+import PendingTripsCard from "../components/inbox/PendingTripsCard";
+import RejectionAlert from "../components/inbox/RejectionAlert";
+import RiderCancelModal from "../components/inbox/RiderCancelModal";
 
 import { format } from "date-fns";
 import { sendNotification } from "../components/utils/notifications";
@@ -107,6 +110,10 @@ export default function InboxPage() {
     const [notificationsEnabled, setNotificationsEnabled] = useState(false);
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [bookingToCancel, setBookingToCancel] = useState(null);
+    const [showRiderCancelModal, setShowRiderCancelModal] = useState(false);
+    const [riderBookingToCancel, setRiderBookingToCancel] = useState(null);
+    const [rejectedBookings, setRejectedBookings] = useState([]);
+    const [dismissedRejections, setDismissedRejections] = useState([]);
     const [showReviewModal, setShowReviewModal] = useState(false);
     const [isProcessingPayment, setIsProcessingPayment] = useState(false);
     const [reviewData, setReviewData] = useState({ rating: 0, comment: '' });
@@ -191,6 +198,14 @@ export default function InboxPage() {
                 b.payment_status === 'paid'
             );
             setMyPendingBookings(riderPendingBookings);
+
+            // Get rejected bookings for this rider (not yet dismissed)
+            const riderRejectedBookings = allBookings.filter(b => 
+                String(b.passenger_id) === String(currentUser.id) && 
+                b.booking_status === 'rejected' &&
+                !dismissedRejections.includes(b.id)
+            );
+            setRejectedBookings(riderRejectedBookings);
 
             // Active bookings: confirmed status with paid payment for both drivers and riders
             // DEBUG: Log all bookings to see what we're working with
@@ -431,23 +446,47 @@ export default function InboxPage() {
     };
 
     const handleRejectRequest = async (booking) => {
-        try {
-            await base44.entities.RideBooking.update(booking.id, {
-                booking_status: 'rejected'
-            });
+    try {
+        await base44.entities.RideBooking.update(booking.id, {
+            booking_status: 'rejected'
+        });
 
-            sendNotification(
-                'Ride Request Rejected',
-                'A rider request has been declined.'
-            );
+        // Send email notification to rider about rejection
+        const riders = await base44.entities.User.list();
+        const rider = riders.find(u => u.id === booking.passenger_id);
+        if (rider?.email) {
+            try {
+                await base44.integrations.Core.SendEmail({
+                    to: rider.email,
+                    subject: `Ride request update - Cruise Kauaʻi`,
+                    body: `
+    Aloha ${booking.passenger_name},
 
-            alert("Request rejected. The rider has been notified.");
-            setShowRiderRequestModal(false);
-            loadData();
-        } catch (error) {
-            console.error("Error rejecting request:", error);
-            alert("Error rejecting request. Please try again.");
+    Unfortunately, the driver was unable to accept your ride request at this time. Your payment will be refunded.
+
+    Please log into Cruise Kauaʻi to find another ride.
+
+    Mahalo,
+    Cruise Kauaʻi Team
+                    `.trim()
+                });
+            } catch (emailError) {
+                console.error("Error sending rejection email:", emailError);
+            }
         }
+
+        sendNotification(
+            'Ride Request Rejected',
+            'A rider request has been declined.'
+        );
+
+        alert("Request rejected. The rider has been notified.");
+        setShowRiderRequestModal(false);
+        loadData();
+    } catch (error) {
+        console.error("Error rejecting request:", error);
+        alert("Error rejecting request. Please try again.");
+    }
     };
 
     const handleCancelBooking = (booking) => {
@@ -456,7 +495,7 @@ export default function InboxPage() {
     };
 
     const handleCancelPendingRequest = async (booking) => {
-        if (!confirm("Are you sure you want to cancel this ride request?")) return;
+        if (!confirm("Are you sure you want to cancel this ride request? Your payment will be refunded.")) return;
         
         try {
             await base44.entities.RideBooking.update(booking.id, {
@@ -464,12 +503,130 @@ export default function InboxPage() {
                 cancellation_reason: 'Cancelled by rider before acceptance',
                 cancellation_date: new Date().toISOString()
             });
+
+            // Notify driver that rider cancelled
+            const drivers = await base44.entities.User.list();
+            const driver = drivers.find(u => u.id === booking.driver_id);
+            if (driver?.email) {
+                try {
+                    await base44.integrations.Core.SendEmail({
+                        to: driver.email,
+                        subject: `Ride request cancelled - Cruise Kauaʻi`,
+                        body: `
+Aloha ${driver.full_name},
+
+${booking.passenger_name} has cancelled their ride request before you accepted it.
+
+No action is needed on your end.
+
+Mahalo,
+Cruise Kauaʻi Team
+                        `.trim()
+                    });
+                } catch (emailError) {
+                    console.error("Error sending cancellation email to driver:", emailError);
+                }
+            }
             
-            alert("Ride request cancelled successfully.");
+            alert("Ride request cancelled successfully. Your payment will be refunded.");
             loadData();
         } catch (error) {
             console.error("Error cancelling request:", error);
             alert("Error cancelling request. Please try again.");
+        }
+    };
+
+    const handleMessageDriverFromPending = (booking, driverUsername, driverPicture) => {
+        setSelectedBooking(booking);
+        setSelectedChatName(driverUsername);
+        setSelectedChatPicture(driverPicture || '');
+        setShowChatModal(true);
+    };
+
+    const handleDismissRejection = (bookingId) => {
+        setDismissedRejections(prev => [...prev, bookingId]);
+        setRejectedBookings(prev => prev.filter(b => b.id !== bookingId));
+    };
+
+    const handleOpenRiderCancelModal = (booking) => {
+        setRiderBookingToCancel(booking);
+        setShowRiderCancelModal(true);
+    };
+
+    const handleConfirmRiderCancel = async (booking, reason, refundPercentage) => {
+        try {
+            const ride = allRidesData.find(r => r.id === booking.ride_id);
+
+            // Update booking status
+            await base44.entities.RideBooking.update(booking.id, {
+                booking_status: 'cancelled',
+                cancellation_reason: reason,
+                cancellation_date: new Date().toISOString()
+            });
+
+            // Restore seats on the ride
+            if (ride) {
+                await base44.entities.Ride.update(ride.id, {
+                    seats_available: ride.seats_available + booking.seats_booked,
+                    status: 'active'
+                });
+            }
+
+            // Create admin notification for manual refund
+            await base44.entities.AdminMessage.create({
+                recipient_id: 'admin',
+                recipient_name: 'Admin',
+                subject: `Refund Request: ${refundPercentage} - ${booking.passenger_name}`,
+                message: `
+RIDER CANCELLATION - MANUAL REFUND NEEDED
+
+Passenger: ${booking.passenger_name}
+Booking ID: ${booking.id}
+Ride: ${ride?.departure_location} → ${ride?.destination}
+Date: ${ride?.departure_date} at ${ride?.departure_time}
+
+Total Amount Paid: $${booking.total_amount?.toFixed(2)}
+Refund Percentage: ${refundPercentage}
+Cancellation Reason: ${reason}
+
+Please process the refund manually via Stripe.
+                `.trim(),
+                message_type: 'action_required'
+            });
+
+            // Notify driver about cancellation
+            const drivers = await base44.entities.User.list();
+            const driver = drivers.find(u => u.id === booking.driver_id);
+            if (driver?.email) {
+                try {
+                    await base44.integrations.Core.SendEmail({
+                        to: driver.email,
+                        subject: `Rider cancelled - Cruise Kauaʻi`,
+                        body: `
+Aloha ${driver.full_name},
+
+${booking.passenger_name} has cancelled their confirmed booking for your ride on ${ride?.departure_date} at ${ride?.departure_time}.
+
+Reason: ${reason}
+
+The seat(s) have been made available again for your ride.
+
+Mahalo,
+Cruise Kauaʻi Team
+                        `.trim()
+                    });
+                } catch (emailError) {
+                    console.error("Error sending cancellation email to driver:", emailError);
+                }
+            }
+
+            alert(`Booking cancelled. A ${refundPercentage} refund will be processed by our team.`);
+            setShowRiderCancelModal(false);
+            setRiderBookingToCancel(null);
+            loadData();
+        } catch (error) {
+            console.error("Error cancelling booking:", error);
+            alert("Error cancelling booking. Please try again.");
         }
     };
 
@@ -595,6 +752,21 @@ export default function InboxPage() {
                 </Card>
 
 
+
+                {/* Rejection Alert */}
+                <RejectionAlert 
+                    rejectedBookings={rejectedBookings}
+                    onDismiss={handleDismissRejection}
+                />
+
+                {/* Pending Trips Card for Riders */}
+                <PendingTripsCard
+                    pendingBookings={myPendingBookings}
+                    allRidesData={allRidesData}
+                    getUserById={getUserById}
+                    onCancelRequest={handleCancelPendingRequest}
+                    onMessageDriver={handleMessageDriverFromPending}
+                />
 
                 {adminMessages.length > 0 && (
                     <Card className={`shadow-lg rounded-3xl ${adminMessages.some(m => !m.is_read) ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-gray-50'}`}>
@@ -768,65 +940,7 @@ export default function InboxPage() {
                     </Card>
                 )}
 
-                {myPendingBookings.length > 0 && (
-                    <Card className="shadow-lg border-gray-200 bg-gray-50 rounded-3xl">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-secondary">
-                                <Clock className="w-6 h-6 text-yellow-600"/>
-                                your pending requests ({myPendingBookings.length})
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-gray-600 mb-4">
-                                Waiting for drivers to accept your ride requests
-                            </p>
-                            <div className="space-y-3">
-                                {myPendingBookings.map(booking => {
-                                    const ride = allRidesData.find(r => r.id === booking.ride_id) || {};
-                                    const driverUser = getUserById(booking.driver_id);
-                                    const driverUsername = driverUser?.username || booking.driver_username || 'Driver';
-                                    
-                                    return (
-                                        <div key={booking.id} className="p-4 bg-white rounded-lg border border-gray-200">
-                                            <div className="space-y-2">
-                                                <div className="flex items-center gap-2 text-sm text-gray-600">
-                                                    <Calendar className="w-4 h-4" />
-                                                    <span>{ride.departure_date ? format(new Date(ride.departure_date), "MMM d, yyyy") : 'TBD'}</span>
-                                                    {ride.departure_time && (
-                                                        <>
-                                                            <Clock className="w-4 h-4 ml-2" />
-                                                            <span>{ride.departure_time}</span>
-                                                        </>
-                                                    )}
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <MapPin className="w-4 h-4 text-primary" />
-                                                    <span className="font-semibold text-secondary">
-                                                        {ride.departure_location || 'Loading...'} → {ride.destination || 'Loading...'}
-                                                    </span>
-                                                </div>
-                                                <p className="text-sm text-gray-600">
-                                                    Driver: @{driverUsername} • {booking.seats_booked} seat(s) • ${booking.total_amount}
-                                                </p>
-                                                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 rounded-2xl">
-                                                    Awaiting driver approval
-                                                </Badge>
-                                                <Button
-                                                    onClick={() => handleCancelPendingRequest(booking)}
-                                                    variant="outline"
-                                                    size="sm"
-                                                    className="w-full mt-2 border-red-300 text-red-600 hover:bg-red-50 rounded-2xl"
-                                                >
-                                                    Cancel Request
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </CardContent>
-                    </Card>
-                )}
+
 
                 {pendingRequests.length > 0 && (
                     <Card className="shadow-lg border-blue-200 bg-blue-50 rounded-3xl">
@@ -940,15 +1054,15 @@ export default function InboxPage() {
                                             </div>
                                             
                                             {!isDriver && (
-                                                <Button
-                                                    onClick={() => handleCancelBooking(booking)}
-                                                    variant="outline"
-                                                    size="sm"
-                                                    className="w-full mt-3 border-red-300 text-red-600 hover:bg-red-50 rounded-2xl"
-                                                >
-                                                    Cancel Booking
-                                                </Button>
-                                            )}
+                                                                <Button
+                                                                    onClick={() => handleOpenRiderCancelModal(booking)}
+                                                                    variant="outline"
+                                                                    size="sm"
+                                                                    className="w-full mt-3 border-red-300 text-red-600 hover:bg-red-50 rounded-2xl"
+                                                                >
+                                                                    Cancel Booking
+                                                                </Button>
+                                                            )}
                                         </div>
                                     );
                                 })}
@@ -1033,6 +1147,17 @@ export default function InboxPage() {
                     isOpen={showReportModal}
                     onClose={() => setShowReportModal(false)}
                     recentChats={recentChats}
+                />
+
+                <RiderCancelModal
+                    isOpen={showRiderCancelModal}
+                    onClose={() => {
+                        setShowRiderCancelModal(false);
+                        setRiderBookingToCancel(null);
+                    }}
+                    booking={riderBookingToCancel}
+                    ride={riderBookingToCancel ? allRidesData.find(r => r.id === riderBookingToCancel.ride_id) : null}
+                    onConfirmCancel={handleConfirmRiderCancel}
                 />
 
                 {isProcessingPayment && (
