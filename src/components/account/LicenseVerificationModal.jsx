@@ -1,14 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X, ExternalLink, ShieldCheck } from "lucide-react";
-
-const STRIPE_VERIFICATION_URL = "https://verify.stripe.com/start/live_YWNjdF8xU0M5NElMMkh0bzdtWXNpLF9UVmNNNlVmbWVjM1lKZXNqZ0VYSEJwVjFhMFpXdVly0100dUp8Bh0u";
+import { X, ExternalLink, ShieldCheck, Loader2 } from "lucide-react";
+import { createIdentityVerification } from "@/functions/createIdentityVerification";
 
 export default function LicenseVerificationModal({ isOpen, onClose, onSuccess }) {
-  const handleVerify = () => {
-    window.open(STRIPE_VERIFICATION_URL, '_blank');
-    onClose();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleVerify = async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const response = await createIdentityVerification({});
+      
+      if (response.data?.url) {
+        window.open(response.data.url, '_blank');
+        onClose();
+      } else {
+        setError("Failed to create verification session. Please try again.");
+      }
+    } catch (err) {
+      console.error("Verification error:", err);
+      setError("Failed to start verification. Please try again.");
+    }
+    
+    setIsLoading(false);
   };
 
   return (
@@ -49,12 +67,28 @@ export default function LicenseVerificationModal({ isOpen, onClose, onSuccess })
             </ul>
           </div>
 
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-2xl p-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
+
           <Button
             onClick={handleVerify}
+            disabled={isLoading}
             className="w-full px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-2xl"
           >
-            <ExternalLink className="w-4 h-4 mr-2" />
-            continue to verification
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                creating session...
+              </>
+            ) : (
+              <>
+                <ExternalLink className="w-4 h-4 mr-2" />
+                continue to verification
+              </>
+            )}
           </Button>
 
           <p className="text-xs text-gray-500 text-center">
