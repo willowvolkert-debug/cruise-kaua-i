@@ -203,8 +203,8 @@ export default function InboxPage() {
             const myUpcomingRides = allRides.filter(r => {
                 if (String(r.driver_id) !== String(currentUser.id)) return false;
                 if (r.status !== 'active' && r.status !== 'full') return false;
-                const rideDateTime = new Date(`${r.departure_date}T${r.departure_time || '23:59'}`);
-                return rideDateTime >= now;
+                const rideDateTime = parseRideDateTimeHST(r.departure_date, r.departure_time);
+                return rideDateTime >= hawaiiNow;
             });
             
             // Rides where I'm a confirmed passenger (from stillActive bookings)
@@ -213,8 +213,8 @@ export default function InboxPage() {
                 .map(b => allRides.find(r => r.id === b.ride_id))
                 .filter(ride => {
                     if (!ride) return false;
-                    const rideDateTime = new Date(`${ride.departure_date}T${ride.departure_time || '23:59'}`);
-                    return rideDateTime >= now;
+                    const rideDateTime = parseRideDateTimeHST(ride.departure_date, ride.departure_time);
+                    return rideDateTime >= hawaiiNow;
                 });
             
             const uniqueUpcomingRides = Array.from(new Set([...myUpcomingRides, ...myBookedRides].map(ride => ride.id)))
