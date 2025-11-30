@@ -221,14 +221,14 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                     onClick={() => setBookingData(p => ({ ...p, wants_detour_service: true }))}
                     className={`flex-1 ${bookingData.wants_detour_service ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
                   >
-                    YES
+                    yes
                   </Button>
                   <Button
                     type="button"
                     onClick={() => setBookingData(p => ({ ...p, wants_detour_service: false, detour_destination: '' }))}
                     className={`flex-1 ${!bookingData.wants_detour_service ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
                   >
-                    NO
+                    no
                   </Button>
                 </div>
                 {bookingData.wants_detour_service && (
