@@ -52,11 +52,17 @@ function DebugCard({ user, activeBookings, upcomingRides }) {
                 <p>Total bookings in DB: {allBookings.length}</p>
                 <p>Your bookings (any status): {myBookings.length}</p>
                 <p>Active bookings (filtered): {activeBookings.length}</p>
-                {myBookings.map(b => (
-                    <p key={b.id} className="border-t pt-1 mt-1">
-                        ID: {b.id?.slice(-6)} | status: {b.booking_status} | payment: {b.payment_status} | ride: {b._ride?.departure_date} {b._ride?.departure_time}
-                    </p>
-                ))}
+                {myBookings.map(b => {
+                    const rideDateTimeStr = `${b._ride?.departure_date}T${b._ride?.departure_time || '23:59'}:00-10:00`;
+                    const rideDateTime = new Date(rideDateTimeStr);
+                    const reviewThreshold = new Date(rideDateTime.getTime() + 4 * 60 * 60 * 1000);
+                    const now = new Date();
+                    return (
+                        <p key={b.id} className="border-t pt-1 mt-1">
+                            ride: {b._ride?.departure_date} {b._ride?.departure_time} | now: {now.toISOString()} | threshold: {reviewThreshold.toISOString()} | pastThreshold: {String(now > reviewThreshold)}
+                        </p>
+                    );
+                })}
             </CardContent>
         </Card>
     );
