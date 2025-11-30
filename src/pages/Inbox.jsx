@@ -49,12 +49,11 @@ function DebugCard({ user, activeBookings, upcomingRides }) {
             </CardHeader>
             <CardContent className="text-xs text-yellow-700 space-y-1">
                 <p>Your ID: {user?.id}</p>
-                <p>Total bookings in DB: {allBookings.length}</p>
-                <p>Your bookings (any status): {myBookings.length}</p>
-                <p>Active bookings (filtered): {activeBookings.length}</p>
+                <p>Active bookings count: {activeBookings.length}</p>
+                <p>Needs review count: {ridesNeedingReview.length}</p>
                 {myBookings.map(b => (
                     <p key={b.id} className="border-t pt-1 mt-1">
-                        ride_id: {b.ride_id?.slice(-6)} | rideFound: {String(!!b._ride)} | status: {b.booking_status} | payment: {b.payment_status}
+                        inActiveBookings: {String(activeBookings.some(ab => ab.id === b.id))} | inNeedsReview: {String(ridesNeedingReview.some(r => r.booking.id === b.id))}
                     </p>
                 ))}
             </CardContent>
