@@ -6,15 +6,15 @@ import { Smartphone, Chrome, Share2 } from "lucide-react";
 export default function EnableNotificationsModal({ isOpen, onClose }) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg bg-white rounded-3xl">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-lg bg-white rounded-3xl max-h-[90vh] flex flex-col">
+        <DialogHeader className="flex-shrink-0">
           <DialogTitle className="text-2xl font-bold text-secondary flex items-center gap-2">
             <Smartphone className="w-6 h-6 text-primary" />
             enable notifications
           </DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-6 py-4">
+        <div className="flex-1 overflow-y-auto space-y-6 py-4 pr-2">
           <p className="text-gray-700">
             To receive notifications, you need to add Cruise Kauaʻi to your device's home screen first.
           </p>
@@ -61,7 +61,9 @@ export default function EnableNotificationsModal({ isOpen, onClose }) {
               </ol>
             </div>
           </div>
+        </div>
 
+        <div className="flex-shrink-0 pt-4 border-t border-gray-100">
           <Button
             onClick={onClose}
             className="w-full bg-primary hover:bg-primary/90 rounded-2xl"

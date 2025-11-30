@@ -101,6 +101,11 @@ export default function FindRide() {
           return;
         }
 
+        if (!user.notifications_enabled) {
+          setError("Please enable notifications before booking rides. Go to Account page and tap 'enable now' under notifications.");
+          return;
+        }
+
         if (user.user_type !== 'rider' && user.user_type !== 'driver' && user.role !== 'admin') {
           setError("Your account must be upgraded to rider status before booking rides. Please complete your profile and license verification.");
           return;
@@ -212,6 +217,11 @@ export default function FindRide() {
 
     if (!currentUser.drivers_license_verified) {
       setError("Please verify your driver's license before booking rides.");
+      return;
+    }
+
+    if (!currentUser.notifications_enabled) {
+      setError("Please enable notifications before booking rides. Go to Account page.");
       return;
     }
 
