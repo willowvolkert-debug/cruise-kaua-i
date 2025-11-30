@@ -18,20 +18,76 @@ import { sendNotification } from "../components/utils/notifications";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
-// Helper to get current time in Hawaii (UTC-10)
+// Helper to get current time in Hawaii (UTC-10) as a simple comparable object
 const getHawaiiNow = () => {
-    const now = new Date();
-    // Get UTC time, then subtract 10 hours for Hawaii
-    return new Date(now.getTime() - (now.getTimezoneOffset() * 60000) - (10 * 60 * 60 * 1000));
+    // Create formatter that outputs Hawaii time components
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Pacific/Honolulu',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+    const parts = formatter.formatToParts(new Date());
+    const get = (type) => parts.find(p => p.type === type)?.value;
+    
+    return {
+        year: parseInt(get('year')),
+        month: parseInt(get('month')),
+        day: parseInt(get('day')),
+        hour: parseInt(get('hour')),
+        minute: parseInt(get('minute')),
+        // For easy comparison: YYYYMMDDHHMM as number
+        toComparable: function() {
+            return this.year * 100000000 + this.month * 1000000 + this.day * 10000 + this.hour * 100 + this.minute;
+        }
+    };
 };
 
-// Helper to parse a ride date/time as Hawaii time and return comparable timestamp
+// Helper to parse a ride date/time as comparable object (same format as getHawaiiNow)
 const parseRideDateTimeHST = (dateStr, timeStr) => {
-    // dateStr is "YYYY-MM-DD", timeStr is "HH:MM"
+    if (!dateStr) return { toComparable: () => 0 }; // No date = treat as past
+    
     const [year, month, day] = dateStr.split('-').map(Number);
     const [hours, minutes] = (timeStr || '23:59').split(':').map(Number);
-    // Create date as if in Hawaii (just use the raw values)
-    return new Date(year, month - 1, day, hours, minutes, 0, 0);
+    
+    return {
+        year,
+        month,
+        day,
+        hour: hours,
+        minute: minutes,
+        toComparable: function() {
+            return this.year * 100000000 + this.month * 1000000 + this.day * 10000 + this.hour * 100 + this.minute;
+        },
+        // Add hours and return new comparable
+        addHours: function(h) {
+            // Simple approach: just add to hour, handle overflow
+            let newHour = this.hour + h;
+            let newDay = this.day;
+            let newMonth = this.month;
+            let newYear = this.year;
+            
+            while (newHour >= 24) {
+                newHour -= 24;
+                newDay++;
+            }
+            // Simplified - don't worry about month overflow for 4 hour buffer
+            
+            return {
+                year: newYear,
+                month: newMonth,
+                day: newDay,
+                hour: newHour,
+                minute: this.minute,
+                toComparable: function() {
+                    return this.year * 100000000 + this.month * 1000000 + this.day * 10000 + this.hour * 100 + this.minute;
+                }
+            };
+        }
+    };
 };
 
 export default function InboxPage() {
