@@ -145,24 +145,25 @@ export default function InboxPage() {
                 return (isPassenger || isDriver) && isConfirmed && isPaid;
             });
 
-            const now = new Date();
             const needsReview = [];
             const stillActive = [];
 
             // Get ratings once for efficiency
             const allRatings = await base44.entities.Rating.list();
 
+            // Get current Hawaii time for comparison
+            const hawaiiNow = getHawaiiNow();
+
             for (const booking of userActiveBookings) {
                 const ride = allRides.find(r => String(r.id) === String(booking.ride_id));
 
                 if (ride) {
-                    // Parse ride date/time in Hawaii timezone (UTC-10)
+                    // Parse ride date/time as Hawaii local time
+                    const rideDateTime = parseRideDateTimeHST(ride.departure_date, ride.departure_time);
                     // Add 4 hours buffer after departure time before requiring review
-                    const rideDateTimeStr = `${ride.departure_date}T${ride.departure_time || '23:59'}:00-10:00`;
-                    const rideDateTime = new Date(rideDateTimeStr);
                     const reviewThreshold = new Date(rideDateTime.getTime() + 4 * 60 * 60 * 1000);
 
-                    if (now > reviewThreshold) {
+                    if (hawaiiNow > reviewThreshold) {
                         const userRating = allRatings.find(r => 
                             String(r.ride_id) === String(ride.id) && 
                             String(r.rated_by_user_id) === String(currentUser.id)
