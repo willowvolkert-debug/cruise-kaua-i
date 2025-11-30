@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ShieldCheck, X, CheckCircle, Clock, Users, AlertCircle, Eye, Car, MessageSquare, Phone } from "lucide-react";
+import { ShieldCheck, X, CheckCircle, Clock, Users, AlertCircle, Eye, Car, MessageSquare, Phone, Mail } from "lucide-react";
+import AdminMessageModal from "../components/admin/AdminMessageModal";
 import {
   Dialog,
   DialogContent,
@@ -30,6 +31,8 @@ export default function AdminPage() {
   const [showVehicleModal, setShowVehicleModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
+  const [showMessageModal, setShowMessageModal] = useState(false);
+  const [messageUser, setMessageUser] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -198,6 +201,11 @@ export default function AdminPage() {
     } catch (error) {
       console.error("Error resolving inquiry:", error);
     }
+  };
+
+  const handleMessageUser = (user) => {
+    setMessageUser(user);
+    setShowMessageModal(true);
   };
 
   if (error && !currentUser) {
@@ -464,6 +472,15 @@ export default function AdminPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
+                        <Button
+                          onClick={() => handleMessageUser(user)}
+                          size="sm"
+                          variant="outline"
+                          className="rounded-2xl border-gray-300"
+                        >
+                          <Mail className="w-3 h-3 mr-1" />
+                          message
+                        </Button>
                         {user.drivers_license_verified ? (
                           <Badge className="bg-green-100 text-green-800">
                             <CheckCircle className="w-3 h-3 mr-1" />
