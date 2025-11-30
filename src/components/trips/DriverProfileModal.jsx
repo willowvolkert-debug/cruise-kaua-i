@@ -24,11 +24,16 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
       if (!isOpen || !ride) return;
       
       setIsLoading(true);
+      setDriverProfile(null);
+      setDriverRatings([]);
+      
       try {
         // Get driver profile
         const allUsers = await base44.entities.User.list();
         const driver = allUsers.find(u => u.id === ride.driver_id);
-        setDriverProfile(driver);
+        if (driver) {
+          setDriverProfile(driver);
+        }
 
         // Get driver ratings
         const allRatings = await base44.entities.Rating.list();
@@ -42,8 +47,10 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
       setIsLoading(false);
     };
 
-    loadDriverData();
-  }, [isOpen, ride]);
+    if (isOpen && ride?.driver_id) {
+      loadDriverData();
+    }
+  }, [isOpen, ride?.driver_id]);
 
   const averageRating = driverRatings.length > 0 
     ? (driverRatings.reduce((sum, r) => sum + r.rating_value, 0) / driverRatings.length).toFixed(1)
