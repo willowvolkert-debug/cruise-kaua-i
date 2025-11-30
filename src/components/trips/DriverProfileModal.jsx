@@ -21,35 +21,32 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
 
   useEffect(() => {
     const loadDriverData = async () => {
-      if (!isOpen || !ride) return;
+      if (!isOpen || !ride?.driver_id) return;
       
       setIsLoading(true);
       setDriverProfile(null);
       setDriverRatings([]);
       
       try {
-        // Get driver profile
-        const allUsers = await base44.entities.User.list();
-        const driver = allUsers.find(u => u.id === ride.driver_id);
-        if (driver) {
-          setDriverProfile(driver);
+        // Get driver profile by filtering with driver_id
+        const drivers = await base44.entities.User.filter({ id: ride.driver_id });
+        if (drivers && drivers.length > 0) {
+          setDriverProfile(drivers[0]);
         }
 
         // Get driver ratings
-        const allRatings = await base44.entities.Rating.list();
-        const ratings = allRatings.filter(r => 
-          r.rated_user_id === ride.driver_id && r.trip_role === 'driver'
-        );
-        setDriverRatings(ratings);
+        const ratings = await base44.entities.Rating.filter({ 
+          rated_user_id: ride.driver_id, 
+          trip_role: 'driver' 
+        });
+        setDriverRatings(ratings || []);
       } catch (error) {
         console.error("Error loading driver data:", error);
       }
       setIsLoading(false);
     };
 
-    if (isOpen && ride?.driver_id) {
-      loadDriverData();
-    }
+    loadDriverData();
   }, [isOpen, ride?.driver_id]);
 
   const averageRating = driverRatings.length > 0 
