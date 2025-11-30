@@ -22,6 +22,7 @@ export default function AdminPage() {
   const [pendingLicenses, setPendingLicenses] = useState([]);
   const [pendingVehicles, setPendingVehicles] = useState([]);
   const [verifiedUsers, setVerifiedUsers] = useState([]);
+  const [verifiedRiders, setVerifiedRiders] = useState([]);
   const [contactInquiries, setContactInquiries] = useState([]);
   const [phoneAlerts, setPhoneAlerts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,10 +58,12 @@ export default function AdminPage() {
       const pendingLic = allUsers.filter(u => u.drivers_license_pending_review === true);
       const pendingVeh = allUsers.filter(u => u.vehicle_pending_review === true);
       const verified = allUsers.filter(u => u.drivers_license_verified === true);
+      const riders = allUsers.filter(u => u.user_type === 'rider');
 
       setPendingLicenses(pendingLic);
       setPendingVehicles(pendingVeh);
       setVerifiedUsers(verified);
+      setVerifiedRiders(riders);
 
       // Load contact inquiries
       const allInquiries = await base44.entities.ContactInquiry.list('-created_date');
@@ -502,9 +505,10 @@ export default function AdminPage() {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="all" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="all">all ({users.length})</TabsTrigger>
-                <TabsTrigger value="verified">verified ({verifiedUsers.length})</TabsTrigger>
+                <TabsTrigger value="riders">riders ({verifiedRiders.length})</TabsTrigger>
+                <TabsTrigger value="verified">drivers ({verifiedUsers.length})</TabsTrigger>
                 <TabsTrigger value="pending">pending ({pendingLicenses.length})</TabsTrigger>
               </TabsList>
 
@@ -561,6 +565,30 @@ export default function AdminPage() {
                           <Badge className="bg-gray-100 text-gray-600">user</Badge>
                         )}
                       </div>
+                    </div>
+                  ))}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="riders" className="mt-4">
+                <div className="space-y-3 max-h-96 overflow-y-auto">
+                  {verifiedRiders.map(user => (
+                    <div key={user.id} className="flex items-center justify-between p-3 bg-white rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="w-10 h-10 bg-gradient-to-r from-primary to-secondary">
+                          <AvatarFallback className="text-white font-semibold">
+                            {getInitials(user.full_name)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-medium text-secondary">{user.full_name}</p>
+                          <p className="text-sm text-gray-600">{user.email}</p>
+                        </div>
+                      </div>
+                      <Badge className="bg-blue-100 text-blue-800">
+                        <CheckCircle className="w-3 h-3 mr-1" />
+                        verified rider
+                      </Badge>
                     </div>
                   ))}
                 </div>
