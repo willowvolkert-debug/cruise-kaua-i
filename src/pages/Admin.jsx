@@ -753,6 +753,13 @@ export default function AdminPage() {
             )}
           </DialogContent>
         </Dialog>
+
+        <AdminMessageModal
+          isOpen={showMessageModal}
+          onClose={() => setShowMessageModal(false)}
+          user={messageUser}
+          onSuccess={loadData}
+        />
       </div>
     </div>
   );
