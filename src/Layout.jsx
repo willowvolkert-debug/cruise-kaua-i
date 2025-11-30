@@ -230,18 +230,23 @@ export default function Layout({ children, currentPageName }) {
           />
         </Sidebar>
 
-        <main className="flex-1 flex flex-col">
-          <header className="bg-white border-b border-gray-200 px-6 py-4 md:hidden">
-            <div className="flex items-center gap-4">
-                <SidebarTrigger className="hover:bg-gray-100 p-2 rounded-2xl transition-colors duration-200" />
-                <h1 className="text-xl font-bold text-secondary">cruise kauaʻi</h1>
-              </div>
-          </header>
+        <main 
+                      className="flex-1 flex flex-col"
+                      onTouchStart={onTouchStart}
+                      onTouchMove={onTouchMove}
+                      onTouchEnd={onTouchEnd}
+                    >
+                      <header className="bg-white border-b border-gray-200 px-6 py-4 md:hidden">
+                        <div className="flex items-center gap-4">
+                            <SidebarTrigger data-sidebar="trigger" className="hover:bg-gray-100 p-2 rounded-2xl transition-colors duration-200" />
+                            <h1 className="text-xl font-bold text-secondary">cruise kauaʻi</h1>
+                          </div>
+                      </header>
 
-          <div className="flex-1 overflow-auto bg-white">
-            {children}
-          </div>
-        </main>
+                      <div className="flex-1 overflow-auto bg-white">
+                        {children}
+                      </div>
+                    </main>
       </div>
 
       <ShareAppModal 
