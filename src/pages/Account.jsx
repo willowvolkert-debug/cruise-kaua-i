@@ -161,12 +161,20 @@ export default function AccountPage() {
 
     const handleLicenseVerificationSuccess = async () => {
         await loadData();
-        // Auto-upgrade to rider if profile is complete and license is verified
+        // Auto-upgrade to rider if all requirements are met
         const updatedUser = await base44.auth.me();
-        if (updatedUser.profile_complete && updatedUser.drivers_license_verified && 
-            updatedUser.terms_accepted && updatedUser.privacy_policy_accepted && 
-            updatedUser.community_agreement_accepted && (!updatedUser.user_type || updatedUser.user_type === 'new')) {
+        const agreementsComplete = updatedUser.terms_accepted && updatedUser.privacy_policy_accepted && updatedUser.community_agreement_accepted;
+        const notificationsOn = updatedUser.notifications_enabled;
+
+        if (updatedUser.profile_complete && updatedUser.drivers_license_verified && agreementsComplete && notificationsOn &&
+            (!updatedUser.user_type || updatedUser.user_type === 'new')) {
             await base44.auth.updateMe({ user_type: 'rider' });
+        }
+
+        // Auto-upgrade to driver if rider with verified vehicle
+        const refreshedUser = await base44.auth.me();
+        if (refreshedUser.user_type === 'rider' && refreshedUser.vehicle_verified) {
+            await base44.auth.updateMe({ user_type: 'driver' });
         }
     };
 
