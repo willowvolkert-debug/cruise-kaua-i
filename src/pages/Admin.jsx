@@ -94,14 +94,19 @@ export default function AdminPage() {
 
     setIsProcessing(true);
     try {
-      // Check if user meets all requirements for rider status
+      // Check if user meets all requirements for rider/driver status
       const profileComplete = selectedUser.username && selectedUser.bio && selectedUser.age && selectedUser.gender && selectedUser.profile_picture_url;
       const agreementsComplete = selectedUser.terms_accepted && selectedUser.privacy_policy_accepted && selectedUser.community_agreement_accepted;
       const notificationsEnabled = selectedUser.notifications_enabled;
       
       // Determine new user_type based on requirements
+      const canBeRider = profileComplete && agreementsComplete && notificationsEnabled;
+      const canBeDriver = canBeRider && selectedUser.vehicle_verified;
+      
       let newUserType = selectedUser.user_type || 'new';
-      if (profileComplete && agreementsComplete && notificationsEnabled) {
+      if (canBeDriver) {
+        newUserType = 'driver';
+      } else if (canBeRider) {
         newUserType = 'rider';
       }
 
