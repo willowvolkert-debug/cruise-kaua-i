@@ -751,7 +751,7 @@ export default function InboxPage() {
                         ) : activeBookings.length > 0 ? (
                             <div className="space-y-4">
                                 {activeBookings.map(booking => {
-                                    const isDriver = user.id === booking.driver_id;
+                                    const isDriver = String(user.id) === String(booking.driver_id);
                                     const otherUserId = isDriver ? booking.passenger_id : booking.driver_id;
                                     const otherUser = getUserById(otherUserId);
                                     const otherPartyUsername = otherUser?.username || (isDriver ? booking.passenger_name : "Driver");
