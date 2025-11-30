@@ -90,7 +90,7 @@ export default function InboxPage() {
             setAllRidesData(allRides);
             const allBookings = await base44.entities.RideBooking.list();
 
-            const myRideIds = allRides.filter(r => r.driver_id === currentUser.id).map(r => r.id);
+            const myRideIds = allRides.filter(r => String(r.driver_id) === String(currentUser.id)).map(r => r.id);
             // Only show pending requests where payment has been completed
             const pendingBookingRequests = allBookings.filter(b => 
                 myRideIds.includes(b.ride_id) && 
@@ -101,7 +101,7 @@ export default function InboxPage() {
 
             // Get rider's own pending booking requests (only show if payment is completed)
             const riderPendingBookings = allBookings.filter(b => 
-                b.passenger_id === currentUser.id && 
+                String(b.passenger_id) === String(currentUser.id) && 
                 b.booking_status === 'pending' &&
                 b.payment_status === 'paid'
             );
