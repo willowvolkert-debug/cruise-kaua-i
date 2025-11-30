@@ -491,6 +491,20 @@ export default function InboxPage() {
                     </AlertDescription>
                 </Alert>
 
+                {/* Debug info - REMOVE AFTER TESTING */}
+                <Card className="shadow-md border-yellow-300 bg-yellow-50 rounded-3xl">
+                    <CardHeader>
+                        <CardTitle className="text-sm text-yellow-800">Debug Info (temp)</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-xs text-yellow-700 space-y-1">
+                        <p>Your ID: {user?.id}</p>
+                        <p>Active bookings found: {activeBookings.length}</p>
+                        <p>Pending requests (driver): {pendingRequests.length}</p>
+                        <p>Your pending bookings: {myPendingBookings.length}</p>
+                        <p>Upcoming rides: {upcomingRides.length}</p>
+                    </CardContent>
+                </Card>
+
                 {adminMessages.length > 0 && (
                     <Card className={`shadow-lg rounded-3xl ${adminMessages.some(m => !m.is_read) ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-gray-50'}`}>
                         <CardHeader>
