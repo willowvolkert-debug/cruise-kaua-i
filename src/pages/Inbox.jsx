@@ -588,7 +588,7 @@ export default function InboxPage() {
                         </CardHeader>
                         <CardContent className="space-y-3">
                             {upcomingRides.map(ride => {
-                                const isDriver = ride.driver_id === user?.id;
+                                const isDriver = String(ride.driver_id) === String(user?.id);
                                 const bookingsForRide = activeBookings.filter(b => b.ride_id === ride.id && b.booking_status === 'confirmed');
                                 const participants = bookingsForRide
                                     .map(b => {
