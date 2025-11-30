@@ -170,19 +170,6 @@ export default function InboxPage() {
             setAllRidesData(allRides);
             const allBookings = await base44.entities.RideBooking.list();
 
-            console.log("Current user ID:", currentUser.id);
-            console.log("All bookings count:", allBookings.length);
-            
-            // Debug: Log all confirmed+paid bookings
-            const confirmedPaidBookings = allBookings.filter(b => b.booking_status === 'confirmed' && b.payment_status === 'paid');
-            console.log("Confirmed+Paid bookings:", confirmedPaidBookings.map(b => ({
-                id: b.id,
-                passenger_id: b.passenger_id,
-                driver_id: b.driver_id,
-                status: b.booking_status,
-                payment: b.payment_status
-            })));
-
             const myRideIds = allRides.filter(r => String(r.driver_id) === String(currentUser.id)).map(r => r.id);
             // Only show pending requests where payment has been completed
             const pendingBookingRequests = allBookings.filter(b => 
