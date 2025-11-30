@@ -182,6 +182,7 @@ export default function AdminPage() {
       await base44.entities.User.update(selectedUser.id, {
         vehicle_verified: true,
         vehicle_pending_review: false,
+        vehicle_rejection_reason: null,
         can_drive: true,
         user_type: newUserType
       });
