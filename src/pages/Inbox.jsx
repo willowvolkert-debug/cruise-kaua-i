@@ -578,10 +578,9 @@ export default function InboxPage() {
                     <CardContent className="p-4 text-xs space-y-1">
                         <p><strong>Debug Info:</strong></p>
                         <p>Your User ID: {user?.id}</p>
-                        <p>Expected passenger_id: 692be2d3785855b72489d79c</p>
-                        <p>IDs match: {user?.id === '692be2d3785855b72489d79c' ? 'YES' : 'NO'}</p>
                         <p>Active Bookings: {activeBookings.length}</p>
                         <p>Rides Needing Review: {ridesNeedingReview.length}</p>
+                        <p>All Rides Loaded: {allRidesData.length}</p>
                         <p>Loading: {isLoading ? 'Yes' : 'No'}</p>
                     </CardContent>
                 </Card>
