@@ -15,6 +15,12 @@ export default function LicenseVerificationModal({ isOpen, onClose, onSuccess })
     try {
       const response = await createIdentityVerification({});
       
+      if (response.data?.error) {
+        setError(response.data.error);
+        setIsLoading(false);
+        return;
+      }
+      
       if (response.data?.url) {
         // Open Stripe Identity verification in a popup window
         const width = 500;
@@ -43,7 +49,7 @@ export default function LicenseVerificationModal({ isOpen, onClose, onSuccess })
       }
     } catch (err) {
       console.error("Verification error:", err);
-      setError("Failed to start verification. Please try again.");
+      setError(err?.response?.data?.error || "Failed to start verification. Please try again.");
       setIsLoading(false);
     }
   };
