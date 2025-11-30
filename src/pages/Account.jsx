@@ -138,20 +138,17 @@ export default function AccountPage() {
             profile_complete: isProfileComplete
         });
 
-        // Auto-upgrade to rider if all requirements met
+        // Check all requirements and auto-upgrade
         const updatedUser = await base44.auth.me();
         const agreementsComplete = updatedUser.terms_accepted && updatedUser.privacy_policy_accepted && updatedUser.community_agreement_accepted;
         const notificationsOn = updatedUser.notifications_enabled;
+        const canBeRider = isProfileComplete && updatedUser.drivers_license_verified && agreementsComplete && notificationsOn;
+        const canBeDriver = canBeRider && updatedUser.vehicle_verified;
 
-        if (isProfileComplete && updatedUser.drivers_license_verified && agreementsComplete && notificationsOn && 
-            (!updatedUser.user_type || updatedUser.user_type === 'new')) {
-            await base44.auth.updateMe({ user_type: 'rider' });
-        }
-
-        // Auto-upgrade to driver if rider with verified vehicle
-        const refreshedUser = await base44.auth.me();
-        if (refreshedUser.user_type === 'rider' && refreshedUser.vehicle_verified) {
+        if (canBeDriver && updatedUser.user_type !== 'driver') {
             await base44.auth.updateMe({ user_type: 'driver' });
+        } else if (canBeRider && (!updatedUser.user_type || updatedUser.user_type === 'new')) {
+            await base44.auth.updateMe({ user_type: 'rider' });
         }
 
         await loadData();
@@ -161,20 +158,17 @@ export default function AccountPage() {
 
     const handleLicenseVerificationSuccess = async () => {
         await loadData();
-        // Auto-upgrade to rider if all requirements are met
+        // Check all requirements and auto-upgrade
         const updatedUser = await base44.auth.me();
         const agreementsComplete = updatedUser.terms_accepted && updatedUser.privacy_policy_accepted && updatedUser.community_agreement_accepted;
         const notificationsOn = updatedUser.notifications_enabled;
+        const canBeRider = updatedUser.profile_complete && updatedUser.drivers_license_verified && agreementsComplete && notificationsOn;
+        const canBeDriver = canBeRider && updatedUser.vehicle_verified;
 
-        if (updatedUser.profile_complete && updatedUser.drivers_license_verified && agreementsComplete && notificationsOn &&
-            (!updatedUser.user_type || updatedUser.user_type === 'new')) {
-            await base44.auth.updateMe({ user_type: 'rider' });
-        }
-
-        // Auto-upgrade to driver if rider with verified vehicle
-        const refreshedUser = await base44.auth.me();
-        if (refreshedUser.user_type === 'rider' && refreshedUser.vehicle_verified) {
+        if (canBeDriver && updatedUser.user_type !== 'driver') {
             await base44.auth.updateMe({ user_type: 'driver' });
+        } else if (canBeRider && (!updatedUser.user_type || updatedUser.user_type === 'new')) {
+            await base44.auth.updateMe({ user_type: 'rider' });
         }
     };
 
@@ -184,19 +178,16 @@ export default function AccountPage() {
             setNotificationsEnabled(true);
             await base44.auth.updateMe({ notifications_enabled: true });
 
-            // Auto-upgrade to rider if all requirements are now met
+            // Check all requirements and auto-upgrade
             const updatedUser = await base44.auth.me();
             const agreementsComplete = updatedUser.terms_accepted && updatedUser.privacy_policy_accepted && updatedUser.community_agreement_accepted;
+            const canBeRider = updatedUser.profile_complete && updatedUser.drivers_license_verified && agreementsComplete && true;
+            const canBeDriver = canBeRider && updatedUser.vehicle_verified;
 
-            if (updatedUser.profile_complete && updatedUser.drivers_license_verified && agreementsComplete &&
-                (!updatedUser.user_type || updatedUser.user_type === 'new')) {
-                await base44.auth.updateMe({ user_type: 'rider' });
-            }
-
-            // Auto-upgrade to driver if rider with verified vehicle
-            const refreshedUser = await base44.auth.me();
-            if (refreshedUser.user_type === 'rider' && refreshedUser.vehicle_verified) {
+            if (canBeDriver && updatedUser.user_type !== 'driver') {
                 await base44.auth.updateMe({ user_type: 'driver' });
+            } else if (canBeRider && (!updatedUser.user_type || updatedUser.user_type === 'new')) {
+                await base44.auth.updateMe({ user_type: 'rider' });
             }
 
             await loadData();
