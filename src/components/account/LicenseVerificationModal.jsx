@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { X, ExternalLink, ShieldCheck, Loader2 } from "lucide-react";
 import { createIdentityVerification } from "@/functions/createIdentityVerification";
+import { base44 } from "@/api/base44Client";
 
 export default function LicenseVerificationModal({ isOpen, onClose, onSuccess }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -35,10 +36,25 @@ export default function LicenseVerificationModal({ isOpen, onClose, onSuccess })
         );
 
         // Poll to check when popup closes
-        const checkPopup = setInterval(() => {
+        const checkPopup = setInterval(async () => {
           if (!popup || popup.closed) {
             clearInterval(checkPopup);
             setIsLoading(false);
+            
+            // Notify admin of new license submission
+            try {
+              const currentUser = await base44.auth.me();
+              await base44.entities.AdminMessage.create({
+                recipient_id: 'admin',
+                recipient_name: 'Admin',
+                subject: `License Pending Review: ${currentUser.full_name}`,
+                message: `A user has submitted their driver's license for verification.\n\nUser: ${currentUser.full_name}\nEmail: ${currentUser.email}\n\nPlease review in the Admin Dashboard and check the Stripe Identity Dashboard for verification details.`,
+                message_type: 'action_required'
+              });
+            } catch (notifyErr) {
+              console.error("Error notifying admin:", notifyErr);
+            }
+            
             if (onSuccess) onSuccess();
             onClose();
           }

@@ -12,7 +12,22 @@ export default function WelcomePage() {
 
   const handleComplete = async () => {
     try {
+      const currentUser = await base44.auth.me();
       await base44.auth.updateMe({ has_seen_welcome: true });
+
+      // Notify admin of new user
+      try {
+        await base44.entities.AdminMessage.create({
+          recipient_id: 'admin',
+          recipient_name: 'Admin',
+          subject: `New User: ${currentUser.full_name}`,
+          message: `A new user has joined Cruise Kauaʻi!\n\nName: ${currentUser.full_name}\nEmail: ${currentUser.email}\n\nThey have completed the welcome flow and are ready to start using the app.`,
+          message_type: 'info'
+        });
+      } catch (notifyErr) {
+        console.error("Error notifying admin:", notifyErr);
+      }
+
       navigate(createPageUrl("Trips"));
       
       // Open tutorial after a short delay

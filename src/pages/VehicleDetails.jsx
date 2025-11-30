@@ -109,6 +109,19 @@ export default function VehicleDetailsPage() {
         vehicle_verified: false
       });
 
+      // Notify admin of new vehicle submission
+      try {
+        await base44.entities.AdminMessage.create({
+          recipient_id: 'admin',
+          recipient_name: 'Admin',
+          subject: `Vehicle Pending Review: ${user.full_name}`,
+          message: `A user has submitted their vehicle for review.\n\nUser: ${user.full_name}\nEmail: ${user.email}\nVehicle: ${vehicleData.year} ${vehicleData.make} ${vehicleData.model} (${vehicleData.color})\nLicense Plate: ${vehicleData.license_plate}\n\nPlease review in the Admin Dashboard.`,
+          message_type: 'action_required'
+        });
+      } catch (notifyErr) {
+        console.error("Error notifying admin:", notifyErr);
+      }
+
       alert("Vehicle details submitted for review! You'll be notified once verified.");
       window.history.back();
     } catch (error) {
