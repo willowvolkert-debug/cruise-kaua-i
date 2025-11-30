@@ -49,7 +49,7 @@ function DebugCard({ user, activeBookings, upcomingRides }) {
                 <p>Active bookings (filtered): {activeBookings.length}</p>
                 {myBookings.map(b => (
                     <p key={b.id} className="border-t pt-1 mt-1">
-                        ID: {b.id?.slice(-6)} | status: {b.booking_status} | payment: {b.payment_status} | passenger: {b.passenger_id?.slice(-6)} | driver: {b.driver_id?.slice(-6)}
+                        ID: {b.id?.slice(-6)} | status: {b.booking_status} | payment: {b.payment_status} | isConfirmed: {String(b.booking_status === 'confirmed')} | isPaid: {String(b.payment_status === 'paid')}
                     </p>
                 ))}
             </CardContent>
