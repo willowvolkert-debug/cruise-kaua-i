@@ -363,33 +363,33 @@ export default function AdminPage() {
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="bg-white border-gray-200 rounded-3xl">
-            <CardContent className="p-6 text-center">
-              <Clock className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
-              <p className="text-3xl font-bold text-secondary">{pendingLicenses.length}</p>
-              <p className="text-gray-600">pending licenses</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+          <Card className="bg-white border-gray-200 rounded-2xl md:rounded-3xl">
+            <CardContent className="p-3 md:p-6 text-center">
+              <Clock className="w-5 h-5 md:w-8 md:h-8 text-orange-500 mx-auto mb-1 md:mb-2" />
+              <p className="text-xl md:text-3xl font-bold text-secondary">{pendingLicenses.length}</p>
+              <p className="text-xs md:text-base text-gray-600">pending licenses</p>
             </CardContent>
           </Card>
-          <Card className="bg-white border-gray-200 rounded-3xl">
-            <CardContent className="p-6 text-center">
-              <Car className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-              <p className="text-3xl font-bold text-secondary">{pendingVehicles.length}</p>
-              <p className="text-gray-600">pending vehicles</p>
+          <Card className="bg-white border-gray-200 rounded-2xl md:rounded-3xl">
+            <CardContent className="p-3 md:p-6 text-center">
+              <Car className="w-5 h-5 md:w-8 md:h-8 text-blue-500 mx-auto mb-1 md:mb-2" />
+              <p className="text-xl md:text-3xl font-bold text-secondary">{pendingVehicles.length}</p>
+              <p className="text-xs md:text-base text-gray-600">pending vehicles</p>
             </CardContent>
           </Card>
-          <Card className="bg-white border-gray-200 rounded-3xl">
-            <CardContent className="p-6 text-center">
-              <Users className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-              <p className="text-3xl font-bold text-secondary">{verifiedRiders.length}</p>
-              <p className="text-gray-600">verified riders</p>
+          <Card className="bg-white border-gray-200 rounded-2xl md:rounded-3xl">
+            <CardContent className="p-3 md:p-6 text-center">
+              <Users className="w-5 h-5 md:w-8 md:h-8 text-blue-500 mx-auto mb-1 md:mb-2" />
+              <p className="text-xl md:text-3xl font-bold text-secondary">{verifiedRiders.length}</p>
+              <p className="text-xs md:text-base text-gray-600">verified riders</p>
             </CardContent>
           </Card>
-          <Card className="bg-white border-gray-200 rounded-3xl">
-            <CardContent className="p-6 text-center">
-              <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2" />
-              <p className="text-3xl font-bold text-secondary">{verifiedUsers.length}</p>
-              <p className="text-gray-600">verified drivers</p>
+          <Card className="bg-white border-gray-200 rounded-2xl md:rounded-3xl">
+            <CardContent className="p-3 md:p-6 text-center">
+              <CheckCircle className="w-5 h-5 md:w-8 md:h-8 text-green-500 mx-auto mb-1 md:mb-2" />
+              <p className="text-xl md:text-3xl font-bold text-secondary">{verifiedUsers.length}</p>
+              <p className="text-xs md:text-base text-gray-600">verified drivers</p>
             </CardContent>
           </Card>
         </div>
@@ -491,64 +491,64 @@ export default function AdminPage() {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="all" className="w-full">
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="all">all ({users.length})</TabsTrigger>
-                <TabsTrigger value="riders">riders ({verifiedRiders.length})</TabsTrigger>
-                <TabsTrigger value="verified">drivers ({verifiedUsers.length})</TabsTrigger>
-                <TabsTrigger value="pending">pending ({pendingLicenses.length})</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto">
+                <TabsTrigger value="all" className="text-xs md:text-sm py-2">all ({users.length})</TabsTrigger>
+                <TabsTrigger value="riders" className="text-xs md:text-sm py-2">riders ({verifiedRiders.length})</TabsTrigger>
+                <TabsTrigger value="verified" className="text-xs md:text-sm py-2">drivers ({verifiedUsers.length})</TabsTrigger>
+                <TabsTrigger value="pending" className="text-xs md:text-sm py-2">pending ({pendingLicenses.length})</TabsTrigger>
               </TabsList>
 
               <TabsContent value="all" className="mt-4">
                 <div className="space-y-3 max-h-96 overflow-y-auto">
                   {users.map(user => (
-                    <div key={user.id} className="flex items-center justify-between p-3 bg-white rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="w-10 h-10 bg-gradient-to-r from-primary to-secondary">
-                          <AvatarFallback className="text-white font-semibold">
+                    <div key={user.id} className="flex flex-col md:flex-row md:items-center justify-between p-3 bg-white rounded-lg gap-2">
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <Avatar className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-primary to-secondary">
+                          <AvatarFallback className="text-white font-semibold text-xs md:text-sm">
                             {getInitials(user.full_name)}
                           </AvatarFallback>
                         </Avatar>
-                        <div>
-                          <p className="font-medium text-secondary">{user.full_name}</p>
-                          <p className="text-sm text-gray-600">{user.email}</p>
+                        <div className="min-w-0">
+                          <p className="font-medium text-secondary text-sm md:text-base truncate">{user.full_name}</p>
+                          <p className="text-xs md:text-sm text-gray-600 truncate">{user.email}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1 md:gap-2 flex-wrap justify-end">
                         <Button
                           onClick={() => handleMessageUser(user)}
                           size="sm"
                           variant="outline"
-                          className="rounded-2xl border-gray-300"
+                          className="rounded-2xl border-blue-300 text-blue-600 hover:bg-blue-50 text-xs md:text-sm h-7 md:h-8 px-2 md:px-3"
                         >
                           <Mail className="w-3 h-3 mr-1" />
                           message
                         </Button>
                         {user.drivers_license_verified ? (
-                          <Badge className="bg-green-100 text-green-800">
+                          <Badge className="bg-green-100 text-green-800 text-xs">
                             <CheckCircle className="w-3 h-3 mr-1" />
                             verified
                           </Badge>
                         ) : user.drivers_license_pending_review ? (
-                          <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-300">
+                          <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-300 text-xs">
                             <Clock className="w-3 h-3 mr-1" />
                             pending
                           </Badge>
                         ) : (
-                          <Badge variant="outline" className="text-gray-600">
+                          <Badge variant="outline" className="text-gray-600 text-xs">
                             not submitted
                           </Badge>
                         )}
                         {user.role === 'admin' && (
-                          <Badge className="bg-purple-100 text-purple-800">admin</Badge>
+                          <Badge className="bg-purple-100 text-purple-800 text-xs">admin</Badge>
                         )}
                         {user.role === 'driver' && (
-                          <Badge className="bg-green-100 text-green-800">driver</Badge>
+                          <Badge className="bg-green-100 text-green-800 text-xs">driver</Badge>
                         )}
                         {user.role === 'rider' && (
-                          <Badge className="bg-blue-100 text-blue-800">rider</Badge>
+                          <Badge className="bg-blue-100 text-blue-800 text-xs">rider</Badge>
                         )}
                         {(!user.role || user.role === 'user') && (
-                          <Badge className="bg-gray-100 text-gray-600">user</Badge>
+                          <Badge className="bg-gray-100 text-gray-600 text-xs">user</Badge>
                         )}
                       </div>
                     </div>
@@ -559,19 +559,19 @@ export default function AdminPage() {
               <TabsContent value="riders" className="mt-4">
                 <div className="space-y-3 max-h-96 overflow-y-auto">
                   {verifiedRiders.map(user => (
-                    <div key={user.id} className="flex items-center justify-between p-3 bg-white rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="w-10 h-10 bg-gradient-to-r from-primary to-secondary">
-                          <AvatarFallback className="text-white font-semibold">
+                    <div key={user.id} className="flex flex-col md:flex-row md:items-center justify-between p-3 bg-white rounded-lg gap-2">
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <Avatar className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-primary to-secondary">
+                          <AvatarFallback className="text-white font-semibold text-xs md:text-sm">
                             {getInitials(user.full_name)}
                           </AvatarFallback>
                         </Avatar>
-                        <div>
-                          <p className="font-medium text-secondary">{user.full_name}</p>
-                          <p className="text-sm text-gray-600">{user.email}</p>
+                        <div className="min-w-0">
+                          <p className="font-medium text-secondary text-sm md:text-base truncate">{user.full_name}</p>
+                          <p className="text-xs md:text-sm text-gray-600 truncate">{user.email}</p>
                         </div>
                       </div>
-                      <Badge className="bg-blue-100 text-blue-800">
+                      <Badge className="bg-blue-100 text-blue-800 text-xs self-end md:self-auto">
                         <CheckCircle className="w-3 h-3 mr-1" />
                         verified rider
                       </Badge>
@@ -583,19 +583,19 @@ export default function AdminPage() {
               <TabsContent value="verified" className="mt-4">
                 <div className="space-y-3 max-h-96 overflow-y-auto">
                   {verifiedUsers.map(user => (
-                    <div key={user.id} className="flex items-center justify-between p-3 bg-white rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="w-10 h-10 bg-gradient-to-r from-primary to-secondary">
-                          <AvatarFallback className="text-white font-semibold">
+                    <div key={user.id} className="flex flex-col md:flex-row md:items-center justify-between p-3 bg-white rounded-lg gap-2">
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <Avatar className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-primary to-secondary">
+                          <AvatarFallback className="text-white font-semibold text-xs md:text-sm">
                             {getInitials(user.full_name)}
                           </AvatarFallback>
                         </Avatar>
-                        <div>
-                          <p className="font-medium text-secondary">{user.full_name}</p>
-                          <p className="text-sm text-gray-600">{user.email}</p>
+                        <div className="min-w-0">
+                          <p className="font-medium text-secondary text-sm md:text-base truncate">{user.full_name}</p>
+                          <p className="text-xs md:text-sm text-gray-600 truncate">{user.email}</p>
                         </div>
                       </div>
-                      <Badge className="bg-green-100 text-green-800">
+                      <Badge className="bg-green-100 text-green-800 text-xs self-end md:self-auto">
                         <CheckCircle className="w-3 h-3 mr-1" />
                         verified driver
                       </Badge>
@@ -607,22 +607,22 @@ export default function AdminPage() {
               <TabsContent value="pending" className="mt-4">
                 <div className="space-y-3 max-h-96 overflow-y-auto">
                   {pendingLicenses.map(user => (
-                    <div key={user.id} className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="w-10 h-10 bg-gradient-to-r from-primary to-secondary">
-                          <AvatarFallback className="text-white font-semibold">
+                    <div key={user.id} className="flex flex-col md:flex-row md:items-center justify-between p-3 bg-orange-50 rounded-lg border border-orange-200 gap-2">
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <Avatar className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-primary to-secondary">
+                          <AvatarFallback className="text-white font-semibold text-xs md:text-sm">
                             {getInitials(user.full_name)}
                           </AvatarFallback>
                         </Avatar>
-                        <div>
-                          <p className="font-medium text-secondary">{user.full_name}</p>
-                          <p className="text-sm text-gray-600">{user.email}</p>
+                        <div className="min-w-0">
+                          <p className="font-medium text-secondary text-sm md:text-base truncate">{user.full_name}</p>
+                          <p className="text-xs md:text-sm text-gray-600 truncate">{user.email}</p>
                         </div>
                       </div>
                       <Button
                         onClick={() => handleViewLicense(user)}
                         size="sm"
-                        className="bg-primary hover:bg-primary/90"
+                        className="bg-primary hover:bg-primary/90 text-xs md:text-sm h-7 md:h-8"
                       >
                         review
                       </Button>
