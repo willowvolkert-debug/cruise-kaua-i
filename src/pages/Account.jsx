@@ -420,21 +420,44 @@ export default function AccountPage() {
                             </div>
                         </div>
                         {user.drivers_license_verified && !user.license_rejection_reason && (
-                            <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-2xl text-green-800 text-sm flex items-center gap-2">
-                                <ShieldCheck className="w-5 h-5 text-green-600" />
-                                <span><strong>Congrats!</strong> Your license is approved and you can now book rides.</span>
-                            </div>
-                        )}
-                        {user.license_rejection_reason && !user.drivers_license_verified && (
-                            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-2xl text-red-800 text-sm">
-                                <strong>Sorry, your license was rejected.</strong> Reason: {user.license_rejection_reason}
-                            </div>
-                        )}
-                        {!profileComplete && (
-                            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-2xl text-blue-800 text-sm">
-                                <strong>Complete your profile:</strong> Username, bio, age, gender, and profile picture are required to book or post rides.
-                            </div>
-                        )}
+                                                          <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-2xl text-green-800 text-sm flex items-center gap-2">
+                                                              <ShieldCheck className="w-5 h-5 text-green-600" />
+                                                              <span><strong>Congrats!</strong> Your license is approved and you can now book rides.</span>
+                                                          </div>
+                                                      )}
+                                                      {user.license_rejection_reason && !user.drivers_license_verified && (
+                                                          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-2xl text-red-800 text-sm">
+                                                              <strong>Sorry, your license was rejected.</strong> Reason: {user.license_rejection_reason}
+                                                          </div>
+                                                      )}
+                                                      {user.drivers_license_pending_review && !user.drivers_license_verified && !user.license_rejection_reason && (
+                                                          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-300 rounded-2xl text-yellow-800 text-sm flex items-center gap-2">
+                                                              <Clock className="w-5 h-5 text-yellow-600" />
+                                                              <span><strong>License pending review.</strong> You'll be notified once it's approved.</span>
+                                                          </div>
+                                                      )}
+                                                      {user.vehicle_verified && (
+                                                          <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-2xl text-green-800 text-sm flex items-center gap-2">
+                                                              <ShieldCheck className="w-5 h-5 text-green-600" />
+                                                              <span><strong>Vehicle approved!</strong> You can now post rides as a driver.</span>
+                                                          </div>
+                                                      )}
+                                                      {user.vehicle_rejection_reason && !user.vehicle_verified && (
+                                                          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-2xl text-red-800 text-sm">
+                                                              <strong>Sorry, your vehicle was rejected.</strong> Reason: {user.vehicle_rejection_reason}
+                                                          </div>
+                                                      )}
+                                                      {user.vehicle_pending_review && !user.vehicle_verified && !user.vehicle_rejection_reason && (
+                                                          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-300 rounded-2xl text-yellow-800 text-sm flex items-center gap-2">
+                                                              <Clock className="w-5 h-5 text-yellow-600" />
+                                                              <span><strong>Vehicle pending review.</strong> You'll be notified once it's approved.</span>
+                                                          </div>
+                                                      )}
+                                                      {!profileComplete && (
+                                                          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-2xl text-blue-800 text-sm">
+                                                              <strong>Complete your profile:</strong> Username, bio, age, gender, and profile picture are required to book or post rides.
+                                                          </div>
+                                                      )}
                     </CardContent>
                 </Card>
 
