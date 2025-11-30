@@ -611,35 +611,22 @@ export default function AdminPage() {
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <p className="font-semibold text-secondary">front of license</p>
-                    {selectedUser.drivers_license_front_url ? (
-                      <img
-                        src={selectedUser.drivers_license_front_url}
-                        alt="License Front"
-                        className="w-full rounded-lg border-2 border-border"
-                      />
-                    ) : (
-                      <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <p className="text-gray-400">No front photo uploaded</p>
-                      </div>
-                    )}
+                <div className="p-4 bg-blue-50 border border-blue-200 rounded-2xl">
+                  <div className="flex items-center gap-2 mb-3">
+                    <ShieldCheck className="w-5 h-5 text-blue-600" />
+                    <h4 className="font-semibold text-secondary">Stripe Identity Verification</h4>
                   </div>
-                  <div className="space-y-2">
-                    <p className="font-semibold text-secondary">back of license</p>
-                    {selectedUser.drivers_license_back_url ? (
-                      <img
-                        src={selectedUser.drivers_license_back_url}
-                        alt="License Back"
-                        className="w-full rounded-lg border-2 border-border"
-                      />
-                    ) : (
-                      <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <p className="text-gray-400">No back photo uploaded</p>
-                      </div>
-                    )}
-                  </div>
+                  <p className="text-sm text-gray-700 mb-2">
+                    This user has submitted their identity for verification through Stripe Identity.
+                  </p>
+                  {selectedUser.stripe_verification_session_id && (
+                    <p className="text-xs text-gray-500">
+                      Session ID: {selectedUser.stripe_verification_session_id}
+                    </p>
+                  )}
+                  <p className="text-sm text-blue-700 mt-3">
+                    Please verify the user's identity in your <a href="https://dashboard.stripe.com/identity/verification-sessions" target="_blank" rel="noopener noreferrer" className="underline font-medium">Stripe Dashboard</a> before approving.
+                  </p>
                 </div>
 
                 <div className="flex gap-3 pt-4">
