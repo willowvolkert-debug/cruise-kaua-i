@@ -18,46 +18,39 @@ import { sendNotification } from "../components/utils/notifications";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
-function DebugCard({ user, activeBookings, upcomingRides }) {
-    const [allBookings, setAllBookings] = React.useState([]);
+function DebugCard({ user, activeBookings, ridesNeedingReview }) {
     const [myBookings, setMyBookings] = React.useState([]);
-    
+
     React.useEffect(() => {
         const load = async () => {
             const bookings = await base44.entities.RideBooking.list();
-            const rides = await base44.entities.Ride.list();
-            setAllBookings(bookings);
             if (user?.id) {
                 const mine = bookings.filter(b => 
                     String(b.passenger_id) === String(user.id) || 
                     String(b.driver_id) === String(user.id)
                 );
-                // Add ride info to each booking
-                mine.forEach(b => {
-                    b._ride = rides.find(r => String(r.id) === String(b.ride_id));
-                });
                 setMyBookings(mine);
             }
         };
         load();
     }, [user]);
-    
+
     return (
-        <Card className="shadow-md border-yellow-300 bg-yellow-50 rounded-3xl">
-            <CardHeader>
-                <CardTitle className="text-sm text-yellow-800">Debug Info</CardTitle>
-            </CardHeader>
-            <CardContent className="text-xs text-yellow-700 space-y-1">
-                <p>Your ID: {user?.id}</p>
-                <p>Active bookings count: {activeBookings.length}</p>
-                <p>Needs review count: {ridesNeedingReview.length}</p>
-                {myBookings.map(b => (
-                    <p key={b.id} className="border-t pt-1 mt-1">
-                        inActiveBookings: {String(activeBookings.some(ab => ab.id === b.id))} | inNeedsReview: {String(ridesNeedingReview.some(r => r.booking.id === b.id))}
-                    </p>
-                ))}
-            </CardContent>
-        </Card>
+            <Card className="shadow-md border-yellow-300 bg-yellow-50 rounded-3xl">
+                <CardHeader>
+                    <CardTitle className="text-sm text-yellow-800">Debug Info</CardTitle>
+                </CardHeader>
+                <CardContent className="text-xs text-yellow-700 space-y-1">
+                    <p>Your ID: {user?.id}</p>
+                    <p>Active bookings count: {activeBookings.length}</p>
+                    <p>Needs review count: {ridesNeedingReview.length}</p>
+                    {myBookings.map(b => (
+                        <p key={b.id} className="border-t pt-1 mt-1">
+                            status: {b.booking_status} | payment: {b.payment_status} | inActive: {String(activeBookings.some(ab => ab.id === b.id))}
+                        </p>
+                    ))}
+                </CardContent>
+            </Card>
     );
 }
 
