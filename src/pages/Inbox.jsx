@@ -45,14 +45,19 @@ function DebugCard({ user, activeBookings, ridesNeedingReview }) {
                     <p>Active bookings count: {activeBookings.length}</p>
                     <p>Needs review count: {ridesNeedingReview.length}</p>
                     {myBookings.map(b => {
-                        const isPassenger = String(b.passenger_id) === String(user?.id);
-                        const isDriver = String(b.driver_id) === String(user?.id);
-                        const isConfirmed = b.booking_status === 'confirmed';
-                        const isPaid = b.payment_status === 'paid';
-                        const passesFilter = (isPassenger || isDriver) && isConfirmed && isPaid;
+                        const ride = allRidesData.find(r => String(r.id) === String(b.ride_id));
+                        const rideFound = !!ride;
+                        let isPastThreshold = false;
+                        if (ride) {
+                            const now = new Date();
+                            const rideDateTimeStr = `${ride.departure_date}T${ride.departure_time || '23:59'}:00-10:00`;
+                            const rideDateTime = new Date(rideDateTimeStr);
+                            const reviewThreshold = new Date(rideDateTime.getTime() + 4 * 60 * 60 * 1000);
+                            isPastThreshold = now > reviewThreshold;
+                        }
                         return (
                             <p key={b.id} className="border-t pt-1 mt-1">
-                                passesFilter: {String(passesFilter)} | ride_id: {b.ride_id}
+                                rideFound: {String(rideFound)} | isPastThreshold: {String(isPastThreshold)} | dep: {ride?.departure_date} {ride?.departure_time}
                             </p>
                         );
                     })}
