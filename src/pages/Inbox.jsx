@@ -477,19 +477,7 @@ export default function InboxPage() {
                 </Alert>
 
                 {/* Debug info - REMOVE AFTER TESTING */}
-                <Card className="shadow-md border-yellow-300 bg-yellow-50 rounded-3xl">
-                    <CardHeader>
-                        <CardTitle className="text-sm text-yellow-800">Debug Info</CardTitle>
-                    </CardHeader>
-                    <CardContent className="text-xs text-yellow-700 space-y-1">
-                        <p>Your ID: {user?.id}</p>
-                        <p>Active bookings: {activeBookings.length}</p>
-                        <p>Upcoming rides: {upcomingRides.length}</p>
-                        {activeBookings.map(b => (
-                            <p key={b.id}>Booking: {b.id} - status: {b.booking_status} - paid: {b.payment_status}</p>
-                        ))}
-                    </CardContent>
-                </Card>
+                <DebugCard user={user} activeBookings={activeBookings} upcomingRides={upcomingRides} />
 
                 {adminMessages.length > 0 && (
                     <Card className={`shadow-lg rounded-3xl ${adminMessages.some(m => !m.is_read) ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-gray-50'}`}>
