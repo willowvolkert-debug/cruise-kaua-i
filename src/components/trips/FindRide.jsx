@@ -318,6 +318,20 @@ export default function FindRide() {
               />
             </div>
             <div className="space-y-2">
+              <Label htmlFor="time">departure time (optional)</Label>
+              <Input
+                id="time"
+                type="text"
+                placeholder="e.g., 9:00 AM"
+                value={searchData.departure_time}
+                onChange={(e) => handleInputChange('departure_time', e.target.value)}
+                className="rounded-2xl"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
               <Label htmlFor="seats">seats required</Label>
               <Select 
                 value={searchData.seats_required.toString()}

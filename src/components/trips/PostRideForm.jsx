@@ -373,7 +373,8 @@ export default function PostRideForm() {
                   <Label htmlFor="time">departure time</Label>
                   <Input
                     id="time"
-                    type="time"
+                    type="text"
+                    placeholder="e.g., 9:00 AM"
                     value={rideData.departure_time}
                     onChange={(e) => handleInputChange('departure_time', e.target.value)}
                     disabled={rideData.is_flexible}
