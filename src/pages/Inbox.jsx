@@ -44,11 +44,17 @@ function DebugCard({ user, activeBookings, ridesNeedingReview }) {
                     <p>Your ID: {user?.id}</p>
                     <p>Active bookings count: {activeBookings.length}</p>
                     <p>Needs review count: {ridesNeedingReview.length}</p>
-                    {myBookings.map(b => (
-                        <p key={b.id} className="border-t pt-1 mt-1">
-                            status: {b.booking_status} | payment: {b.payment_status} | inActive: {String(activeBookings.some(ab => ab.id === b.id))}
-                        </p>
-                    ))}
+                    {myBookings.map(b => {
+                        const isPassenger = String(b.passenger_id) === String(user?.id);
+                        const isDriver = String(b.driver_id) === String(user?.id);
+                        const isConfirmed = b.booking_status === 'confirmed';
+                        const isPaid = b.payment_status === 'paid';
+                        return (
+                            <p key={b.id} className="border-t pt-1 mt-1">
+                                isPassenger: {String(isPassenger)} | isDriver: {String(isDriver)} | isConfirmed: {String(isConfirmed)} | isPaid: {String(isPaid)}
+                            </p>
+                        );
+                    })}
                 </CardContent>
             </Card>
     );
