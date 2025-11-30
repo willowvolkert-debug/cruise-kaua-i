@@ -99,21 +99,9 @@ export default function AdminPage() {
 
     setIsProcessing(true);
     try {
-      // Check if user meets all requirements for rider/driver status
-      const profileComplete = selectedUser.username && selectedUser.bio && selectedUser.age && selectedUser.gender && selectedUser.profile_picture_url;
-      const agreementsComplete = selectedUser.terms_accepted && selectedUser.privacy_policy_accepted && selectedUser.community_agreement_accepted;
-      const notificationsEnabled = selectedUser.notifications_enabled;
-      
-      // Determine new user_type based on requirements
-      const canBeRider = profileComplete && agreementsComplete && notificationsEnabled;
-      const canBeDriver = canBeRider && selectedUser.vehicle_verified;
-      
-      let newUserType = selectedUser.user_type || 'new';
-      if (canBeDriver) {
-        newUserType = 'driver';
-      } else if (canBeRider) {
-        newUserType = 'rider';
-      }
+      // License approval always upgrades user to rider
+      // If they also have vehicle verified, upgrade to driver
+      const newUserType = selectedUser.vehicle_verified ? 'driver' : 'rider';
 
       await base44.entities.User.update(selectedUser.id, {
         drivers_license_verified: true,
@@ -136,9 +124,9 @@ export default function AdminPage() {
         });
       }
 
-      const statusMsg = newUserType === 'rider' 
-        ? `License approved for ${selectedUser.full_name}. They are now a RIDER and can book rides.`
-        : `License approved for ${selectedUser.full_name}. They still need to complete their profile, accept agreements, or enable notifications to become a rider.`;
+      const statusMsg = newUserType === 'driver' 
+        ? `License approved for ${selectedUser.full_name}. They are now a DRIVER and can post rides!`
+        : `License approved for ${selectedUser.full_name}. They are now a RIDER and can book rides.`;
       
       alert(statusMsg);
       setShowLicenseModal(false);
@@ -186,9 +174,8 @@ export default function AdminPage() {
 
     setIsProcessing(true);
     try {
-      // Vehicle approval upgrades user to "driver" if they are already a rider
-      const isRider = selectedUser.user_type === 'rider';
-      const newUserType = isRider ? 'driver' : selectedUser.user_type;
+      // Vehicle approval always upgrades user to driver (they must be a rider first with verified license)
+      const newUserType = 'driver';
       
       await base44.entities.User.update(selectedUser.id, {
         vehicle_verified: true,
@@ -205,11 +192,7 @@ export default function AdminPage() {
         body: `Aloha ${selectedUser.full_name}!\n\nGreat news! Your vehicle has been verified and approved.\n\nYou can now post rides on Cruise Kauaʻi and start sharing the aloha with fellow travelers!\n\nMahalo for being part of our community,\nThe Cruise Kauaʻi Team`
       });
 
-      if (newUserType === 'driver') {
-        alert(`Vehicle approved for ${selectedUser.full_name}. Their account has been upgraded to DRIVER and they can now post rides!`);
-      } else {
-        alert(`Vehicle approved for ${selectedUser.full_name}. They need to complete rider requirements first (license, profile, agreements, notifications) before becoming a driver.`);
-      }
+      alert(`Vehicle approved for ${selectedUser.full_name}. Their account has been upgraded to DRIVER and they can now post rides!`);
       setShowVehicleModal(false);
       loadData();
     } catch (error) {
