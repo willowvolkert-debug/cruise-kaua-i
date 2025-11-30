@@ -42,7 +42,7 @@ export default function WelcomePage() {
                 <span className="font-semibold text-green-600"> sustainable</span>!
               </p>
               <p className="text-gray-600">
-                Share rides with kamaʻāina (residents) and malihini (visitors) to reduce the number of cars on our roads. Because let's face it – solo driving is SO last season! 🚗💨
+                Share rides with kamaʻāina (residents) and malihini (visitors) to reduce the number of cars on our roads. 🚗💨
               </p>
               <Button onClick={() => setStep(2)} size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 py-6 text-lg rounded-2xl">
                 Get Started
@@ -104,14 +104,14 @@ export default function WelcomePage() {
                           <Users className="w-8 h-8 text-blue-600 flex-shrink-0 mt-1" />
                           <div>
                             <h3 className="font-semibold text-lg text-secondary">Book a Trip</h3>
-                    <p className="text-gray-600">Search for rides by date and hop in! Click on any ride to see the driver's profile, ratings, and vehicle details. Request seats and payment is processed automatically when the driver accepts. Then chat in the Inbox to coordinate pickup details. Getting from A to B has never been easier (or more fun)! 🎉</p>
+                    <p className="text-gray-600">Search for rides by date and hop in! Click on any ride to see the driver's profile, ratings, and vehicle details. Request seats and payment is processed automatically when the driver accepts. Then chat in the Inbox to coordinate pickup details. 🎉</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-green-50 rounded-2xl border border-green-200">
                   <Car className="w-8 h-8 text-green-600 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Post a Ride</h3>
-                    <p className="text-gray-600">Turn those empty seats into new friends (and gas money)! Post your upcoming trips, set your price per seat, choose your rider preferences, and wait for requests to roll in. Accept the riders you vibe with and coordinate through in-app messaging. Who knew commuting could be this social? 🤙</p>
+                    <p className="text-gray-600">Turn those empty seats into new friends (and gas money)! Post your upcoming trips, set your price per seat, choose your rider preferences, and wait for requests to roll in. Coordinate through in-app messaging. 🤙</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-orange-50 rounded-2xl border border-orange-200">
@@ -147,14 +147,14 @@ export default function WelcomePage() {
                   <Clock className="w-8 h-8 text-orange-600 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Ride Cancellations</h3>
-                    <p className="text-gray-600">Life happens! Cancel anytime with our flexible refund policy. The earlier you cancel, the more aloha you get back in your wallet. 💰</p>
+                    <p className="text-gray-600">Life happens! Cancel anytime with our flexible refund policy. 💰</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <HandHeart className="w-8 h-8 text-pink-600 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Need Help?</h3>
-                    <p className="text-gray-600">Hit a roadblock? Visit our Contact Us page for any questions or concerns. Our team is here to help you cruise smoothly! 🌊</p>
+                    <p className="text-gray-600">Hit a roadblock? Visit our Contact Us page for any questions or concerns. 🌊</p>
                   </div>
                 </div>
               </div>
@@ -185,12 +185,10 @@ export default function WelcomePage() {
                 <div className="flex flex-col items-center text-center p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <DollarSign className="w-10 h-10 text-green-600 mb-2" />
                   <h3 className="font-semibold text-secondary">Shared Transportation Costs</h3>
-                  <p className="text-sm text-gray-600">Split gas money, not hairs!</p>
                 </div>
                 <div className="flex flex-col items-center text-center p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <Leaf className="w-10 h-10 text-green-600 mb-2" />
                   <h3 className="font-semibold text-secondary">Fewer Cars on the Road</h3>
-                  <p className="text-sm text-gray-600">Because Mother Nature called – she wants less traffic!</p>
                 </div>
                 <div className="flex flex-col items-center text-center p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <CheckCircle className="w-10 h-10 text-blue-600 mb-2" />
