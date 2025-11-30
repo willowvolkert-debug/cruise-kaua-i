@@ -498,11 +498,9 @@ export default function InboxPage() {
                     </CardHeader>
                     <CardContent className="text-xs text-yellow-700 space-y-1">
                         <p>Your ID: {user?.id}</p>
-                        <p>Active bookings found: {activeBookings.length}</p>
-                        <p>Pending requests (driver): {pendingRequests.length}</p>
-                        <p>Your pending bookings: {myPendingBookings.length}</p>
-                        <p>Upcoming rides: {upcomingRides.length}</p>
+                        <p>Active bookings: {activeBookings.length}</p>
                         <p>Needs review: {ridesNeedingReview.length}</p>
+                        <p>Upcoming rides: {upcomingRides.length}</p>
                     </CardContent>
                 </Card>
 
