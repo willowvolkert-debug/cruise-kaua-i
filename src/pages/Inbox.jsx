@@ -107,11 +107,13 @@ export default function InboxPage() {
             );
             setMyPendingBookings(riderPendingBookings);
 
-            const userActiveBookings = allBookings.filter(b => 
-                (b.passenger_id === currentUser.id || b.driver_id === currentUser.id) && 
-                b.booking_status === 'confirmed' &&
-                b.payment_status === 'paid'
-            );
+            // Active bookings: confirmed status with paid payment for both drivers and riders
+            const userActiveBookings = allBookings.filter(b => {
+                const isInvolved = b.passenger_id === currentUser.id || b.driver_id === currentUser.id;
+                const isConfirmed = b.booking_status === 'confirmed';
+                const isPaid = b.payment_status === 'paid';
+                return isInvolved && isConfirmed && isPaid;
+            });
 
             const now = new Date();
             const needsReview = [];
