@@ -57,12 +57,12 @@ export default function AdminPage() {
 
       const pendingLic = allUsers.filter(u => u.drivers_license_pending_review === true);
       const pendingVeh = allUsers.filter(u => u.vehicle_pending_review === true);
-      const verified = allUsers.filter(u => u.drivers_license_verified === true);
+      const drivers = allUsers.filter(u => u.user_type === 'driver');
       const riders = allUsers.filter(u => u.user_type === 'rider');
 
       setPendingLicenses(pendingLic);
       setPendingVehicles(pendingVeh);
-      setVerifiedUsers(verified);
+      setVerifiedUsers(drivers);
       setVerifiedRiders(riders);
 
       // Load contact inquiries
@@ -394,16 +394,16 @@ export default function AdminPage() {
           </Card>
           <Card className="bg-white border-gray-200 rounded-3xl">
             <CardContent className="p-6 text-center">
-              <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2" />
-              <p className="text-3xl font-bold text-secondary">{verifiedUsers.length}</p>
-              <p className="text-gray-600">verified drivers</p>
+              <Users className="w-8 h-8 text-blue-500 mx-auto mb-2" />
+              <p className="text-3xl font-bold text-secondary">{verifiedRiders.length}</p>
+              <p className="text-gray-600">verified riders</p>
             </CardContent>
           </Card>
           <Card className="bg-white border-gray-200 rounded-3xl">
             <CardContent className="p-6 text-center">
-              <Users className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-              <p className="text-3xl font-bold text-secondary">{users.length}</p>
-              <p className="text-gray-600">total users</p>
+              <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2" />
+              <p className="text-3xl font-bold text-secondary">{verifiedUsers.length}</p>
+              <p className="text-gray-600">verified drivers</p>
             </CardContent>
           </Card>
         </div>
