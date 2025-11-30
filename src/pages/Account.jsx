@@ -524,6 +524,15 @@ export default function AccountPage() {
                     <div className="space-y-8">
                         <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
                             <CardHeader>
+                                <CardTitle className="text-xl text-secondary">transaction history</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <TransactionHistory />
+                            </CardContent>
+                        </Card>
+
+                        <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
+                            <CardHeader>
                                 <CardTitle className="text-xl text-secondary flex items-center gap-2">
                                     <DollarSign className="w-5 h-5 text-primary" />
                                     payouts
@@ -688,15 +697,6 @@ export default function AccountPage() {
                     </div>
                 </div>
                 
-                <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
-                    <CardHeader>
-                        <CardTitle className="text-xl text-secondary">transaction history</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <TransactionHistory />
-                    </CardContent>
-                </Card>
-
                 <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
                     <CardHeader><CardTitle className="text-xl text-secondary">ratings</CardTitle></CardHeader>
                     <CardContent className="grid md:grid-cols-2 gap-8">
