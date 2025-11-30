@@ -183,6 +183,23 @@ export default function AccountPage() {
         if (granted) {
             setNotificationsEnabled(true);
             await base44.auth.updateMe({ notifications_enabled: true });
+
+            // Auto-upgrade to rider if all requirements are now met
+            const updatedUser = await base44.auth.me();
+            const agreementsComplete = updatedUser.terms_accepted && updatedUser.privacy_policy_accepted && updatedUser.community_agreement_accepted;
+
+            if (updatedUser.profile_complete && updatedUser.drivers_license_verified && agreementsComplete &&
+                (!updatedUser.user_type || updatedUser.user_type === 'new')) {
+                await base44.auth.updateMe({ user_type: 'rider' });
+            }
+
+            // Auto-upgrade to driver if rider with verified vehicle
+            const refreshedUser = await base44.auth.me();
+            if (refreshedUser.user_type === 'rider' && refreshedUser.vehicle_verified) {
+                await base44.auth.updateMe({ user_type: 'driver' });
+            }
+
+            await loadData();
             alert("Notifications enabled! You'll receive updates about your trips.");
         } else {
             setShowNotificationModal(true);
