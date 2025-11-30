@@ -7,12 +7,12 @@ import { AlertTriangle, Send } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { format } from "date-fns";
 
-export default function AdminMessageCard({ adminMessages, onMessageRead, onReplySuccess }) {
+export default function AdminMessageCard({ adminMessages = [], onMessageRead, onReplySuccess }) {
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyMessage, setReplyMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
 
-  if (!adminMessages || adminMessages.length === 0) return null;
+  if (adminMessages.length === 0) return null;
 
   const handleReply = async (msg) => {
     if (!replyMessage.trim()) return;
