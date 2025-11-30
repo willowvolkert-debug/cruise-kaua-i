@@ -121,48 +121,37 @@ export default function InboxPage() {
             setMyPendingBookings(riderPendingBookings);
 
             // Active bookings: confirmed status with paid payment for both drivers and riders
-            // Note: filter by passenger_id OR driver_id to show for both parties
             const userActiveBookings = allBookings.filter(b => {
                 const isPassenger = String(b.passenger_id) === String(currentUser.id);
                 const isDriver = String(b.driver_id) === String(currentUser.id);
                 const isConfirmed = b.booking_status === 'confirmed';
                 const isPaid = b.payment_status === 'paid';
-                
-                console.log(`Booking ${b.id}: passenger=${b.passenger_id}, driver=${b.driver_id}, isPassenger=${isPassenger}, isDriver=${isDriver}, confirmed=${isConfirmed}, paid=${isPaid}`);
-                
                 return (isPassenger || isDriver) && isConfirmed && isPaid;
             });
-            
-            console.log("userActiveBookings found:", userActiveBookings.length);
 
             const now = new Date();
             const needsReview = [];
             const stillActive = [];
-            
+
             // Get ratings once for efficiency
             const allRatings = await base44.entities.Rating.list();
-            
-            console.log("Processing userActiveBookings:", userActiveBookings.length);
-            
+
             for (const booking of userActiveBookings) {
-                const ride = allRides.find(r => r.id === booking.ride_id);
-                console.log(`Booking ${booking.id}: ride found = ${!!ride}, ride_id = ${booking.ride_id}`);
-                
+                const ride = allRides.find(r => String(r.id) === String(booking.ride_id));
+
                 if (ride) {
                     // Parse ride date/time in Hawaii timezone (UTC-10)
                     // Add 4 hours buffer after departure time before requiring review
                     const rideDateTimeStr = `${ride.departure_date}T${ride.departure_time || '23:59'}:00-10:00`;
                     const rideDateTime = new Date(rideDateTimeStr);
-                    const reviewThreshold = new Date(rideDateTime.getTime() + 4 * 60 * 60 * 1000); // 4 hours after departure
-                    
-                    console.log(`Ride ${ride.id}: departure=${rideDateTimeStr}, now=${now.toISOString()}, reviewThreshold=${reviewThreshold.toISOString()}, needsReview=${now > reviewThreshold}`);
-                    
+                    const reviewThreshold = new Date(rideDateTime.getTime() + 4 * 60 * 60 * 1000);
+
                     if (now > reviewThreshold) {
                         const userRating = allRatings.find(r => 
-                            r.ride_id === ride.id && 
+                            String(r.ride_id) === String(ride.id) && 
                             String(r.rated_by_user_id) === String(currentUser.id)
                         );
-                        
+
                         if (!userRating) {
                             needsReview.push({ booking, ride });
                         }
@@ -171,13 +160,9 @@ export default function InboxPage() {
                     }
                 } else {
                     // Ride not found but booking exists - still show it as active
-                    console.log(`Booking ${booking.id}: No ride found, adding to stillActive`);
                     stillActive.push(booking);
                 }
             }
-
-            console.log("stillActive bookings:", stillActive.length);
-            console.log("needsReview:", needsReview.length);
             
             setRidesNeedingReview(needsReview);
             setActiveBookings(stillActive);
