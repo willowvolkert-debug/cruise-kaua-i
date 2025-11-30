@@ -108,9 +108,10 @@ export default function InboxPage() {
             setMyPendingBookings(riderPendingBookings);
 
             // Active bookings: confirmed status with paid payment for both drivers and riders
+            // Note: filter by passenger_id OR driver_id to show for both parties
             const userActiveBookings = allBookings.filter(b => {
-                const isPassenger = b.passenger_id === currentUser.id;
-                const isDriver = b.driver_id === currentUser.id;
+                const isPassenger = String(b.passenger_id) === String(currentUser.id);
+                const isDriver = String(b.driver_id) === String(currentUser.id);
                 const isConfirmed = b.booking_status === 'confirmed';
                 const isPaid = b.payment_status === 'paid';
                 return (isPassenger || isDriver) && isConfirmed && isPaid;
