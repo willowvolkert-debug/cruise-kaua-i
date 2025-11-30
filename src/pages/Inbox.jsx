@@ -124,14 +124,20 @@ export default function InboxPage() {
             // Get ratings once for efficiency
             const allRatings = await base44.entities.Rating.list();
             
+            console.log("Processing userActiveBookings:", userActiveBookings.length);
+            
             for (const booking of userActiveBookings) {
                 const ride = allRides.find(r => r.id === booking.ride_id);
+                console.log(`Booking ${booking.id}: ride found = ${!!ride}, ride_id = ${booking.ride_id}`);
+                
                 if (ride) {
                     // Parse ride date/time in Hawaii timezone (UTC-10)
                     // Add 4 hours buffer after departure time before requiring review
                     const rideDateTimeStr = `${ride.departure_date}T${ride.departure_time || '23:59'}:00-10:00`;
                     const rideDateTime = new Date(rideDateTimeStr);
                     const reviewThreshold = new Date(rideDateTime.getTime() + 4 * 60 * 60 * 1000); // 4 hours after departure
+                    
+                    console.log(`Ride ${ride.id}: departure=${rideDateTimeStr}, now=${now.toISOString()}, reviewThreshold=${reviewThreshold.toISOString()}, needsReview=${now > reviewThreshold}`);
                     
                     if (now > reviewThreshold) {
                         const userRating = allRatings.find(r => 
@@ -147,10 +153,14 @@ export default function InboxPage() {
                     }
                 } else {
                     // Ride not found but booking exists - still show it as active
+                    console.log(`Booking ${booking.id}: No ride found, adding to stillActive`);
                     stillActive.push(booking);
                 }
             }
 
+            console.log("stillActive bookings:", stillActive.length);
+            console.log("needsReview:", needsReview.length);
+            
             setRidesNeedingReview(needsReview);
             setActiveBookings(stillActive);
 
