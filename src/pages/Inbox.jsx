@@ -217,9 +217,12 @@ export default function InboxPage() {
                     // Parse ride date/time as Hawaii local time
                     const rideDateTime = parseRideDateTimeHST(ride.departure_date, ride.departure_time);
                     // Add 4 hours buffer after departure time before requiring review
-                    const reviewThreshold = new Date(rideDateTime.getTime() + 4 * 60 * 60 * 1000);
+                    const reviewThreshold = rideDateTime.addHours(4);
+                    
+                    const nowComparable = hawaiiNow.toComparable();
+                    const thresholdComparable = reviewThreshold.toComparable();
 
-                    if (hawaiiNow > reviewThreshold) {
+                    if (nowComparable > thresholdComparable) {
                         const userRating = allRatings.find(r => 
                             String(r.ride_id) === String(ride.id) && 
                             String(r.rated_by_user_id) === String(currentUser.id)
