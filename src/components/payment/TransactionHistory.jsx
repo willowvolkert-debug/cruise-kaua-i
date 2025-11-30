@@ -111,7 +111,7 @@ export default function TransactionHistory() {
                 <button
                   key={transaction.id}
                   onClick={() => handleTransactionClick(transaction)}
-                  className="w-full p-3 bg-white border border-gray-200 rounded-2xl hover:bg-gray-50 hover:shadow-sm transition-all text-left"
+                  className="w-full p-3 bg-gray-50 border border-gray-200 rounded-2xl hover:bg-gray-100 hover:shadow-sm transition-all text-left"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
