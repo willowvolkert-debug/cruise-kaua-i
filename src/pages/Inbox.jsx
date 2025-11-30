@@ -136,7 +136,7 @@ export default function InboxPage() {
                     if (now > reviewThreshold) {
                         const userRating = allRatings.find(r => 
                             r.ride_id === ride.id && 
-                            r.rated_by_user_id === currentUser.id
+                            String(r.rated_by_user_id) === String(currentUser.id)
                         );
                         
                         if (!userRating) {
