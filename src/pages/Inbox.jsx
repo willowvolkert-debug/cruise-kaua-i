@@ -193,13 +193,22 @@ export default function InboxPage() {
             setMyPendingBookings(riderPendingBookings);
 
             // Active bookings: confirmed status with paid payment for both drivers and riders
+            // DEBUG: Log all bookings to see what we're working with
+            console.log("ALL BOOKINGS RAW:", allBookings.map(b => ({
+                id: b.id,
+                passenger_id: b.passenger_id,
+                driver_id: b.driver_id,
+                status: b.booking_status,
+                payment: b.payment_status
+            })));
+            
             const userActiveBookings = allBookings.filter(b => {
                 const isPassenger = String(b.passenger_id) === String(currentUser.id);
                 const isDriver = String(b.driver_id) === String(currentUser.id);
                 const isConfirmed = b.booking_status === 'confirmed';
                 const isPaid = b.payment_status === 'paid';
                 
-                console.log(`Booking ${b.id}: passenger=${isPassenger}, driver=${isDriver}, confirmed=${isConfirmed}, paid=${isPaid}, pass? ${(isPassenger || isDriver) && isConfirmed && isPaid}`);
+                console.log(`Booking ${b.id}: passenger_id=${b.passenger_id}, currentUser.id=${currentUser.id}, isPassenger=${isPassenger}, driver=${isDriver}, confirmed=${isConfirmed}, paid=${isPaid}, pass? ${(isPassenger || isDriver) && isConfirmed && isPaid}`);
                 
                 return (isPassenger || isDriver) && isConfirmed && isPaid;
             });
