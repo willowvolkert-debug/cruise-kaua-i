@@ -31,7 +31,8 @@ export default function DriverRideModal({ isOpen, onClose, ride, bookings = [], 
                 departure_date: ride.departure_date || '',
                 departure_time: ride.departure_time || '',
                 seats_available: ride.seats_available || 1,
-                price_per_seat: ride.price_per_seat || 0,
+                price_per_seat_local: ride.price_per_seat_local || ride.price_per_seat || 0,
+                price_per_seat_tourist: ride.price_per_seat_tourist || ride.price_per_seat || 0,
                 description: ride.description || '',
                 smoking_allowed: ride.smoking_allowed || false,
                 pets_allowed: ride.pets_allowed || false,
@@ -213,7 +214,7 @@ Please process full refunds for all affected riders.
                                         />
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-4">
                                     <div className="space-y-2">
                                         <Label>Seats Available</Label>
                                         <Input
@@ -225,15 +226,27 @@ Please process full refunds for all affected riders.
                                             className="rounded-2xl"
                                         />
                                     </div>
-                                    <div className="space-y-2">
-                                        <Label>Price per Seat ($)</Label>
-                                        <Input
-                                            type="number"
-                                            min="0"
-                                            value={editData.price_per_seat}
-                                            onChange={(e) => setEditData({...editData, price_per_seat: parseFloat(e.target.value)})}
-                                            className="rounded-2xl"
-                                        />
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label>Local Price ($)</Label>
+                                            <Input
+                                                type="number"
+                                                min="0"
+                                                value={editData.price_per_seat_local}
+                                                onChange={(e) => setEditData({...editData, price_per_seat_local: parseFloat(e.target.value)})}
+                                                className="rounded-2xl"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>Tourist Price ($)</Label>
+                                            <Input
+                                                type="number"
+                                                min="0"
+                                                value={editData.price_per_seat_tourist}
+                                                onChange={(e) => setEditData({...editData, price_per_seat_tourist: parseFloat(e.target.value)})}
+                                                className="rounded-2xl"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="space-y-2">
@@ -292,14 +305,18 @@ Please process full refunds for all affected riders.
                                     </span>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-2xl">
+                                <div className="p-4 bg-gray-50 rounded-2xl space-y-2">
                                     <div className="flex items-center gap-2">
                                         <Users className="w-4 h-4 text-gray-500" />
                                         <span>{ride.seats_available} seats available</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <DollarSign className="w-4 h-4 text-gray-500" />
-                                        <span>${ride.price_per_seat} per seat</span>
+                                        <span>Local: ${ride.price_per_seat_local || ride.price_per_seat || 0} per seat</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <DollarSign className="w-4 h-4 text-gray-500" />
+                                        <span>Tourist: ${ride.price_per_seat_tourist || ride.price_per_seat || 0} per seat</span>
                                     </div>
                                 </div>
 
