@@ -302,9 +302,19 @@ export default function InboxPage() {
                 const { booking, ride } = needsReview[0];
                 const isDriver = String(ride.driver_id) === String(currentUser.id);
                 const otherUserId = isDriver ? booking.passenger_id : ride.driver_id;
-                const otherUsername = isDriver 
+
+                // Fetch user info for the review modal
+                let otherUsername = isDriver 
                     ? (booking.passenger_username || booking.passenger_name) 
                     : (booking.driver_username || ride.driver_name);
+
+                // Try to get actual username from user list if available
+                if (allUsersList.length > 0) {
+                    const otherUser = allUsersList.find(u => String(u.id) === String(otherUserId));
+                    if (otherUser?.username) {
+                        otherUsername = otherUser.username;
+                    }
+                }
 
                 setCurrentReviewUser({ 
                     username: otherUsername, 
@@ -791,9 +801,10 @@ Cruise Kauaʻi Team
                             {ridesNeedingReview.map(({ booking, ride }) => {
                                 const isDriver = String(ride.driver_id) === String(user?.id);
                                 const otherUserId = isDriver ? booking.passenger_id : ride.driver_id;
-                                const otherUsername = isDriver 
+                                const otherUser = getUserById(otherUserId);
+                                const otherUsername = otherUser?.username || (isDriver 
                                     ? (booking.passenger_username || booking.passenger_name) 
-                                    : (booking.driver_username || ride.driver_name);
+                                    : (booking.driver_username || ride.driver_name));
 
                                 return (
                                     <div key={booking.id} className="bg-white rounded-lg p-4 border border-orange-200">

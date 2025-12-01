@@ -9,12 +9,77 @@ export default function RiderCancelModal({ isOpen, onClose, booking, ride, onCon
   const [reason, setReason] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Calculate hours until ride
+  // Calculate hours until ride using Hawaii time
   const getHoursUntilRide = () => {
     if (!ride?.departure_date || !ride?.departure_time) return 999;
-    const rideDateTime = new Date(`${ride.departure_date}T${ride.departure_time}`);
+    
+    // Parse ride time - handle various formats like "10:00", "10am", "1030am"
+    const parseTime = (timeStr) => {
+      if (!timeStr) return { hours: 12, minutes: 0 };
+      const normalized = timeStr.toLowerCase().trim();
+      
+      if (normalized.includes(':')) {
+        const [h, m] = normalized.replace(/[ap]m/i, '').split(':').map(Number);
+        let hours = h;
+        if (normalized.includes('pm') && hours < 12) hours += 12;
+        if (normalized.includes('am') && hours === 12) hours = 0;
+        return { hours, minutes: m || 0 };
+      }
+      
+      const match = normalized.match(/^(\d{1,4})(am|pm)?$/);
+      if (match) {
+        const numPart = match[1];
+        const period = match[2];
+        let hours, minutes;
+        
+        if (numPart.length <= 2) {
+          hours = parseInt(numPart);
+          minutes = 0;
+        } else if (numPart.length === 3) {
+          hours = parseInt(numPart[0]);
+          minutes = parseInt(numPart.substring(1));
+        } else {
+          hours = parseInt(numPart.substring(0, 2));
+          minutes = parseInt(numPart.substring(2));
+        }
+        
+        if (period === 'pm' && hours < 12) hours += 12;
+        if (period === 'am' && hours === 12) hours = 0;
+        
+        return { hours, minutes };
+      }
+      
+      return { hours: 12, minutes: 0 };
+    };
+
+    // Get current Hawaii time
     const now = new Date();
-    return (rideDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+    const hawaiiFormatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Pacific/Honolulu',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+    const hawaiiParts = hawaiiFormatter.formatToParts(now);
+    const getPart = (type) => hawaiiParts.find(p => p.type === type)?.value;
+    
+    const hawaiiNow = new Date(
+      parseInt(getPart('year')),
+      parseInt(getPart('month')) - 1,
+      parseInt(getPart('day')),
+      parseInt(getPart('hour')),
+      parseInt(getPart('minute'))
+    );
+
+    // Parse ride date/time as Hawaii local time
+    const [year, month, day] = ride.departure_date.split('-').map(Number);
+    const { hours, minutes } = parseTime(ride.departure_time);
+    const rideDateTime = new Date(year, month - 1, day, hours, minutes);
+
+    return (rideDateTime.getTime() - hawaiiNow.getTime()) / (1000 * 60 * 60);
   };
 
   const hoursUntilRide = getHoursUntilRide();
