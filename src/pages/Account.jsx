@@ -5,7 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, Star, Edit, Save, MessageCircle, Wind, Upload, Clock, FileText, Shield, HandHeart, Camera, ChevronRight, ChevronDown, DollarSign, LogOut } from "lucide-react";
+import { ShieldCheck, Star, Edit, Save, MessageCircle, Wind, Upload, Clock, FileText, Shield, HandHeart, Camera, ChevronRight, ChevronDown, DollarSign, LogOut, UserPlus, MapPin, Calendar } from "lucide-react";
+import { Link as RouterLink } from "react-router-dom";
 import { format } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -43,6 +44,8 @@ export default function AccountPage() {
     const [user, setUser] = useState(null);
     const [ridesGiven, setRidesGiven] = useState([]);
     const [ridesTaken, setRidesTaken] = useState([]);
+    const [pendingRequests, setPendingRequests] = useState([]);
+    const [allRidesData, setAllRidesData] = useState([]);
     const [ratings, setRatings] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
@@ -98,10 +101,20 @@ export default function AccountPage() {
             const allBookings = await base44.entities.RideBooking.list();
             const allRatings = await base44.entities.Rating.list();
 
+            setAllRidesData(allRides);
             setRidesGiven(allRides.filter(r => r.driver_id === currentUser.id));
             const takenRideIds = allBookings.filter(b => b.passenger_id === currentUser.id).map(b => b.ride_id);
             setRidesTaken(allRides.filter(r => takenRideIds.includes(r.id)));
             setRatings(allRatings.filter(r => r.rated_user_id === currentUser.id));
+
+            // Get pending requests for this driver
+            const myRideIds = allRides.filter(r => String(r.driver_id) === String(currentUser.id)).map(r => r.id);
+            const pendingBookingRequests = allBookings.filter(b => 
+                myRideIds.includes(b.ride_id) && 
+                b.booking_status === 'pending' &&
+                b.payment_status === 'paid'
+            );
+            setPendingRequests(pendingBookingRequests);
 
             // Calculate available balance from completed transactions where user is recipient
             const allTransactions = await base44.entities.Transaction.list();
@@ -570,6 +583,61 @@ export default function AccountPage() {
                                     <div className="p-3 bg-blue-50 border border-blue-200 rounded-2xl text-blue-800 text-sm">
                                         <strong>Required:</strong> You must accept all agreements before booking or posting rides.
                                     </div>
+                                </CardContent>
+                            </Card>
+                        )}
+
+                        {pendingRequests.length > 0 && (
+                            <Card className="shadow-lg border-blue-200 bg-blue-50 rounded-3xl">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2 text-secondary">
+                                        <UserPlus className="w-6 h-6 text-blue-600"/>
+                                        pending ride requests ({pendingRequests.length})
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-blue-700 mb-4">
+                                        You have riders requesting to join your trips!
+                                    </p>
+                                    <div className="space-y-3">
+                                        {pendingRequests.slice(0, 3).map(request => {
+                                            const ride = allRidesData.find(r => r.id === request.ride_id);
+                                            return (
+                                                <div
+                                                    key={request.id}
+                                                    className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200"
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        <Avatar className="w-10 h-10 bg-gradient-to-r from-primary to-secondary">
+                                                            <AvatarFallback className="text-white font-semibold text-sm">
+                                                                {getInitials(request.passenger_name)}
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <div>
+                                                            <p className="font-semibold text-secondary">{request.passenger_name}</p>
+                                                            <p className="text-sm text-gray-600">
+                                                                {request.seats_booked} seat(s) • ${request.total_amount?.toFixed(2)}
+                                                            </p>
+                                                            {ride && (
+                                                                <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                                                                    <MapPin className="w-3 h-3" />
+                                                                    {ride.departure_location} → {ride.destination}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 rounded-2xl">
+                                                        Pending
+                                                    </Badge>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                    <RouterLink to={createPageUrl("Inbox")}>
+                                        <Button className="w-full mt-4 bg-primary hover:bg-primary/90 rounded-2xl">
+                                            view all in inbox
+                                        </Button>
+                                    </RouterLink>
                                 </CardContent>
                             </Card>
                         )}
