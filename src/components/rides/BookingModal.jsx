@@ -7,10 +7,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
-import { CreditCard, Navigation, Star, Loader2, MessageCircle, Wind } from "lucide-react";
+import { CreditCard, Navigation, Star, Loader2, MessageCircle, Wind, HelpCircle } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { createRideCheckout } from "@/functions/createRideCheckout";
 import { format } from "date-fns";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }) {
   const [bookingData, setBookingData] = useState({ 
@@ -25,6 +26,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   const [currentUser, setCurrentUser] = useState(null);
   const [driverProfile, setDriverProfile] = useState(null);
   const [driverRatings, setDriverRatings] = useState([]);
+  const [isFirstBooking, setIsFirstBooking] = useState(true);
 
   useEffect(() => {
     if (isOpen && ride) {
@@ -47,16 +49,23 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
 
       // Load driver profile and ratings
       if (ride?.driver_id) {
-        // Fetch driver profile and ratings using filter
-        const [drivers, ratings] = await Promise.all([
+        // Fetch driver profile, ratings, and check if first booking
+        const [drivers, ratings, bookings] = await Promise.all([
           base44.entities.User.filter({ id: ride.driver_id }),
-          base44.entities.Rating.filter({ rated_user_id: ride.driver_id, trip_role: 'driver' })
+          base44.entities.Rating.filter({ rated_user_id: ride.driver_id, trip_role: 'driver' }),
+          base44.entities.RideBooking.filter({ passenger_id: user.id })
         ]);
         
         if (drivers && drivers.length > 0) {
           setDriverProfile(drivers[0]);
         }
         setDriverRatings(ratings || []);
+        
+        // Check if user has any previous completed or confirmed bookings
+        const hasPreviousBookings = bookings.some(b => 
+          b.booking_status === 'confirmed' || b.booking_status === 'completed'
+        );
+        setIsFirstBooking(!hasPreviousBookings);
       }
     } catch (error) {
       console.error("Error loading data:", error);
@@ -115,9 +124,12 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   const detourFee = bookingData.wants_detour_service ? 5 : 0;
   const isLocal = currentUser?.has_hawaii_id === true;
   const pricePerSeat = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);
-  const baseAmount = (bookingData.seats_booked || 0) * pricePerSeat + detourFee;
-  const connectFee = baseAmount * 0.10;
-  const totalAmount = baseAmount + connectFee;
+  const rideAmount = (bookingData.seats_booked || 0) * pricePerSeat + detourFee;
+  const connectFee = rideAmount * 0.10;
+  const licenseVerificationFee = isFirstBooking ? 1.50 : 0;
+  const subtotal = rideAmount + connectFee + licenseVerificationFee;
+  const creditCardFee = subtotal * 0.03;
+  const totalAmount = subtotal + creditCardFee;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -309,6 +321,31 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               <div className="flex justify-between text-sm">
                 <span className="text-gray-700">Connect fee (10%):</span>
                 <span className="font-medium">${connectFee.toFixed(2)}</span>
+              </div>
+              {isFirstBooking && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-700 flex items-center gap-1">
+                    License verification fee:
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <button type="button" className="text-gray-400 hover:text-gray-600">
+                          <HelpCircle className="w-3.5 h-3.5" />
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-72 p-3 text-sm">
+                        <p className="font-semibold mb-1">One-Time Verification Fee</p>
+                        <p className="text-gray-600">
+                          Stripe charges $1.50 to verify your identity through their secure ID verification system. This is a one-time fee only on your first booking.
+                        </p>
+                      </PopoverContent>
+                    </Popover>
+                  </span>
+                  <span className="font-medium">${licenseVerificationFee.toFixed(2)}</span>
+                </div>
+              )}
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-700">Credit card fee (3%):</span>
+                <span className="font-medium">${creditCardFee.toFixed(2)}</span>
               </div>
               <div className="border-t border-gray-200 pt-2 flex justify-between">
                 <span className="font-semibold text-secondary">Total:</span>
