@@ -50,12 +50,54 @@ const getHawaiiNow = () => {
     };
 };
 
+// Helper to parse time strings in various formats (e.g., "19:30", "7:30pm", "730pm")
+const parseTimeString = (timeStr) => {
+    if (!timeStr) return { hours: 23, minutes: 59 };
+    
+    const normalized = timeStr.toLowerCase().trim();
+    
+    // Try HH:MM format first
+    if (normalized.includes(':')) {
+        const [h, m] = normalized.replace(/[ap]m/i, '').split(':').map(Number);
+        let hours = h;
+        if (normalized.includes('pm') && hours < 12) hours += 12;
+        if (normalized.includes('am') && hours === 12) hours = 0;
+        return { hours, minutes: m || 0 };
+    }
+    
+    // Try formats like "730pm", "7pm", "1130am"
+    const match = normalized.match(/^(\d{1,4})(am|pm)?$/);
+    if (match) {
+        const numPart = match[1];
+        const period = match[2];
+        let hours, minutes;
+        
+        if (numPart.length <= 2) {
+            hours = parseInt(numPart);
+            minutes = 0;
+        } else if (numPart.length === 3) {
+            hours = parseInt(numPart[0]);
+            minutes = parseInt(numPart.substring(1));
+        } else {
+            hours = parseInt(numPart.substring(0, 2));
+            minutes = parseInt(numPart.substring(2));
+        }
+        
+        if (period === 'pm' && hours < 12) hours += 12;
+        if (period === 'am' && hours === 12) hours = 0;
+        
+        return { hours, minutes };
+    }
+    
+    return { hours: 23, minutes: 59 };
+};
+
 // Helper to parse a ride date/time as comparable object (same format as getHawaiiNow)
 const parseRideDateTimeHST = (dateStr, timeStr) => {
     if (!dateStr) return { toComparable: () => 0 }; // No date = treat as past
     
     const [year, month, day] = dateStr.split('-').map(Number);
-    const [hours, minutes] = (timeStr || '23:59').split(':').map(Number);
+    const { hours, minutes } = parseTimeString(timeStr);
     
     return {
         year,
@@ -68,7 +110,6 @@ const parseRideDateTimeHST = (dateStr, timeStr) => {
         },
         // Add hours and return new comparable
         addHours: function(h) {
-            // Simple approach: just add to hour, handle overflow
             let newHour = this.hour + h;
             let newDay = this.day;
             let newMonth = this.month;
@@ -78,7 +119,6 @@ const parseRideDateTimeHST = (dateStr, timeStr) => {
                 newHour -= 24;
                 newDay++;
             }
-            // Simplified - don't worry about month overflow for 4 hour buffer
             
             return {
                 year: newYear,
