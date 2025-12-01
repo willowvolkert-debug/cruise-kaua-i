@@ -1,10 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { XCircle } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 
 export default function RejectionAlert({ rejectedBookings, onDismiss }) {
+  const [dismissingIds, setDismissingIds] = useState([]);
+
   if (!rejectedBookings || rejectedBookings.length === 0) return null;
+
+  const handleDismiss = async (bookingId) => {
+    setDismissingIds(prev => [...prev, bookingId]);
+    try {
+      // Mark the booking as dismissed so it won't show again
+      await base44.entities.RideBooking.update(bookingId, {
+        booking_status: 'cancelled'
+      });
+      onDismiss(bookingId);
+    } catch (error) {
+      console.error("Error dismissing rejection:", error);
+      setDismissingIds(prev => prev.filter(id => id !== bookingId));
+    }
+  };
 
   return (
     <>
@@ -18,10 +35,11 @@ export default function RejectionAlert({ rejectedBookings, onDismiss }) {
               Your payment will be refunded automatically.
             </p>
             <Button
-              onClick={() => onDismiss(booking.id)}
+              onClick={() => handleDismiss(booking.id)}
+              disabled={dismissingIds.includes(booking.id)}
               className="bg-red-600 hover:bg-red-700 text-white rounded-2xl"
             >
-              got it
+              {dismissingIds.includes(booking.id) ? 'dismissing...' : 'got it'}
             </Button>
           </AlertDescription>
         </Alert>
