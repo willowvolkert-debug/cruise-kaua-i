@@ -153,7 +153,7 @@ export default function ChatModal({ isOpen, onClose, booking, otherPartyName, ot
             )}
 
             {/* Messages */}
-            <div className="h-80 overflow-y-auto space-y-3 p-4 bg-muted/30 rounded-lg">
+            <div className="h-80 overflow-y-auto space-y-3 p-4 bg-gray-50 rounded-lg">
               {messages.length === 0 ? (
                 <p className="text-center text-gray-500 py-8">No messages yet. Start the conversation!</p>
               ) : (
