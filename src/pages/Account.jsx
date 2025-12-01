@@ -317,9 +317,15 @@ export default function AccountPage() {
                                 )}
                             </div>
                             <div className="flex-1 text-center md:text-left space-y-2">
-                                <h2 className="text-3xl font-bold text-secondary">{user.full_name}</h2>
+                                <h2 className="text-3xl font-bold text-secondary">
+                                    {user.username ? `@${user.username}` : user.full_name}
+                                </h2>
                                 {isEditing ? (
                                     <div className="space-y-4">
+                                        <div className="p-3 bg-gray-100 rounded-2xl mb-4">
+                                            <p className="text-sm text-gray-500">Account Email</p>
+                                            <p className="font-medium text-secondary">{user.full_name} ({user.email})</p>
+                                        </div>
                                         <div className="space-y-2">
                                             <Label>Username *</Label>
                                             <Input 
@@ -390,7 +396,6 @@ export default function AccountPage() {
                                     </div>
                                 ) : (
                                     <>
-                                        {user.username && <p className="text-lg text-gray-500">@{user.username}</p>}
                                         {user.age && user.gender && (
                                             <p className="text-sm text-gray-500">{user.age} years old • {user.gender}</p>
                                         )}
