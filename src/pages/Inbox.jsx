@@ -16,6 +16,7 @@ import PendingTripsCard from "../components/inbox/PendingTripsCard";
 import RejectionAlert from "../components/inbox/RejectionAlert";
 import RiderCancelModal from "../components/inbox/RiderCancelModal";
 import AdminMessageCard from "../components/inbox/AdminMessageCard";
+import DriverRideModal from "../components/inbox/DriverRideModal";
 
 import { format } from "date-fns";
 import { sendNotification } from "../components/utils/notifications";
@@ -163,6 +164,8 @@ export default function InboxPage() {
     const [allUsers, setAllUsers] = useState([]);
     const [allRidesData, setAllRidesData] = useState([]);
     const [adminMessages, setAdminMessages] = useState([]);
+    const [showDriverRideModal, setShowDriverRideModal] = useState(false);
+    const [selectedDriverRide, setSelectedDriverRide] = useState(null);
 
     useEffect(() => {
         loadData();
@@ -849,7 +852,16 @@ Cruise Kauaʻi Team
                                     .join(', ');
                                 
                                 return (
-                                    <div key={ride.id} className="bg-white rounded-lg p-4 border border-blue-200">
+                                    <button
+                                        key={ride.id}
+                                        onClick={() => {
+                                            if (isDriver) {
+                                                setSelectedDriverRide(ride);
+                                                setShowDriverRideModal(true);
+                                            }
+                                        }}
+                                        className={`w-full text-left bg-white rounded-lg p-4 border border-blue-200 ${isDriver ? 'hover:shadow-md cursor-pointer' : ''} transition-shadow`}
+                                    >
                                         <div className="space-y-2">
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -858,6 +870,9 @@ Cruise Kauaʻi Team
                                                     <Clock className="w-4 h-4 ml-2" />
                                                     <span>{ride.departure_time}</span>
                                                 </div>
+                                                {isDriver && (
+                                                    <ChevronRight className="w-5 h-5 text-gray-400" />
+                                                )}
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <MapPin className="w-4 h-4 text-primary" />
@@ -878,7 +893,7 @@ Cruise Kauaʻi Team
                                                 </p>
                                             )}
                                         </div>
-                                    </div>
+                                    </button>
                                 );
                             })}
                         </CardContent>
@@ -1103,6 +1118,17 @@ Cruise Kauaʻi Team
                     booking={riderBookingToCancel}
                     ride={riderBookingToCancel ? allRidesData.find(r => r.id === riderBookingToCancel.ride_id) : null}
                     onConfirmCancel={handleConfirmRiderCancel}
+                />
+
+                <DriverRideModal
+                    isOpen={showDriverRideModal}
+                    onClose={() => {
+                        setShowDriverRideModal(false);
+                        setSelectedDriverRide(null);
+                    }}
+                    ride={selectedDriverRide}
+                    bookings={activeBookings}
+                    onRideUpdated={loadData}
                 />
 
                 {isProcessingPayment && (
