@@ -132,7 +132,10 @@ export default function PostRideForm() {
       return;
     }
 
-
+    if (!rideData.departure_location || !rideData.destination || !rideData.departure_date || !rideData.departure_time.replace(/\s*(AM|PM)$/i, '').trim()) {
+      setError("Please fill in all required fields: coming from, going to, departure date, and departure time.");
+      return;
+    }
     
     if (currentUser.pending_ratings && currentUser.pending_ratings.length > 0) {
       setError("Please complete your pending trip ratings before posting new rides.");
