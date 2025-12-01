@@ -367,7 +367,7 @@ export default function AccountPage() {
                                         <div className="space-y-2">
                                             <Label>Bio *</Label>
                                             <p className="text-sm text-gray-600">
-                                                Tell us why you're using Cruise Kauaʻi!
+                                                Tell us a bit about yourself and why you're using Cruise Kauaʻi!
                                             </p>
                                             <Textarea 
                                                 value={editData.bio} 
@@ -428,7 +428,7 @@ export default function AccountPage() {
                                 )}
                             </div>
                         </div>
-                        {user.drivers_license_verified && !user.license_rejection_reason && (
+                        {user.drivers_license_verified && !user.license_rejection_reason && ridesTaken.length === 0 && (
                                                           <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-2xl text-green-800 text-sm flex items-center gap-2">
                                                               <ShieldCheck className="w-5 h-5 text-green-600" />
                                                               <span><strong>Congrats!</strong> Your license is approved and you can now book rides.</span>
@@ -445,7 +445,7 @@ export default function AccountPage() {
                                                               <span><strong>License pending review.</strong> You'll be notified once it's approved.</span>
                                                           </div>
                                                       )}
-                                                      {user.vehicle_verified && (
+                                                      {user.vehicle_verified && ridesGiven.length === 0 && (
                                                           <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-2xl text-green-800 text-sm flex items-center gap-2">
                                                               <ShieldCheck className="w-5 h-5 text-green-600" />
                                                               <span><strong>Vehicle approved!</strong> You can now post rides as a driver.</span>
@@ -496,7 +496,7 @@ export default function AccountPage() {
                                 <CardHeader><CardTitle className="text-xl text-secondary">verification</CardTitle></CardHeader>
                                 <CardContent className="space-y-4">
                                     {user.drivers_license_pending_review && !user.drivers_license_verified && (
-                                        <div className="p-3 bg-yellow-50 border border-yellow-300 rounded-2xl text-yellow-800 text-sm mb-3">
+                                        <div className="p-3 bg-gray-50 border border-gray-300 rounded-2xl text-gray-700 text-sm mb-3">
                                             <strong>thanks!</strong> you will be able to book rides once your identity is verified. check back soon for approval!
                                         </div>
                                     )}

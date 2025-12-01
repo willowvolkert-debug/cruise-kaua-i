@@ -201,6 +201,15 @@ export default function PostRideForm() {
       });
       setStops(['']);
       
+      // Refresh user data to repopulate vehicle info
+      const refreshedUser = await base44.auth.me();
+      if (refreshedUser.vehicle_make && refreshedUser.vehicle_model) {
+        setRideData(prev => ({
+          ...prev,
+          car_model: `${refreshedUser.vehicle_make} ${refreshedUser.vehicle_model} ${refreshedUser.vehicle_year || ''}`.trim()
+        }));
+      }
+      
       alert("Ride posted successfully!");
       
     } catch (error) {
@@ -371,15 +380,36 @@ export default function PostRideForm() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="time">departure time</Label>
-                  <Input
-                    id="time"
-                    type="text"
-                    placeholder="e.g., 9:00 AM"
-                    value={rideData.departure_time}
-                    onChange={(e) => handleInputChange('departure_time', e.target.value)}
-                    disabled={rideData.is_flexible}
-                    className="rounded-2xl"
-                  />
+                  <div className="flex gap-2">
+                    <Input
+                      id="time"
+                      type="text"
+                      placeholder="e.g., 9:00"
+                      value={rideData.departure_time.replace(/\s*(AM|PM)$/i, '')}
+                      onChange={(e) => {
+                        const period = rideData.departure_time.match(/\s*(AM|PM)$/i)?.[1] || 'AM';
+                        handleInputChange('departure_time', e.target.value + ' ' + period);
+                      }}
+                      disabled={rideData.is_flexible}
+                      className="rounded-2xl flex-1"
+                    />
+                    <Select
+                      value={rideData.departure_time.match(/\s*(AM|PM)$/i)?.[1]?.toUpperCase() || 'AM'}
+                      onValueChange={(period) => {
+                        const timeWithoutPeriod = rideData.departure_time.replace(/\s*(AM|PM)$/i, '').trim();
+                        handleInputChange('departure_time', timeWithoutPeriod + ' ' + period);
+                      }}
+                      disabled={rideData.is_flexible}
+                    >
+                      <SelectTrigger className="rounded-2xl w-24">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-2xl">
+                        <SelectItem value="AM">AM</SelectItem>
+                        <SelectItem value="PM">PM</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
 
