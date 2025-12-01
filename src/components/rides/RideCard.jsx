@@ -36,7 +36,9 @@ export default function RideCard({ ride, onBookRide, showBookButton = true, curr
                 </div>
             </div>
             <div className="text-right">
-                <p className="text-2xl font-bold text-secondary">${displayPrice}</p>
+                <p className="text-2xl font-bold text-secondary">
+                  {displayPrice === 0 ? 'Free' : `$${displayPrice}`}
+                </p>
                 <p className="text-sm text-gray-500">per seat</p>
             </div>
         </div>
