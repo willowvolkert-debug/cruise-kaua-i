@@ -39,11 +39,21 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Ride not found' }, { status: 404 });
         }
 
+        // Check if this is user's first booking
+        const existingBookings = await base44.entities.RideBooking.filter({ passenger_id: user.id });
+        const hasPreviousBookings = existingBookings.some(b => 
+            b.booking_status === 'confirmed' || b.booking_status === 'completed'
+        );
+        const isFirstBooking = !hasPreviousBookings;
+
         // Calculate fees
         const rideAmount = base_amount + (detour_fee || 0);
         const connectFeeRate = ride.driver_license_state === 'HI' ? 0.10 : 0.30;
         const connectFee = rideAmount * connectFeeRate;
-        const totalAmount = rideAmount + connectFee;
+        const licenseVerificationFee = isFirstBooking ? 1.50 : 0;
+        const subtotal = rideAmount + connectFee + licenseVerificationFee;
+        const creditCardFee = subtotal * 0.03;
+        const totalAmount = subtotal + creditCardFee;
 
         // Create a pending booking first
         const booking = await base44.entities.RideBooking.create({
@@ -66,35 +76,66 @@ Deno.serve(async (req) => {
             initial_notification_sent: false
         });
 
+        // Build line items
+        const lineItems = [
+            {
+                price_data: {
+                    currency: 'usd',
+                    product_data: {
+                        name: `Cruise Kauaʻi Ride`,
+                        description: `${ride.departure_location} → ${ride.destination} (${seats_booked} seat${seats_booked > 1 ? 's' : ''})`
+                    },
+                    unit_amount: Math.round(rideAmount * 100)
+                },
+                quantity: 1
+            },
+            {
+                price_data: {
+                    currency: 'usd',
+                    product_data: {
+                        name: 'Connect Fee',
+                        description: `Cruise Kauaʻi service fee (${Math.round(connectFeeRate * 100)}%)`
+                    },
+                    unit_amount: Math.round(connectFee * 100)
+                },
+                quantity: 1
+            }
+        ];
+
+        // Add license verification fee for first-time riders
+        if (isFirstBooking) {
+            lineItems.push({
+                price_data: {
+                    currency: 'usd',
+                    product_data: {
+                        name: 'License Verification Fee',
+                        description: 'One-time Stripe identity verification fee'
+                    },
+                    unit_amount: Math.round(licenseVerificationFee * 100)
+                },
+                quantity: 1
+            });
+        }
+
+        // Add credit card processing fee
+        lineItems.push({
+            price_data: {
+                currency: 'usd',
+                product_data: {
+                    name: 'Credit Card Fee',
+                    description: 'Payment processing fee (3%)'
+                },
+                unit_amount: Math.round(creditCardFee * 100)
+            },
+            quantity: 1
+        });
+
         // Create Stripe Checkout Session
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             mode: 'payment',
             customer_email: user.email,
-            line_items: [
-                {
-                    price_data: {
-                        currency: 'usd',
-                        product_data: {
-                            name: `Cruise Kauaʻi Ride`,
-                            description: `${ride.departure_location} → ${ride.destination} (${seats_booked} seat${seats_booked > 1 ? 's' : ''})`
-                        },
-                        unit_amount: Math.round(rideAmount * 100)
-                    },
-                    quantity: 1
-                },
-                {
-                    price_data: {
-                        currency: 'usd',
-                        product_data: {
-                            name: 'Connect Fee',
-                            description: `Cruise Kauaʻi service fee (${Math.round(connectFeeRate * 100)}%)`
-                        },
-                        unit_amount: Math.round(connectFee * 100)
-                    },
-                    quantity: 1
-                }
-            ],
+            line_items: lineItems,
             metadata: {
                 booking_id: booking.id,
                 ride_id: ride_id,
