@@ -6,8 +6,11 @@ import { base44 } from "@/api/base44Client";
 
 export default function RejectionAlert({ rejectedBookings, onDismiss }) {
   const [dismissingIds, setDismissingIds] = useState([]);
+  const [dismissedIds, setDismissedIds] = useState([]);
 
-  if (!rejectedBookings || rejectedBookings.length === 0) return null;
+  const visibleBookings = rejectedBookings?.filter(b => !dismissedIds.includes(b.id)) || [];
+
+  if (visibleBookings.length === 0) return null;
 
   const handleDismiss = async (bookingId) => {
     setDismissingIds(prev => [...prev, bookingId]);
@@ -16,6 +19,8 @@ export default function RejectionAlert({ rejectedBookings, onDismiss }) {
       await base44.entities.RideBooking.update(bookingId, {
         booking_status: 'cancelled'
       });
+      // Hide immediately in local state
+      setDismissedIds(prev => [...prev, bookingId]);
       onDismiss(bookingId);
     } catch (error) {
       console.error("Error dismissing rejection:", error);
@@ -25,7 +30,7 @@ export default function RejectionAlert({ rejectedBookings, onDismiss }) {
 
   return (
     <>
-      {rejectedBookings.map(booking => (
+      {visibleBookings.map(booking => (
         <Alert key={booking.id} className="bg-red-50 border-red-300 rounded-3xl">
           <XCircle className="h-5 w-5 text-red-600" />
           <AlertTitle className="font-bold text-red-800">your ride request has been rejected</AlertTitle>
