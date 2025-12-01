@@ -11,39 +11,41 @@ export default function AdminMessageCard({ adminMessages = [], onMessageRead, on
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyMessage, setReplyMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [localMessages, setLocalMessages] = useState(adminMessages);
 
-  if (adminMessages.length === 0) return null;
+  // Update local state when prop changes
+  React.useEffect(() => {
+    setLocalMessages(adminMessages);
+  }, [adminMessages]);
+
+  const unreadMessages = localMessages.filter(m => !m.is_read);
+  
+  if (unreadMessages.length === 0) return null;
 
   const handleReply = async (msg) => {
     if (!replyMessage.trim()) return;
     
     setIsSending(true);
     try {
-      // Send email to admin
-      await base44.integrations.Core.SendEmail({
-        to: 'admin@cruisekauai.com', // Replace with actual admin email
-        subject: `Reply from ${msg.recipient_name}: ${msg.subject}`,
-        body: `
-User ${msg.recipient_name} (${msg.recipient_email}) replied to your message:
+      // Get current user for email
+      const currentUser = await base44.auth.me();
 
-Original Subject: ${msg.subject}
-Original Message: ${msg.message}
-
-User Reply:
-${replyMessage}
-        `.trim()
-      });
-
-      // Create a contact inquiry for tracking
+      // Create a contact inquiry for tracking (this is the main way to track replies)
       await base44.entities.ContactInquiry.create({
         user_id: msg.recipient_id,
         user_name: msg.recipient_name,
-        user_email: msg.recipient_email || '',
+        user_email: currentUser?.email || msg.recipient_email || '',
         subject: `Reply: ${msg.subject}`,
         message: replyMessage,
         status: 'pending',
         priority: 'medium'
       });
+
+      // Mark the original message as read
+      await base44.entities.AdminMessage.update(msg.id, { is_read: true });
+
+      // Remove from local state
+      setLocalMessages(prev => prev.filter(m => m.id !== msg.id));
 
       alert("Reply sent successfully!");
       setReplyMessage('');
@@ -51,7 +53,7 @@ ${replyMessage}
       if (onReplySuccess) onReplySuccess();
     } catch (error) {
       console.error("Error sending reply:", error);
-      alert("Error sending reply. Please try again.");
+      alert("Error sending reply: " + error.message);
     }
     setIsSending(false);
   };
@@ -59,6 +61,8 @@ ${replyMessage}
   const handleMarkAsRead = async (msg) => {
     try {
       await base44.entities.AdminMessage.update(msg.id, { is_read: true });
+      // Remove from local state immediately
+      setLocalMessages(prev => prev.filter(m => m.id !== msg.id));
       if (onMessageRead) onMessageRead();
     } catch (error) {
       console.error("Error marking as read:", error);
@@ -70,11 +74,11 @@ ${replyMessage}
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-red-800">
           <AlertTriangle className="w-6 h-6 text-red-600" />
-          !Admin Message! ({adminMessages.filter(m => !m.is_read).length} unread)
+          !Admin Message! ({unreadMessages.length} unread)
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {adminMessages.map(msg => (
+        {unreadMessages.map(msg => (
           <div 
             key={msg.id} 
             className={`p-4 rounded-2xl border ${
