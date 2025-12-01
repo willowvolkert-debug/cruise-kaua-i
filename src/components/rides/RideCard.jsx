@@ -17,7 +17,12 @@ export default function RideCard({ ride, onBookRide, showBookButton = true, curr
     : null;
   
   return (
-    <Card className="hover:shadow-xl transition-all duration-300 border-border shadow-lg bg-white flex flex-col">
+    <Card className={`hover:shadow-xl transition-all duration-300 shadow-lg bg-white flex flex-col ${ride.is_last_minute ? 'border-red-400 border-2' : 'border-border'}`}>
+      {ride.is_last_minute && (
+        <div className="bg-red-500 text-white px-4 py-2 text-sm font-semibold">
+          last minute: {ride.departure_time}
+        </div>
+      )}
       <CardHeader className="p-6">
         <div className="flex items-start justify-between">
             <div className="flex-1">
@@ -39,12 +44,12 @@ export default function RideCard({ ride, onBookRide, showBookButton = true, curr
       
       <CardContent className="p-6 pt-0 flex-grow flex flex-col justify-between">
         <div>
-            <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
+            <div className="flex flex-col gap-1 text-sm text-gray-600 mb-4">
                 <div className="flex items-center gap-2"><Clock className="w-4 h-4" /><span>{format(new Date(ride.departure_date), "MMM d, yyyy")} at {ride.departure_time}</span></div>
+                {ride.is_flexible && <span className="text-amber-600 text-xs ml-6">flexible timing</span>}
             </div>
             <div className="flex flex-wrap gap-2 mb-4">
                 <Badge variant="outline" className="border-primary/50 text-primary"><Users className="w-3 h-3 mr-1" />{ride.seats_available} seats left</Badge>
-                {ride.is_flexible && <Badge variant="outline" className="border-amber-500/50 text-amber-600"><Clock className="w-3 h-3 mr-1" />Flexible</Badge>}
                 {ride.offers_detour_service && <Badge variant="outline" className="border-green-500/50 text-green-600"><Navigation className="w-3 h-3 mr-1" />Detours +$5</Badge>}
             </div>
         </div>

@@ -266,7 +266,7 @@ export default function PostRideForm() {
             <CardContent className="p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="departure">coming from</Label>
+                  <Label htmlFor="departure">coming from *</Label>
                   <LocationAutocomplete
                     id="departure"
                     value={rideData.departure_location}
@@ -276,7 +276,7 @@ export default function PostRideForm() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="destination">going to</Label>
+                  <Label htmlFor="destination">going to *</Label>
                   <LocationAutocomplete
                     id="destination"
                     value={rideData.destination}
@@ -368,7 +368,7 @@ export default function PostRideForm() {
             <CardContent className="p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="date">departure date</Label>
+                  <Label htmlFor="date">departure date *</Label>
                   <Input
                     id="date"
                     type="date"
@@ -379,7 +379,7 @@ export default function PostRideForm() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="time">departure time</Label>
+                  <Label htmlFor="time">departure time *</Label>
                   <div className="flex gap-2">
                     <Input
                       id="time"
@@ -390,7 +390,7 @@ export default function PostRideForm() {
                         const period = rideData.departure_time.match(/\s*(AM|PM)$/i)?.[1] || 'AM';
                         handleInputChange('departure_time', e.target.value + ' ' + period);
                       }}
-                      disabled={rideData.is_flexible}
+                      required
                       className="rounded-2xl flex-1"
                     />
                     <Select
@@ -399,7 +399,6 @@ export default function PostRideForm() {
                         const timeWithoutPeriod = rideData.departure_time.replace(/\s*(AM|PM)$/i, '').trim();
                         handleInputChange('departure_time', timeWithoutPeriod + ' ' + period);
                       }}
-                      disabled={rideData.is_flexible}
                     >
                       <SelectTrigger className="rounded-2xl w-24">
                         <SelectValue />
