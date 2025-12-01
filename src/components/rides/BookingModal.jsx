@@ -50,16 +50,21 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
       // Load driver profile and ratings
       if (ride?.driver_id) {
         // Fetch driver profile, ratings, and check if first booking
-        const [drivers, ratings, bookings] = await Promise.all([
-          base44.entities.User.filter({ id: ride.driver_id }),
-          base44.entities.Rating.filter({ rated_user_id: ride.driver_id, trip_role: 'driver' }),
+        const [allUsers, ratings, bookings] = await Promise.all([
+          base44.entities.User.list(),
+          base44.entities.Rating.list(),
           base44.entities.RideBooking.filter({ passenger_id: user.id })
         ]);
         
-        if (drivers && drivers.length > 0) {
-          setDriverProfile(drivers[0]);
+        const driver = allUsers.find(u => String(u.id) === String(ride.driver_id));
+        if (driver) {
+          setDriverProfile(driver);
         }
-        setDriverRatings(ratings || []);
+        
+        const driverRatingsFiltered = ratings.filter(r => 
+          String(r.rated_user_id) === String(ride.driver_id) && r.trip_role === 'driver'
+        );
+        setDriverRatings(driverRatingsFiltered || []);
         
         // Check if user has any previous completed or confirmed bookings
         const hasPreviousBookings = bookings.some(b => 
