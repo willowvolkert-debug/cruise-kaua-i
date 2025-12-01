@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, Star, Edit, Save, MessageCircle, Wind, Upload, Clock, FileText, Shield, HandHeart, Camera, ChevronRight, ChevronDown, DollarSign } from "lucide-react";
+import { ShieldCheck, Star, Edit, Save, MessageCircle, Wind, Upload, Clock, FileText, Shield, HandHeart, Camera, ChevronRight, ChevronDown, DollarSign, LogOut } from "lucide-react";
 import { format } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -816,6 +816,18 @@ export default function AccountPage() {
                         </CardContent>
                     </Card>
                 )}
+
+                {/* Logout Button */}
+                <div className="pt-4">
+                    <Button
+                        onClick={() => base44.auth.logout()}
+                        variant="outline"
+                        className="w-full border-red-300 text-red-600 hover:bg-red-50 rounded-2xl"
+                    >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        log out
+                    </Button>
+                </div>
 
                 <footer className="pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
                     © {new Date().getFullYear()} Cruise Hawaiʻi. Specializing in carpooling and ridesharing across Hawaiʻi.
