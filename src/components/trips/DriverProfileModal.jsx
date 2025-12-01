@@ -28,18 +28,18 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
       setDriverRatings([]);
       
       try {
-        // Get driver profile by filtering with driver_id
-        const drivers = await base44.entities.User.filter({ id: ride.driver_id });
-        if (drivers && drivers.length > 0) {
-          setDriverProfile(drivers[0]);
+        // Get driver profile using get() method with the ID directly
+        const driver = await base44.entities.User.get(ride.driver_id);
+        if (driver) {
+          setDriverProfile(driver);
         }
 
-        // Get driver ratings
-        const ratings = await base44.entities.Rating.filter({ 
-          rated_user_id: ride.driver_id, 
-          trip_role: 'driver' 
-        });
-        setDriverRatings(ratings || []);
+        // Get all ratings and filter for this driver
+        const allRatings = await base44.entities.Rating.list();
+        const driverRatingsFiltered = allRatings.filter(r => 
+          String(r.rated_user_id) === String(ride.driver_id) && r.trip_role === 'driver'
+        );
+        setDriverRatings(driverRatingsFiltered || []);
       } catch (error) {
         console.error("Error loading driver data:", error);
       }
