@@ -129,82 +129,76 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         </DialogHeader>
 
         <form onSubmit={handleRequestToBook} className="space-y-4 pt-4">
-            {/* Driver Profile - Same style as RiderRequestModal */}
+            {/* Driver Profile - Same layout as Account page */}
             {isLoading ? (
               <div className="p-8 text-center">Loading driver information...</div>
             ) : (
               <div className="space-y-4">
-                {/* Driver Info */}
-                <div className="flex items-center gap-4">
-                  <Avatar className="w-20 h-20 bg-gradient-to-r from-primary to-secondary">
-                    <AvatarImage src={driverProfile?.profile_picture_url} />
-                    <AvatarFallback className="text-white font-bold text-xl">
-                      {ride?.driver_name?.split(' ').map(n => n[0]).join('').toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-secondary">{ride?.driver_name}</h3>
-                    {driverProfile && (
-                      <div className="space-y-1 mt-2">
-                        <div className="text-sm text-gray-600">
-                          <span>{driverProfile.gender}, {driverProfile.age} years old</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                          <span className="text-sm font-semibold">
-                            {driverRatings.length > 0 
-                              ? (driverRatings.reduce((sum, r) => sum + r.rating_value, 0) / driverRatings.length).toFixed(1)
-                              : 'New'}
-                          </span>
-                          <span className="text-sm text-gray-500">({driverRatings.length} reviews)</span>
-                        </div>
-                        {ride?.car_model && (
-                          <div className="text-sm text-gray-600">
-                            Driving: {ride.car_model}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Bio */}
-                {driverProfile?.bio && (
-                  <div>
-                    <h4 className="font-semibold text-secondary mb-2">About</h4>
-                    <p className="text-gray-700">{driverProfile.bio}</p>
-                  </div>
-                )}
-
-                {/* Preferences */}
-                {driverProfile && (
-                  <div className="bg-gray-50 rounded-2xl p-4 border border-gray-200">
-                    <h4 className="font-semibold text-secondary mb-3">Preferences</h4>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="flex items-center gap-2 text-sm">
-                          <MessageCircle className="w-4 h-4" />
-                          chattiness
+                {/* Driver Profile Card - Same style as Account page */}
+                <div className="bg-gray-50 rounded-2xl p-4 border border-gray-200">
+                  <div className="flex items-start gap-4">
+                    <Avatar className="w-16 h-16 text-xl">
+                      <AvatarImage src={driverProfile?.profile_picture_url} />
+                      <AvatarFallback className="bg-gradient-to-br from-primary to-green-400 text-white font-bold">
+                        {ride?.driver_name?.split(' ').map(n => n[0]).join('').toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 space-y-1">
+                      <h3 className="text-xl font-bold text-secondary">
+                        {driverProfile?.username ? `@${driverProfile.username}` : ride?.driver_name}
+                      </h3>
+                      {driverProfile?.age && driverProfile?.gender && (
+                        <p className="text-sm text-gray-500">{driverProfile.age} years old • {driverProfile.gender}</p>
+                      )}
+                      <div className="flex items-center gap-2">
+                        <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                        <span className="text-sm font-semibold">
+                          {driverRatings.length > 0 
+                            ? (driverRatings.reduce((sum, r) => sum + r.rating_value, 0) / driverRatings.length).toFixed(1)
+                            : 'New'}
                         </span>
-                        <Badge variant="outline">{driverProfile.preferences_chattiness || 'Not set'}</Badge>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="flex items-center gap-2 text-sm">
-                          <Wind className="w-4 h-4" />
-                          scents
-                        </span>
-                        <Badge variant="outline">{driverProfile.preferences_scents || 'Not set'}</Badge>
+                        <span className="text-sm text-gray-500">({driverRatings.length} reviews)</span>
                       </div>
                     </div>
                   </div>
-                )}
+
+                  {/* Bio */}
+                  {driverProfile?.bio && (
+                    <p className="text-gray-600 mt-3">{driverProfile.bio}</p>
+                  )}
+
+                  {/* Preferences */}
+                  {driverProfile && (
+                    <div className="pt-3 mt-3 border-t border-gray-200 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <MessageCircle className="w-4 h-4 text-gray-500"/>
+                        <span className="text-sm text-gray-600">chattiness:</span>
+                        <Badge variant="outline" className="rounded-2xl border-gray-300">{driverProfile.preferences_chattiness || 'Flexible'}</Badge>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Wind className="w-4 h-4 text-gray-500"/>
+                        <span className="text-sm text-gray-600">scents:</span>
+                        <Badge variant="outline" className="rounded-2xl border-gray-300">{driverProfile.preferences_scents || 'Any'}</Badge>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Vehicle Info */}
+                  {ride?.car_model && (
+                    <div className="pt-3 mt-3 border-t border-gray-200">
+                      <p className="text-sm text-gray-600">
+                        <span className="font-medium">Driving:</span> {ride.car_model}
+                      </p>
+                    </div>
+                  )}
+                </div>
 
                 {/* Recent Reviews */}
                 {driverRatings.length > 0 && (
                   <div>
-                    <h4 className="font-semibold text-secondary mb-3">Recent Reviews</h4>
-                    <div className="space-y-3 max-h-32 overflow-y-auto">
-                      {driverRatings.slice(0, 3).map(rating => (
+                    <h4 className="font-semibold text-secondary mb-2">recent reviews</h4>
+                    <div className="space-y-2 max-h-28 overflow-y-auto">
+                      {driverRatings.slice(0, 2).map(rating => (
                         <div key={rating.id} className="p-3 bg-gray-50 rounded-2xl border border-gray-200">
                           <div className="flex items-center gap-2 mb-1">
                             {Array(rating.rating_value).fill(0).map((_, i) => (
