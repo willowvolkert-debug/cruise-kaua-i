@@ -720,7 +720,10 @@ Cruise Kauaʻi Team
             const isDriver = String(user?.id) === String(booking.driver_id);
             const otherUserId = isDriver ? booking.passenger_id : booking.driver_id;
             const otherUser = getUserById(otherUserId);
-            const otherPartyUsername = otherUser?.username || (isDriver ? booking.passenger_name : "Driver");
+            // For drivers viewing passengers, use passenger info; for passengers viewing drivers, use driver info from booking
+            const otherPartyUsername = otherUser?.username || (isDriver 
+                ? (booking.passenger_username || booking.passenger_name) 
+                : (booking.driver_username || allRidesData.find(r => r.id === booking.ride_id)?.driver_name || "Driver"));
             const otherPartyPicture = otherUser?.profile_picture_url || '';
             const lastMessage = booking.messages[booking.messages.length - 1];
             return {
@@ -972,12 +975,12 @@ Cruise Kauaʻi Team
                                     const isDriver = String(user.id) === String(booking.driver_id);
                                     const otherUserId = isDriver ? booking.passenger_id : booking.driver_id;
                                     const otherUser = getUserById(otherUserId);
-                                    const otherPartyUsername = otherUser?.username || (isDriver ? booking.passenger_name : "Driver");
-                                    const otherPartyPicture = otherUser?.profile_picture_url || '';
-                                    const otherPartyName = isDriver ? booking.passenger_name : "Driver";
-                                    
                                     // Use allRidesData to find ride details (not upcomingRides which may not include all rides)
                                     const ride = allRidesData.find(r => r.id === booking.ride_id);
+                                    const otherPartyUsername = otherUser?.username || (isDriver 
+                                        ? (booking.passenger_username || booking.passenger_name) 
+                                        : (booking.driver_username || ride?.driver_name || "Driver"));
+                                    const otherPartyPicture = otherUser?.profile_picture_url || '';
 
                                     return (
                                         <div key={booking.id} className="p-4 bg-gray-50 rounded-2xl border border-gray-200">
