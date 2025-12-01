@@ -297,11 +297,12 @@ export default function InboxPage() {
 
             if (needsReview.length > 0 && !showReviewModal) {
                 const { booking, ride } = needsReview[0];
-                const isDriver = ride.driver_id === currentUser.id;
+                const isDriver = String(ride.driver_id) === String(currentUser.id);
                 const otherUserId = isDriver ? booking.passenger_id : ride.driver_id;
-                const otherUser = allUsersList.find(u => u.id === otherUserId);
-                const otherUsername = otherUser?.username || (isDriver ? booking.passenger_name : "Driver");
-                
+                const otherUsername = isDriver 
+                    ? (booking.passenger_username || booking.passenger_name) 
+                    : (booking.driver_username || ride.driver_name);
+
                 setCurrentReviewUser({ 
                     username: otherUsername, 
                     id: otherUserId 
@@ -787,9 +788,10 @@ Cruise Kauaʻi Team
                             {ridesNeedingReview.map(({ booking, ride }) => {
                                 const isDriver = String(ride.driver_id) === String(user?.id);
                                 const otherUserId = isDriver ? booking.passenger_id : ride.driver_id;
-                                const otherUser = getUserById(otherUserId);
-                                const otherUsername = otherUser?.username || (isDriver ? booking.passenger_name : "Driver");
-                                
+                                const otherUsername = isDriver 
+                                    ? (booking.passenger_username || booking.passenger_name) 
+                                    : (booking.driver_username || ride.driver_name);
+
                                 return (
                                     <div key={booking.id} className="bg-white rounded-lg p-4 border border-orange-200">
                                         <div className="space-y-2">
