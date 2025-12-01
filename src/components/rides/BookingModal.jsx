@@ -5,10 +5,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
-import { CreditCard, Navigation, Star, Loader2 } from "lucide-react";
+import { CreditCard, Navigation, Star, Loader2, MessageCircle, Wind } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { createRideCheckout } from "@/functions/createRideCheckout";
+import { format } from "date-fns";
 
 export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }) {
   const [bookingData, setBookingData] = useState({ 
@@ -127,44 +129,101 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         </DialogHeader>
 
         <form onSubmit={handleRequestToBook} className="space-y-4 pt-4">
-            {/* Driver Info */}
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl border border-gray-200">
-              {isLoading ? (
-                <div className="flex items-center gap-3 w-full">
-                  <div className="w-12 h-12 bg-gray-200 rounded-full animate-pulse" />
-                  <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-gray-200 rounded w-24 animate-pulse" />
-                    <div className="h-3 bg-gray-200 rounded w-32 animate-pulse" />
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <Avatar className="w-12 h-12">
+            {/* Driver Profile - Same style as RiderRequestModal */}
+            {isLoading ? (
+              <div className="p-8 text-center">Loading driver information...</div>
+            ) : (
+              <div className="space-y-4">
+                {/* Driver Info */}
+                <div className="flex items-center gap-4">
+                  <Avatar className="w-20 h-20 bg-gradient-to-r from-primary to-secondary">
                     <AvatarImage src={driverProfile?.profile_picture_url} />
-                    <AvatarFallback className="bg-gradient-to-r from-primary to-secondary text-white font-bold">
+                    <AvatarFallback className="text-white font-bold text-xl">
                       {ride?.driver_name?.split(' ').map(n => n[0]).join('').toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <p className="font-semibold text-secondary">{ride?.driver_name}</p>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      {driverRatings.length > 0 ? (
-                        <div className="flex items-center gap-1">
-                          <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-                          <span>
-                            {(driverRatings.reduce((sum, r) => sum + r.rating_value, 0) / driverRatings.length).toFixed(1)}
-                          </span>
-                          <span className="text-gray-400">({driverRatings.length} reviews)</span>
+                    <h3 className="text-xl font-bold text-secondary">{ride?.driver_name}</h3>
+                    {driverProfile && (
+                      <div className="space-y-1 mt-2">
+                        <div className="text-sm text-gray-600">
+                          <span>{driverProfile.gender}, {driverProfile.age} years old</span>
                         </div>
-                      ) : (
-                        <span className="text-gray-400">No reviews yet</span>
-                      )}
-                      {ride?.car_model && <span>• {ride.car_model}</span>}
+                        <div className="flex items-center gap-2">
+                          <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                          <span className="text-sm font-semibold">
+                            {driverRatings.length > 0 
+                              ? (driverRatings.reduce((sum, r) => sum + r.rating_value, 0) / driverRatings.length).toFixed(1)
+                              : 'New'}
+                          </span>
+                          <span className="text-sm text-gray-500">({driverRatings.length} reviews)</span>
+                        </div>
+                        {ride?.car_model && (
+                          <div className="text-sm text-gray-600">
+                            Driving: {ride.car_model}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Bio */}
+                {driverProfile?.bio && (
+                  <div>
+                    <h4 className="font-semibold text-secondary mb-2">About</h4>
+                    <p className="text-gray-700">{driverProfile.bio}</p>
+                  </div>
+                )}
+
+                {/* Preferences */}
+                {driverProfile && (
+                  <div className="bg-gray-50 rounded-2xl p-4 border border-gray-200">
+                    <h4 className="font-semibold text-secondary mb-3">Preferences</h4>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="flex items-center gap-2 text-sm">
+                          <MessageCircle className="w-4 h-4" />
+                          chattiness
+                        </span>
+                        <Badge variant="outline">{driverProfile.preferences_chattiness || 'Not set'}</Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="flex items-center gap-2 text-sm">
+                          <Wind className="w-4 h-4" />
+                          scents
+                        </span>
+                        <Badge variant="outline">{driverProfile.preferences_scents || 'Not set'}</Badge>
+                      </div>
                     </div>
                   </div>
-                </>
-              )}
-            </div>
+                )}
+
+                {/* Recent Reviews */}
+                {driverRatings.length > 0 && (
+                  <div>
+                    <h4 className="font-semibold text-secondary mb-3">Recent Reviews</h4>
+                    <div className="space-y-3 max-h-32 overflow-y-auto">
+                      {driverRatings.slice(0, 3).map(rating => (
+                        <div key={rating.id} className="p-3 bg-gray-50 rounded-2xl border border-gray-200">
+                          <div className="flex items-center gap-2 mb-1">
+                            {Array(rating.rating_value).fill(0).map((_, i) => (
+                              <Star key={i} className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                            ))}
+                            <span className="text-xs text-gray-500">
+                              {format(new Date(rating.created_date), "MMM yyyy")}
+                            </span>
+                          </div>
+                          {rating.comment && (
+                            <p className="text-sm text-gray-700 italic">"{rating.comment}"</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="space-y-2">
                 <Label htmlFor="seats">seats required</Label>
