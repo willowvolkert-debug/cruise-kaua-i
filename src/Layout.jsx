@@ -4,6 +4,7 @@ import { createPageUrl } from "@/utils";
 import { User, MessageSquare, ShieldCheck, Share2, MapPin } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import ShareAppModal from "./components/sidebar/ShareAppModal";
 import AppTutorial from "./components/tutorial/AppTutorial";
 import {
@@ -53,7 +54,7 @@ const navigationItems = [
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
-function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal, location }) {
+function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal, location, unreadCount }) {
   const { setOpenMobile } = useSidebar();
 
   const handleNavClick = () => {
@@ -99,6 +100,11 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
                       <Link to={item.url} onClick={handleNavClick} className="flex items-center gap-3 px-4 py-3">
                         <item.icon className="w-5 h-5" />
                         <span>{item.title}</span>
+                        {item.title === "inbox" && unreadCount > 0 && (
+                          <Badge className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                            {unreadCount > 99 ? '99+' : unreadCount}
+                          </Badge>
+                        )}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -138,6 +144,7 @@ export default function Layout({ children, currentPageName }) {
   const [showTutorial, setShowTutorial] = React.useState(false);
   const [touchStart, setTouchStart] = React.useState(null);
   const [touchEnd, setTouchEnd] = React.useState(null);
+  const [unreadCount, setUnreadCount] = React.useState(0);
   const sidebarRef = React.useRef(null);
 
   const minSwipeDistance = 50;
@@ -175,16 +182,58 @@ export default function Layout({ children, currentPageName }) {
         } else if (user.has_seen_welcome && !user.has_seen_tutorial && location.pathname === createPageUrl("Trips")) {
           setShowTutorial(true);
         }
+
+        // Load unread counts
+        loadUnreadCount(user);
       } catch (e) {
         console.error("Error loading user:", e);
       }
     };
+
+    const loadUnreadCount = async (user) => {
+      try {
+        const [bookings, adminMessages] = await Promise.all([
+          base44.entities.RideBooking.list(),
+          base44.entities.AdminMessage.list()
+        ]);
+
+        let count = 0;
+
+        // Count pending requests for driver (where user is driver)
+        const pendingRequests = bookings.filter(b => 
+          String(b.driver_id) === String(user.id) && 
+          b.booking_status === 'pending' &&
+          b.payment_status === 'paid'
+        );
+        count += pendingRequests.length;
+
+        // Count unread admin messages
+        const unreadAdminMessages = adminMessages.filter(m => 
+          m.recipient_id === user.id && !m.is_read
+        );
+        count += unreadAdminMessages.length;
+
+        setUnreadCount(count);
+      } catch (e) {
+        console.error("Error loading unread count:", e);
+      }
+    };
+
     loadUser();
 
     // Listen for tutorial trigger
     const handleOpenTutorial = () => setShowTutorial(true);
     window.addEventListener('openTutorial', handleOpenTutorial);
-    return () => window.removeEventListener('openTutorial', handleOpenTutorial);
+    
+    // Refresh unread count periodically
+    const interval = setInterval(() => {
+      if (currentUser) loadUnreadCount(currentUser);
+    }, 30000);
+
+    return () => {
+      window.removeEventListener('openTutorial', handleOpenTutorial);
+      clearInterval(interval);
+    };
   }, [location.pathname, navigate]);
 
   return (
@@ -227,6 +276,7 @@ export default function Layout({ children, currentPageName }) {
             showShareModal={showShareModal} 
             setShowShareModal={setShowShareModal}
             location={location}
+            unreadCount={unreadCount}
           />
         </Sidebar>
 
