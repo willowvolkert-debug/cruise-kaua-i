@@ -203,7 +203,15 @@ export default function InboxPage() {
             const currentUser = await base44.auth.me();
             setUser(currentUser);
 
-            const allUsersList = await base44.entities.User.list();
+            // Only admins can list all users, so we'll build user info from bookings/rides instead
+            let allUsersList = [];
+            if (currentUser.role === 'admin') {
+                try {
+                    allUsersList = await base44.entities.User.list();
+                } catch (e) {
+                    console.log("Could not list users - not admin");
+                }
+            }
             setAllUsers(allUsersList);
 
             const allRides = await base44.entities.Ride.list();
