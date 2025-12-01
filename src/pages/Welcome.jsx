@@ -50,7 +50,7 @@ export default function WelcomePage() {
               <div className="w-20 h-20 bg-gradient-to-br from-primary to-orange-400 rounded-full mx-auto flex items-center justify-center">
                 <Ship className="w-12 h-12 text-white" />
               </div>
-              <h1 className="text-4xl font-bold text-secondary">Welcome to Cruise Kauaʻi! 🌺</h1>
+              <h1 className="text-4xl font-bold text-secondary">Welcome to Cruise Kauaʻi 🌺</h1>
               <p className="text-xl text-gray-700 leading-relaxed">
                 Making transportation on Kauaʻi more <span className="font-semibold text-gray-500">social</span>, 
                 <span className="font-semibold text-blue-600"> affordable</span>, and 
@@ -70,27 +70,27 @@ export default function WelcomePage() {
         {step === 2 && (
           <Card className="shadow-xl border-gray-200 rounded-3xl bg-white">
             <CardContent className="p-8 md:p-12 space-y-6">
-              <h2 className="text-3xl font-bold text-secondary text-center">Build Your Profile! 🌟</h2>
+              <h2 className="text-3xl font-bold text-secondary text-center">Build Your Profile 🌟</h2>
               <div className="space-y-4">
                 <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <Shield className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Verify Your License</h3>
-                    <p className="text-gray-600">Upload photos of your driver's license for manual verification by our team. Don't worry, we won't judge your DMV photo! 😄</p>
+                    <p className="text-gray-600">Upload photos of your driver's license for manual verification by our team. Don't worry, we won't judge your DMV photo!</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <Car className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Add Vehicle Details</h3>
-                    <p className="text-gray-600">Share information about your ride – we mean your vehicle! Including photos and insurance info.</p>
+                    <p className="text-gray-600">Share information about your vehicle, including photos and insurance.</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <CheckCircle className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Maintain Good Ratings</h3>
-                    <p className="text-gray-600">Be respectful, punctual, and communicate clearly to build trust in our community. Good vibes only! ✨</p>
+                    <p className="text-gray-600">Be respectful, punctual, and communicate clearly to build trust in our community.</p>
                   </div>
                 </div>
               </div>
@@ -106,7 +106,7 @@ export default function WelcomePage() {
         {step === 3 && (
           <Card className="shadow-xl border-gray-200 rounded-3xl bg-white">
             <CardContent className="p-8 md:p-12 space-y-6">
-              <h2 className="text-3xl font-bold text-secondary text-center">How It Works! 🚀</h2>
+              <h2 className="text-3xl font-bold text-secondary text-center">How It Works 🚀</h2>
                       <div className="space-y-4">
                         <div className="flex items-start gap-4 p-4 bg-orange-50 rounded-2xl border border-orange-300">
                           <Smartphone className="w-8 h-8 text-orange-600 flex-shrink-0 mt-1" />
@@ -119,7 +119,7 @@ export default function WelcomePage() {
                           <Users className="w-8 h-8 text-blue-600 flex-shrink-0 mt-1" />
                           <div>
                             <h3 className="font-semibold text-lg text-secondary">Book a Trip</h3>
-                    <p className="text-gray-600">Search for rides by date and hop in! Click on any ride to see the driver's profile, ratings, and vehicle details. Request seats and payment is processed automatically when the driver accepts. Then chat in the Inbox to coordinate pickup details. 🎉</p>
+                    <p className="text-gray-600">Search for rides by date and hop in! Click on any ride to see the driver's profile, ratings, and vehicle details. Request seats, and your payment will be processed automatically when the driver accepts. Then chat in the Inbox to coordinate pickup details. 🎉</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-green-50 rounded-2xl border border-green-200">
@@ -149,7 +149,7 @@ export default function WelcomePage() {
         {step === 4 && (
           <Card className="shadow-xl border-gray-200 rounded-3xl bg-white">
             <CardContent className="p-8 md:p-12 space-y-6">
-              <h2 className="text-3xl font-bold text-secondary text-center">Communication & Support! 💬</h2>
+              <h2 className="text-3xl font-bold text-secondary text-center">Communication & Support 💬</h2>
               <div className="space-y-4">
                 <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <MessageSquare className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
@@ -185,7 +185,7 @@ export default function WelcomePage() {
         {step === 5 && (
           <Card className="shadow-xl border-gray-200 rounded-3xl bg-white">
             <CardContent className="p-8 md:p-12 space-y-6">
-              <h2 className="text-3xl font-bold text-secondary text-center">Our Community Values! 🤝</h2>
+              <h2 className="text-3xl font-bold text-secondary text-center">Our Community Values 🤝</h2>
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="flex flex-col items-center text-center p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <Shield className="w-10 h-10 text-primary mb-2" />
