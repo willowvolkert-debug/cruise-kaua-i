@@ -35,8 +35,7 @@ Deno.serve(async (req) => {
             }
 
             // Get booking details
-            const bookings = await base44.asServiceRole.entities.RideBooking.filter({ id: booking_id });
-            const booking = bookings[0];
+            const booking = await base44.asServiceRole.entities.RideBooking.get(booking_id);
 
             if (!booking) {
                 console.error('Booking not found:', booking_id);
@@ -44,16 +43,13 @@ Deno.serve(async (req) => {
             }
 
             // Get ride details
-            const rides = await base44.asServiceRole.entities.Ride.filter({ id: ride_id });
-            const ride = rides[0];
+            const ride = await base44.asServiceRole.entities.Ride.get(ride_id);
 
             // Get driver details
-            const drivers = await base44.asServiceRole.entities.User.filter({ id: driver_id });
-            const driver = drivers[0];
+            const driver = await base44.asServiceRole.entities.User.get(driver_id);
 
             // Get passenger details
-            const passengers = await base44.asServiceRole.entities.User.filter({ id: passenger_id });
-            const passenger = passengers[0];
+            const passenger = await base44.asServiceRole.entities.User.get(passenger_id);
 
             // Calculate amounts from the session
             const totalPaid = session.amount_total / 100; // Convert from cents
