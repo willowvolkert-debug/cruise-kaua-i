@@ -266,21 +266,26 @@ export default function InboxPage() {
             const hawaiiNow = getHawaiiNow();
 
             for (const booking of userActiveBookings) {
-                const ride = allRides.find(r => String(r.id) === String(booking.ride_id));
+                const ride = allRides.find(r => String(r.id) === String(booking.id));
 
                 if (ride) {
                     // Parse ride date/time as Hawaii local time
                     const rideDateTime = parseRideDateTimeHST(ride.departure_date, ride.departure_time);
                     // Add 4 hours buffer after departure time before requiring review
                     const reviewThreshold = rideDateTime.addHours(4);
-                    
+
                     const nowComparable = hawaiiNow.toComparable();
                     const thresholdComparable = reviewThreshold.toComparable();
-                    
+
                     if (nowComparable > thresholdComparable) {
+                        // Check if current user needs to review the OTHER person in this booking
+                        const isDriver = String(ride.driver_id) === String(currentUser.id);
+                        const otherUserId = isDriver ? booking.passenger_id : ride.driver_id;
+
                         const userRating = allRatings.find(r => 
                             String(r.ride_id) === String(ride.id) && 
-                            String(r.rated_by_user_id) === String(currentUser.id)
+                            String(r.rated_by_user_id) === String(currentUser.id) &&
+                            String(r.rated_user_id) === String(otherUserId)
                         );
 
                         if (!userRating) {
