@@ -153,24 +153,18 @@ export default function FindRide() {
       setFilteredRides(filtered);
       setHasSearched(true);
 
-      // Load driver profiles and ratings
-      const allUsers = await base44.entities.User.list();
+      // Load driver ratings only (profile info now on Ride entity)
       const allRatings = await base44.entities.Rating.list();
       
-      const profiles = {};
       const ratings = {};
       
       filtered.forEach(ride => {
-        const driver = allUsers.find(u => String(u.id) === String(ride.driver_id));
-        if (driver) profiles[ride.driver_id] = driver;
-        
         const driverRatings = allRatings.filter(r => 
           String(r.rated_user_id) === String(ride.driver_id) && r.trip_role === 'driver'
         );
         ratings[ride.driver_id] = driverRatings;
       });
       
-      setDriverProfiles(profiles);
       setDriverRatings(ratings);
     } catch (error) {
       console.error("Error searching rides:", error);
@@ -401,14 +395,14 @@ export default function FindRide() {
                             <div className="flex justify-between items-center">
                               <div className="flex items-center gap-3">
                                 <Avatar className="w-10 h-10 bg-gradient-to-r from-primary to-secondary">
-                                 <AvatarImage src={driverProfiles[ride.driver_id]?.profile_picture_url} alt={ride.driver_name} />
+                                 <AvatarImage src={ride.driver_profile_picture_url} alt={ride.driver_name} />
                                  <AvatarFallback className="text-white font-semibold text-sm">
                                    {ride.driver_name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'DR'}
                                  </AvatarFallback>
                                 </Avatar>
                                 <div>
                                  <span className="text-sm font-medium text-gray-700">
-                                   @{driverProfiles[ride.driver_id]?.username || ride.driver_name}
+                                   @{ride.driver_username || ride.driver_name}
                                  </span>
                                  {driverRatings[ride.driver_id]?.length > 0 && (
                                    <div className="flex items-center gap-1">
@@ -464,7 +458,6 @@ export default function FindRide() {
         ride={selectedRide}
         onBookRide={handleBookRide}
         currentUser={currentUser}
-        driverProfile={selectedRide ? driverProfiles[selectedRide.driver_id] : null}
         driverRatings={selectedRide ? driverRatings[selectedRide.driver_id] : []}
       />
 

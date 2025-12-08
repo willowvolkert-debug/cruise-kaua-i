@@ -14,7 +14,7 @@ import { format } from "date-fns";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
-export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, currentUser, driverProfile, driverRatings = [] }) {
+export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, currentUser, driverRatings = [] }) {
 
   const averageRating = driverRatings.length > 0 
     ? (driverRatings.reduce((sum, r) => sum + r.rating_value, 0) / driverRatings.length).toFixed(1)
@@ -39,20 +39,16 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
             {/* Driver Info */}
             <div className="flex items-center gap-4">
               <Avatar className="w-20 h-20">
-                <AvatarImage src={driverProfile?.profile_picture_url} />
+                <AvatarImage src={ride.driver_profile_picture_url} />
                 <AvatarFallback className="bg-gradient-to-r from-primary to-secondary text-white font-bold text-2xl">
                   {getInitials(ride.driver_name)}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-secondary">{ride.driver_name}</h3>
-                {driverProfile && (
+                <h3 className="text-xl font-bold text-secondary">@{ride.driver_username || ride.driver_name}</h3>
+                {ride.driver_age && ride.driver_gender && (
                   <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
-                    <span>{driverProfile.gender}, {driverProfile.age} years old</span>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
-                      <span>Joined {format(new Date(driverProfile.created_date), "MMM yyyy")}</span>
-                    </div>
+                    <span>{ride.driver_gender}, {ride.driver_age} years old</span>
                   </div>
                 )}
               </div>
@@ -68,10 +64,28 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
             </div>
 
             {/* Bio */}
-            {driverProfile?.bio && (
+            {ride.driver_bio && (
               <div>
                 <h4 className="font-semibold text-secondary mb-2">About</h4>
-                <p className="text-gray-700">{driverProfile.bio}</p>
+                <p className="text-gray-700">{ride.driver_bio}</p>
+              </div>
+            )}
+
+            {/* Preferences */}
+            {(ride.driver_preferences_chattiness || ride.driver_preferences_scents) && (
+              <div className="space-y-2">
+                {ride.driver_preferences_chattiness && (
+                  <div className="text-sm">
+                    <span className="text-gray-600">Chattiness:</span>
+                    <span className="ml-2 font-medium">{ride.driver_preferences_chattiness}</span>
+                  </div>
+                )}
+                {ride.driver_preferences_scents && (
+                  <div className="text-sm">
+                    <span className="text-gray-600">Scents:</span>
+                    <span className="ml-2 font-medium">{ride.driver_preferences_scents}</span>
+                  </div>
+                )}
               </div>
             )}
 
