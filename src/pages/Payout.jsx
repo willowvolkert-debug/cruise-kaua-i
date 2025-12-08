@@ -89,7 +89,7 @@ export default function PayoutPage() {
       <div className="max-w-3xl mx-auto space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-secondary">payout settings</h1>
-          <p className="text-gray-600">connect your bank account to receive ride earnings automatically</p>
+          <p className="text-gray-600">required for all users: connect your bank account to receive ride earnings</p>
         </div>
 
         {error && (
@@ -134,6 +134,17 @@ export default function PayoutPage() {
                   </p>
                 </div>
 
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+                  <p className="text-green-800 font-semibold">✓ Setup Complete!</p>
+                  <p className="text-sm text-green-700 mt-1">You can now use all features of Cruise Kauaʻi</p>
+                  <Button
+                    onClick={() => window.location.href = '/account'}
+                    className="mt-3 bg-primary hover:bg-primary/90"
+                  >
+                    continue to account
+                  </Button>
+                </div>
+
                 <div className="flex gap-3">
                   <Button
                     onClick={checkStatus}
@@ -166,8 +177,8 @@ export default function PayoutPage() {
                 <Alert className="bg-yellow-50 border-yellow-200">
                   <AlertCircle className="h-4 w-4 text-yellow-700" />
                   <AlertDescription className="text-yellow-800">
-                    You must connect a bank account via Stripe Connect to receive payouts from rides you drive. 
-                    This is required to post rides.
+                    <strong>Required for all users:</strong> You must connect a bank account via Stripe Connect to use Cruise Kauaʻi. 
+                    This ensures secure payments for both drivers and riders.
                   </AlertDescription>
                 </Alert>
 
