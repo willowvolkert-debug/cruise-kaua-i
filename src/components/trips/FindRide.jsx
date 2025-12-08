@@ -161,11 +161,11 @@ export default function FindRide() {
       const ratings = {};
       
       filtered.forEach(ride => {
-        const driver = allUsers.find(u => u.id === ride.driver_id);
+        const driver = allUsers.find(u => String(u.id) === String(ride.driver_id));
         if (driver) profiles[ride.driver_id] = driver;
         
         const driverRatings = allRatings.filter(r => 
-          r.rated_user_id === ride.driver_id && r.trip_role === 'driver'
+          String(r.rated_user_id) === String(ride.driver_id) && r.trip_role === 'driver'
         );
         ratings[ride.driver_id] = driverRatings;
       });
