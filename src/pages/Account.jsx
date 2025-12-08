@@ -5,7 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, Star, Edit, Save, MessageCircle, Wind, Upload, Clock, FileText, Shield, HandHeart, Camera, ChevronRight, ChevronDown, DollarSign, LogOut, UserPlus, MapPin, Calendar } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import { ShieldCheck, Star, Edit, Save, MessageCircle, Wind, Upload, Clock, FileText, Shield, HandHeart, Camera, ChevronRight, ChevronDown, DollarSign, LogOut, UserPlus, MapPin, Calendar, PartyPopper } from "lucide-react";
 import { Link as RouterLink } from "react-router-dom";
 import { format } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
@@ -66,6 +67,7 @@ export default function AccountPage() {
     const [availableBalance, setAvailableBalance] = useState(0);
     const [isTransferring, setIsTransferring] = useState(false);
     const [showBankForm, setShowBankForm] = useState(false);
+    const [acceptedRideAlert, setAcceptedRideAlert] = useState(null);
 
     useEffect(() => {
         loadData();
@@ -123,6 +125,21 @@ export default function AccountPage() {
                 .reduce((sum, t) => sum + (t.ride_amount || 0), 0);
             const payouts = currentUser.total_payouts || 0;
             setAvailableBalance(Math.max(0, earnings - payouts));
+            
+            // Check for recently accepted bookings (confirmed within last 5 minutes)
+            const recentlyAccepted = allBookings.find(b => 
+                String(b.passenger_id) === String(currentUser.id) &&
+                b.booking_status === 'confirmed' &&
+                b.payment_status === 'paid' &&
+                new Date() - new Date(b.updated_date) < 5 * 60 * 1000
+            );
+            
+            if (recentlyAccepted) {
+                const acceptedRide = allRides.find(r => r.id === recentlyAccepted.ride_id);
+                if (acceptedRide) {
+                    setAcceptedRideAlert(acceptedRide);
+                }
+            }
 
         } catch (e) { console.error(e); }
         setIsLoading(false);
@@ -917,6 +934,64 @@ export default function AccountPage() {
                 isOpen={showNotificationModal}
                 onClose={() => setShowNotificationModal(false)}
             />
+            
+            {/* Accepted Ride Alert */}
+            <Dialog open={!!acceptedRideAlert} onOpenChange={() => setAcceptedRideAlert(null)}>
+                <DialogContent className="sm:max-w-md bg-white rounded-3xl">
+                    <DialogHeader>
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="p-3 bg-green-100 rounded-full">
+                                <PartyPopper className="w-6 h-6 text-green-600" />
+                            </div>
+                            <DialogTitle className="text-2xl font-bold text-green-900">
+                                ride request accepted!
+                            </DialogTitle>
+                        </div>
+                        <DialogDescription className="text-gray-600">
+                            Great news! The driver has accepted your ride request.
+                        </DialogDescription>
+                    </DialogHeader>
+                    
+                    {acceptedRideAlert && (
+                        <div className="space-y-4 py-4">
+                            <div className="p-4 bg-green-50 rounded-2xl border border-green-200">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <Calendar className="w-4 h-4 text-green-700" />
+                                    <span className="text-sm font-medium text-green-900">
+                                        {format(new Date(acceptedRideAlert.departure_date), "MMMM d, yyyy")} at {acceptedRideAlert.departure_time}
+                                    </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <MapPin className="w-4 h-4 text-green-700" />
+                                    <span className="text-sm text-green-900">
+                                        {acceptedRideAlert.departure_location} → {acceptedRideAlert.destination}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <Alert className="bg-blue-50 border-blue-200 rounded-2xl">
+                                <MessageCircle className="h-4 w-4 text-blue-600" />
+                                <AlertDescription className="text-blue-800">
+                                    Go to your <strong>Inbox</strong> to chat with your driver and coordinate pickup details.
+                                </AlertDescription>
+                            </Alert>
+                        </div>
+                    )}
+                    
+                    <DialogFooter>
+                        <Button
+                            onClick={() => {
+                                setAcceptedRideAlert(null);
+                                window.location.href = createPageUrl('Inbox');
+                            }}
+                            className="w-full bg-primary hover:bg-primary/90 rounded-2xl"
+                        >
+                            <MessageCircle className="w-4 h-4 mr-2" />
+                            go to inbox
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
             </div>
             );
             }
