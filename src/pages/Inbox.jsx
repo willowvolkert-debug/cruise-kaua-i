@@ -431,7 +431,7 @@ export default function InboxPage() {
                 });
             }
 
-            // Send confirmation email to rider
+            // Send confirmation email and notification to rider
             const riders = await base44.entities.User.list();
             const rider = riders.find(u => u.id === booking.passenger_id);
             if (rider?.email) {
@@ -440,19 +440,19 @@ export default function InboxPage() {
                         to: rider.email,
                         subject: `🎉 Your ride request was accepted!`,
                         body: `
-    Hi ${booking.passenger_name},
+            Hi ${booking.passenger_name},
 
-    Great news! Your ride request has been accepted by the driver.
+            Great news! Your ride request has been accepted by the driver.
 
-    Trip Details:
-    ${ride.departure_location} → ${ride.destination}
-    Date: ${ride.departure_date}
-    Time: ${ride.departure_time}
+            Trip Details:
+            ${ride.departure_location} → ${ride.destination}
+            Date: ${ride.departure_date}
+            Time: ${ride.departure_time}
 
-    Please log into Cruise Kauaʻi to chat with your driver.
+            Please log into Cruise Kauaʻi to chat with your driver.
 
-    Mahalo,
-    Cruise Kauaʻi Team
+            Mahalo,
+            Cruise Kauaʻi Team
                         `.trim()
                     });
                 } catch (emailError) {
@@ -460,10 +460,19 @@ export default function InboxPage() {
                 }
             }
 
+            // Browser notification for driver
             sendNotification(
                 'Ride Request Accepted!',
                 `${booking.passenger_name} can now join your trip.`
             );
+
+            // Browser notification for rider (if they're online and have notifications enabled)
+            if (rider?.notifications_enabled) {
+                sendNotification(
+                    '🎉 Ride Request Accepted!',
+                    `Your ride on ${ride.departure_date} has been accepted. Go to Inbox to chat with your driver!`
+                );
+            }
 
             alert(`Request accepted! The rider has already paid and will be notified.`);
             loadData();
