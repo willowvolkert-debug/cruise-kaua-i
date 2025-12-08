@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,43 +14,7 @@ import { format } from "date-fns";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
-export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, currentUser }) {
-  const [driverProfile, setDriverProfile] = useState(null);
-  const [driverRatings, setDriverRatings] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const loadDriverData = async () => {
-      if (!isOpen || !ride?.driver_id) return;
-      
-      setIsLoading(true);
-      setDriverProfile(null);
-      setDriverRatings([]);
-      
-      try {
-        // Get all users and find the driver
-        const allUsers = await base44.entities.User.list();
-        const driver = allUsers.find(u => String(u.id) === String(ride.driver_id));
-        if (driver) {
-          setDriverProfile(driver);
-        } else {
-          console.log("Driver not found in user list, driver_id:", ride.driver_id);
-        }
-
-        // Get all ratings and filter for this driver
-        const allRatings = await base44.entities.Rating.list();
-        const driverRatingsFiltered = allRatings.filter(r => 
-          String(r.rated_user_id) === String(ride.driver_id) && r.trip_role === 'driver'
-        );
-        setDriverRatings(driverRatingsFiltered || []);
-      } catch (error) {
-        console.error("Error loading driver data:", error);
-      }
-      setIsLoading(false);
-    };
-
-    loadDriverData();
-  }, [isOpen, ride?.driver_id]);
+export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, currentUser, driverProfile, driverRatings = [] }) {
 
   const averageRating = driverRatings.length > 0 
     ? (driverRatings.reduce((sum, r) => sum + r.rating_value, 0) / driverRatings.length).toFixed(1)
@@ -68,7 +32,7 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
           <DialogTitle className="text-2xl font-bold text-secondary">Driver Profile</DialogTitle>
         </DialogHeader>
 
-        {isLoading ? (
+        {!ride ? (
           <div className="p-8 text-center">Loading driver information...</div>
         ) : (
           <div className="space-y-6 py-4">

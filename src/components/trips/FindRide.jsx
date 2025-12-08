@@ -462,6 +462,8 @@ export default function FindRide() {
         ride={selectedRide}
         onBookRide={handleBookRide}
         currentUser={currentUser}
+        driverProfile={selectedRide ? driverProfiles[selectedRide.driver_id] : null}
+        driverRatings={selectedRide ? driverRatings[selectedRide.driver_id] : []}
       />
 
       <BookingModal
