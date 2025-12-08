@@ -41,12 +41,12 @@ Deno.serve(async (req) => {
 
 
 
-        // Check if this is user's first booking
-        const existingBookings = await base44.entities.RideBooking.filter({ passenger_id: user.id });
-        const hasPreviousBookings = existingBookings.some(b => 
-            b.booking_status === 'confirmed' || b.booking_status === 'completed'
+        // Check if this is user's first PAYMENT (not just booking)
+        const existingTransactions = await base44.entities.Transaction.filter({ payer_id: user.id });
+        const hasCompletedPayments = existingTransactions.some(t => 
+            t.transaction_status === 'completed'
         );
-        const isFirstBooking = !hasPreviousBookings;
+        const isFirstBooking = !hasCompletedPayments;
 
         // Calculate fees
         const rideAmount = base_amount + (detour_fee || 0);
