@@ -1,23 +1,19 @@
-
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { DollarSign, CheckCircle, AlertCircle, Building } from "lucide-react";
+import { DollarSign, CheckCircle, AlertCircle, ExternalLink, Loader2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { createConnectAccount } from "@/functions/createConnectAccount";
+import { checkConnectStatus } from "@/functions/checkConnectStatus";
 
 export default function PayoutPage() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [bankData, setBankData] = useState({
-    account_number: '',
-    routing_number: '',
-    account_holder_name: ''
-  });
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
+  const [isCheckingStatus, setIsCheckingStatus] = useState(false);
+  const [connectStatus, setConnectStatus] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -30,18 +26,9 @@ export default function PayoutPage() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
       
-      if (currentUser.bank_account_linked) {
-        setBankData({
-          account_number: '',
-          routing_number: currentUser.bank_routing_number || '',
-          account_holder_name: currentUser.full_name
-        });
-      } else {
-        setBankData({
-          account_number: '',
-          routing_number: '',
-          account_holder_name: currentUser.full_name
-        });
+      // Check Connect status if user has account
+      if (currentUser.stripe_connect_account_id) {
+        await checkStatus();
       }
     } catch (e) {
       console.error(e);
@@ -50,60 +37,59 @@ export default function PayoutPage() {
     setIsLoading(false);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    
-    if (!bankData.account_number || !bankData.routing_number) {
-      setError("Please fill in all required fields.");
-      return;
-    }
-
-    if (bankData.routing_number.length !== 9) {
-      setError("Routing number must be exactly 9 digits.");
-      return;
-    }
-
-    if (bankData.account_number.length < 8) {
-      setError("Please enter a valid account number.");
-      return;
-    }
-
-    setIsSubmitting(true);
+  const checkStatus = async () => {
+    setIsCheckingStatus(true);
     try {
-      const last4 = bankData.account_number.slice(-4);
+      const { data } = await checkConnectStatus();
+      setConnectStatus(data);
       
-      await base44.auth.updateMe({
-        bank_account_linked: true,
-        bank_account_last4: last4,
-        bank_routing_number: bankData.routing_number
+      // Refresh user data if status changed
+      if (data.onboarding_complete) {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+      }
+    } catch (error) {
+      console.error("Error checking Connect status:", error);
+    }
+    setIsCheckingStatus(false);
+  };
+
+  const handleConnectOnboarding = async () => {
+    setError('');
+    setIsCreatingAccount(true);
+    
+    try {
+      const appUrl = window.location.origin;
+      const { data } = await createConnectAccount({
+        refresh_url: `${appUrl}/payout?refresh=true`,
+        return_url: `${appUrl}/payout?success=true`
       });
 
-      alert("Bank account linked successfully! You can now receive payouts.");
-      await loadData();
-      
-      // Clear sensitive data
-      setBankData(prev => ({
-        ...prev,
-        account_number: ''
-      }));
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      // Redirect to Stripe Connect onboarding
+      window.location.href = data.url;
     } catch (error) {
-      console.error("Error linking bank account:", error);
-      setError("Error linking bank account. Please try again.");
+      console.error("Error creating Connect account:", error);
+      setError("Error setting up payout account. Please try again.");
+      setIsCreatingAccount(false);
     }
-    setIsSubmitting(false);
   };
 
   if (isLoading) {
     return <div className="p-8 text-center">Loading...</div>;
   }
 
+  const isOnboardingComplete = user?.stripe_connect_onboarding_complete || connectStatus?.onboarding_complete;
+
   return (
     <div className="p-4 md:p-8 bg-white">
       <div className="max-w-3xl mx-auto space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-secondary">payout settings</h1>
-          <p className="text-gray-600">link your bank account to receive ride earnings</p>
+          <p className="text-gray-600">connect your bank account to receive ride earnings automatically</p>
         </div>
 
         {error && (
@@ -119,22 +105,19 @@ export default function PayoutPage() {
               <div className="p-2 bg-primary/10 rounded-lg">
                 <DollarSign className="w-5 h-5 text-primary" />
               </div>
-              bank account
+              stripe connect account
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6 space-y-6">
-            {user?.bank_account_linked ? (
+            {isOnboardingComplete ? (
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
                   <div className="flex items-center gap-3">
                     <CheckCircle className="w-6 h-6 text-green-600" />
                     <div>
-                      <p className="font-semibold text-green-900">Bank Account Linked</p>
+                      <p className="font-semibold text-green-900">Payout Account Active</p>
                       <p className="text-sm text-green-700">
-                        Account ending in •••• {user.bank_account_last4}
-                      </p>
-                      <p className="text-xs text-green-600 mt-1">
-                        Routing: {user.bank_routing_number}
+                        Your bank account is connected via Stripe Connect
                       </p>
                     </div>
                   </div>
@@ -142,117 +125,96 @@ export default function PayoutPage() {
                 </div>
 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <p className="text-sm text-blue-800">
-                    <strong>Note:</strong> Payouts are processed automatically 24 hours after ride completion. 
-                    Funds typically arrive in 2-3 business days.
+                  <p className="text-sm text-blue-800 mb-3">
+                    <strong>How it works:</strong> Payouts are processed automatically 24 hours after ride completion. 
+                    Funds arrive in your bank account within 2-3 business days.
+                  </p>
+                  <p className="text-xs text-blue-700">
+                    Total earned: ${(user.total_payouts || 0).toFixed(2)}
                   </p>
                 </div>
 
-                <div className="pt-4">
-                  <p className="text-sm text-gray-600 mb-4">
-                    Need to update your bank account? Enter new details below:
-                  </p>
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="routing">routing number *</Label>
-                      <Input
-                        id="routing"
-                        type="text"
-                        maxLength="9"
-                        value={bankData.routing_number}
-                        onChange={(e) => setBankData({...bankData, routing_number: e.target.value.replace(/\D/g, '')})}
-                        placeholder="9 digit routing number"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="account">account number *</Label>
-                      <Input
-                        id="account"
-                        type="text"
-                        value={bankData.account_number}
-                        onChange={(e) => setBankData({...bankData, account_number: e.target.value.replace(/\D/g, '')})}
-                        placeholder="Your account number"
-                      />
-                    </div>
-
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full bg-primary hover:bg-primary/90"
-                    >
-                      {isSubmitting ? 'updating...' : 'update bank account'}
-                    </Button>
-                  </form>
+                <div className="flex gap-3">
+                  <Button
+                    onClick={checkStatus}
+                    disabled={isCheckingStatus}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    {isCheckingStatus ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        checking...
+                      </>
+                    ) : (
+                      'refresh status'
+                    )}
+                  </Button>
+                  <Button
+                    onClick={handleConnectOnboarding}
+                    disabled={isCreatingAccount}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    <ExternalLink className="w-4 h-4 mr-2" />
+                    manage account
+                  </Button>
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-6">
                 <Alert className="bg-yellow-50 border-yellow-200">
-                  <Building className="h-4 w-4 text-yellow-700" />
+                  <AlertCircle className="h-4 w-4 text-yellow-700" />
                   <AlertDescription className="text-yellow-800">
-                    You must link a bank account to receive payouts from rides you drive. 
-                    Your information is encrypted and secure.
+                    You must connect a bank account via Stripe Connect to receive payouts from rides you drive. 
+                    This is required to post rides.
                   </AlertDescription>
                 </Alert>
 
-                <div className="space-y-2">
-                  <Label htmlFor="holder">account holder name *</Label>
-                  <Input
-                    id="holder"
-                    value={bankData.account_holder_name}
-                    onChange={(e) => setBankData({...bankData, account_holder_name: e.target.value})}
-                    placeholder="Full name on account"
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="routing">routing number *</Label>
-                  <Input
-                    id="routing"
-                    type="text"
-                    maxLength="9"
-                    value={bankData.routing_number}
-                    onChange={(e) => setBankData({...bankData, routing_number: e.target.value.replace(/\D/g, '')})}
-                    placeholder="9 digit routing number"
-                    required
-                  />
-                  <p className="text-xs text-gray-500">Found on the bottom of your check</p>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="account">account number *</Label>
-                  <Input
-                    id="account"
-                    type="text"
-                    value={bankData.account_number}
-                    onChange={(e) => setBankData({...bankData, account_number: e.target.value.replace(/\D/g, '')})}
-                    placeholder="Your account number"
-                    required
-                  />
-                  <p className="text-xs text-gray-500">Also found on the bottom of your check</p>
-                </div>
-
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm text-gray-700">
-                  <p className="font-semibold mb-2">🔒 Security & Privacy</p>
-                  <ul className="list-disc list-inside space-y-1">
-                    <li>All bank information is encrypted</li>
-                    <li>We never store full account numbers</li>
-                    <li>Only the last 4 digits are saved for reference</li>
-                    <li>Used only for payout processing</li>
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <p className="font-semibold mb-3 text-secondary">What is Stripe Connect?</p>
+                  <ul className="text-sm text-gray-700 space-y-2">
+                    <li>✓ Secure bank account connection</li>
+                    <li>✓ Automatic payouts 24hrs after rides</li>
+                    <li>✓ 2-3 business day transfers</li>
+                    <li>✓ Tax forms (1099s) handled automatically</li>
+                    <li>✓ Industry-standard security</li>
                   </ul>
                 </div>
 
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+                  <p className="font-semibold mb-2">What you'll need:</p>
+                  <ul className="list-disc list-inside space-y-1">
+                    <li>Bank account information (routing & account number)</li>
+                    <li>Social Security Number or EIN</li>
+                    <li>Date of birth</li>
+                    <li>Home address</li>
+                  </ul>
+                  <p className="mt-3 text-xs">This information is securely stored by Stripe and never shared.</p>
+                </div>
+
                 <Button
-                  type="submit"
-                  disabled={isSubmitting}
+                  onClick={handleConnectOnboarding}
+                  disabled={isCreatingAccount}
                   className="w-full bg-primary hover:bg-primary/90"
                 >
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  {isSubmitting ? 'linking...' : 'link bank account'}
+                  {isCreatingAccount ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      redirecting to stripe...
+                    </>
+                  ) : (
+                    <>
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      connect bank account with stripe
+                    </>
+                  )}
                 </Button>
-              </form>
+
+                <p className="text-xs text-center text-gray-500">
+                  You'll be securely redirected to Stripe to complete setup
+                </p>
+              </div>
             )}
           </CardContent>
         </Card>
