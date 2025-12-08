@@ -41,10 +41,10 @@ Deno.serve(async (req) => {
 
 
 
-        // Check if this is user's first PAYMENT (not just booking)
-        const existingTransactions = await base44.entities.Transaction.filter({ payer_id: user.id });
-        const hasCompletedPayments = existingTransactions.some(t => 
-            t.transaction_status === 'completed'
+        // Check if this is user's first COMPLETED PAYMENT
+        const existingBookings = await base44.entities.RideBooking.filter({ passenger_id: user.id });
+        const hasCompletedPayments = existingBookings.some(b => 
+            b.payment_status === 'paid'
         );
         const isFirstBooking = !hasCompletedPayments;
 

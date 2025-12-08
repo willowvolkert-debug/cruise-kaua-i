@@ -66,9 +66,9 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         );
         setDriverRatings(driverRatingsFiltered || []);
         
-        // Check if user has any previous completed or confirmed bookings
+        // Check if user has any previous PAID bookings
         const hasPreviousBookings = bookings.some(b => 
-          b.booking_status === 'confirmed' || b.booking_status === 'completed'
+          b.payment_status === 'paid'
         );
         setIsFirstBooking(!hasPreviousBookings);
       }

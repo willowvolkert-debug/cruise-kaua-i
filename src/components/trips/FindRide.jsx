@@ -401,21 +401,23 @@ export default function FindRide() {
                             <div className="flex justify-between items-center">
                               <div className="flex items-center gap-3">
                                 <Avatar className="w-10 h-10 bg-gradient-to-r from-primary to-secondary">
-                                  <AvatarImage src={driverProfiles[ride.driver_id]?.profile_picture_url} />
-                                  <AvatarFallback className="text-white font-semibold text-sm">
-                                    {ride.driver_name.split(' ').map(n => n[0]).join('').toUpperCase()}
-                                  </AvatarFallback>
+                                 <AvatarImage src={driverProfiles[ride.driver_id]?.profile_picture_url} alt={ride.driver_name} />
+                                 <AvatarFallback className="text-white font-semibold text-sm">
+                                   {ride.driver_name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'DR'}
+                                 </AvatarFallback>
                                 </Avatar>
                                 <div>
-                                  <span className="text-sm font-medium text-gray-700">{ride.driver_name}</span>
-                                  {driverRatings[ride.driver_id]?.length > 0 && (
-                                    <div className="flex items-center gap-1">
-                                      <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-                                      <span className="text-xs text-gray-600">
-                                        {(driverRatings[ride.driver_id].reduce((sum, r) => sum + r.rating_value, 0) / driverRatings[ride.driver_id].length).toFixed(1)}
-                                      </span>
-                                    </div>
-                                  )}
+                                 <span className="text-sm font-medium text-gray-700">
+                                   @{driverProfiles[ride.driver_id]?.username || ride.driver_name}
+                                 </span>
+                                 {driverRatings[ride.driver_id]?.length > 0 && (
+                                   <div className="flex items-center gap-1">
+                                     <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                                     <span className="text-xs text-gray-600">
+                                       {(driverRatings[ride.driver_id].reduce((sum, r) => sum + r.rating_value, 0) / driverRatings[ride.driver_id].length).toFixed(1)}
+                                     </span>
+                                   </div>
+                                 )}
                                 </div>
                               </div>
                               <div className="flex items-center gap-2">
