@@ -895,16 +895,20 @@ Cruise Kauaʻi Team
                                                 </span>
                                             </div>
                                             {isDriver ? (
-                                                <p className="text-sm text-gray-600">
-                                                    Driving with: {participants || 'No riders yet'}
-                                                </p>
+                                              <p className="text-sm text-gray-600">
+                                                  Driving with: {participants || 'No riders yet'}
+                                              </p>
                                             ) : (
-                                                <p className="text-sm text-gray-600">
-                                                    Riding with: @{(() => {
-                                                        const driverUser = getUserById(ride.driver_id);
-                                                        return driverUser?.username || ride.driver_name || 'Driver';
-                                                    })()}
-                                                </p>
+                                              <p className="text-sm text-gray-600">
+                                                  Riding with: @{(() => {
+                                                      // Find the booking for this ride to get driver username
+                                                      const myBooking = activeBookings.find(b => 
+                                                          String(b.ride_id) === String(ride.id) && 
+                                                          String(b.passenger_id) === String(user?.id)
+                                                      );
+                                                      return myBooking?.driver_username || ride.driver_name || 'Driver';
+                                                  })()}
+                                              </p>
                                             )}
                                         </div>
                                     </button>
