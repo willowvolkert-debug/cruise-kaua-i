@@ -28,10 +28,13 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
       setDriverRatings([]);
       
       try {
-        // Get driver profile using get() method with the ID directly
-        const driver = await base44.entities.User.get(ride.driver_id);
+        // Get all users and find the driver
+        const allUsers = await base44.entities.User.list();
+        const driver = allUsers.find(u => String(u.id) === String(ride.driver_id));
         if (driver) {
           setDriverProfile(driver);
+        } else {
+          console.log("Driver not found in user list, driver_id:", ride.driver_id);
         }
 
         // Get all ratings and filter for this driver
