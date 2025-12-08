@@ -331,22 +331,24 @@ export default function InboxPage() {
 
             const nowComparable = hawaiiNow.toComparable();
             
-            // Rides where I'm the driver
+            // Rides where I'm the driver (only future rides)
             const myUpcomingRides = allRides.filter(r => {
                 if (String(r.driver_id) !== String(currentUser.id)) return false;
                 if (r.status !== 'active' && r.status !== 'full') return false;
                 const rideDateTime = parseRideDateTimeHST(r.departure_date, r.departure_time);
-                return rideDateTime.toComparable() >= nowComparable;
+                // Ride must be in the future (not past departure time)
+                return rideDateTime.toComparable() > nowComparable;
             });
-            
-            // Rides where I'm a confirmed passenger (from stillActive bookings)
+
+            // Rides where I'm a confirmed passenger (from stillActive bookings, only future rides)
             const myBookedRides = stillActive
                 .filter(b => String(b.passenger_id) === String(currentUser.id))
                 .map(b => allRides.find(r => r.id === b.ride_id))
                 .filter(ride => {
                     if (!ride) return false;
                     const rideDateTime = parseRideDateTimeHST(ride.departure_date, ride.departure_time);
-                    return rideDateTime.toComparable() >= nowComparable;
+                    // Ride must be in the future (not past departure time)
+                    return rideDateTime.toComparable() > nowComparable;
                 });
             
             const uniqueUpcomingRides = Array.from(new Set([...myUpcomingRides, ...myBookedRides].map(ride => ride.id)))
