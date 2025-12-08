@@ -89,6 +89,16 @@ export default function AccountPage() {
                 preferences_chattiness: currentUser.preferences_chattiness || 'Flexible',
                 preferences_scents: currentUser.preferences_scents || 'Any'
             });
+            
+            // Check if user needs Stripe Connect onboarding
+            if (!currentUser.stripe_connect_onboarding_complete) {
+                // Redirect to Payout page to complete Stripe Connect
+                setTimeout(() => {
+                    if (window.location.pathname !== createPageUrl("Payout")) {
+                        window.location.href = createPageUrl("Payout");
+                    }
+                }, 1000);
+            }
 
             if (currentUser.bank_account_linked) {
                 setBankDetails({
