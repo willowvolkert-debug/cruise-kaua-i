@@ -39,15 +39,7 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Ride not found' }, { status: 404 });
         }
 
-        // Get driver's Connect account
-        const drivers = await base44.entities.User.list();
-        const driver = drivers.find(u => u.id === driver_id);
-        
-        if (!driver || !driver.stripe_connect_account_id || !driver.stripe_connect_onboarding_complete) {
-            return Response.json({ 
-                error: 'Driver has not completed payout setup. Please try another ride.' 
-            }, { status: 400 });
-        }
+
 
         // Check if this is user's first booking
         const existingBookings = await base44.entities.RideBooking.filter({ passenger_id: user.id });
@@ -140,24 +132,17 @@ Deno.serve(async (req) => {
             quantity: 1
         });
 
-        // Create Stripe Checkout Session with payment_intent_data for Connect
+        // Create Stripe Checkout Session - Marketplace pattern (full payment to platform)
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             mode: 'payment',
             customer_email: user.email,
             line_items: lineItems,
-            payment_intent_data: {
-                application_fee_amount: Math.round(connectFee * 100), // Platform fee in cents
-                transfer_data: {
-                    destination: driver.stripe_connect_account_id,
-                },
-            },
             metadata: {
                 booking_id: booking.id,
                 ride_id: ride_id,
                 passenger_id: user.id,
                 driver_id: driver_id,
-                driver_connect_account: driver.stripe_connect_account_id,
                 total_amount: totalAmount.toString()
             },
             success_url: success_url + `?booking_id=${booking.id}&payment=success&session_id={CHECKOUT_SESSION_ID}`,
