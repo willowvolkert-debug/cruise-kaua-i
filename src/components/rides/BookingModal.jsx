@@ -49,6 +49,9 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
 
       // Load driver profile and ratings
       if (ride?.driver_id) {
+        console.log('Ride data in BookingModal:', ride);
+        console.log('Driver profile picture URL:', ride.driver_profile_picture_url);
+        
         // Fetch ratings and check if first booking
         const [allRatings, bookings] = await Promise.all([
           base44.entities.Rating.list(),
