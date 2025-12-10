@@ -39,14 +39,14 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
             {/* Driver Info */}
             <div className="flex items-center gap-4">
               <Avatar className="w-20 h-20">
-                <AvatarImage src={ride.driver_profile_picture_url} />
+                <AvatarImage src={ride?.driver_profile_picture_url} />
                 <AvatarFallback className="bg-gradient-to-r from-primary to-secondary text-white font-bold text-2xl">
-                  {getInitials(ride.driver_name)}
+                  {getInitials(ride?.driver_name)}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-secondary">@{ride.driver_username || ride.driver_name}</h3>
-                {ride.driver_age && ride.driver_gender && (
+                <h3 className="text-xl font-bold text-secondary">@{ride?.driver_username || ride?.driver_name}</h3>
+                {ride?.driver_age && ride?.driver_gender && (
                   <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
                     <span>{ride.driver_gender}, {ride.driver_age} years old</span>
                   </div>
@@ -57,9 +57,9 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
             {/* Ratings */}
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                <span className="text-lg font-semibold">{averageRating}</span>
-                <span className="text-gray-500">({driverRatings.length} reviews)</span>
+                <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
+                <span className="text-lg font-semibold">{averageRating || 'New'}</span>
+                <span className="text-gray-500">({driverRatings?.length || 0} reviews)</span>
               </div>
             </div>
 
