@@ -164,22 +164,26 @@ export default function PostRideForm() {
     
     setIsSubmitting(true);
     try {
+      console.log('Current user profile picture:', currentUser.profile_picture_url);
+
       const ridePayload = {
         ...rideData,
         driver_id: currentUser.id,
         driver_name: currentUser.full_name,
-        driver_username: currentUser.username,
-        driver_profile_picture_url: currentUser.profile_picture_url,
-        driver_bio: currentUser.bio,
-        driver_age: currentUser.age,
-        driver_gender: currentUser.gender,
-        driver_preferences_chattiness: currentUser.preferences_chattiness,
-        driver_preferences_scents: currentUser.preferences_scents,
+        driver_username: currentUser.username || null,
+        driver_profile_picture_url: currentUser.profile_picture_url || null,
+        driver_bio: currentUser.bio || null,
+        driver_age: currentUser.age || null,
+        driver_gender: currentUser.gender || null,
+        driver_preferences_chattiness: currentUser.preferences_chattiness || 'Flexible',
+        driver_preferences_scents: currentUser.preferences_scents || 'Any',
         driver_license_state: currentUser.drivers_license_state || 'HI',
         stops: stops.filter(s => s.trim() !== ''),
         seats_available: parseInt(rideData.seats_available),
         status: 'active'
       };
+
+      console.log('Ride payload driver_profile_picture_url:', ridePayload.driver_profile_picture_url);
 
       if (rideData.rider_preference === 'both_fine') {
         ridePayload.price_per_seat_local = parseFloat(rideData.price_per_seat_local);
