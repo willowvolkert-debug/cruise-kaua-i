@@ -149,7 +149,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                 {/* Driver Profile Card - Matching Account page exactly */}
                 <div className="flex flex-col md:flex-row items-center gap-4 p-4 bg-white border border-gray-200 rounded-3xl shadow-sm">
                   <Avatar className="w-20 h-20 text-2xl">
-                    <AvatarImage src={ride?.driver_profile_picture_url} />
+                    {ride?.driver_profile_picture_url && <AvatarImage src={ride.driver_profile_picture_url} />}
                     <AvatarFallback className="bg-gradient-to-br from-primary to-green-400 text-white font-bold">
                       {ride?.driver_name?.split(' ').map(n => n[0]).join('').toUpperCase()}
                     </AvatarFallback>
