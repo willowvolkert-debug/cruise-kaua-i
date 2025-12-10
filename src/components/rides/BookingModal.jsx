@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -141,6 +141,9 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
           <DialogTitle className="text-2xl font-bold text-secondary">
             request to book
           </DialogTitle>
+          <DialogDescription className="text-gray-600">
+            Review the driver profile and trip details before booking.
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleRequestToBook} className="space-y-4 pt-4">
