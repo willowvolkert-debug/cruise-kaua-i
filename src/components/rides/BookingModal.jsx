@@ -49,17 +49,11 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
 
       // Load driver profile and ratings
       if (ride?.driver_id) {
-        // Fetch driver profile, ratings, and check if first booking
-        const [allUsers, allRatings, bookings] = await Promise.all([
-          base44.entities.User.list(),
+        // Fetch ratings and check if first booking
+        const [allRatings, bookings] = await Promise.all([
           base44.entities.Rating.list(),
           base44.entities.RideBooking.list()
         ]);
-
-        const driver = allUsers.find(u => String(u.id) === String(ride.driver_id));
-        if (driver) {
-          setDriverProfile(driver);
-        }
 
         const driverRatingsFiltered = allRatings.filter(r => 
           String(r.rated_user_id) === String(ride.driver_id) && r.trip_role === 'driver'
@@ -155,31 +149,31 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                 {/* Driver Profile Card - Matching Account page exactly */}
                 <div className="flex flex-col md:flex-row items-center gap-4 p-4 bg-white border border-gray-200 rounded-3xl shadow-sm">
                   <Avatar className="w-20 h-20 text-2xl">
-                    <AvatarImage src={ride?.driver_profile_picture_url || driverProfile?.profile_picture_url} />
+                    <AvatarImage src={ride?.driver_profile_picture_url} />
                     <AvatarFallback className="bg-gradient-to-br from-primary to-green-400 text-white font-bold">
                       {ride?.driver_name?.split(' ').map(n => n[0]).join('').toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 text-center md:text-left space-y-2">
                     <h2 className="text-2xl font-bold text-secondary">
-                      {ride?.driver_username ? `@${ride.driver_username}` : (driverProfile?.username ? `@${driverProfile.username}` : ride?.driver_name)}
+                      {ride?.driver_username ? `@${ride.driver_username}` : ride?.driver_name}
                     </h2>
-                    {(ride?.driver_age || driverProfile?.age) && (ride?.driver_gender || driverProfile?.gender) && (
-                      <p className="text-sm text-gray-500">{ride?.driver_age || driverProfile?.age} years old • {ride?.driver_gender || driverProfile?.gender}</p>
+                    {ride?.driver_age && ride?.driver_gender && (
+                      <p className="text-sm text-gray-500">{ride.driver_age} years old • {ride.driver_gender}</p>
                     )}
-                    {(ride?.driver_bio || driverProfile?.bio) && (
-                      <p className="text-gray-600">{ride?.driver_bio || driverProfile?.bio}</p>
+                    {ride?.driver_bio && (
+                      <p className="text-gray-600">{ride.driver_bio}</p>
                     )}
                     <div className="pt-2 space-y-2">
                       <div className="flex items-center gap-2">
                         <MessageCircle className="w-4 h-4 text-gray-500"/>
                         <span className="text-sm text-gray-600">chattiness:</span>
-                        <Badge variant="outline" className="rounded-2xl border-gray-300">{ride?.driver_preferences_chattiness || driverProfile?.preferences_chattiness || 'Flexible'}</Badge>
+                        <Badge variant="outline" className="rounded-2xl border-gray-300">{ride?.driver_preferences_chattiness || 'Flexible'}</Badge>
                       </div>
                       <div className="flex items-center gap-2">
                         <Wind className="w-4 h-4 text-gray-500"/>
                         <span className="text-sm text-gray-600">scents:</span>
-                        <Badge variant="outline" className="rounded-2xl border-gray-300">{ride?.driver_preferences_scents || driverProfile?.preferences_scents || 'Any'}</Badge>
+                        <Badge variant="outline" className="rounded-2xl border-gray-300">{ride?.driver_preferences_scents || 'Any'}</Badge>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 pt-1">
