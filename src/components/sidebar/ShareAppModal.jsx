@@ -1,7 +1,7 @@
 import React from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X, Ship, MessageCircle, Share2 } from "lucide-react";
+import { X, Car, MessageCircle, Share2, Copy } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 export default function ShareAppModal({ isOpen, onClose, currentUser }) {
@@ -58,7 +58,7 @@ export default function ShareAppModal({ isOpen, onClose, currentUser }) {
         <div className="text-center space-y-6 py-6">
           <div className="flex justify-center">
             <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-lg">
-              <Ship className="w-12 h-12 text-blue-500" />
+              <Car className="w-12 h-12 text-blue-500" />
             </div>
           </div>
 
@@ -104,6 +104,18 @@ export default function ShareAppModal({ isOpen, onClose, currentUser }) {
               Facebook
             </Button>
           </div>
+
+          <Button
+            onClick={() => {
+              const shareUrl = window.location.origin;
+              navigator.clipboard.writeText(shareUrl);
+              alert("Link copied to clipboard!");
+            }}
+            className="w-full bg-white text-blue-500 hover:bg-blue-50 py-4 rounded-2xl"
+          >
+            <Copy className="w-5 h-5 mr-2" />
+            copy link
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
