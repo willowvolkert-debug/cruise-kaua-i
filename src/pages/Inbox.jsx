@@ -731,7 +731,16 @@ Cruise Kauaʻi Team
     };
 
     const recentChats = activeBookings
-        .filter(booking => booking.messages && booking.messages.length > 0)
+        .filter(booking => {
+            if (!booking.messages || booking.messages.length === 0) return false;
+            // Check if ride is within 3 days after departure
+            const ride = allRidesData.find(r => r.id === booking.ride_id);
+            if (!ride) return true; // Show if ride not found
+            const rideDateTime = parseRideDateTimeHST(ride.departure_date, ride.departure_time);
+            const threeDaysAfterRide = rideDateTime.addHours(72); // 3 days = 72 hours
+            const hawaiiNow = getHawaiiNow();
+            return hawaiiNow.toComparable() <= threeDaysAfterRide.toComparable();
+        })
         .map(booking => {
             const isDriver = String(user?.id) === String(booking.driver_id);
             const otherUserId = isDriver ? booking.passenger_id : booking.driver_id;
@@ -983,15 +992,33 @@ Cruise Kauaʻi Team
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2 text-secondary">
                             <MessageSquare className="w-6 h-6 text-primary"/>
-                            active trips ({activeBookings.length})
+                            active trips ({activeBookings.filter(booking => {
+                                const ride = allRidesData.find(r => r.id === booking.ride_id);
+                                if (!ride) return false;
+                                const rideDateTime = parseRideDateTimeHST(ride.departure_date, ride.departure_time);
+                                const hawaiiNow = getHawaiiNow();
+                                return rideDateTime.toComparable() >= hawaiiNow.toComparable();
+                            }).length})
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
                         {isLoading ? (
                             <p>Loading trips...</p>
-                        ) : activeBookings.length > 0 ? (
+                        ) : activeBookings.filter(booking => {
+                            const ride = allRidesData.find(r => r.id === booking.ride_id);
+                            if (!ride) return false;
+                            const rideDateTime = parseRideDateTimeHST(ride.departure_date, ride.departure_time);
+                            const hawaiiNow = getHawaiiNow();
+                            return rideDateTime.toComparable() >= hawaiiNow.toComparable();
+                        }).length > 0 ? (
                             <div className="space-y-4">
-                                {activeBookings.map(booking => {
+                                {activeBookings.filter(booking => {
+                                    const ride = allRidesData.find(r => r.id === booking.ride_id);
+                                    if (!ride) return false;
+                                    const rideDateTime = parseRideDateTimeHST(ride.departure_date, ride.departure_time);
+                                    const hawaiiNow = getHawaiiNow();
+                                    return rideDateTime.toComparable() >= hawaiiNow.toComparable();
+                                }).map(booking => {
                                     const isDriver = String(user.id) === String(booking.driver_id);
                                     const otherUserId = isDriver ? booking.passenger_id : booking.driver_id;
                                     const otherUser = getUserById(otherUserId);
