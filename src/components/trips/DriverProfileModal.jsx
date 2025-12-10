@@ -64,7 +64,7 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
             </div>
 
             {/* Bio */}
-            {ride.driver_bio && (
+            {ride?.driver_bio && (
               <div>
                 <h4 className="font-semibold text-secondary mb-2">About</h4>
                 <p className="text-gray-700">{ride.driver_bio}</p>
@@ -72,15 +72,15 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
             )}
 
             {/* Preferences */}
-            {(ride.driver_preferences_chattiness || ride.driver_preferences_scents) && (
+            {(ride?.driver_preferences_chattiness || ride?.driver_preferences_scents) && (
               <div className="space-y-2">
-                {ride.driver_preferences_chattiness && (
+                {ride?.driver_preferences_chattiness && (
                   <div className="text-sm">
                     <span className="text-gray-600">Chattiness:</span>
                     <span className="ml-2 font-medium">{ride.driver_preferences_chattiness}</span>
                   </div>
                 )}
-                {ride.driver_preferences_scents && (
+                {ride?.driver_preferences_scents && (
                   <div className="text-sm">
                     <span className="text-gray-600">Scents:</span>
                     <span className="ml-2 font-medium">{ride.driver_preferences_scents}</span>
@@ -95,23 +95,23 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">From:</span>
-                  <span className="font-medium">{ride.departure_location}</span>
+                  <span className="font-medium">{ride?.departure_location}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">To:</span>
-                  <span className="font-medium">{ride.destination}</span>
+                  <span className="font-medium">{ride?.destination}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Date & Time:</span>
                   <span className="font-medium">
-                    {format(new Date(ride.departure_date), "MMM d, yyyy")} at {ride.departure_time}
+                    {format(new Date(ride?.departure_date), "MMM d, yyyy")} at {ride?.departure_time}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Price per seat:</span>
-                  <span className="font-medium">${currentUser?.has_hawaii_id ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0)}</span>
+                  <span className="font-medium">${currentUser?.has_hawaii_id ? (ride?.price_per_seat_local || 0) : (ride?.price_per_seat_tourist || 0)}</span>
                 </div>
-                {ride.car_model && (
+                {ride?.car_model && (
                   <div className="flex justify-between">
                     <span className="text-gray-600">Vehicle:</span>
                     <span className="font-medium">{ride.car_model}</span>
@@ -121,7 +121,7 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
             </div>
 
             {/* Recent Reviews */}
-            {driverRatings.length > 0 && (
+            {driverRatings && driverRatings.length > 0 && (
               <div>
                 <h4 className="font-semibold text-secondary mb-3">Recent Reviews</h4>
                 <div className="space-y-3 max-h-32 overflow-y-auto">
@@ -129,7 +129,7 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
                     <div key={rating.id} className="p-3 bg-gray-50 rounded-2xl border border-gray-200">
                       <div className="flex items-center gap-2 mb-1">
                         {Array(rating.rating_value).fill(0).map((_, i) => (
-                          <Star key={i} className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                          <Star key={i} className="w-3 h-3 text-amber-400 fill-amber-400" />
                         ))}
                         <span className="text-xs text-gray-500">
                           {format(new Date(rating.created_date), "MMM yyyy")}
