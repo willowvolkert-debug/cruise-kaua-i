@@ -305,24 +305,6 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               </div>
             )}
 
-            <DialogFooter className="pt-4">
-              <Button type="button" variant="outline" onClick={onClose}>cancel</Button>
-              <Button 
-                type="submit" 
-                disabled={isSubmitting} 
-                className="bg-primary hover:bg-primary/90 text-primary-foreground"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    redirecting...
-                  </>
-                ) : (
-                  'book this ride'
-                )}
-              </Button>
-            </DialogFooter>
-
             <div className="bg-gray-50 rounded-lg p-4 space-y-2 border border-gray-200">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-700">Ride cost:</span>
@@ -379,7 +361,25 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                 You'll be redirected to Stripe to complete payment securely.
               </p>
             </div>
-        </form>
+
+            <DialogFooter className="pt-4">
+              <Button type="button" variant="outline" onClick={onClose}>cancel</Button>
+              <Button 
+                type="submit" 
+                disabled={isSubmitting} 
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    redirecting...
+                  </>
+                ) : (
+                  'book this ride'
+                )}
+              </Button>
+            </DialogFooter>
+            </form>
       </DialogContent>
     </Dialog>
   );
