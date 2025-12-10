@@ -90,15 +90,7 @@ export default function AccountPage() {
                 preferences_scents: currentUser.preferences_scents || 'Any'
             });
             
-            // Check if user needs Stripe Connect onboarding
-            if (!currentUser.stripe_connect_onboarding_complete) {
-                // Redirect to Payout page to complete Stripe Connect
-                setTimeout(() => {
-                    if (window.location.pathname !== createPageUrl("Payout")) {
-                        window.location.href = createPageUrl("Payout");
-                    }
-                }, 1000);
-            }
+
 
             if (currentUser.bank_account_linked) {
                 setBankDetails({
@@ -694,6 +686,7 @@ export default function AccountPage() {
                             </CardContent>
                         </Card>
 
+                        {user.vehicle_verified && user.stripe_connect_onboarding_complete && (
                         <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
                             <CardHeader>
                                 <CardTitle className="text-xl text-secondary flex items-center gap-2">
@@ -857,6 +850,7 @@ export default function AccountPage() {
                                 )}
                             </CardContent>
                         </Card>
+                        )}
                     </div>
                 </div>
                 

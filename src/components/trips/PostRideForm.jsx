@@ -72,8 +72,8 @@ export default function PostRideForm() {
           return;
         }
 
-        if (!user.bank_account_linked) {
-          setError("You must link your bank account before posting rides. Please add your payout information in your Account page.");
+        if (!user.stripe_connect_onboarding_complete) {
+          setError("You must complete Stripe Connect onboarding before posting rides. Please complete this in your Account page.");
           return;
         }
 
@@ -152,8 +152,8 @@ export default function PostRideForm() {
       return;
     }
 
-    if (!currentUser.bank_account_linked) {
-      setError("You must link your bank account before posting rides.");
+    if (!currentUser.stripe_connect_onboarding_complete) {
+      setError("You must complete Stripe Connect onboarding before posting rides.");
       return;
     }
 
@@ -236,7 +236,7 @@ export default function PostRideForm() {
                       currentUser?.community_agreement_accepted &&
                       currentUser?.drivers_license_verified && 
                       currentUser?.vehicle_verified && 
-                      currentUser?.bank_account_linked &&
+                      currentUser?.stripe_connect_onboarding_complete &&
                       (currentUser?.user_type === 'driver' || currentUser?.role === 'admin') &&
                       (!currentUser?.pending_ratings || currentUser.pending_ratings.length === 0);
 

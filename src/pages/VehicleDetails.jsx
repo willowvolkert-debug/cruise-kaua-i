@@ -6,9 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Car, Save, ArrowLeft } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Car, Save, ArrowLeft, ExternalLink, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { createConnectAccount } from "@/functions/createConnectAccount";
 
 export default function VehicleDetailsPage() {
   const [vehicleData, setVehicleData] = useState({
@@ -25,6 +27,8 @@ export default function VehicleDetailsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [user, setUser] = useState(null);
   const [uploadError, setUploadError] = useState('');
+  const [showStripeModal, setShowStripeModal] = useState(false);
+  const [isCreatingStripe, setIsCreatingStripe] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -123,13 +127,42 @@ export default function VehicleDetailsPage() {
       }
 
       alert("Vehicle details submitted for review! You'll be notified once verified.");
-      window.history.back();
+      
+      // Check if user needs to complete Stripe Connect onboarding
+      const updatedUser = await base44.auth.me();
+      if (!updatedUser.stripe_connect_onboarding_complete) {
+        setShowStripeModal(true);
+      } else {
+        window.history.back();
+      }
     } catch (error) {
       console.error("Error saving vehicle details:", error);
       setUploadError("Error saving vehicle details. Please try again.");
     }
     
     setIsSubmitting(false);
+  };
+
+  const handleStripeConnect = async () => {
+    setIsCreatingStripe(true);
+    try {
+      const appUrl = window.location.origin;
+      const { data } = await createConnectAccount({
+        refresh_url: `${appUrl}${createPageUrl("Account")}?refresh=true`,
+        return_url: `${appUrl}${createPageUrl("Account")}?success=true`
+      });
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      // Redirect to Stripe Connect onboarding
+      window.location.href = data.url;
+    } catch (error) {
+      console.error("Error creating Connect account:", error);
+      alert("Error setting up payout account. You can complete this later from your Account page.");
+      window.history.back();
+    }
   };
 
   return (
@@ -300,6 +333,68 @@ export default function VehicleDetailsPage() {
           © {new Date().getFullYear()} Cruise Kauaʻi. All rights reserved.
         </footer>
       </div>
+
+      {/* Stripe Connect Modal */}
+      <Dialog open={showStripeModal} onOpenChange={setShowStripeModal}>
+        <DialogContent className="sm:max-w-lg bg-white rounded-3xl">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-secondary">
+              one more step: connect your bank account
+            </DialogTitle>
+            <DialogDescription className="text-gray-600">
+              To become a driver and receive payouts, you need to connect your bank account via Stripe Connect.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 text-sm text-blue-800">
+              <p className="font-semibold mb-2">What you'll need:</p>
+              <ul className="list-disc list-inside space-y-1">
+                <li>Bank account information (routing & account number)</li>
+                <li>Social Security Number or EIN</li>
+                <li>Date of birth</li>
+                <li>Home address</li>
+              </ul>
+              <p className="mt-3 text-xs">This information is securely stored by Stripe and never shared.</p>
+            </div>
+
+            <div className="bg-green-50 border border-green-200 rounded-2xl p-4 text-sm text-green-800">
+              <p className="font-semibold mb-1">Why this is required:</p>
+              <p>All drivers must have a connected bank account to receive payouts from completed rides.</p>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <Button
+              onClick={() => {
+                setShowStripeModal(false);
+                window.history.back();
+              }}
+              variant="outline"
+              className="flex-1 rounded-2xl"
+            >
+              do this later
+            </Button>
+            <Button
+              onClick={handleStripeConnect}
+              disabled={isCreatingStripe}
+              className="flex-1 bg-primary hover:bg-primary/90 rounded-2xl"
+            >
+              {isCreatingStripe ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  connecting...
+                </>
+              ) : (
+                <>
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  connect bank account
+                </>
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
