@@ -53,22 +53,23 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         const [allUsers, allRatings, bookings] = await Promise.all([
           base44.entities.User.list(),
           base44.entities.Rating.list(),
-          base44.entities.RideBooking.filter({ passenger_id: user.id })
+          base44.entities.RideBooking.list()
         ]);
-        
+
         const driver = allUsers.find(u => String(u.id) === String(ride.driver_id));
         if (driver) {
           setDriverProfile(driver);
         }
-        
+
         const driverRatingsFiltered = allRatings.filter(r => 
           String(r.rated_user_id) === String(ride.driver_id) && r.trip_role === 'driver'
         );
         setDriverRatings(driverRatingsFiltered || []);
-        
-        // Check if user has any previous PAID bookings
+
+        // Check if user has any previous PAID bookings (including completed)
         const hasPreviousBookings = bookings.some(b => 
-          b.payment_status === 'paid'
+          String(b.passenger_id) === String(user.id) && 
+          (b.payment_status === 'paid' || b.booking_status === 'completed')
         );
         setIsFirstBooking(!hasPreviousBookings);
       }
