@@ -147,11 +147,11 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         </DialogHeader>
 
         <form onSubmit={handleRequestToBook} className="space-y-4 pt-4">
-            {/* Driver Profile - Same layout as Account page */}
+            {/* Driver Profile - Scrollable */}
             {isLoading ? (
               <div className="p-8 text-center">Loading driver information...</div>
             ) : (
-              <div className="space-y-4">
+              <div className="max-h-64 overflow-y-auto space-y-4 pr-2">
                 {/* Driver Profile Card - Matching Account page exactly */}
                 <div className="flex flex-col md:flex-row items-center gap-4 p-4 bg-white border border-gray-200 rounded-3xl shadow-sm">
                   <Avatar className="w-20 h-20 text-2xl">
@@ -207,7 +207,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                 {driverRatings.length > 0 && (
                   <div>
                     <h4 className="font-semibold text-secondary mb-2">recent reviews</h4>
-                    <div className="space-y-2 max-h-28 overflow-y-auto">
+                    <div className="space-y-2">
                       {driverRatings.slice(0, 2).map(rating => (
                         <div key={rating.id} className="p-3 bg-gray-50 rounded-2xl border border-gray-200">
                           <div className="flex items-center gap-2 mb-1">
@@ -305,6 +305,24 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               </div>
             )}
 
+            <DialogFooter className="pt-4">
+              <Button type="button" variant="outline" onClick={onClose}>cancel</Button>
+              <Button 
+                type="submit" 
+                disabled={isSubmitting} 
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    redirecting...
+                  </>
+                ) : (
+                  'book this ride'
+                )}
+              </Button>
+            </DialogFooter>
+
             <div className="bg-gray-50 rounded-lg p-4 space-y-2 border border-gray-200">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-700">Ride cost:</span>
@@ -361,24 +379,6 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                 You'll be redirected to Stripe to complete payment securely.
               </p>
             </div>
-
-            <DialogFooter className="pt-4">
-              <Button type="button" variant="outline" onClick={onClose}>cancel</Button>
-              <Button 
-                type="submit" 
-                disabled={isSubmitting} 
-                className="bg-primary hover:bg-primary/90 text-primary-foreground"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    redirecting...
-                  </>
-                ) : (
-                  'proceed to payment'
-                )}
-              </Button>
-            </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
