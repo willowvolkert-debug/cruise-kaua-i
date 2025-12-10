@@ -23,23 +23,48 @@ import { requestNotificationPermission } from "../components/utils/notifications
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
-const RatingsList = ({ ratings, title }) => (
-    <div className="space-y-4">
-        <h4 className="font-semibold text-secondary">{title} ({ratings.length})</h4>
-        {ratings.length > 0 ? ratings.map(rating => (
-            <div key={rating.id} className="p-4 bg-gray-50 rounded-2xl border border-gray-200">
-                <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                        {Array(rating.rating_value).fill(0).map((_, i) => <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
-                        {Array(5 - rating.rating_value).fill(0).map((_, i) => <Star key={i} className="w-4 h-4 text-gray-300" />)}
+const RatingsList = ({ ratings, title }) => {
+    const [isOpen, setIsOpen] = React.useState(false);
+    const averageRating = ratings.length > 0 
+        ? (ratings.reduce((sum, r) => sum + r.rating_value, 0) / ratings.length).toFixed(1)
+        : 'N/A';
+    
+    return (
+        <div className="space-y-2">
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-200 hover:bg-gray-100 transition-colors"
+            >
+                <div className="flex items-center gap-3">
+                    <h4 className="font-semibold text-secondary">{title}</h4>
+                    <div className="flex items-center gap-1">
+                        <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                        <span className="font-medium text-gray-700">{averageRating}</span>
+                        <span className="text-sm text-gray-500">({ratings.length})</span>
                     </div>
-                    <span className="text-xs text-gray-500">{format(new Date(rating.created_date), "MMM yyyy")}</span>
                 </div>
-                <p className="text-gray-700 italic">"{rating.comment}"</p>
-            </div>
-        )) : <p className="text-sm text-gray-500">No ratings yet.</p>}
-    </div>
-);
+                <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+            
+            {isOpen && (
+                <div className="space-y-3 pl-4">
+                    {ratings.length > 0 ? ratings.map(rating => (
+                        <div key={rating.id} className="p-4 bg-gray-50 rounded-2xl border border-gray-200">
+                            <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                    {Array(rating.rating_value).fill(0).map((_, i) => <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
+                                    {Array(5 - rating.rating_value).fill(0).map((_, i) => <Star key={i} className="w-4 h-4 text-gray-300" />)}
+                                </div>
+                                <span className="text-xs text-gray-500">{format(new Date(rating.created_date), "MMM yyyy")}</span>
+                            </div>
+                            <p className="text-gray-700 italic">"{rating.comment}"</p>
+                        </div>
+                    )) : <p className="text-sm text-gray-500">No ratings yet.</p>}
+                </div>
+            )}
+        </div>
+    );
+};
 
 export default function AccountPage() {
     const [user, setUser] = useState(null);
