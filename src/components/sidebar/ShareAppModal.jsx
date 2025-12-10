@@ -1,7 +1,7 @@
 import React from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X, Car, MessageCircle, Share2, Copy } from "lucide-react";
+import { Car, MessageCircle, Share2, Copy } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 export default function ShareAppModal({ isOpen, onClose, currentUser }) {
@@ -48,13 +48,6 @@ export default function ShareAppModal({ isOpen, onClose, currentUser }) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md bg-blue-500 text-white border-0 rounded-3xl">
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 rounded-sm opacity-90 transition-opacity hover:opacity-100"
-        >
-          <X className="h-6 w-6 text-black" />
-        </button>
-
         <div className="text-center space-y-6 py-6">
           <div className="flex justify-center">
             <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-lg">
