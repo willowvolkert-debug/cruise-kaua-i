@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -52,112 +51,154 @@ export default function TermsOfServicePage() {
               <div className="space-y-6 text-gray-700">
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">1. Acceptance of Terms</h3>
-                  <p>By accessing and using Cruise Kauaʻi, you accept and agree to be bound by these Terms of Service. If you do not agree, please do not use our platform.</p>
+                  <p>By accessing or using Cruise Kauaʻi ("Cruise Kauaʻi," "we," "us," or "our"), you acknowledge that you have read, understood, and agree to be bound by these Terms of Service ("Terms").</p>
+                  <p className="mt-2">If you do not agree to these Terms, you must not access or use the platform.</p>
                 </section>
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">2. Platform Description</h3>
-                  <p>Cruise Kauaʻi is a carpooling platform that connects drivers and passengers for shared rides. We are NOT a transportation provider and do not employ drivers. We simply facilitate connections between users.</p>
+                  <p className="mb-2">Cruise Kauaʻi is a technology platform that enables users to connect with one another to arrange voluntary, cost-sharing carpools.</p>
+                  <p className="font-semibold mb-2">Cruise Kauaʻi:</p>
+                  <ul className="list-disc list-inside space-y-1 ml-4">
+                    <li>Is not a transportation provider, carrier, broker, or insurer;</li>
+                    <li>Does not own, lease, or operate vehicles;</li>
+                    <li>Does not employ drivers;</li>
+                    <li>Does not provide rides, transportation services, or commercial ride-hailing services.</li>
+                  </ul>
+                  <p className="mt-2">All transportation services are provided solely by independent users, and any agreement to share a ride is entered into directly between users.</p>
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">3. Disclaimer of Liability</h3>
-                  <p className="mb-2">Cruise Kauaʻi explicitly disclaims all liability for:</p>
-                  <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li>Personal injuries or death</li>
-                    <li>Property damage</li>
-                    <li>Financial losses</li>
-                    <li>Any other damages arising from ride-sharing activities</li>
-                  </ul>
-                  <p className="mt-2">The platform is merely a connection service. All rides are arranged directly between users.</p>
+                  <h3 className="font-bold text-lg text-secondary mb-2">3. No Agency or Employment Relationship</h3>
+                  <p>No joint venture, partnership, employment, agency, or carrier relationship exists between Cruise Kauaʻi and any user, including drivers.</p>
+                  <p className="mt-2">Drivers are independent individuals and are solely responsible for their conduct, vehicles, insurance, and compliance with applicable laws.</p>
                 </section>
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">4. Assumption of Risk</h3>
-                  <p>By using Cruise Kauaʻi, you acknowledge and agree that you VOLUNTARILY ASSUME ALL RISKS associated with carpooling, including but not limited to risks of personal injury, property damage, and interactions with other users.</p>
+                  <p className="font-semibold uppercase mb-2">YOU EXPRESSLY ACKNOWLEDGE AND AGREE THAT USE OF THE PLATFORM AND PARTICIPATION IN CARPOOLING ACTIVITIES INVOLVES INHERENT RISKS, INCLUDING BUT NOT LIMITED TO:</p>
+                  <ul className="list-disc list-inside space-y-1 ml-4">
+                    <li>Personal injury or death</li>
+                    <li>Vehicle accidents</li>
+                    <li>Property damage</li>
+                    <li>Acts or omissions of other users</li>
+                  </ul>
+                  <p className="mt-2 font-semibold">By using Cruise Kauaʻi, you VOLUNTARILY AND KNOWINGLY ASSUME ALL SUCH RISKS, whether foreseeable or unforeseeable, to the fullest extent permitted by Hawaii law.</p>
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">5. Driver Responsibilities</h3>
-                  <p className="mb-2">All drivers must:</p>
+                  <h3 className="font-bold text-lg text-secondary mb-2">5. Disclaimer of Liability</h3>
+                  <p className="mb-2">To the maximum extent permitted by Hawaii law, Cruise Kauaʻi DISCLAIMS ALL LIABILITY for any claims, damages, losses, or injuries arising out of or related to:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li>Maintain a safe, roadworthy vehicle</li>
-                    <li>Follow all traffic laws and regulations</li>
-                    <li>Possess a valid driver's license</li>
-                    <li>Maintain adequate insurance coverage (minimum $2,000,000 third-party liability recommended)</li>
-                    <li>Confirm with their insurance provider that carpooling activity is covered</li>
-                    <li>Not engage in commercial ride-hailing activities</li>
+                    <li>Any ride, carpool, or transportation activity</li>
+                    <li>Acts or omissions of drivers or passengers</li>
+                    <li>Vehicle condition or operation</li>
+                    <li>Insurance coverage or lack thereof</li>
+                    <li>Disputes between users</li>
+                  </ul>
+                  <p className="mt-2">Cruise Kauaʻi does not guarantee the safety, legality, suitability, or insurance coverage of any user or ride.</p>
+                </section>
+
+                <section>
+                  <h3 className="font-bold text-lg text-secondary mb-2">6. Driver Responsibilities</h3>
+                  <p className="mb-2">All drivers agree that they are solely responsible for:</p>
+                  <ul className="list-disc list-inside space-y-1 ml-4">
+                    <li>Maintaining a safe, roadworthy, and legally registered vehicle</li>
+                    <li>Holding a valid driver's license</li>
+                    <li>Complying with all Hawaii traffic, safety, and insurance laws</li>
+                    <li>Maintaining active automobile insurance coverage as required by law</li>
+                    <li>Confirming with their insurer that carpooling activity is covered</li>
+                    <li>Ensuring all cost-sharing charges are limited to actual trip expenses</li>
+                    <li>Not engaging in commercial or for-hire transportation activities</li>
+                  </ul>
+                  <p className="mt-2">Drivers acknowledge that Cruise Kauaʻi does not verify insurance coverage or compliance beyond basic information collection.</p>
+                </section>
+
+                <section>
+                  <h3 className="font-bold text-lg text-secondary mb-2">7. Passenger Responsibilities</h3>
+                  <p className="mb-2">Passengers agree to:</p>
+                  <ul className="list-disc list-inside space-y-1 ml-4">
+                    <li>Act lawfully, responsibly, and respectfully</li>
+                    <li>Follow reasonable safety instructions from drivers</li>
+                    <li>Refrain from illegal, disruptive, or unsafe conduct</li>
+                    <li>Respect drivers, vehicles, and other users</li>
                   </ul>
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">6. Passenger Responsibilities</h3>
-                  <p className="mb-2">All passengers must:</p>
+                  <h3 className="font-bold text-lg text-secondary mb-2">8. Insurance Disclosure (IMPORTANT NOTICE)</h3>
+                  <p className="font-semibold uppercase mb-2">Cruise Kauaʻi DOES NOT PROVIDE AUTOMOBILE OR LIABILITY INSURANCE.</p>
+                  <p className="mb-2">Drivers are solely responsible for maintaining legally required insurance coverage.</p>
+                  <p className="mb-2">Users acknowledge that:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li>Act responsibly and respectfully</li>
-                    <li>Follow driver instructions regarding vehicle use</li>
-                    <li>Not engage in illegal activities</li>
-                    <li>Treat drivers and vehicles with respect</li>
+                    <li>Personal auto insurance may not cover carpooling or cost-sharing activities</li>
+                    <li>Any damages or injuries may not be fully insured</li>
+                    <li>Cruise Kauaʻi is not responsible for insurance gaps or denied claims</li>
                   </ul>
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">7. Insurance Requirements</h3>
-                  <p className="font-semibold">IMPORTANT NOTICE:</p>
-                  <p className="mb-2">Drivers MUST have valid automobile insurance. It is the driver's responsibility to:</p>
+                  <h3 className="font-bold text-lg text-secondary mb-2">9. Cost-Sharing Only (Non-Commercial Use)</h3>
+                  <p className="mb-2">Cruise Kauaʻi is intended solely for voluntary cost-sharing carpools.</p>
+                  <p className="mb-2">Drivers may only request reimbursement reasonably related to actual trip costs (e.g., fuel, tolls, vehicle wear).</p>
+                  <p>Drivers may not generate profit, receive compensation, or provide transportation for hire.</p>
+                  <p className="mt-2 font-semibold">Use of the platform for commercial ridesharing or for-hire transportation is strictly prohibited.</p>
+                </section>
+
+                <section>
+                  <h3 className="font-bold text-lg text-secondary mb-2">10. No Background Checks</h3>
+                  <p className="mb-2">Cruise Kauaʻi does not conduct criminal background checks, driving record checks, or continuous monitoring of users.</p>
+                  <p className="mb-2">Any license or vehicle verification is limited and does not constitute endorsement or certification.</p>
+                  <p className="font-semibold">Users are solely responsible for exercising their own judgment and caution.</p>
+                </section>
+
+                <section>
+                  <h3 className="font-bold text-lg text-secondary mb-2">11. Waiver and Release of Claims</h3>
+                  <p className="mb-2">To the fullest extent permitted by Hawaii law, you WAIVE, RELEASE, AND FOREVER DISCHARGE Cruise Kauaʻi and its owners, officers, employees, and affiliates from any and all claims, known or unknown, arising out of or related to:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li>Verify with their insurance provider that carpooling is covered</li>
-                    <li>Understand that personal auto insurance may not cover commercial activities</li>
-                    <li>Maintain a minimum of $2,000,000 in third-party liability coverage (recommended)</li>
+                    <li>Use of the platform</li>
+                    <li>Participation in carpooling activities</li>
+                    <li>Acts or omissions of other users</li>
                   </ul>
-                  <p className="mt-2 font-semibold">Cruise Kauaʻi provides NO insurance coverage and is not liable for any uncovered claims.</p>
+                  <p className="mt-2 text-sm italic">This waiver does not apply to claims that cannot be waived under applicable law.</p>
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">8. Cost-Sharing vs. Commercial Activity</h3>
-                  <p>Cruise Kauaʻi is for COST-SHARING only, NOT commercial ride-hailing. Drivers may only charge amounts reasonably related to the actual costs of the trip (fuel, maintenance, etc.). Drivers may NOT use this platform to generate profit.</p>
-                </section>
-
-                <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">9. No Background Checks</h3>
-                  <p className="font-semibold">IMPORTANT: Cruise Kauaʻi does NOT conduct background checks on users.</p>
-                  <p className="mt-2">While we verify driver's licenses and vehicle information, we do not perform criminal background checks or driving record checks. Users must exercise their own judgment and caution when arranging rides.</p>
-                </section>
-
-                <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">10. Waiver of Claims</h3>
-                  <p>By using Cruise Kauaʻi, you waive all claims against Cruise Kauaʻi, its owners, operators, affiliates, and employees related to any disputes, incidents, accidents, or damages arising from ride-sharing activities.</p>
-                </section>
-
-                <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">11. Voluntary Participation</h3>
-                  <p>Your participation in Cruise Kauaʻi is completely voluntary. You may stop using the platform at any time.</p>
-                </section>
-
-                <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">12. User Conduct</h3>
-                  <p className="mb-2">Users must NOT:</p>
+                  <h3 className="font-bold text-lg text-secondary mb-2">12. Indemnification</h3>
+                  <p className="mb-2">You agree to defend, indemnify, and hold harmless Cruise Kauaʻi from any claims, damages, losses, liabilities, or expenses arising from:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li>Share personal contact information outside the app</li>
-                    <li>Engage in harassment or discriminatory behavior</li>
+                    <li>Your use of the platform</li>
+                    <li>Your violation of these Terms</li>
+                    <li>Your violation of any law</li>
+                    <li>Your acts or omissions related to carpooling activities</li>
+                  </ul>
+                </section>
+
+                <section>
+                  <h3 className="font-bold text-lg text-secondary mb-2">13. User Conduct</h3>
+                  <p className="mb-2">Users must not:</p>
+                  <ul className="list-disc list-inside space-y-1 ml-4">
+                    <li>Engage in harassment, discrimination, or threats</li>
                     <li>Use the platform for illegal purposes</li>
-                    <li>Attempt to defraud other users</li>
+                    <li>Misrepresent identity, insurance, or eligibility</li>
+                    <li>Attempt to circumvent platform safeguards</li>
                   </ul>
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">13. Governing Law</h3>
-                  <p>These Terms are governed by the laws of the State of Hawaii, County of Kauaʻi. Any disputes shall be resolved through binding arbitration in Kauaʻi County, Hawaii.</p>
+                  <h3 className="font-bold text-lg text-secondary mb-2">14. Arbitration & Governing Law</h3>
+                  <p className="mb-2">These Terms are governed by the laws of the State of Hawaii, without regard to conflict-of-law principles.</p>
+                  <p>Any dispute shall be resolved through binding arbitration conducted in Kauaʻi County, Hawaii, except where prohibited by law.</p>
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">14. Changes to Terms</h3>
-                  <p>Cruise Kauaʻi reserves the right to modify these terms at any time. Continued use of the platform constitutes acceptance of modified terms.</p>
+                  <h3 className="font-bold text-lg text-secondary mb-2">15. Changes to Terms</h3>
+                  <p>Cruise Kauaʻi may modify these Terms at any time. Continued use of the platform after changes constitutes acceptance.</p>
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">15. Contact</h3>
-                  <p>For questions about these Terms, please use our Contact Us page.</p>
+                  <h3 className="font-bold text-lg text-secondary mb-2">16. Contact Information</h3>
+                  <p>For questions regarding these Terms, please contact us through the Cruise Kauaʻi website.</p>
                 </section>
 
                 <p className="text-sm italic pt-4">Last Updated: {new Date().toLocaleDateString()}</p>
