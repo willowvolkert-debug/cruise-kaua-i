@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Car, Save, ArrowLeft, ExternalLink, Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { createConnectAccount } from "@/functions/createConnectAccount";
 
@@ -29,6 +29,7 @@ export default function VehicleDetailsPage() {
   const [uploadError, setUploadError] = useState('');
   const [showStripeModal, setShowStripeModal] = useState(false);
   const [isCreatingStripe, setIsCreatingStripe] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -128,9 +129,11 @@ export default function VehicleDetailsPage() {
 
       alert("Vehicle details submitted for review! You'll be notified once verified.");
       
-      // Check if user needs to complete Stripe Connect onboarding
+      // Navigate to Driver Agreement
       const updatedUser = await base44.auth.me();
-      if (!updatedUser.stripe_connect_onboarding_complete) {
+      if (!updatedUser.driver_agreement_accepted) {
+        navigate(createPageUrl("DriverAgreement"));
+      } else if (!updatedUser.stripe_connect_onboarding_complete) {
         setShowStripeModal(true);
       } else {
         window.history.back();

@@ -9,6 +9,7 @@ import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import CommunityAgreement from './pages/CommunityAgreement';
 import Payout from './pages/Payout';
+import DriverAgreement from './pages/DriverAgreement';
 import __Layout from './Layout.jsx';
 
 
@@ -24,6 +25,7 @@ export const PAGES = {
     "PrivacyPolicy": PrivacyPolicy,
     "CommunityAgreement": CommunityAgreement,
     "Payout": Payout,
+    "DriverAgreement": DriverAgreement,
 }
 
 export const pagesConfig = {
