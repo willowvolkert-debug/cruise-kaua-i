@@ -932,6 +932,22 @@ export default function AccountPage() {
                                             </div>
                                             <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
                                         </Link>
+                                        {user.driver_agreement_accepted && (
+                                            <Link to={createPageUrl("DriverAgreement")} className="flex flex-col p-3 rounded-2xl bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-colors cursor-pointer">
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex items-center gap-2">
+                                                        <FileText className="w-4 h-4 text-gray-500" />
+                                                        <span className="font-medium">driver agreement</span>
+                                                    </div>
+                                                    <Badge variant="default" className="bg-green-600 border-green-600 rounded-2xl"><ShieldCheck className="w-4 h-4 mr-1"/>accepted</Badge>
+                                                </div>
+                                                {user.driver_agreement_timestamp && (
+                                                    <p className="text-xs text-gray-500 mt-1 ml-6">
+                                                        Signed: {format(new Date(user.driver_agreement_timestamp), "MMM d, yyyy 'at' h:mm a")}
+                                                    </p>
+                                                )}
+                                            </Link>
+                                        )}
                         </CardContent>
                     </Card>
                 )}

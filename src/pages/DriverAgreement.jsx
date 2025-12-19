@@ -13,16 +13,52 @@ export default function DriverAgreementPage() {
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const [checkboxes, setCheckboxes] = useState({
+    notTransportProvider: false,
+    notEmployee: false,
+    solelyResponsible: false,
+    incidentalTravel: false,
+    noProfit: false,
+    noForHire: false,
+    validLicense: false,
+    vehicleRegistered: false,
+    vehicleSafe: false,
+    willRemoveUnsafe: false,
+    hasInsurance: false,
+    noInsuranceProvided: false,
+    insuranceDenial: false,
+    confirmedCoverage: false,
+    inherentRisk: false,
+    passengersIndependent: false,
+    accidentsMayOccur: false,
+    noBackgroundChecks: false,
+    responsibleInteractions: false,
+    indemnify: false,
+    financialResponsibility: false,
+    accurateInfo: false,
+    violationRemoval: false,
+    voluntaryParticipation: false,
+  });
+
+  const allCheckboxesChecked = Object.values(checkboxes).every(val => val === true);
+
+  const handleCheckboxChange = (key) => {
+    setCheckboxes(prev => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const handleAccept = async () => {
-    if (!agreed) {
-      alert("Please read and accept the Driver Agreement to continue.");
+    if (!agreed || !allCheckboxesChecked) {
+      alert("Please read the agreement and check all boxes to continue.");
       return;
     }
 
     setIsSubmitting(true);
     try {
-      await base44.auth.updateMe({ driver_agreement_accepted: true });
+      const timestamp = new Date().toISOString();
+      await base44.auth.updateMe({ 
+        driver_agreement_accepted: true,
+        driver_agreement_timestamp: timestamp
+      });
       
       // Check if user needs Stripe Connect onboarding
       const user = await base44.auth.me();
@@ -183,25 +219,71 @@ export default function DriverAgreementPage() {
               </div>
             </ScrollArea>
 
-            <div className="flex items-center space-x-2 mt-6">
-              <Checkbox 
-                id="agree" 
-                checked={agreed}
-                onCheckedChange={(checked) => setAgreed(checked)}
-              />
-              <Label htmlFor="agree" className="cursor-pointer">
-                I have read and agree to the Driver Agreement
-              </Label>
-            </div>
+            <div className="mt-6 space-y-4">
+              <div className="p-4 bg-gray-50 rounded-2xl border border-gray-200">
+                <p className="font-semibold text-secondary mb-3">By checking all boxes below, I certify that:</p>
+                <div className="space-y-2">
+                  {[
+                    { key: 'notTransportProvider', label: 'I understand Cruise Kauaʻi is not a transportation provider' },
+                    { key: 'notEmployee', label: 'I understand I am not an employee or agent' },
+                    { key: 'solelyResponsible', label: 'I understand I am solely responsible for my actions' },
+                    { key: 'incidentalTravel', label: 'My rides are incidental to my own travel' },
+                    { key: 'noProfit', label: 'I will not make a profit from rides' },
+                    { key: 'noForHire', label: 'I will not provide transportation for hire' },
+                    { key: 'validLicense', label: 'I hold a valid Hawaii driver\'s license' },
+                    { key: 'vehicleRegistered', label: 'My vehicle is legally registered' },
+                    { key: 'vehicleSafe', label: 'My vehicle is safe and roadworthy' },
+                    { key: 'willRemoveUnsafe', label: 'I will remove my vehicle if unsafe' },
+                    { key: 'hasInsurance', label: 'I maintain legally required auto insurance' },
+                    { key: 'noInsuranceProvided', label: 'I understand Cruise Kauaʻi provides NO insurance' },
+                    { key: 'insuranceDenial', label: 'I understand my insurer may deny coverage' },
+                    { key: 'confirmedCoverage', label: 'I have confirmed coverage with my insurer' },
+                    { key: 'inherentRisk', label: 'Driving involves inherent risk' },
+                    { key: 'passengersIndependent', label: 'Passengers are independent individuals' },
+                    { key: 'accidentsMayOccur', label: 'Accidents and injuries may occur' },
+                    { key: 'noBackgroundChecks', label: 'I understand Cruise Kauaʻi does not conduct background checks' },
+                    { key: 'responsibleInteractions', label: 'I am responsible for my interactions with passengers' },
+                    { key: 'indemnify', label: 'I understand I may be required to indemnify Cruise Kauaʻi' },
+                    { key: 'financialResponsibility', label: 'I accept financial responsibility for my actions' },
+                    { key: 'accurateInfo', label: 'All information I provided is accurate' },
+                    { key: 'violationRemoval', label: 'I understand violations may result in removal' },
+                    { key: 'voluntaryParticipation', label: 'I voluntarily agree to participate' },
+                  ].map(({ key, label }) => (
+                    <div key={key} className="flex items-start space-x-2">
+                      <Checkbox 
+                        id={key}
+                        checked={checkboxes[key]}
+                        onCheckedChange={() => handleCheckboxChange(key)}
+                        className="mt-0.5"
+                      />
+                      <Label htmlFor={key} className="cursor-pointer text-sm leading-tight">
+                        {label}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-            <Button
-              onClick={handleAccept}
-              disabled={!agreed || isSubmitting}
-              className="w-full mt-4 bg-primary hover:bg-primary/90"
-            >
-              <CheckCircle className="w-4 h-4 mr-2" />
-              {isSubmitting ? 'Accepting...' : 'Accept and Continue'}
-            </Button>
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="agree" 
+                  checked={agreed}
+                  onCheckedChange={(checked) => setAgreed(checked)}
+                />
+                <Label htmlFor="agree" className="cursor-pointer font-semibold">
+                  I have read and agree to the Driver Agreement
+                </Label>
+              </div>
+
+              <Button
+                onClick={handleAccept}
+                disabled={!agreed || !allCheckboxesChecked || isSubmitting}
+                className="w-full bg-primary hover:bg-primary/90"
+              >
+                <CheckCircle className="w-4 h-4 mr-2" />
+                {isSubmitting ? 'Accepting...' : 'Accept and Continue'}
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
