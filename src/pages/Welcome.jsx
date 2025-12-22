@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Car, Shield, MessageSquare, Users, DollarSign, Clock, Leaf, HandHeart, CheckCircle, Ship, AlertCircle, Smartphone } from "lucide-react";
+import { Car, Shield, MessageSquare, Users, DollarSign, Clock, Leaf, HandHeart, CheckCircle, AlertCircle, Smartphone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
@@ -47,10 +47,7 @@ export default function WelcomePage() {
         {step === 1 && (
           <Card className="shadow-xl border-gray-200 rounded-3xl bg-white">
             <CardContent className="p-8 md:p-12 text-center space-y-6">
-              <div className="w-20 h-20 bg-gradient-to-br from-primary to-orange-400 rounded-full mx-auto flex items-center justify-center">
-                <Ship className="w-12 h-12 text-white" />
-              </div>
-              <h1 className="text-4xl font-bold text-secondary">Welcome to Cruise Kauaʻi 🌺</h1>
+              <h1 className="text-4xl font-bold text-secondary">Welcome to Cruise Kauaʻi 🚗</h1>
               <p className="text-xl text-gray-700 leading-relaxed">
                 Making transportation on Kauaʻi more <span className="font-semibold text-gray-500">social</span>, 
                 <span className="font-semibold text-blue-600"> affordable</span>, and 
@@ -76,14 +73,14 @@ export default function WelcomePage() {
                   <Shield className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Verify Your License</h3>
-                    <p className="text-gray-600">Upload photos of your driver's license for manual verification by our team. Don't worry, we won't judge your DMV photo!</p>
+                    <p className="text-gray-600">Upload photos of your driverʻs license for instant verification through Stripe</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
                   <Car className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg text-secondary">Add Vehicle Details</h3>
-                    <p className="text-gray-600">Share information about your vehicle, including photos and insurance.</p>
+                    <p className="text-gray-600">Share information about your vehicle, including photos and insurance, and sign Driver Agreement</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
