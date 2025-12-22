@@ -30,11 +30,6 @@ const navigationItems = [
     icon: MapPin,
   },
   {
-    title: "community",
-    url: createPageUrl("Community"),
-    icon: Users,
-  },
-  {
     title: "account",
     url: createPageUrl("Account"),
     icon: User,
@@ -48,6 +43,11 @@ const navigationItems = [
     title: "contact us",
     url: createPageUrl("ContactUs"),
     icon: MessageSquare,
+  },
+  {
+    title: "community",
+    url: createPageUrl("Community"),
+    icon: Users,
   },
   {
     title: "admin",
