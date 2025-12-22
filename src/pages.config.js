@@ -10,6 +10,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import CommunityAgreement from './pages/CommunityAgreement';
 import Payout from './pages/Payout';
 import DriverAgreement from './pages/DriverAgreement';
+import Community from './pages/Community';
 import __Layout from './Layout.jsx';
 
 
@@ -26,6 +27,7 @@ export const PAGES = {
     "CommunityAgreement": CommunityAgreement,
     "Payout": Payout,
     "DriverAgreement": DriverAgreement,
+    "Community": Community,
 }
 
 export const pagesConfig = {
