@@ -25,6 +25,7 @@ export default function AdminPage() {
   const [verifiedRiders, setVerifiedRiders] = useState([]);
   const [contactInquiries, setContactInquiries] = useState([]);
   const [phoneAlerts, setPhoneAlerts] = useState([]);
+  const [pendingCommunityPosts, setPendingCommunityPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -75,6 +76,11 @@ export default function AdminPage() {
       const allBookings = await base44.entities.RideBooking.list('-updated_date');
       const phoneDetected = allBookings.filter(b => b.phone_number_detected === true);
       setPhoneAlerts(phoneDetected);
+
+      // Load pending community posts
+      const allCommunityPosts = await base44.entities.CommunityPost.list('-created_date');
+      const pendingPosts = allCommunityPosts.filter(p => p.status === 'pending');
+      setPendingCommunityPosts(pendingPosts);
 
     } catch (error) {
       console.error("Error loading data:", error);
@@ -244,6 +250,58 @@ export default function AdminPage() {
     }
   };
 
+  const handleApproveCommunityPost = async (postId, userId) => {
+    try {
+      await base44.entities.CommunityPost.update(postId, {
+        status: 'approved'
+      });
+
+      // Notify user their post was approved
+      const post = pendingCommunityPosts.find(p => p.id === postId);
+      if (post) {
+        await base44.entities.AdminMessage.create({
+          recipient_id: userId,
+          recipient_name: post.user_name,
+          subject: '🎉 Your community post has been approved!',
+          message: `Your community post has been approved and is now live! Thank you for sharing your story with the Cruise Kauaʻi community.\n\nYour post:\n"${post.content.substring(0, 100)}..."\n\nKeep sharing the aloha!`,
+          message_type: 'info'
+        });
+      }
+
+      alert('Post approved and user notified!');
+      loadData();
+    } catch (error) {
+      console.error('Error approving post:', error);
+      alert('Error approving post. Please try again.');
+    }
+  };
+
+  const handleRejectCommunityPost = async (postId, userId) => {
+    const reason = prompt('Please provide a reason for rejection (optional):');
+    
+    try {
+      await base44.entities.CommunityPost.delete(postId);
+
+      // Notify user their post was rejected
+      const post = pendingCommunityPosts.find(p => p.id === postId);
+      if (post) {
+        await base44.entities.AdminMessage.create({
+          recipient_id: userId,
+          recipient_name: post.user_name,
+          subject: 'Community Post Update',
+          message: `We're unable to approve your recent community post at this time.${reason ? `\n\nReason: ${reason}` : ''}\n\nIf you have questions, please contact us through the app.\n\nMahalo for your understanding.`,
+          message_type: 'info'
+        });
+      }
+
+      alert('Post rejected and user notified.');
+      loadData();
+    } catch (error) {
+      console.error('Error rejecting post:', error);
+      alert('Error rejecting post. Please try again.');
+    }
+  };
+
   const handleMessageUser = (user) => {
     setMessageUser(user);
     setShowMessageModal(true);
@@ -307,6 +365,64 @@ export default function AdminPage() {
                         </p>
                       </div>
                       <Badge className="bg-red-600">needs review</Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Pending Community Posts */}
+        {pendingCommunityPosts.length > 0 && (
+          <Card className="shadow-lg border-purple-300 bg-purple-50 rounded-3xl">
+            <CardHeader>
+              <CardTitle className="text-xl text-purple-800 flex items-center gap-2">
+                <Users className="w-6 h-6 text-purple-600" />
+                pending community posts ({pendingCommunityPosts.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {pendingCommunityPosts.map(post => (
+                  <div key={post.id} className="bg-white rounded-lg p-4 border border-purple-200">
+                    <div className="flex items-start gap-3 mb-3">
+                      <Avatar className="w-10 h-10">
+                        <AvatarFallback className="bg-gradient-to-r from-primary to-secondary text-white font-semibold">
+                          {getInitials(post.user_name)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <p className="font-semibold text-secondary">@{post.user_username || post.user_name}</p>
+                        <p className="text-xs text-gray-500">Submitted {new Date(post.created_date).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                    <p className="text-gray-700 mb-3 whitespace-pre-wrap">{post.content}</p>
+                    {post.image_urls && post.image_urls.length > 0 && (
+                      <div className="grid grid-cols-2 gap-2 mb-3">
+                        {post.image_urls.map((url, idx) => (
+                          <img key={idx} src={url} alt={`Post image ${idx + 1}`} className="rounded-lg w-full h-32 object-cover" />
+                        ))}
+                      </div>
+                    )}
+                    <div className="flex gap-2 pt-2 border-t border-gray-200">
+                      <Button
+                        onClick={() => handleRejectCommunityPost(post.id, post.user_id)}
+                        size="sm"
+                        variant="outline"
+                        className="flex-1 border-red-300 text-red-600 hover:bg-red-50"
+                      >
+                        <X className="w-4 h-4 mr-1" />
+                        reject
+                      </Button>
+                      <Button
+                        onClick={() => handleApproveCommunityPost(post.id, post.user_id)}
+                        size="sm"
+                        className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                      >
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                        approve
+                      </Button>
                     </div>
                   </div>
                 ))}
