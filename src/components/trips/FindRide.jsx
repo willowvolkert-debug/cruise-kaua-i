@@ -368,7 +368,7 @@ export default function FindRide() {
                   <CardHeader>
                     <CardTitle className="text-lg text-secondary flex items-center gap-2">
                       <Calendar className="w-5 h-5 text-primary" />
-                      {format(new Date(date), "EEEE, MMMM d, yyyy")} - All Rides Around Kauaʻi
+                      {format(new Date(date + 'T00:00:00'), "EEEE, MMMM d, yyyy")} - All Rides Around Kauaʻi
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
