@@ -23,10 +23,10 @@ Deno.serve(async (req) => {
       '• Verify your driver\'s license'
     ];
 
-    const emailBody = `
-Aloha!
+    const emailBody = `Aloha!
 
 You started making your carpooling account, but you're not finished!
+
 
 STEP 1: In order to be a rider, input your profile details such as name, age, and bio. Then, securely verify your license and identity using Stripe. Finally, sign our legal agreements such as Terms of Service and our Community Agreement. Now you are able to get rides around the island!
 
@@ -36,14 +36,15 @@ STEP 2: If you would like to be a driver and make money, upload your vehicle inf
 
 Questions? Just reply to this email and we'll be happy to help!
 
+
 Mahalo for joining Cruise Kauaʻi,
 The Cruise Kauaʻi Team
+
 
 ---
 
 If you'd like to stop receiving these setup reminders, click here:
-https://cruisekauai.base44.app/unsubscribe?user_id=test123
-    `.trim();
+https://cruisekauai.base44.app/unsubscribe?user_id=test123`;
 
     await base44.integrations.Core.SendEmail({
       to: email,
