@@ -26,21 +26,11 @@ Deno.serve(async (req) => {
     const emailBody = `
 Aloha!
 
-We noticed you haven't finished setting up your Cruise Kauaʻi account yet. We're here to help you get started!
+You started making your carpooling account, but you're not finished!
 
-To start booking or posting rides, please complete these steps:
+STEP 1: In order to be a rider, input your profile details such as name, age, and bio. Then, securely verify your license and identity using Stripe. Finally, sign our legal agreements such as Terms of Service and our Community Agreement. Now you are able to get rides around the island!
 
-${missingSteps.join('\n')}
-
-Getting started is easy:
-1. Log in to your Cruise Kauaʻi account
-2. Go to the Account page
-3. Complete the missing steps above
-
-Once you're all set up, you'll be able to:
-✓ Book rides with verified drivers
-✓ Post your own rides and earn money
-✓ Connect with the Kauaʻi community
+STEP 2: If you would like to be a driver and make money, upload your vehicle information, insurance information, and sign our Driver Agreement. Once this is uploaded, you will be a verified driver- making money, building community, and reducing traffic at the same time!
 
 Questions? Just reply to this email and we'll be happy to help!
 
@@ -54,7 +44,7 @@ https://cruisekauai.base44.app/unsubscribe?user_id=test123
 
     await base44.integrations.Core.SendEmail({
       to: email,
-      subject: '🌺 Complete your Cruise Kauaʻi setup',
+      subject: 'Finish setting up your Cruise Kauaʻi Carpooling Account Today!',
       body: emailBody
     });
 
