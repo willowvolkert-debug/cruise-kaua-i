@@ -25,25 +25,17 @@ const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpp
 
 // Helper to get current time in Hawaii (UTC-10) as a simple comparable object
 const getHawaiiNow = () => {
-    // Create formatter that outputs Hawaii time components
-    const formatter = new Intl.DateTimeFormat('en-US', {
-        timeZone: 'Pacific/Honolulu',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-    });
-    const parts = formatter.formatToParts(new Date());
-    const get = (type) => parts.find(p => p.type === type)?.value;
+    const now = new Date();
+    // Get Hawaii time by using Date UTC methods and adjusting for Hawaii timezone (UTC-10)
+    const utcTime = now.getTime();
+    const hawaiiTime = new Date(utcTime - (10 * 60 * 60 * 1000)); // Subtract 10 hours
     
     return {
-        year: parseInt(get('year')),
-        month: parseInt(get('month')),
-        day: parseInt(get('day')),
-        hour: parseInt(get('hour')),
-        minute: parseInt(get('minute')),
+        year: hawaiiTime.getUTCFullYear(),
+        month: hawaiiTime.getUTCMonth() + 1,
+        day: hawaiiTime.getUTCDate(),
+        hour: hawaiiTime.getUTCHours(),
+        minute: hawaiiTime.getUTCMinutes(),
         // For easy comparison: YYYYMMDDHHMM as number
         toComparable: function() {
             return this.year * 100000000 + this.month * 1000000 + this.day * 10000 + this.hour * 100 + this.minute;

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ShieldCheck, X, CheckCircle, Clock, Users, AlertCircle, Eye, Car, MessageSquare, Phone, Mail } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import AdminMessageModal from "../components/admin/AdminMessageModal";
 import {
   Dialog,
@@ -239,6 +240,11 @@ export default function AdminPage() {
     setIsProcessing(false);
   };
 
+  const [showRespondModal, setShowRespondModal] = useState(false);
+  const [selectedInquiry, setSelectedInquiry] = useState(null);
+  const [responseMessage, setResponseMessage] = useState('');
+  const [isSendingResponse, setIsSendingResponse] = useState(false);
+
   const handleResolveInquiry = async (inquiryId) => {
     try {
       await base44.entities.ContactInquiry.update(inquiryId, {
@@ -248,6 +254,54 @@ export default function AdminPage() {
     } catch (error) {
       console.error("Error resolving inquiry:", error);
     }
+  };
+
+  const handleRespondToInquiry = (inquiry) => {
+    setSelectedInquiry(inquiry);
+    setResponseMessage('');
+    setShowRespondModal(true);
+  };
+
+  const handleSendResponse = async () => {
+    if (!selectedInquiry || !responseMessage.trim()) {
+      alert('Please enter a response message.');
+      return;
+    }
+
+    setIsSendingResponse(true);
+    try {
+      // Send email notification
+      await base44.integrations.Core.SendEmail({
+        to: selectedInquiry.user_email,
+        subject: `Re: ${selectedInquiry.subject} - Cruise Kauaʻi Support`,
+        body: `Aloha ${selectedInquiry.user_name},\n\nThank you for contacting us. We've responded to your inquiry:\n\n"${selectedInquiry.subject}"\n\n---\n\n${responseMessage}\n\n---\n\nYou can view this response in your Cruise Kauaʻi inbox.\n\nMahalo,\nCruise Kauaʻi Team`
+      });
+
+      // Create admin message in user's inbox
+      await base44.entities.AdminMessage.create({
+        recipient_id: selectedInquiry.user_id,
+        recipient_name: selectedInquiry.user_name,
+        recipient_email: selectedInquiry.user_email,
+        subject: `Re: ${selectedInquiry.subject}`,
+        message: responseMessage,
+        message_type: 'info'
+      });
+
+      // Update inquiry status to reviewed
+      await base44.entities.ContactInquiry.update(selectedInquiry.id, {
+        status: 'reviewed'
+      });
+
+      alert('Response sent successfully! The user will see it in their inbox.');
+      setShowRespondModal(false);
+      setSelectedInquiry(null);
+      setResponseMessage('');
+      loadData();
+    } catch (error) {
+      console.error('Error sending response:', error);
+      alert('Error sending response. Please try again.');
+    }
+    setIsSendingResponse(false);
   };
 
   const handleApproveCommunityPost = async (postId, userId) => {
@@ -461,15 +515,25 @@ export default function AdminPage() {
                           From: {inquiry.user_name} ({inquiry.user_email})
                         </p>
                       </div>
-                      <Button
-                        onClick={() => handleResolveInquiry(inquiry.id)}
-                        size="sm"
-                        variant="outline"
-                        className="ml-4"
-                      >
-                        <CheckCircle className="w-4 h-4 mr-1" />
-                        resolve
-                      </Button>
+                      <div className="flex gap-2 ml-4">
+                        <Button
+                          onClick={() => handleRespondToInquiry(inquiry)}
+                          size="sm"
+                          variant="outline"
+                          className="border-blue-300 text-blue-600 hover:bg-blue-50"
+                        >
+                          <MessageSquare className="w-4 h-4 mr-1" />
+                          respond
+                        </Button>
+                        <Button
+                          onClick={() => handleResolveInquiry(inquiry.id)}
+                          size="sm"
+                          variant="outline"
+                        >
+                          <CheckCircle className="w-4 h-4 mr-1" />
+                          resolve
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -957,6 +1021,65 @@ export default function AdminPage() {
           user={messageUser}
           onSuccess={loadData}
         />
+
+        {/* Contact Inquiry Response Modal */}
+        <Dialog open={showRespondModal} onOpenChange={setShowRespondModal}>
+          <DialogContent className="sm:max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold text-secondary">
+                respond to inquiry
+              </DialogTitle>
+            </DialogHeader>
+
+            {selectedInquiry && (
+              <div className="space-y-4 py-4">
+                <div className="p-4 bg-gray-50 rounded-2xl border border-gray-200">
+                  <p className="font-semibold text-secondary mb-2">Original Inquiry:</p>
+                  <p className="text-sm text-gray-600 mb-1">
+                    <strong>From:</strong> {selectedInquiry.user_name} ({selectedInquiry.user_email})
+                  </p>
+                  <p className="text-sm text-gray-600 mb-1">
+                    <strong>Subject:</strong> {selectedInquiry.subject}
+                  </p>
+                  <p className="text-sm text-gray-700 mt-2 p-3 bg-white rounded-lg">
+                    {selectedInquiry.message}
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="font-semibold text-secondary">Your Response:</label>
+                  <Textarea
+                    value={responseMessage}
+                    onChange={(e) => setResponseMessage(e.target.value)}
+                    placeholder="Type your response here..."
+                    className="h-40 rounded-2xl"
+                  />
+                  <p className="text-xs text-gray-500">
+                    This will be sent via email and appear in the user's Cruise Kauaʻi inbox.
+                  </p>
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    onClick={() => setShowRespondModal(false)}
+                    variant="outline"
+                    className="flex-1"
+                    disabled={isSendingResponse}
+                  >
+                    cancel
+                  </Button>
+                  <Button
+                    onClick={handleSendResponse}
+                    className="flex-1 bg-primary hover:bg-primary/90"
+                    disabled={isSendingResponse || !responseMessage.trim()}
+                  >
+                    {isSendingResponse ? 'sending...' : 'send response'}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
