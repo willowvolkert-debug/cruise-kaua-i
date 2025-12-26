@@ -23,28 +23,28 @@ Deno.serve(async (req) => {
       '• Verify your driver\'s license'
     ];
 
-    const emailBody = `Aloha!
+    const emailBody = `
+    <html>
+    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <p>Aloha!</p>
 
-You started making your carpooling account, but you're not finished!
+    <p>You started making your carpooling account, but you're not finished!</p>
 
+    <p><strong>STEP 1:</strong> In order to be a rider, input your profile details such as name, age, and bio. Then, securely verify your license and identity using Stripe. Finally, sign our legal agreements such as Terms of Service and our Community Agreement. Now you are able to get rides around the island!</p>
 
-STEP 1: In order to be a rider, input your profile details such as name, age, and bio. Then, securely verify your license and identity using Stripe. Finally, sign our legal agreements such as Terms of Service and our Community Agreement. Now you are able to get rides around the island!
+    <p><strong>STEP 2:</strong> If you would like to be a driver and make money, upload your vehicle information, insurance information, and sign our Driver Agreement. Once this is uploaded, you will be a verified driver- making money, building community, and reducing traffic at the same time!</p>
 
+    <p>Questions? Just reply to this email and we'll be happy to help!</p>
 
-STEP 2: If you would like to be a driver and make money, upload your vehicle information, insurance information, and sign our Driver Agreement. Once this is uploaded, you will be a verified driver- making money, building community, and reducing traffic at the same time!
+    <p>Mahalo for joining Cruise Kauaʻi,<br>
+    The Cruise Kauaʻi Team</p>
 
+    <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
 
-Questions? Just reply to this email and we'll be happy to help!
-
-
-Mahalo for joining Cruise Kauaʻi,
-The Cruise Kauaʻi Team
-
-
----
-
-If you'd like to stop receiving these setup reminders, click here:
-https://cruisekauai.base44.app/unsubscribe?user_id=test123`;
+    <p style="font-size: 12px; color: #666;">If you'd like to stop receiving these setup reminders, <a href="https://cruisekauai.base44.app/unsubscribe?user_id=test123">click here</a>.</p>
+    </body>
+    </html>
+    `.trim();
 
     await base44.integrations.Core.SendEmail({
       to: email,
