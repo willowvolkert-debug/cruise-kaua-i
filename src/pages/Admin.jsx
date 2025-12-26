@@ -616,59 +616,72 @@ export default function AdminPage() {
 
               <TabsContent value="all" className="mt-4">
                 <div className="space-y-3 max-h-96 overflow-y-auto">
-                  {users.map(user => (
-                    <div key={user.id} className="flex flex-col md:flex-row md:items-center justify-between p-3 bg-white rounded-lg gap-2">
-                      <div className="flex items-center gap-2 md:gap-3">
-                        <Avatar className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-primary to-secondary">
-                          <AvatarFallback className="text-white font-semibold text-xs md:text-sm">
-                            {getInitials(user.full_name)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="min-w-0">
-                          <p className="font-medium text-secondary text-sm md:text-base truncate">{user.full_name}</p>
-                          <p className="text-xs md:text-sm text-gray-600 truncate">{user.email}</p>
+                  {users.map(user => {
+                    // Determine verification status for middle badge
+                    let verificationStatus = 'not submitted';
+                    let verificationBadgeClass = 'bg-gray-100 text-gray-600';
+                    
+                    if (user.user_type === 'driver' || user.vehicle_verified) {
+                      verificationStatus = 'verified driver';
+                      verificationBadgeClass = 'bg-green-100 text-green-800';
+                    } else if (user.user_type === 'rider' || user.drivers_license_verified) {
+                      verificationStatus = 'verified rider';
+                      verificationBadgeClass = 'bg-blue-100 text-blue-800';
+                    } else if (user.drivers_license_pending_review || user.vehicle_pending_review) {
+                      verificationStatus = 'pending';
+                      verificationBadgeClass = 'bg-orange-50 text-orange-700 border-orange-300';
+                    }
+
+                    // Determine account type for far right badge
+                    let accountType = 'user';
+                    let accountBadgeClass = 'bg-gray-100 text-gray-600';
+                    
+                    if (user.role === 'admin') {
+                      accountType = 'admin';
+                      accountBadgeClass = 'bg-purple-100 text-purple-800';
+                    } else if (user.user_type === 'driver') {
+                      accountType = 'driver';
+                      accountBadgeClass = 'bg-green-100 text-green-800';
+                    } else if (user.user_type === 'rider') {
+                      accountType = 'rider';
+                      accountBadgeClass = 'bg-blue-100 text-blue-800';
+                    }
+
+                    return (
+                      <div key={user.id} className="flex flex-col md:flex-row md:items-center justify-between p-3 bg-white rounded-lg gap-2">
+                        <div className="flex items-center gap-2 md:gap-3">
+                          <Avatar className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-primary to-secondary">
+                            <AvatarFallback className="text-white font-semibold text-xs md:text-sm">
+                              {getInitials(user.full_name)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="min-w-0">
+                            <p className="font-medium text-secondary text-sm md:text-base truncate">{user.full_name}</p>
+                            <p className="text-xs md:text-sm text-gray-600 truncate">{user.email}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 md:gap-2 flex-wrap justify-end">
+                          <Button
+                            onClick={() => handleMessageUser(user)}
+                            size="sm"
+                            variant="outline"
+                            className="rounded-2xl border-blue-300 text-blue-600 hover:bg-blue-50 text-xs md:text-sm h-7 md:h-8 px-2 md:px-3"
+                          >
+                            <Mail className="w-3 h-3 mr-1" />
+                            message
+                          </Button>
+                          <Badge variant={verificationStatus === 'pending' ? 'outline' : 'default'} className={`text-xs ${verificationBadgeClass}`}>
+                            {verificationStatus === 'pending' && <Clock className="w-3 h-3 mr-1" />}
+                            {(verificationStatus === 'verified driver' || verificationStatus === 'verified rider') && <CheckCircle className="w-3 h-3 mr-1" />}
+                            {verificationStatus}
+                          </Badge>
+                          <Badge className={`text-xs ${accountBadgeClass}`}>
+                            {accountType}
+                          </Badge>
                         </div>
                       </div>
-                      <div className="flex items-center gap-1 md:gap-2 flex-wrap justify-end">
-                        <Button
-                          onClick={() => handleMessageUser(user)}
-                          size="sm"
-                          variant="outline"
-                          className="rounded-2xl border-blue-300 text-blue-600 hover:bg-blue-50 text-xs md:text-sm h-7 md:h-8 px-2 md:px-3"
-                        >
-                          <Mail className="w-3 h-3 mr-1" />
-                          message
-                        </Button>
-                        {user.drivers_license_verified ? (
-                          <Badge className="bg-green-100 text-green-800 text-xs">
-                            <CheckCircle className="w-3 h-3 mr-1" />
-                            verified
-                          </Badge>
-                        ) : user.drivers_license_pending_review ? (
-                          <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-300 text-xs">
-                            <Clock className="w-3 h-3 mr-1" />
-                            pending
-                          </Badge>
-                        ) : (
-                          <Badge variant="outline" className="text-gray-600 text-xs">
-                            not submitted
-                          </Badge>
-                        )}
-                        {user.role === 'admin' && (
-                          <Badge className="bg-purple-100 text-purple-800 text-xs">admin</Badge>
-                        )}
-                        {user.role === 'driver' && (
-                          <Badge className="bg-green-100 text-green-800 text-xs">driver</Badge>
-                        )}
-                        {user.role === 'rider' && (
-                          <Badge className="bg-blue-100 text-blue-800 text-xs">rider</Badge>
-                        )}
-                        {(!user.role || user.role === 'user') && (
-                          <Badge className="bg-gray-100 text-gray-600 text-xs">user</Badge>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </TabsContent>
 
