@@ -1,33 +1,37 @@
-import Trips from './pages/Trips';
 import Account from './pages/Account';
-import Inbox from './pages/Inbox';
-import VehicleDetails from './pages/VehicleDetails';
 import Admin from './pages/Admin';
-import Welcome from './pages/Welcome';
-import ContactUs from './pages/ContactUs';
-import TermsOfService from './pages/TermsOfService';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import CommunityAgreement from './pages/CommunityAgreement';
-import Payout from './pages/Payout';
-import DriverAgreement from './pages/DriverAgreement';
 import Community from './pages/Community';
+import CommunityAgreement from './pages/CommunityAgreement';
+import ContactUs from './pages/ContactUs';
+import DriverAgreement from './pages/DriverAgreement';
+import Home from './pages/Home';
+import Inbox from './pages/Inbox';
+import Payout from './pages/Payout';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+import Trips from './pages/Trips';
+import VehicleDetails from './pages/VehicleDetails';
+import Welcome from './pages/Welcome';
+import Unsubscribe from './pages/Unsubscribe';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Trips": Trips,
     "Account": Account,
-    "Inbox": Inbox,
-    "VehicleDetails": VehicleDetails,
     "Admin": Admin,
-    "Welcome": Welcome,
-    "ContactUs": ContactUs,
-    "TermsOfService": TermsOfService,
-    "PrivacyPolicy": PrivacyPolicy,
-    "CommunityAgreement": CommunityAgreement,
-    "Payout": Payout,
-    "DriverAgreement": DriverAgreement,
     "Community": Community,
+    "CommunityAgreement": CommunityAgreement,
+    "ContactUs": ContactUs,
+    "DriverAgreement": DriverAgreement,
+    "Home": Home,
+    "Inbox": Inbox,
+    "Payout": Payout,
+    "PrivacyPolicy": PrivacyPolicy,
+    "TermsOfService": TermsOfService,
+    "Trips": Trips,
+    "VehicleDetails": VehicleDetails,
+    "Welcome": Welcome,
+    "Unsubscribe": Unsubscribe,
 }
 
 export const pagesConfig = {
