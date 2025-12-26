@@ -44,6 +44,8 @@ Deno.serve(async (req) => {
     <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
 
     <p style="font-size: 12px; color: #666;">If you'd like to stop receiving these setup reminders, <a href="https://cruisekauai.base44.app/unsubscribe?user_id=test123">click here</a>.</p>
+
+    <p style="font-size: 12px; color: #666; margin-top: 10px;">Replies to this email are not monitored. Please fill out the contact us form on the Cruise Kauaʻi website, or email willowvolkert@gmail.com, with any questions or concerns.</p>
     </body>
     </html>
     `.trim();
