@@ -30,9 +30,11 @@ Deno.serve(async (req) => {
 
     <p>You started making your carpooling account, but you're not finished!</p>
 
-    <p><strong>STEP 1:</strong> In order to be a rider, input your profile details such as name, age, and bio. Then, securely verify your license and identity using Stripe. Finally, sign our legal agreements such as Terms of Service and our Community Agreement. Now you are able to get rides around the island!</p>
+    <p><strong>1. BECOME A RIDER</strong></p>
+    <p>In order to be a rider, input your profile details such as name, age, and bio. Then, securely verify your license and identity using Stripe. Finally, sign our legal agreements such as Terms of Service and our Community Agreement. Now you are able to get rides around the island!</p>
 
-    <p><strong>STEP 2:</strong> If you would like to be a driver and make money, upload your vehicle information, insurance information, and sign our Driver Agreement. Once this is uploaded, you will be a verified driver- making money, building community, and reducing traffic at the same time!</p>
+    <p><strong>2. BECOME A DRIVER</strong></p>
+    <p>If you would like to be a driver and make money, upload your vehicle information, insurance information, and sign our Driver Agreement. Once this is uploaded, you will be a verified driver- making money, building community, and reducing traffic at the same time!</p>
 
     <p>Questions? Just reply to this email and we'll be happy to help!</p>
 
