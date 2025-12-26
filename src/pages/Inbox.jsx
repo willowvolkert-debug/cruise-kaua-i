@@ -759,8 +759,8 @@ Cruise Kauaʻi Team
             <div className="max-w-4xl mx-auto space-y-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-secondary">inbox</h1>
-                        <p className="text-gray-600">manage your trip communications and leave ratings</p>
+                        <h1 className="text-3xl font-bold text-secondary">inbox & confirmed rides</h1>
+                        <p className="text-gray-600">manage your trips, message drivers & riders, and leave ratings</p>
                     </div>
                     <Button
                         onClick={() => setShowReportModal(true)}
@@ -770,19 +770,6 @@ Cruise Kauaʻi Team
                         report
                     </Button>
                 </div>
-
-
-
-                <Alert className="bg-teal-50 border-primary/50 text-secondary rounded-2xl">
-                    <Bot className="h-5 w-5 text-primary" />
-                    <AlertTitle className="font-bold">chatbot safety monitor</AlertTitle>
-                    <AlertDescription>
-                        Our AI chatbot monitors all messages to ensure no personal contact information is shared. 
-                        Keep all communication within the app.
-                    </AlertDescription>
-                </Alert>
-
-
 
 
 
@@ -1087,6 +1074,15 @@ Cruise Kauaʻi Team
                         )}
                     </CardContent>
                 </Card>
+
+                <Alert className="bg-teal-50 border-primary/50 text-secondary rounded-2xl">
+                    <Bot className="h-5 w-5 text-primary" />
+                    <AlertTitle className="font-bold">chatbot safety monitor</AlertTitle>
+                    <AlertDescription>
+                        Our AI chatbot monitors all messages to ensure no personal contact information is shared. 
+                        Keep all communication within the app.
+                    </AlertDescription>
+                </Alert>
 
                 <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
                     <CardHeader>
