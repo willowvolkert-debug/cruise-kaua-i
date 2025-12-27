@@ -38,8 +38,9 @@ Deno.serve(async (req) => {
 
     <p>Questions? Just reply to this email and we'll be happy to help!</p>
 
-    <p>Mahalo for joining Cruise Kauaʻi,<br>
-    The Cruise Kauaʻi Team</p>
+    <p>Mahalo for joing cruise kauaʻi and helping our island home :)<br>
+    Founder & CEO,<br>
+    Willow</p>
 
     <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
 
