@@ -39,6 +39,13 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Ride not found' }, { status: 404 });
         }
 
+        // Format ride date/time in Hawaii Time for Stripe metadata
+        const rideDate = new Date(ride.departure_date + 'T' + ride.departure_time);
+        const hawaiiOffset = -10 * 60; // Hawaii is UTC-10
+        const hawaiiTime = new Date(rideDate.getTime() + (rideDate.getTimezoneOffset() + hawaiiOffset) * 60000);
+        const hawaiiDateStr = hawaiiTime.toLocaleDateString('en-US', { timeZone: 'Pacific/Honolulu', month: 'short', day: 'numeric', year: 'numeric' });
+        const hawaiiTimeStr = hawaiiTime.toLocaleTimeString('en-US', { timeZone: 'Pacific/Honolulu', hour: 'numeric', minute: '2-digit' });
+
 
 
         // Check if this is user's first COMPLETED PAYMENT
@@ -85,7 +92,7 @@ Deno.serve(async (req) => {
                     currency: 'usd',
                     product_data: {
                         name: `Cruise Kauaʻi Ride`,
-                        description: `${ride.departure_location} → ${ride.destination} (${seats_booked} seat${seats_booked > 1 ? 's' : ''})`
+                        description: `${ride.departure_location} → ${ride.destination} on ${hawaiiDateStr} at ${hawaiiTimeStr} HST (${seats_booked} seat${seats_booked > 1 ? 's' : ''})`
                     },
                     unit_amount: Math.round(rideAmount * 100)
                 },

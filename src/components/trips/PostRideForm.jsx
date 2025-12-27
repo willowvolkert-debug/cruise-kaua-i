@@ -166,8 +166,15 @@ export default function PostRideForm() {
     try {
       console.log('Current user profile picture:', currentUser.profile_picture_url);
 
+      // Convert date to Hawaii timezone (UTC-10)
+      // User selects date in their local timezone, we store it as Hawaii date
+      const localDate = new Date(rideData.departure_date + 'T00:00:00');
+      const hawaiiDate = new Date(localDate.getTime() - (localDate.getTimezoneOffset() * 60000));
+      const hawaiiDateString = hawaiiDate.toISOString().split('T')[0];
+
       const ridePayload = {
         ...rideData,
+        departure_date: hawaiiDateString,
         driver_id: currentUser.id,
         driver_name: currentUser.full_name,
         driver_username: currentUser.username || null,
@@ -382,7 +389,7 @@ export default function PostRideForm() {
             <CardContent className="p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="date">departure date *</Label>
+                  <Label htmlFor="date">departure date (Hawaii Time) *</Label>
                   <Input
                     id="date"
                     type="date"
@@ -393,7 +400,7 @@ export default function PostRideForm() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="time">departure time *</Label>
+                  <Label htmlFor="time">departure time (Hawaii Time) *</Label>
                   <div className="flex gap-2">
                     <Input
                       id="time"
