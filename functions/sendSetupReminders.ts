@@ -35,22 +35,36 @@ Deno.serve(async (req) => {
         for (const u of incompleteUsers) {
             try {
                 const createdDate = new Date(u.created_date);
-                const lastReminderDate = u.last_setup_reminder_sent ? new Date(u.last_setup_reminder_sent) : createdDate;
-                const daysSinceCreated = Math.floor((now - createdDate) / (1000 * 60 * 60 * 24));
-                const daysSinceLastReminder = Math.floor((now - lastReminderDate) / (1000 * 60 * 60 * 24));
-
+                const lastReminderDate = u.last_setup_reminder_sent ? new Date(u.last_setup_reminder_sent) : null;
+                const hoursSinceCreated = (now - createdDate) / (1000 * 60 * 60);
+                const daysSinceCreated = Math.floor(hoursSinceCreated / 24);
+                
                 let shouldSend = false;
 
-                // First 2 weeks: send every other day (2 days)
-                if (daysSinceCreated <= 14) {
-                    if (daysSinceLastReminder >= 2) {
+                // First reminder: 2 hours after account creation
+                if (!lastReminderDate && hoursSinceCreated >= 2) {
+                    shouldSend = true;
+                }
+                // Second reminder: 1 day after first reminder (24 hours from account creation)
+                else if (lastReminderDate) {
+                    const hoursSinceLastReminder = (now - lastReminderDate) / (1000 * 60 * 60);
+                    const daysSinceLastReminder = Math.floor(hoursSinceLastReminder / 24);
+                    
+                    // If first reminder was sent, second reminder after 1 day (around 24 hours)
+                    if (daysSinceCreated >= 1 && daysSinceCreated < 2 && daysSinceLastReminder >= 1) {
                         shouldSend = true;
                     }
-                }
-                // After 2 weeks: send once per week (7 days)
-                else {
-                    if (daysSinceLastReminder >= 7) {
-                        shouldSend = true;
+                    // Every other day for a week (days 3, 5, 7)
+                    else if (daysSinceCreated >= 2 && daysSinceCreated <= 7) {
+                        if (daysSinceLastReminder >= 2) {
+                            shouldSend = true;
+                        }
+                    }
+                    // After first week: every other week (14 days)
+                    else if (daysSinceCreated > 7) {
+                        if (daysSinceLastReminder >= 14) {
+                            shouldSend = true;
+                        }
                     }
                 }
 
