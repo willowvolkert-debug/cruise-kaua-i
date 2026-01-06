@@ -366,7 +366,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               <Button type="button" variant="outline" onClick={onClose}>cancel</Button>
               <Button 
                 type="submit" 
-                disabled={isSubmitting || !bookingData.description} 
+                disabled={isSubmitting || isLoading} 
                 className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 {isSubmitting ? (
