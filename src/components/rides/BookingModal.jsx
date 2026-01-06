@@ -104,7 +104,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         wants_detour_service: bookingData.wants_detour_service,
         detour_destination: bookingData.detour_destination,
         driver_id: ride.driver_id,
-        driver_username: driverProfile?.username || '',
+        driver_username: ride.driver_username || '',
         success_url: window.location.origin + window.location.pathname,
         cancel_url: window.location.origin + window.location.pathname
       });
@@ -366,7 +366,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               <Button type="button" variant="outline" onClick={onClose}>cancel</Button>
               <Button 
                 type="submit" 
-                disabled={isSubmitting || isLoading} 
+                disabled={isSubmitting} 
                 className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 {isSubmitting ? (
