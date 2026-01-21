@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, DollarSign, Car, X, Plus, AlertCircle, Clock, Users, HelpCircle, MessageSquare } from "lucide-react";
+import { MapPin, DollarSign, Car, X, Plus, AlertCircle, Clock, Users, HelpCircle, MessageSquare, ChevronDown, ChevronUp } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import PostRideTutorial from "../tutorial/PostRideTutorial";
 import LocationAutocomplete from "../shared/LocationAutocomplete";
@@ -25,6 +25,7 @@ export default function PostRideForm() {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [matchedRequest, setMatchedRequest] = useState(null);
+  const [showRideRequests, setShowRideRequests] = useState(true);
   const [rideData, setRideData] = useState({
     departure_location: '',
     destination: '',
@@ -308,23 +309,35 @@ export default function PostRideForm() {
 
       {rideRequests.length > 0 && !matchedRequest && (
         <Card className="border-primary/20 shadow-sm bg-orange-50 rounded-3xl">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3 text-secondary">
-              <div className="p-2 bg-primary/10 rounded-2xl">
-                <MessageSquare className="w-5 h-5 text-primary" />
+          <CardHeader className="cursor-pointer" onClick={() => setShowRideRequests(!showRideRequests)}>
+            <CardTitle className="flex items-center justify-between text-secondary">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-primary/10 rounded-2xl">
+                  <MessageSquare className="w-5 h-5 text-primary" />
+                </div>
+                before you post, view ride requests
               </div>
-              before you post, view ride requests
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="rounded-2xl"
+              >
+                {showRideRequests ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+              </Button>
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6 space-y-4">
-            {rideRequests.map(request => (
-              <RideRequestCard
-                key={request.id}
-                request={request}
-                onMessage={handleMessageRequest}
-              />
-            ))}
-          </CardContent>
+          {showRideRequests && (
+            <CardContent className="p-6 space-y-4">
+              {rideRequests.map(request => (
+                <RideRequestCard
+                  key={request.id}
+                  request={request}
+                  onMessage={handleMessageRequest}
+                />
+              ))}
+            </CardContent>
+          )}
         </Card>
       )}
 
