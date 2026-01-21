@@ -10,9 +10,9 @@ import Payout from './pages/Payout';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import Trips from './pages/Trips';
+import Unsubscribe from './pages/Unsubscribe';
 import VehicleDetails from './pages/VehicleDetails';
 import Welcome from './pages/Welcome';
-import Unsubscribe from './pages/Unsubscribe';
 import __Layout from './Layout.jsx';
 
 
@@ -29,9 +29,9 @@ export const PAGES = {
     "PrivacyPolicy": PrivacyPolicy,
     "TermsOfService": TermsOfService,
     "Trips": Trips,
+    "Unsubscribe": Unsubscribe,
     "VehicleDetails": VehicleDetails,
     "Welcome": Welcome,
-    "Unsubscribe": Unsubscribe,
 }
 
 export const pagesConfig = {

@@ -7,10 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, DollarSign, Car, X, Plus, AlertCircle, Clock, Users, HelpCircle } from "lucide-react";
+import { MapPin, DollarSign, Car, X, Plus, AlertCircle, Clock, Users, HelpCircle, MessageSquare } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import PostRideTutorial from "../tutorial/PostRideTutorial";
 import LocationAutocomplete from "../shared/LocationAutocomplete";
+import RideRequestCard from "./RideRequestCard";
+import MessageRiderModal from "./MessageRiderModal";
 
 export default function PostRideForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -19,6 +21,10 @@ export default function PostRideForm() {
   const [stops, setStops] = useState(['']);
   const [showTutorial, setShowTutorial] = useState(false);
   const [hasUnsupportedLocation, setHasUnsupportedLocation] = useState(false);
+  const [rideRequests, setRideRequests] = useState([]);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [showMessageModal, setShowMessageModal] = useState(false);
+  const [matchedRequest, setMatchedRequest] = useState(null);
   const [rideData, setRideData] = useState({
     departure_location: '',
     destination: '',
@@ -41,6 +47,10 @@ export default function PostRideForm() {
       try {
         const user = await base44.auth.me();
         setCurrentUser(user);
+        
+        // Fetch active ride requests
+        const requests = await base44.entities.RideRequest.filter({ status: 'active' });
+        setRideRequests(requests);
         
         if (!user.profile_picture_url) {
           setError("Please upload a profile picture before posting rides. Go to Account page.");
@@ -107,6 +117,27 @@ export default function PostRideForm() {
   
   const addStop = () => setStops([...stops, '']);
   const removeStop = (index) => setStops(stops.filter((_, i) => i !== index));
+
+  const handleMessageRequest = (request) => {
+    setSelectedRequest(request);
+    setShowMessageModal(true);
+  };
+
+  const handleMessageSent = (request) => {
+    setMatchedRequest(request);
+    // Pre-fill route details
+    setRideData(prev => ({
+      ...prev,
+      departure_location: request.departure_location,
+      destination: request.destination,
+      departure_date: request.departure_date,
+      departure_time: request.departure_time,
+      is_flexible: request.is_flexible
+    }));
+    if (request.stops && request.stops.length > 0) {
+      setStops(request.stops);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -265,6 +296,37 @@ export default function PostRideForm() {
           how to post
         </Button>
       </div>
+
+      {matchedRequest && (
+        <Alert className="rounded-2xl bg-green-50 border-green-200">
+          <MessageSquare className="h-4 w-4 text-green-600" />
+          <AlertDescription className="text-green-800">
+            thanks for matching a ride request! don&apos;t forget to post the ride so the rider can book it.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {rideRequests.length > 0 && !matchedRequest && (
+        <Card className="border-primary/20 shadow-sm bg-orange-50 rounded-3xl">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3 text-secondary">
+              <div className="p-2 bg-primary/10 rounded-2xl">
+                <MessageSquare className="w-5 h-5 text-primary" />
+              </div>
+              before you post, view ride requests
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6 space-y-4">
+            {rideRequests.map(request => (
+              <RideRequestCard
+                key={request.id}
+                request={request}
+                onMessage={handleMessageRequest}
+              />
+            ))}
+          </CardContent>
+        </Card>
+      )}
 
       {error && currentUser?.profile_complete && currentUser?.drivers_license_verified && (
         <Alert variant="destructive" className="rounded-2xl border-red-200">
@@ -581,6 +643,13 @@ export default function PostRideForm() {
         isOpen={showTutorial}
         onClose={() => setShowTutorial(false)}
       />
-      </div>
-      );
-      }
+
+      <MessageRiderModal
+        isOpen={showMessageModal}
+        onClose={() => setShowMessageModal(false)}
+        request={selectedRequest}
+        onMessageSent={handleMessageSent}
+      />
+    </div>
+  );
+}
