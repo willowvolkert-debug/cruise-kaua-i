@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, MessageSquarePlus } from "lucide-react";
+import { Search, MessageSquarePlus, Car } from "lucide-react";
 import FindRide from "../components/trips/FindRide";
 import RequestRide from "../components/trips/RequestRide";
 import PostRideForm from "../components/trips/PostRideForm";
@@ -25,7 +25,7 @@ export default function TripsPage() {
               <MessageSquarePlus className="w-5 h-5"/> request a ride
             </TabsTrigger>
             <TabsTrigger value="post" className="py-2.5 text-base flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-md rounded-3xl">
-              post a ride
+              <Car className="w-5 h-5"/> post a ride
             </TabsTrigger>
           </TabsList>
           <TabsContent value="find" className="mt-6">
