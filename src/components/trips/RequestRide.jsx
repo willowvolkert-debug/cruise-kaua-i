@@ -221,6 +221,7 @@ export default function RequestRide() {
                   <Input
                     id="date"
                     type="date"
+                    lang="en"
                     value={requestData.departure_date}
                     onChange={(e) => handleInputChange('departure_date', e.target.value)}
                     required
