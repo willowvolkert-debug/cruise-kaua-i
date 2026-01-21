@@ -451,7 +451,7 @@ export default function PostRideForm() {
             <CardContent className="p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="date">departure date (Hawaii Time) *</Label>
+                  <Label htmlFor="date">departure date *</Label>
                   <Input
                     id="date"
                     type="date"
@@ -462,7 +462,7 @@ export default function PostRideForm() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="time">departure time (Hawaii Time) *</Label>
+                  <Label htmlFor="time">departure time *</Label>
                   <div className="flex gap-2">
                     <Input
                       id="time"
