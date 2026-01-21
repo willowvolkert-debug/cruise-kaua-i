@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, DollarSign, Car, X, Plus, AlertCircle, Clock, Users, HelpCircle, MessageSquare, ChevronDown, ChevronUp, Repeat } from "lucide-react";
+import { MapPin, DollarSign, Car, X, Plus, AlertCircle, Clock, Users, HelpCircle, MessageSquare, ChevronDown, ChevronUp, Repeat, Pencil } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import PostRideTutorial from "../tutorial/PostRideTutorial";
 import LocationAutocomplete from "../shared/LocationAutocomplete";
@@ -30,6 +30,7 @@ export default function PostRideForm() {
   const [recurringTrips, setRecurringTrips] = useState([]);
   const [showRecurringTrips, setShowRecurringTrips] = useState(true);
   const [showRecurringTripModal, setShowRecurringTripModal] = useState(false);
+  const [editingTrip, setEditingTrip] = useState(null);
   const [rideData, setRideData] = useState({
     departure_location: '',
     destination: '',
@@ -169,6 +170,26 @@ export default function PostRideForm() {
     if (trip.stops && trip.stops.length > 0) {
       setStops(trip.stops);
     }
+  };
+
+  const handleEditTrip = (trip, e) => {
+    e.stopPropagation();
+    setEditingTrip(trip);
+    setShowRecurringTripModal(true);
+  };
+
+  const handleSaveTrip = (savedTrip) => {
+    if (editingTrip) {
+      setRecurringTrips(recurringTrips.map(t => t.id === savedTrip.id ? savedTrip : t));
+      setEditingTrip(null);
+    } else {
+      setRecurringTrips([...recurringTrips, savedTrip]);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowRecurringTripModal(false);
+    setEditingTrip(null);
   };
 
   const handleSubmit = async (e) => {
@@ -420,14 +441,25 @@ export default function PostRideForm() {
                     className="cursor-pointer hover:shadow-md transition-shadow border-secondary/20 rounded-2xl"
                     onClick={() => handleSelectRecurringTrip(trip)}
                   >
-                    <CardContent className="p-4">
-                      <h4 className="font-semibold text-secondary mb-1">{trip.trip_name}</h4>
-                      <p className="text-sm text-gray-600">
-                        {trip.departure_location} → {trip.destination}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {trip.departure_time} • {trip.seats_available} seats
-                      </p>
+                    <CardContent className="p-4 flex items-start justify-between">
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-secondary mb-1">{trip.trip_name}</h4>
+                        <p className="text-sm text-gray-600">
+                          {trip.departure_location} → {trip.destination}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {trip.departure_time} • {trip.seats_available} seats
+                        </p>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={(e) => handleEditTrip(trip, e)}
+                        className="rounded-2xl ml-2"
+                      >
+                        <Pencil className="w-4 h-4 text-gray-500" />
+                      </Button>
                     </CardContent>
                   </Card>
                 ))}
@@ -756,10 +788,9 @@ export default function PostRideForm() {
 
       <RecurringTripModal
         isOpen={showRecurringTripModal}
-        onClose={() => setShowRecurringTripModal(false)}
-        onSave={(newTrip) => {
-          setRecurringTrips([...recurringTrips, newTrip]);
-        }}
+        onClose={handleCloseModal}
+        onSave={handleSaveTrip}
+        editTrip={editingTrip}
       />
     </div>
   );
