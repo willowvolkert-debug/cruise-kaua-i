@@ -360,7 +360,14 @@ export default function InboxPage() {
             const uniqueUpcomingRides = Array.from(new Set([...myUpcomingRides, ...myBookedRides].map(ride => ride.id)))
                 .map(id => [...myUpcomingRides, ...myBookedRides].find(ride => ride.id === id));
 
-            setUpcomingRides(uniqueUpcomingRides.sort((a,b) => new Date(`${a.departure_date}T${a.departure_time}`) - new Date(`${b.departure_date}T${b.departure_time}`)));
+            // Sort chronologically by date and time
+            const sortedUpcomingRides = uniqueUpcomingRides.sort((a, b) => {
+                const aDateTime = parseRideDateTimeHST(a.departure_date, a.departure_time);
+                const bDateTime = parseRideDateTimeHST(b.departure_date, b.departure_time);
+                return aDateTime.toComparable() - bDateTime.toComparable();
+            });
+
+            setUpcomingRides(sortedUpcomingRides);
 
             // Load admin messages for this user
             const allAdminMessages = await base44.entities.AdminMessage.list('-created_date');
