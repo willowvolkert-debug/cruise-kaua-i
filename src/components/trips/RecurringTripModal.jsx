@@ -214,12 +214,34 @@ export default function RecurringTripModal({ isOpen, onClose, onSave, editTrip }
 
               <div className="space-y-2">
                 <Label>departure time</Label>
-                <Input
-                  type="time"
-                  value={tripData.departure_time}
-                  onChange={(e) => setTripData({ ...tripData, departure_time: e.target.value })}
-                  required
-                />
+                <div className="flex gap-2">
+                  <Input
+                    type="text"
+                    placeholder="e.g., 9:00"
+                    value={tripData.departure_time.replace(/\s*(AM|PM)$/i, '')}
+                    onChange={(e) => {
+                      const period = tripData.departure_time.match(/\s*(AM|PM)$/i)?.[1] || 'AM';
+                      setTripData({ ...tripData, departure_time: e.target.value + ' ' + period });
+                    }}
+                    required
+                    className="flex-1"
+                  />
+                  <Select
+                    value={tripData.departure_time.match(/\s*(AM|PM)$/i)?.[1]?.toUpperCase() || 'AM'}
+                    onValueChange={(period) => {
+                      const timeWithoutPeriod = tripData.departure_time.replace(/\s*(AM|PM)$/i, '').trim();
+                      setTripData({ ...tripData, departure_time: timeWithoutPeriod + ' ' + period });
+                    }}
+                  >
+                    <SelectTrigger className="w-24">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="AM">AM</SelectItem>
+                      <SelectItem value="PM">PM</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <div className="flex items-center justify-between">
