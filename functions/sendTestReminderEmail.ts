@@ -27,9 +27,19 @@ Deno.serve(async (req) => {
     <html>
     <body style="font-family: Arial, sans-serif; line-height: 1.8; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
     
-    <p style="font-size: 18px; margin-bottom: 24px;">🌺 Aloha!</p>
+    <p style="font-size: 18px; margin-bottom: 24px;">🌺 Aloha kākou!</p>
 
-    <p style="margin-bottom: 20px;">You started making your carpooling account, but you're not finished!</p>
+    <p style="margin-bottom: 20px;"><strong>This is Willow, founder & CEO of Cruise Kauaʻi.</strong> Mahalo for creating an account with us and being interested in reducing traffic on our small island. I wanted to remind you to finish setting up your account. We need more drivers posting rides as we finish beta testing, and need your help to make the culture shift toward carpooling a reality on Kauaʻi!</p>
+
+    <p style="margin-bottom: 16px;"><strong>We also have two new features on our app:</strong></p>
+
+    <p style="margin-bottom: 12px;"><strong>(1) REQUEST A RIDE:</strong> riders can now request a ride in the trips tab. Requested rides are shown to all drivers posting a ride, helping drivers connect to riders quicker, and helping us understand the typical needs of riders.</p>
+
+    <p style="margin-bottom: 24px;"><strong>(2) RECURRING RIDES:</strong> drivers can now set up recurring rides when posting a trip. Simply fill out the recurring ride tab under "post a ride" with your morning commute or daily grocery run. Then, press on that ride and it will populate below, and the only field you have to fill out is the date.</p>
+
+    <hr style="border: none; border-top: 1px solid #ddd; margin: 32px 0;">
+
+    <p style="margin-bottom: 20px; font-weight: bold;">To get started, please complete these steps:</p>
 
     <div style="margin: 32px 0;">
       <p style="font-size: 16px; font-weight: bold; margin-bottom: 16px;">🚗 1. BECOME A RIDER</p>
