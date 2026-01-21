@@ -47,8 +47,6 @@ Deno.serve(async (req) => {
       <p style="padding-left: 20px;">Once this is uploaded, you will be a verified driver— making money, building community, and reducing traffic at the same time! ✨</p>
     </div>
 
-    <p style="margin: 32px 0;">Questions? Just reply to this email and we'll be happy to help! 💬</p>
-
     <p style="margin-top: 40px; margin-bottom: 8px;">Mahalo for joining cruise kauaʻi and helping our island home 🙏</p>
     <p style="margin: 0;">Founder & CEO,</p>
     <p style="margin: 0; font-weight: bold;">Willow</p>
