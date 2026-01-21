@@ -650,7 +650,7 @@ Please process the refund manually via Stripe.
                         body: `
 Aloha ${driver.full_name},
 
-${booking.passenger_name} has cancelled their confirmed booking for your ride on ${ride?.departure_date} at ${ride?.departure_time}.
+${booking.passenger_name} has cancelled their confirmed booking for your ride on ${ride?.departure_date ? format(new Date(ride.departure_date), "EEE, MMM d, yyyy") : 'TBD'} at ${ride?.departure_time ? formatTime12Hour(ride.departure_time) : 'TBD'}.
 
 Reason: ${reason}
 
