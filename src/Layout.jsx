@@ -35,7 +35,7 @@ const navigationItems = [
     icon: User,
   },
   {
-    title: "inbox",
+    title: "inbox & confirmed rides",
     url: createPageUrl("Inbox"),
     icon: MessageSquare,
   },
