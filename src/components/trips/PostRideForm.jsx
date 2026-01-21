@@ -56,6 +56,10 @@ export default function PostRideForm() {
         // Fetch active ride requests
         const requests = await base44.entities.RideRequest.filter({ status: 'active' });
         setRideRequests(requests);
+
+        // Fetch recurring trips
+        const trips = await base44.entities.RecurringTrip.filter({ user_id: user.id });
+        setRecurringTrips(trips);
         
         if (!user.profile_picture_url) {
           setError("Please upload a profile picture before posting rides. Go to Account page.");
@@ -141,6 +145,29 @@ export default function PostRideForm() {
     }));
     if (request.stops && request.stops.length > 0) {
       setStops(request.stops);
+    }
+  };
+
+  const handleSelectRecurringTrip = (trip) => {
+    setRideData(prev => ({
+      ...prev,
+      departure_location: trip.departure_location,
+      destination: trip.destination,
+      departure_time: trip.departure_time,
+      is_flexible: trip.is_flexible,
+      seats_available: trip.seats_available,
+      price_per_seat: trip.price_per_seat || 0,
+      price_per_seat_local: trip.price_per_seat_local || 0,
+      price_per_seat_tourist: trip.price_per_seat_tourist || 0,
+      rider_preference: trip.rider_preference,
+      description: trip.description,
+      car_model: trip.car_model,
+      smoking_allowed: trip.smoking_allowed,
+      pets_allowed: trip.pets_allowed,
+      offers_detour_service: trip.offers_detour_service
+    }));
+    if (trip.stops && trip.stops.length > 0) {
+      setStops(trip.stops);
     }
   };
 
@@ -351,6 +378,64 @@ export default function PostRideForm() {
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
+
+      {/* Recurring Trips */}
+      <Card className="border-secondary/20 shadow-sm bg-blue-50 rounded-3xl">
+        <CardHeader className="cursor-pointer" onClick={() => setShowRecurringTrips(!showRecurringTrips)}>
+          <CardTitle className="flex items-center justify-between text-secondary">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-secondary/10 rounded-2xl">
+                <Repeat className="w-5 h-5 text-secondary" />
+              </div>
+              recurring trips
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="rounded-2xl"
+            >
+              {showRecurringTrips ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        {showRecurringTrips && (
+          <CardContent className="p-6 space-y-4">
+            <p className="text-sm text-gray-600">
+              have your daily drive down? add a recurring trip here. when you press on it, the drive details will automatically populate below, and the only field you have to fill out is the date.
+            </p>
+            <Button
+              type="button"
+              onClick={() => setShowRecurringTripModal(true)}
+              className="w-full rounded-2xl bg-secondary"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              add recurring trip
+            </Button>
+            {recurringTrips.length > 0 && (
+              <div className="space-y-2">
+                {recurringTrips.map(trip => (
+                  <Card
+                    key={trip.id}
+                    className="cursor-pointer hover:shadow-md transition-shadow border-secondary/20 rounded-2xl"
+                    onClick={() => handleSelectRecurringTrip(trip)}
+                  >
+                    <CardContent className="p-4">
+                      <h4 className="font-semibold text-secondary mb-1">{trip.trip_name}</h4>
+                      <p className="text-sm text-gray-600">
+                        {trip.departure_location} → {trip.destination}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {trip.departure_time} • {trip.seats_available} seats
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        )}
+      </Card>
 
       <form onSubmit={handleSubmit}>
         <div className="space-y-8">
@@ -666,6 +751,14 @@ export default function PostRideForm() {
         onClose={() => setShowMessageModal(false)}
         request={selectedRequest}
         onMessageSent={handleMessageSent}
+      />
+
+      <RecurringTripModal
+        isOpen={showRecurringTripModal}
+        onClose={() => setShowRecurringTripModal(false)}
+        onSave={(newTrip) => {
+          setRecurringTrips([...recurringTrips, newTrip]);
+        }}
       />
     </div>
   );
