@@ -7,12 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, DollarSign, Car, X, Plus, AlertCircle, Clock, Users, HelpCircle, MessageSquare, ChevronDown, ChevronUp } from "lucide-react";
+import { MapPin, DollarSign, Car, X, Plus, AlertCircle, Clock, Users, HelpCircle, MessageSquare, ChevronDown, ChevronUp, Repeat } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import PostRideTutorial from "../tutorial/PostRideTutorial";
 import LocationAutocomplete from "../shared/LocationAutocomplete";
 import RideRequestCard from "./RideRequestCard";
 import MessageRiderModal from "./MessageRiderModal";
+import RecurringTripModal from "./RecurringTripModal";
 
 export default function PostRideForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,6 +27,9 @@ export default function PostRideForm() {
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [matchedRequest, setMatchedRequest] = useState(null);
   const [showRideRequests, setShowRideRequests] = useState(true);
+  const [recurringTrips, setRecurringTrips] = useState([]);
+  const [showRecurringTrips, setShowRecurringTrips] = useState(true);
+  const [showRecurringTripModal, setShowRecurringTripModal] = useState(false);
   const [rideData, setRideData] = useState({
     departure_location: '',
     destination: '',

@@ -1,0 +1,317 @@
+import React, { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Card, CardContent } from "@/components/ui/card";
+import { MapPin, DollarSign, Car, X, Plus } from "lucide-react";
+import LocationAutocomplete from "../shared/LocationAutocomplete";
+import { base44 } from "@/api/base44Client";
+
+export default function RecurringTripModal({ isOpen, onClose, onSave }) {
+  const [loading, setLoading] = useState(false);
+  const [tripData, setTripData] = useState({
+    trip_name: "",
+    departure_location: "",
+    destination: "",
+    stops: [],
+    departure_time: "",
+    is_flexible: false,
+    seats_available: 1,
+    price_per_seat: 0,
+    price_per_seat_local: 0,
+    price_per_seat_tourist: 0,
+    rider_preference: "both_fine",
+    description: "",
+    car_model: "",
+    smoking_allowed: false,
+    pets_allowed: false,
+    offers_detour_service: false
+  });
+  const [stopInput, setStopInput] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const user = await base44.auth.me();
+      const newTrip = await base44.entities.RecurringTrip.create({
+        ...tripData,
+        user_id: user.id
+      });
+      onSave(newTrip);
+      setTripData({
+        trip_name: "",
+        departure_location: "",
+        destination: "",
+        stops: [],
+        departure_time: "",
+        is_flexible: false,
+        seats_available: 1,
+        price_per_seat: 0,
+        price_per_seat_local: 0,
+        price_per_seat_tourist: 0,
+        rider_preference: "both_fine",
+        description: "",
+        car_model: "",
+        smoking_allowed: false,
+        pets_allowed: false,
+        offers_detour_service: false
+      });
+      onClose();
+    } catch (error) {
+      console.error("Error saving recurring trip:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addStop = () => {
+    if (stopInput.trim()) {
+      setTripData({ ...tripData, stops: [...tripData.stops, stopInput.trim()] });
+      setStopInput("");
+    }
+  };
+
+  const removeStop = (index) => {
+    setTripData({ ...tripData, stops: tripData.stops.filter((_, i) => i !== index) });
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-2xl text-secondary">add recurring trip</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <Label>trip name</Label>
+            <Input
+              placeholder="e.g., morning commute, airport run"
+              value={tripData.trip_name}
+              onChange={(e) => setTripData({ ...tripData, trip_name: e.target.value })}
+              required
+            />
+          </div>
+
+          {/* Route Details */}
+          <Card className="border-primary/20 rounded-3xl">
+            <CardContent className="p-6 space-y-4">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-primary/10 rounded-2xl">
+                  <MapPin className="w-5 h-5 text-primary" />
+                </div>
+                <h3 className="text-lg font-semibold text-secondary">route details</h3>
+              </div>
+
+              <div className="space-y-2">
+                <Label>departure location</Label>
+                <LocationAutocomplete
+                  value={tripData.departure_location}
+                  onChange={(value) => setTripData({ ...tripData, departure_location: value })}
+                  placeholder="where are you starting from?"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>destination</Label>
+                <LocationAutocomplete
+                  value={tripData.destination}
+                  onChange={(value) => setTripData({ ...tripData, destination: value })}
+                  placeholder="where are you going?"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>stops (optional)</Label>
+                <div className="flex gap-2">
+                  <LocationAutocomplete
+                    value={stopInput}
+                    onChange={setStopInput}
+                    placeholder="add a stop along the way"
+                  />
+                  <Button type="button" variant="outline" onClick={addStop} className="rounded-2xl">
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                </div>
+                {tripData.stops.map((stop, index) => (
+                  <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded-2xl">
+                    <span className="flex-1">{stop}</span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => removeStop(index)}
+                      className="rounded-2xl"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Schedule */}
+          <Card className="border-primary/20 rounded-3xl">
+            <CardContent className="p-6 space-y-4">
+              <h3 className="text-lg font-semibold text-secondary">schedule</h3>
+
+              <div className="space-y-2">
+                <Label>departure time</Label>
+                <Input
+                  type="time"
+                  value={tripData.departure_time}
+                  onChange={(e) => setTripData({ ...tripData, departure_time: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <Label>flexible with time?</Label>
+                <Switch
+                  checked={tripData.is_flexible}
+                  onCheckedChange={(checked) => setTripData({ ...tripData, is_flexible: checked })}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Vehicle & Pricing */}
+          <Card className="border-primary/20 rounded-3xl">
+            <CardContent className="p-6 space-y-4">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-primary/10 rounded-2xl">
+                  <Car className="w-5 h-5 text-primary" />
+                </div>
+                <h3 className="text-lg font-semibold text-secondary">vehicle & pricing</h3>
+              </div>
+
+              <div className="space-y-2">
+                <Label>car model</Label>
+                <Input
+                  placeholder="e.g., toyota camry, honda civic"
+                  value={tripData.car_model}
+                  onChange={(e) => setTripData({ ...tripData, car_model: e.target.value })}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>seats available</Label>
+                <Input
+                  type="number"
+                  min="1"
+                  max="8"
+                  value={tripData.seats_available}
+                  onChange={(e) => setTripData({ ...tripData, seats_available: parseInt(e.target.value) })}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>rider preference</Label>
+                <Select
+                  value={tripData.rider_preference}
+                  onValueChange={(value) => setTripData({ ...tripData, rider_preference: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="both_fine">both locals and tourists</SelectItem>
+                    <SelectItem value="locals_only">locals only</SelectItem>
+                    <SelectItem value="tourists_only">tourists only</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {tripData.rider_preference === "both_fine" && (
+                <>
+                  <div className="space-y-2">
+                    <Label>price per seat (locals)</Label>
+                    <Input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={tripData.price_per_seat_local}
+                      onChange={(e) => setTripData({ ...tripData, price_per_seat_local: parseFloat(e.target.value) })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>price per seat (tourists)</Label>
+                    <Input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={tripData.price_per_seat_tourist}
+                      onChange={(e) => setTripData({ ...tripData, price_per_seat_tourist: parseFloat(e.target.value) })}
+                    />
+                  </div>
+                </>
+              )}
+
+              {tripData.rider_preference !== "both_fine" && (
+                <div className="space-y-2">
+                  <Label>price per seat</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={tripData.price_per_seat}
+                    onChange={(e) => setTripData({ ...tripData, price_per_seat: parseFloat(e.target.value) })}
+                  />
+                </div>
+              )}
+
+              <div className="flex items-center justify-between">
+                <Label>smoking allowed?</Label>
+                <Switch
+                  checked={tripData.smoking_allowed}
+                  onCheckedChange={(checked) => setTripData({ ...tripData, smoking_allowed: checked })}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <Label>pets allowed?</Label>
+                <Switch
+                  checked={tripData.pets_allowed}
+                  onCheckedChange={(checked) => setTripData({ ...tripData, pets_allowed: checked })}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <Label>offer detour service?</Label>
+                <Switch
+                  checked={tripData.offers_detour_service}
+                  onCheckedChange={(checked) => setTripData({ ...tripData, offers_detour_service: checked })}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>description</Label>
+                <Textarea
+                  placeholder="why are you making this trip?"
+                  value={tripData.description}
+                  onChange={(e) => setTripData({ ...tripData, description: e.target.value })}
+                  className="rounded-2xl"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose} className="rounded-2xl">
+              cancel
+            </Button>
+            <Button type="submit" disabled={loading} className="rounded-2xl bg-primary">
+              {loading ? "saving..." : "save recurring trip"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
