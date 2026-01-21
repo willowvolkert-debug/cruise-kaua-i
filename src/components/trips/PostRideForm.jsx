@@ -557,6 +557,7 @@ export default function PostRideForm() {
                   <Input
                     id="date"
                     type="date"
+                    lang="en"
                     value={rideData.departure_date}
                     onChange={(e) => handleInputChange('departure_date', e.target.value)}
                     required
