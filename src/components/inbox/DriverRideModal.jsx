@@ -11,6 +11,16 @@ import { Calendar, Clock, MapPin, Users, DollarSign, Edit, X, AlertTriangle } fr
 import { format } from "date-fns";
 import { base44 } from "@/api/base44Client";
 
+// Helper to convert 24-hour time to 12-hour format with AM/PM
+const formatTime12Hour = (timeStr) => {
+    if (!timeStr) return '';
+    if (/AM|PM/i.test(timeStr)) return timeStr;
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const displayHours = hours % 12 || 12;
+    return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+};
+
 export default function DriverRideModal({ isOpen, onClose, ride, bookings = [], onRideUpdated }) {
     const [isEditing, setIsEditing] = useState(false);
     const [showCancelConfirm, setShowCancelConfirm] = useState(false);
@@ -77,7 +87,7 @@ export default function DriverRideModal({ isOpen, onClose, ride, bookings = [], 
                                 body: `
 Aloha ${booking.passenger_name},
 
-Unfortunately, the driver has cancelled the ride scheduled for ${ride.departure_date} at ${ride.departure_time}.
+Unfortunately, the driver has cancelled the ride scheduled for ${format(new Date(ride.departure_date), "EEE, MMM d, yyyy")} at ${formatTime12Hour(ride.departure_time)}.
 
 Route: ${ride.departure_location} → ${ride.destination}
 
@@ -105,7 +115,7 @@ DRIVER CANCELLED RIDE - MANUAL REFUNDS NEEDED
 
 Driver: ${ride.driver_name}
 Ride: ${ride.departure_location} → ${ride.destination}
-Date: ${ride.departure_date} at ${ride.departure_time}
+Date: ${format(new Date(ride.departure_date), "EEE, MMM d, yyyy")} at ${formatTime12Hour(ride.departure_time)}
 
 Affected Riders:
 ${confirmedBookings.map(b => `- ${b.passenger_name}: $${b.total_amount?.toFixed(2)}`).join('\n')}
@@ -293,9 +303,9 @@ Please process full refunds for all affected riders.
                             <div className="space-y-4">
                                 <div className="flex items-center gap-2 text-sm text-gray-600">
                                     <Calendar className="w-4 h-4" />
-                                    <span>{ride.departure_date ? format(new Date(ride.departure_date), "EEEE, MMM d, yyyy") : 'TBD'}</span>
+                                    <span>{ride.departure_date ? format(new Date(ride.departure_date), "EEE, MMM d, yyyy") : 'TBD'}</span>
                                     <Clock className="w-4 h-4 ml-2" />
-                                    <span>{ride.departure_time}</span>
+                                    <span>{formatTime12Hour(ride.departure_time)}</span>
                                 </div>
 
                                 <div className="flex items-center gap-2">

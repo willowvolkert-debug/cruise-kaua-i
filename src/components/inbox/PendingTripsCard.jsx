@@ -5,6 +5,16 @@ import { Badge } from "@/components/ui/badge";
 import { Clock, MapPin, Calendar, MessageSquare, X } from "lucide-react";
 import { format } from "date-fns";
 
+// Helper to convert 24-hour time to 12-hour format with AM/PM
+const formatTime12Hour = (timeStr) => {
+    if (!timeStr) return '';
+    if (/AM|PM/i.test(timeStr)) return timeStr;
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const displayHours = hours % 12 || 12;
+    return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+};
+
 export default function PendingTripsCard({ 
   pendingBookings = [], 
   allRidesData = [], 
@@ -35,11 +45,11 @@ export default function PendingTripsCard({
                 {/* Ride Details */}
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Calendar className="w-4 h-4" />
-                  <span>{ride.departure_date ? format(new Date(ride.departure_date), "MMM d, yyyy") : 'TBD'}</span>
+                  <span>{ride.departure_date ? format(new Date(ride.departure_date), "EEE, MMM d, yyyy") : 'TBD'}</span>
                   {ride.departure_time && (
                     <>
                       <Clock className="w-4 h-4 ml-2" />
-                      <span>{ride.departure_time}</span>
+                      <span>{formatTime12Hour(ride.departure_time)}</span>
                     </>
                   )}
                 </div>

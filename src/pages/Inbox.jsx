@@ -23,6 +23,20 @@ import { sendNotification } from "../components/utils/notifications";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
+// Helper to convert 24-hour time to 12-hour format with AM/PM
+const formatTime12Hour = (timeStr) => {
+    if (!timeStr) return '';
+    
+    // If already in 12-hour format (contains AM/PM), return as is
+    if (/AM|PM/i.test(timeStr)) return timeStr;
+    
+    // Parse 24-hour time (e.g., "14:30" or "9:00")
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const displayHours = hours % 12 || 12;
+    return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+};
+
 // Helper to get current time in Hawaii (UTC-10) as a simple comparable object
 const getHawaiiNow = () => {
     const now = new Date();
@@ -818,9 +832,9 @@ Cruise Kauaʻi Team
                                         <div className="space-y-2">
                                             <div className="flex items-center gap-2 text-sm text-gray-600">
                                                 <Calendar className="w-4 h-4" />
-                                                <span>{format(new Date(ride.departure_date), "MMM d, yyyy")}</span>
+                                                <span>{format(new Date(ride.departure_date), "EEE, MMM d, yyyy")}</span>
                                                 <Clock className="w-4 h-4 ml-2" />
-                                                <span>{ride.departure_time}</span>
+                                                <span>{formatTime12Hour(ride.departure_time)}</span>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <MapPin className="w-4 h-4 text-primary" />
@@ -884,9 +898,9 @@ Cruise Kauaʻi Team
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-2 text-sm text-gray-600">
                                                     <Calendar className="w-4 h-4" />
-                                                    <span>{format(new Date(ride.departure_date), "MMM d, yyyy")}</span>
+                                                    <span>{format(new Date(ride.departure_date), "EEE, MMM d, yyyy")}</span>
                                                     <Clock className="w-4 h-4 ml-2" />
-                                                    <span>{ride.departure_time}</span>
+                                                    <span>{formatTime12Hour(ride.departure_time)}</span>
                                                 </div>
                                                 {isDriver && (
                                                     <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -1014,9 +1028,9 @@ Cruise Kauaʻi Team
                                                 <div className="mb-3">
                                                     <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                                                         <Calendar className="w-4 h-4" />
-                                                        <span>{format(new Date(ride.departure_date), "MMM d, yyyy")}</span>
+                                                        <span>{format(new Date(ride.departure_date), "EEE, MMM d, yyyy")}</span>
                                                         <Clock className="w-4 h-4 ml-2" />
-                                                        <span>{ride.departure_time}</span>
+                                                        <span>{formatTime12Hour(ride.departure_time)}</span>
                                                     </div>
                                                     <div className="flex items-center gap-2 mb-2">
                                                         <MapPin className="w-4 h-4 text-primary" />
