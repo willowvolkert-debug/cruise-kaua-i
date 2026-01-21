@@ -90,7 +90,7 @@ export default function RecurringTripModal({ isOpen, onClose, onSave }) {
           <div className="space-y-2">
             <Label>trip name</Label>
             <Input
-              placeholder="e.g., morning commute, airport run"
+              placeholder="e.g. morning commute, costco run"
               value={tripData.trip_name}
               onChange={(e) => setTripData({ ...tripData, trip_name: e.target.value })}
               required
