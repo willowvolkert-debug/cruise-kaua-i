@@ -13,20 +13,14 @@ Deno.serve(async (req) => {
         const now = new Date();
         const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
         
-        // Get all users who haven't completed setup
+        // Get all users who aren't registered as driver or rider
         const allUsers = await base44.asServiceRole.entities.User.list();
         const incompleteUsers = allUsers.filter(u => {
-            // User is incomplete if they don't have all required fields
-            const isIncomplete = !u.profile_complete || 
-                                !u.drivers_license_verified || 
-                                !u.terms_accepted || 
-                                !u.privacy_policy_accepted || 
-                                !u.community_agreement_accepted;
-            
             // Skip if unsubscribed
             if (u.setup_reminders_unsubscribed) return false;
             
-            return isIncomplete;
+            // Send to anyone who is NOT a driver or rider
+            return u.user_type !== 'driver' && u.user_type !== 'rider';
         });
 
         let sentCount = 0;
