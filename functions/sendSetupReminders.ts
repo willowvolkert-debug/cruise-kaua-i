@@ -15,6 +15,12 @@ Deno.serve(async (req) => {
         
         // Get all users who aren't registered as driver or rider
         const allUsers = await base44.asServiceRole.entities.User.list();
+        
+        // Count user types
+        const drivers = allUsers.filter(u => u.user_type === 'driver').length;
+        const riders = allUsers.filter(u => u.user_type === 'rider').length;
+        const unsubscribed = allUsers.filter(u => u.setup_reminders_unsubscribed).length;
+        
         const incompleteUsers = allUsers.filter(u => {
             // Skip if unsubscribed
             if (u.setup_reminders_unsubscribed) return false;
@@ -22,6 +28,12 @@ Deno.serve(async (req) => {
             // Send to anyone who is NOT a driver or rider
             return u.user_type !== 'driver' && u.user_type !== 'rider';
         });
+        
+        console.log(`Total users: ${allUsers.length}`);
+        console.log(`Drivers: ${drivers}`);
+        console.log(`Riders: ${riders}`);
+        console.log(`Unsubscribed: ${unsubscribed}`);
+        console.log(`Eligible for reminders: ${incompleteUsers.length}`);
 
         let sentCount = 0;
         const errors = [];
