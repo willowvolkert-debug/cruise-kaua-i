@@ -162,6 +162,12 @@ Deno.serve(async (req) => {
             success: true,
             sent: sentCount,
             checked: incompleteUsers.length,
+            totalUsers: allUsers.length,
+            registeredUsers: registeredUsers.map(u => ({
+                name: u.full_name,
+                email: u.email,
+                type: u.user_type
+            })),
             errors: errors.length > 0 ? errors : undefined
         });
     } catch (error) {
