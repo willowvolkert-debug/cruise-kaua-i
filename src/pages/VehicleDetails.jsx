@@ -21,7 +21,8 @@ export default function VehicleDetailsPage() {
     license_plate: '',
     seats_available: 4,
     bags_allowed: true,
-    vehicle_image: null,
+    vehicle_exterior_image: null,
+    vehicle_interior_images: [],
     auto_policy_image: null
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,7 +47,8 @@ export default function VehicleDetailsPage() {
             license_plate: currentUser.license_plate || '',
             seats_available: currentUser.seats_available || 4,
             bags_allowed: currentUser.bags_allowed !== undefined ? currentUser.bags_allowed : true,
-            vehicle_image: null,
+            vehicle_exterior_image: null,
+            vehicle_interior_images: [],
             auto_policy_image: null
           });
         }
@@ -61,10 +63,17 @@ export default function VehicleDetailsPage() {
     setVehicleData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleVehicleImageUpload = (e) => {
+  const handleExteriorImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setVehicleData(prev => ({ ...prev, vehicle_image: file }));
+      setVehicleData(prev => ({ ...prev, vehicle_exterior_image: file }));
+    }
+  };
+
+  const handleInteriorImagesUpload = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      setVehicleData(prev => ({ ...prev, vehicle_interior_images: files }));
     }
   };
 
@@ -80,19 +89,34 @@ export default function VehicleDetailsPage() {
     setIsSubmitting(true);
     setUploadError('');
 
-    if (!vehicleData.vehicle_image && !user?.vehicle_photo_url) {
-      setUploadError("Please upload a vehicle photo.");
+    if (!vehicleData.vehicle_exterior_image && !user?.vehicle_exterior_photo_url) {
+      setUploadError("Please upload a photo of the outside of your vehicle.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (vehicleData.vehicle_interior_images.length === 0 && !user?.vehicle_interior_photo_urls?.length) {
+      setUploadError("Please upload at least one photo of the inside of your vehicle.");
       setIsSubmitting(false);
       return;
     }
 
     try {
-      let vehiclePhotoUrl = user?.vehicle_photo_url || '';
+      let vehicleExteriorPhotoUrl = user?.vehicle_exterior_photo_url || '';
+      let vehicleInteriorPhotoUrls = user?.vehicle_interior_photo_urls || [];
       let policyPhotoUrl = user?.auto_policy_photo_url || '';
 
-      if (vehicleData.vehicle_image) {
-        const result = await base44.integrations.Core.UploadFile({ file: vehicleData.vehicle_image });
-        vehiclePhotoUrl = result.file_url;
+      if (vehicleData.vehicle_exterior_image) {
+        const result = await base44.integrations.Core.UploadFile({ file: vehicleData.vehicle_exterior_image });
+        vehicleExteriorPhotoUrl = result.file_url;
+      }
+
+      if (vehicleData.vehicle_interior_images.length > 0) {
+        const uploadPromises = vehicleData.vehicle_interior_images.map(file => 
+          base44.integrations.Core.UploadFile({ file })
+        );
+        const results = await Promise.all(uploadPromises);
+        vehicleInteriorPhotoUrls = results.map(r => r.file_url);
       }
 
       if (vehicleData.auto_policy_image) {
@@ -108,7 +132,8 @@ export default function VehicleDetailsPage() {
         license_plate: vehicleData.license_plate,
         seats_available: vehicleData.seats_available,
         bags_allowed: vehicleData.bags_allowed,
-        vehicle_photo_url: vehiclePhotoUrl,
+        vehicle_exterior_photo_url: vehicleExteriorPhotoUrl,
+        vehicle_interior_photo_urls: vehicleInteriorPhotoUrls,
         auto_policy_photo_url: policyPhotoUrl,
         vehicle_pending_review: true,
         vehicle_verified: false
@@ -277,18 +302,35 @@ export default function VehicleDetailsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="image">vehicle photo *</Label>
+                <Label htmlFor="exterior-image">outside of car photo *</Label>
                 <Input
-                  id="image"
+                  id="exterior-image"
                   type="file"
                   accept="image/*"
-                  onChange={handleVehicleImageUpload}
+                  onChange={handleExteriorImageUpload}
                   className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
-                  required={!user?.vehicle_photo_url}
+                  required={!user?.vehicle_exterior_photo_url}
                 />
-                <p className="text-xs text-gray-500">Upload a clear photo of your vehicle</p>
-                {user?.vehicle_photo_url && (
-                  <p className="text-xs text-primary">✓ Vehicle photo already uploaded. Upload a new one to replace it.</p>
+                <p className="text-xs text-gray-500">Upload a clear photo of the outside of your vehicle</p>
+                {user?.vehicle_exterior_photo_url && (
+                  <p className="text-xs text-primary">✓ Exterior photo already uploaded. Upload a new one to replace it.</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="interior-images">inside of car photos *</Label>
+                <Input
+                  id="interior-images"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleInteriorImagesUpload}
+                  className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
+                  required={!user?.vehicle_interior_photo_urls?.length}
+                />
+                <p className="text-xs text-gray-500">Upload clear photos of the inside of your vehicle (you can select multiple)</p>
+                {user?.vehicle_interior_photo_urls?.length > 0 && (
+                  <p className="text-xs text-primary">✓ {user.vehicle_interior_photo_urls.length} interior photo(s) already uploaded. Upload new ones to replace them.</p>
                 )}
               </div>
 
