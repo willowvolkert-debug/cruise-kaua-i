@@ -70,7 +70,8 @@ Deno.serve(async (req) => {
     </html>
     `.trim();
 
-    await base44.integrations.Core.SendEmail({
+    await base44.asServiceRole.integrations.Core.SendEmail({
+      from_name: 'Cruise Kauaʻi',
       to: email,
       subject: '🌺 Finish setting up your Cruise Kauaʻi Carpooling Account Today!',
       body: emailBody
