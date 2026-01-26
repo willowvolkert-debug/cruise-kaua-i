@@ -37,6 +37,13 @@ const formatTime12Hour = (timeStr) => {
     return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
 };
 
+// Helper to parse date string correctly without timezone conversion
+const parseDateString = (dateStr) => {
+    if (!dateStr) return new Date();
+    const [year, month, day] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day);
+};
+
 // Helper to get current time in Hawaii (UTC-10) as a simple comparable object
 const getHawaiiNow = () => {
     const now = new Date();
@@ -657,7 +664,7 @@ Please process the refund manually via Stripe.
                         body: `
 Aloha ${driver.full_name},
 
-${booking.passenger_name} has cancelled their confirmed booking for your ride on ${ride?.departure_date ? format(new Date(ride.departure_date), "EEE, MMM d, yyyy") : 'TBD'} at ${ride?.departure_time ? formatTime12Hour(ride.departure_time) : 'TBD'}.
+${booking.passenger_name} has cancelled their confirmed booking for your ride on ${ride?.departure_date ? format(parseDateString(ride.departure_date), "EEE, MMM d, yyyy") : 'TBD'} at ${ride?.departure_time ? formatTime12Hour(ride.departure_time) : 'TBD'}.
 
 Reason: ${reason}
 
@@ -839,7 +846,7 @@ Cruise Kauaʻi Team
                                         <div className="space-y-2">
                                             <div className="flex items-center gap-2 text-sm text-gray-600">
                                                 <Calendar className="w-4 h-4" />
-                                                <span>{format(new Date(ride.departure_date), "EEE, MMM d, yyyy")}</span>
+                                                <span>{format(parseDateString(ride.departure_date), "EEE, MMM d, yyyy")}</span>
                                                 <Clock className="w-4 h-4 ml-2" />
                                                 <span>{formatTime12Hour(ride.departure_time)}</span>
                                             </div>
@@ -903,12 +910,12 @@ Cruise Kauaʻi Team
                                     >
                                         <div className="space-y-2">
                                             <div className="flex items-center justify-between">
-                                                <div className="flex items-center gap-2 text-sm text-gray-600">
-                                                    <Calendar className="w-4 h-4" />
-                                                    <span>{format(new Date(ride.departure_date), "EEE, MMM d, yyyy")}</span>
-                                                    <Clock className="w-4 h-4 ml-2" />
-                                                    <span>{formatTime12Hour(ride.departure_time)}</span>
-                                                </div>
+                                               <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                   <Calendar className="w-4 h-4" />
+                                                   <span>{format(parseDateString(ride.departure_date), "EEE, MMM d, yyyy")}</span>
+                                                   <Clock className="w-4 h-4 ml-2" />
+                                                   <span>{formatTime12Hour(ride.departure_time)}</span>
+                                               </div>
                                                 {isDriver && (
                                                     <ChevronRight className="w-5 h-5 text-gray-400" />
                                                 )}
@@ -1035,7 +1042,7 @@ Cruise Kauaʻi Team
                                                 <div className="mb-3">
                                                     <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                                                         <Calendar className="w-4 h-4" />
-                                                        <span>{format(new Date(ride.departure_date), "EEE, MMM d, yyyy")}</span>
+                                                        <span>{format(parseDateString(ride.departure_date), "EEE, MMM d, yyyy")}</span>
                                                         <Clock className="w-4 h-4 ml-2" />
                                                         <span>{formatTime12Hour(ride.departure_time)}</span>
                                                     </div>
