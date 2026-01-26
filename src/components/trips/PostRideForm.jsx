@@ -54,9 +54,40 @@ export default function PostRideForm() {
         const user = await base44.auth.me();
         setCurrentUser(user);
         
-        // Fetch active ride requests
+        // Fetch active ride requests and filter out past ones
         const requests = await base44.entities.RideRequest.filter({ status: 'active' });
-        setRideRequests(requests);
+        
+        // Get current Hawaii time
+        const now = new Date();
+        const hawaiiOffset = -10 * 60; // Hawaii is UTC-10
+        const hawaiiTime = new Date(now.getTime() + (hawaiiOffset + now.getTimezoneOffset()) * 60000);
+        
+        // Filter out past requests
+        const futureRequests = requests.filter(request => {
+          if (!request.departure_date || !request.departure_time) return false;
+          
+          // Parse request date and time
+          const [year, month, day] = request.departure_date.split('-').map(Number);
+          const timeStr = request.departure_time.toLowerCase().trim();
+          
+          // Parse time
+          let hours = 0, minutes = 0;
+          if (timeStr.includes(':')) {
+            const [h, m] = timeStr.replace(/[ap]m/i, '').split(':').map(Number);
+            hours = h;
+            minutes = m || 0;
+            if (timeStr.includes('pm') && hours < 12) hours += 12;
+            if (timeStr.includes('am') && hours === 12) hours = 0;
+          }
+          
+          // Create request datetime in Hawaii timezone
+          const requestDateTime = new Date(year, month - 1, day, hours, minutes);
+          
+          // Return true if request is in the future
+          return requestDateTime > hawaiiTime;
+        });
+        
+        setRideRequests(futureRequests);
 
         // Fetch recurring trips
         const trips = await base44.entities.RecurringTrip.filter({ user_id: user.id });
