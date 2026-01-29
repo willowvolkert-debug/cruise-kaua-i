@@ -50,30 +50,17 @@ Deno.serve(async (req) => {
                 
                 let shouldSend = false;
 
-                // First reminder: 2 hours after account creation
-                if (!lastReminderDate && hoursSinceCreated >= 2) {
+                // First reminder: send immediately to everyone who hasn't received one yet
+                if (!lastReminderDate) {
                     shouldSend = true;
                 }
-                // Second reminder: 1 day after first reminder (24 hours from account creation)
+                // Subsequent reminders: every other day (2 days)
                 else if (lastReminderDate) {
                     const hoursSinceLastReminder = (now - lastReminderDate) / (1000 * 60 * 60);
                     const daysSinceLastReminder = Math.floor(hoursSinceLastReminder / 24);
                     
-                    // If first reminder was sent, second reminder after 1 day (around 24 hours)
-                    if (daysSinceCreated >= 1 && daysSinceCreated < 2 && daysSinceLastReminder >= 1) {
+                    if (daysSinceLastReminder >= 2) {
                         shouldSend = true;
-                    }
-                    // Every other day for a week (days 3, 5, 7)
-                    else if (daysSinceCreated >= 2 && daysSinceCreated <= 7) {
-                        if (daysSinceLastReminder >= 2) {
-                            shouldSend = true;
-                        }
-                    }
-                    // After first week: every other week (14 days)
-                    else if (daysSinceCreated > 7) {
-                        if (daysSinceLastReminder >= 14) {
-                            shouldSend = true;
-                        }
                     }
                 }
 
