@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
     <html>
     <body style="font-family: Arial, sans-serif; line-height: 1.8; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
     
-    <p style="font-size: 18px; margin-bottom: 24px;">🌺 Aloha!</p>
+    <p style="font-size: 18px; margin-bottom: 24px;">Aloha kākou,</p>
 
     <p style="margin-bottom: 20px;"><strong>This is Willow, founder & CEO of Cruise Kauaʻi.</strong> Mahalo for creating an account with us and being interested in reducing traffic on our small island. Cruise Kauaʻi is a transportation alternative for those sick of sitting in traffic and paying too much money to get around. It is like a combination of the bus, Uber, and the Nextdoor community app; a community-based ride-sharing platform to get cars off the road, put money in locals' pockets, and make transportation more affordable & accessible for everyone.</p>
 
