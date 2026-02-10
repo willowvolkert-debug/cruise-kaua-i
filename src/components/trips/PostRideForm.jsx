@@ -332,6 +332,8 @@ export default function PostRideForm() {
         driver_preferences_chattiness: currentUser.preferences_chattiness || 'Flexible',
         driver_preferences_scents: currentUser.preferences_scents || 'Any',
         driver_license_state: currentUser.drivers_license_state || 'HI',
+        driver_vehicle_exterior_photo_url: currentUser.vehicle_exterior_photo_url || null,
+        driver_vehicle_interior_photo_urls: currentUser.vehicle_interior_photo_urls || [],
         stops: stops.filter(s => s.trim() !== ''),
         seats_available: parseInt(rideData.seats_available),
         status: 'active'
