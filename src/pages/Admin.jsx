@@ -26,6 +26,8 @@ export default function AdminPage() {
   const [verifiedUsers, setVerifiedUsers] = useState([]);
   const [verifiedRiders, setVerifiedRiders] = useState([]);
   const [userEdits, setUserEdits] = useState([]);
+  const [recentRideRequests, setRecentRideRequests] = useState([]);
+  const [recentRides, setRecentRides] = useState([]);
   const [contactInquiries, setContactInquiries] = useState([]);
   const [phoneAlerts, setPhoneAlerts] = useState([]);
   const [pendingCommunityPosts, setPendingCommunityPosts] = useState([]);
@@ -70,12 +72,21 @@ export default function AdminPage() {
       const allEdits = await base44.entities.UserEdit.list('-created_date', 50);
       const unreviewedEdits = allEdits.filter(e => !e.is_reviewed);
 
+      // Fetch recent ride requests and rides (last 24 hours)
+      const allRideRequests = await base44.entities.RideRequest.list('-created_date', 100);
+      const allRides = await base44.entities.Ride.list('-created_date', 100);
+      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      const newRideRequests = allRideRequests.filter(r => new Date(r.created_date) > oneDayAgo && r.status === 'active');
+      const newRides = allRides.filter(r => new Date(r.created_date) > oneDayAgo && r.status === 'active');
+
       setPendingLicenses(pendingLic);
       setPendingVehicles(pendingVeh);
       setRejectedVehicles(rejectedVeh);
       setVerifiedUsers(drivers);
       setVerifiedRiders(riders);
       setUserEdits(unreviewedEdits);
+      setRecentRideRequests(newRideRequests);
+      setRecentRides(newRides);
 
       // Load contact inquiries
       const allInquiries = await base44.entities.ContactInquiry.list('-created_date');
@@ -623,6 +634,72 @@ export default function AdminPage() {
                   </div>
                 ))}
               </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* New Ride Requests & Rides */}
+        {(recentRideRequests.length > 0 || recentRides.length > 0) && (
+          <Card className="shadow-lg border-blue-300 bg-blue-50 rounded-3xl">
+            <CardHeader>
+              <CardTitle className="text-xl text-blue-800 flex items-center gap-2">
+                <MapPin className="w-6 h-6" />
+                new activity (last 24h)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {recentRideRequests.length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-blue-900 mb-2">ride requests ({recentRideRequests.length})</h3>
+                  <div className="grid gap-3">
+                    {recentRideRequests.map(request => (
+                      <div key={request.id} className="bg-white rounded-lg p-4 border border-blue-200">
+                        <div className="flex items-center gap-4">
+                          <Avatar className="w-10 h-10 bg-gradient-to-r from-primary to-secondary">
+                            <AvatarFallback className="text-white font-semibold text-sm">
+                              {getInitials(request.rider_name)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1">
+                            <p className="font-semibold text-secondary">{request.rider_name}</p>
+                            <p className="text-sm text-gray-600">{request.departure_location} → {request.destination}</p>
+                            <p className="text-xs text-gray-500">{format(new Date(request.departure_date), "MMM d")} at {request.departure_time}</p>
+                          </div>
+                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300">
+                            {request.seats_needed} seat{request.seats_needed > 1 ? 's' : ''}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {recentRides.length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-blue-900 mb-2">posted rides ({recentRides.length})</h3>
+                  <div className="grid gap-3">
+                    {recentRides.map(ride => (
+                      <div key={ride.id} className="bg-white rounded-lg p-4 border border-blue-200">
+                        <div className="flex items-center gap-4">
+                          <Avatar className="w-10 h-10 bg-gradient-to-r from-primary to-secondary">
+                            <AvatarFallback className="text-white font-semibold text-sm">
+                              {getInitials(ride.driver_name)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1">
+                            <p className="font-semibold text-secondary">{ride.driver_name}</p>
+                            <p className="text-sm text-gray-600">{ride.departure_location} → {ride.destination}</p>
+                            <p className="text-xs text-gray-500">{format(new Date(ride.departure_date), "MMM d")} at {ride.departure_time}</p>
+                          </div>
+                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300">
+                            {ride.seats_available} seat{ride.seats_available > 1 ? 's' : ''}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         )}
