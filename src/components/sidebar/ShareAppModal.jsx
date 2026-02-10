@@ -7,7 +7,7 @@ import { base44 } from "@/api/base44Client";
 export default function ShareAppModal({ isOpen, onClose, currentUser }) {
   const handleShare = async (platform) => {
     const shareText = "Check out Cruise Kauaʻi - the island's ride-sharing app! 🚗🌺";
-    const shareUrl = window.location.origin;
+    const shareUrl = "https://cruisekauai.org";
     
     let url = '';
     switch(platform) {
@@ -100,7 +100,7 @@ export default function ShareAppModal({ isOpen, onClose, currentUser }) {
 
           <Button
             onClick={() => {
-              const shareUrl = window.location.origin;
+              const shareUrl = "https://cruisekauai.org";
               navigator.clipboard.writeText(shareUrl);
               alert("Link copied to clipboard!");
             }}
