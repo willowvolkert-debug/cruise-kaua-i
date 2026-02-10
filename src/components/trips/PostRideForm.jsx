@@ -14,6 +14,7 @@ import LocationAutocomplete from "../shared/LocationAutocomplete";
 import RideRequestCard from "./RideRequestCard";
 import MessageRiderModal from "./MessageRiderModal";
 import RecurringTripModal from "./RecurringTripModal";
+import RiderProfileModal from "./RiderProfileModal";
 
 export default function PostRideForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,6 +32,9 @@ export default function PostRideForm() {
   const [showRecurringTrips, setShowRecurringTrips] = useState(true);
   const [showRecurringTripModal, setShowRecurringTripModal] = useState(false);
   const [editingTrip, setEditingTrip] = useState(null);
+  const [showRiderProfileModal, setShowRiderProfileModal] = useState(false);
+  const [selectedRiderRequest, setSelectedRiderRequest] = useState(null);
+  const [riderRatings, setRiderRatings] = useState([]);
   const [rideData, setRideData] = useState({
     departure_location: '',
     destination: '',
@@ -173,6 +177,23 @@ export default function PostRideForm() {
   const handleMessageRequest = (request) => {
     setSelectedRequest(request);
     setShowMessageModal(true);
+  };
+
+  const handleViewRiderProfile = async (request) => {
+    setSelectedRiderRequest(request);
+    // Load rider ratings
+    try {
+      const allRatings = await base44.entities.Rating.list();
+      const ratingsForRider = allRatings.filter(r => 
+        String(r.rated_user_id) === String(request.rider_id) && 
+        r.trip_role === 'passenger'
+      );
+      setRiderRatings(ratingsForRider);
+    } catch (e) {
+      console.error("Error loading ratings:", e);
+      setRiderRatings([]);
+    }
+    setShowRiderProfileModal(true);
   };
 
   const handleMessageSent = (request) => {
@@ -428,6 +449,7 @@ export default function PostRideForm() {
                   key={request.id}
                   request={request}
                   onMessage={handleMessageRequest}
+                  onViewProfile={handleViewRiderProfile}
                 />
               ))}
             </CardContent>
@@ -833,6 +855,16 @@ export default function PostRideForm() {
         onClose={handleCloseModal}
         onSave={handleSaveTrip}
         editTrip={editingTrip}
+      />
+
+      <RiderProfileModal
+        isOpen={showRiderProfileModal}
+        onClose={() => {
+          setShowRiderProfileModal(false);
+          setSelectedRiderRequest(null);
+        }}
+        request={selectedRiderRequest}
+        riderRatings={riderRatings}
       />
     </div>
   );
