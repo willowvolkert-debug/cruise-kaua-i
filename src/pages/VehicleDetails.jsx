@@ -124,6 +124,30 @@ export default function VehicleDetailsPage() {
         policyPhotoUrl = result.file_url;
       }
 
+      // Log the vehicle edit
+      const isNewSubmission = !user?.vehicle_make;
+      await base44.entities.UserEdit.create({
+        user_id: user.id,
+        user_name: user.full_name,
+        user_email: user.email,
+        change_type: "vehicle",
+        change_description: isNewSubmission ? `Submitted vehicle for review` : `Updated vehicle information`,
+        old_values: {
+          make: user?.vehicle_make || null,
+          model: user?.vehicle_model || null,
+          year: user?.vehicle_year || null,
+          color: user?.vehicle_color || null,
+          license_plate: user?.license_plate || null
+        },
+        new_values: {
+          make: vehicleData.make,
+          model: vehicleData.model,
+          year: vehicleData.year,
+          color: vehicleData.color,
+          license_plate: vehicleData.license_plate
+        }
+      });
+
       await base44.auth.updateMe({
         vehicle_make: vehicleData.make,
         vehicle_model: vehicleData.model,

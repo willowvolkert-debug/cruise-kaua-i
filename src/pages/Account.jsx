@@ -189,6 +189,37 @@ export default function AccountPage() {
 
         const isProfileComplete = !!(editData.username && editData.bio && editData.age && editData.gender && profilePicUrl);
 
+        // Track what changed
+        const oldValues = {
+            username: user.username,
+            bio: user.bio,
+            age: user.age,
+            gender: user.gender,
+            preferences_chattiness: user.preferences_chattiness,
+            preferences_scents: user.preferences_scents,
+            profile_picture_url: user.profile_picture_url
+        };
+        const newValues = {
+            username: editData.username,
+            bio: editData.bio,
+            age: editData.age,
+            gender: editData.gender,
+            preferences_chattiness: editData.preferences_chattiness,
+            preferences_scents: editData.preferences_scents,
+            profile_picture_url: profilePicUrl
+        };
+
+        // Log the profile edit
+        await base44.entities.UserEdit.create({
+            user_id: user.id,
+            user_name: user.full_name,
+            user_email: user.email,
+            change_type: "profile",
+            change_description: `Updated profile information`,
+            old_values: oldValues,
+            new_values: newValues
+        });
+
         await base44.auth.updateMe({
             ...editData,
             profile_picture_url: profilePicUrl,
@@ -279,6 +310,23 @@ export default function AccountPage() {
 
         setIsSubmittingPayout(true);
         try {
+            // Log the bank account change
+            await base44.entities.UserEdit.create({
+                user_id: user.id,
+                user_name: user.full_name,
+                user_email: user.email,
+                change_type: "bank_account",
+                change_description: user.bank_account_linked ? `Updated bank account information` : `Linked new bank account`,
+                old_values: {
+                    account_holder_name: user.bank_account_holder_name || null,
+                    last4: user.bank_account_number ? user.bank_account_number.slice(-4) : null
+                },
+                new_values: {
+                    account_holder_name: bankDetails.account_holder_name,
+                    last4: bankDetails.account_number.slice(-4)
+                }
+            });
+
             await base44.auth.updateMe({
                 bank_account_linked: true,
                 bank_account_holder_name: bankDetails.account_holder_name,

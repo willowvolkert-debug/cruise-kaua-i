@@ -25,6 +25,7 @@ export default function AdminPage() {
   const [rejectedVehicles, setRejectedVehicles] = useState([]);
   const [verifiedUsers, setVerifiedUsers] = useState([]);
   const [verifiedRiders, setVerifiedRiders] = useState([]);
+  const [userEdits, setUserEdits] = useState([]);
   const [contactInquiries, setContactInquiries] = useState([]);
   const [phoneAlerts, setPhoneAlerts] = useState([]);
   const [pendingCommunityPosts, setPendingCommunityPosts] = useState([]);
@@ -65,11 +66,16 @@ export default function AdminPage() {
       const drivers = allUsers.filter(u => u.user_type === 'driver');
       const riders = allUsers.filter(u => u.user_type === 'rider');
 
+      // Fetch user edits
+      const allEdits = await base44.entities.UserEdit.list('-created_date', 50);
+      const unreviewedEdits = allEdits.filter(e => !e.is_reviewed);
+
       setPendingLicenses(pendingLic);
       setPendingVehicles(pendingVeh);
       setRejectedVehicles(rejectedVeh);
       setVerifiedUsers(drivers);
       setVerifiedRiders(riders);
+      setUserEdits(unreviewedEdits);
 
       // Load contact inquiries
       const allInquiries = await base44.entities.ContactInquiry.list('-created_date');
@@ -612,6 +618,59 @@ export default function AdminPage() {
                       >
                         <Eye className="w-4 h-4 mr-2" />
                         review license
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* User Edit Notifications */}
+        {userEdits.length > 0 && (
+          <Card className="shadow-lg border-purple-300 bg-purple-50 rounded-3xl">
+            <CardHeader>
+              <CardTitle className="text-xl text-purple-800 flex items-center gap-2">
+                <Edit className="w-6 h-6" />
+                user edits ({userEdits.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4">
+                {userEdits.map(edit => (
+                  <div key={edit.id} className="bg-white rounded-lg p-4 border border-purple-200">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4 flex-1">
+                        <Avatar className="w-12 h-12 bg-gradient-to-r from-primary to-secondary">
+                          <AvatarFallback className="text-white font-semibold">
+                            {getInitials(edit.user_name)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <p className="font-semibold text-secondary">{edit.user_name}</p>
+                          <p className="text-sm text-gray-600">{edit.user_email}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-300">
+                              {edit.change_type}
+                            </Badge>
+                            <span className="text-xs text-gray-500">
+                              {format(new Date(edit.created_date), "MMM d, h:mm a")}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-700 mt-1">{edit.change_description}</p>
+                        </div>
+                      </div>
+                      <Button
+                        onClick={async () => {
+                          await base44.entities.UserEdit.update(edit.id, { is_reviewed: true });
+                          loadData();
+                        }}
+                        variant="outline"
+                        size="sm"
+                        className="border-purple-300 text-purple-600 hover:bg-purple-50"
+                      >
+                        mark reviewed
                       </Button>
                     </div>
                   </div>
