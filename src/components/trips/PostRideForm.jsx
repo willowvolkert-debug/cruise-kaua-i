@@ -66,14 +66,25 @@ export default function PostRideForm() {
         const futureRequests = requests.filter(request => {
           if (!request.departure_date || !request.departure_time) return false;
           
-          // Parse request date and time
-          const [year, month, day] = request.departure_date.split('-').map(Number);
+          // Parse request date - handle both formats
+          let year, month, day;
+          if (request.departure_date.includes('T')) {
+            // ISO format: 2026-02-11T10:00:00.000Z
+            const date = new Date(request.departure_date);
+            year = date.getFullYear();
+            month = date.getMonth() + 1;
+            day = date.getDate();
+          } else {
+            // Simple format: 2026-02-11
+            [year, month, day] = request.departure_date.split('-').map(Number);
+          }
+          
           const timeStr = request.departure_time.toLowerCase().trim();
           
           // Parse time
           let hours = 0, minutes = 0;
           if (timeStr.includes(':')) {
-            const [h, m] = timeStr.replace(/[ap]m/i, '').split(':').map(Number);
+            const [h, m] = timeStr.replace(/[ap]m/i, '').trim().split(':').map(Number);
             hours = h;
             minutes = m || 0;
             if (timeStr.includes('pm') && hours < 12) hours += 12;
