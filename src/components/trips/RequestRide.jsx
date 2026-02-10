@@ -90,6 +90,29 @@ export default function RequestRide() {
       };
 
       await base44.entities.RideRequest.create(requestPayload);
+
+      // Notify drivers with matching home base
+      try {
+        const allUsers = await base44.entities.User.list();
+        const matchingDrivers = allUsers.filter(u => 
+          u.user_type === 'driver' && 
+          u.home_base && 
+          (u.home_base.toLowerCase().includes(requestData.departure_location.toLowerCase()) ||
+           requestData.departure_location.toLowerCase().includes(u.home_base.toLowerCase()) ||
+           u.home_base.toLowerCase().includes(requestData.destination.toLowerCase()) ||
+           requestData.destination.toLowerCase().includes(u.home_base.toLowerCase()))
+        );
+
+        for (const driver of matchingDrivers) {
+          await base44.integrations.Core.SendEmail({
+            to: driver.email,
+            subject: "Ride request in your area!",
+            body: `Aloha! There is a ride request in your area!\n\nTo view the request, log onto https://cruisekauai.org and go to the post a ride feature.\n\nIf you need any help matching the request, please email willowvolkert@gmail.com.`
+          });
+        }
+      } catch (emailError) {
+        console.error("Error sending notifications:", emailError);
+      }
       
       setRequestData({
         departure_location: '',

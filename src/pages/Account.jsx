@@ -111,6 +111,7 @@ export default function AccountPage() {
                 bio: currentUser.bio || '',
                 age: currentUser.age || '',
                 gender: currentUser.gender || '',
+                home_base: currentUser.home_base || '',
                 preferences_chattiness: currentUser.preferences_chattiness || 'Flexible',
                 preferences_scents: currentUser.preferences_scents || 'Any'
             });
@@ -468,6 +469,16 @@ export default function AccountPage() {
                                                 className="rounded-2xl"
                                             />
                                         </div>
+                                        <div className="space-y-2">
+                                            <Label>home base</Label>
+                                            <Input 
+                                                value={editData.home_base} 
+                                                onChange={(e) => setEditData({...editData, home_base: e.target.value})} 
+                                                placeholder="e.g., Koloa, Lihue, Hanalei"
+                                                className="rounded-2xl"
+                                            />
+                                            <p className="text-xs text-gray-500">Your home town on Kauai (optional) - you'll get notifications for ride requests in your area</p>
+                                        </div>
                                         <div className="space-y-4 pt-2">
                                             <h4 className="font-semibold text-secondary">preferences</h4>
                                             <div className="space-y-2">
@@ -492,17 +503,24 @@ export default function AccountPage() {
                                             <p className="text-sm text-gray-500">{user.age} years old • {user.gender}</p>
                                         )}
                                         <p className="text-gray-600">{user.bio || "No bio yet. Click Edit Profile to add one!"}</p>
+                                        {user.home_base && (
+                                           <div className="flex items-center gap-2 mt-2">
+                                               <MapPin className="w-4 h-4 text-gray-500"/>
+                                               <span className="text-sm text-gray-600">home base:</span>
+                                               <Badge variant="outline" className="rounded-2xl border-gray-300">{user.home_base}</Badge>
+                                           </div>
+                                        )}
                                         <div className="pt-2 space-y-2">
-                                            <div className="flex items-center gap-2">
-                                                <MessageCircle className="w-4 h-4 text-gray-500"/>
-                                                <span className="text-sm text-gray-600">chattiness:</span>
-                                                <Badge variant="outline" className="rounded-2xl border-gray-300">{user.preferences_chattiness}</Badge>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <Wind className="w-4 h-4 text-gray-500"/>
-                                                <span className="text-sm text-gray-600">scents:</span>
-                                                <Badge variant="outline" className="rounded-2xl border-gray-300">{user.preferences_scents}</Badge>
-                                            </div>
+                                           <div className="flex items-center gap-2">
+                                               <MessageCircle className="w-4 h-4 text-gray-500"/>
+                                               <span className="text-sm text-gray-600">chattiness:</span>
+                                               <Badge variant="outline" className="rounded-2xl border-gray-300">{user.preferences_chattiness}</Badge>
+                                           </div>
+                                           <div className="flex items-center gap-2">
+                                               <Wind className="w-4 h-4 text-gray-500"/>
+                                               <span className="text-sm text-gray-600">scents:</span>
+                                               <Badge variant="outline" className="rounded-2xl border-gray-300">{user.preferences_scents}</Badge>
+                                           </div>
                                         </div>
                                     </>
                                 )}
