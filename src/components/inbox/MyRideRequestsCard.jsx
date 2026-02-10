@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { base44 } from "@/api/base44Client";
 
 const formatTime12Hour = (timeStr) => {
     if (!timeStr) return '';
@@ -21,8 +22,8 @@ const formatTime12Hour = (timeStr) => {
 
 const parseDateString = (dateStr) => {
     if (!dateStr) return new Date();
-    const [year, month, day] = dateStr.split('-').map(Number);
-    return new Date(year, month - 1, day);
+    // Parse date string in local time to avoid timezone issues
+    return new Date(dateStr + 'T00:00:00');
 };
 
 export default function MyRideRequestsCard({ myRequests, onRequestUpdated }) {
