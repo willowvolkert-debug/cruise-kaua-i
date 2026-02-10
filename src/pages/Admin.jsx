@@ -960,35 +960,57 @@ export default function AdminPage() {
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <p className="font-semibold text-secondary">vehicle photo</p>
-                    {selectedUser.vehicle_photo_url ? (
-                      <img
-                        src={selectedUser.vehicle_photo_url}
-                        alt="Vehicle"
-                        className="w-full rounded-lg border-2 border-border"
-                      />
-                    ) : (
-                      <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <p className="text-gray-400">No vehicle photo uploaded</p>
-                      </div>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-semibold text-secondary">insurance policy</p>
-                    {selectedUser.auto_policy_photo_url ? (
-                      <img
-                        src={selectedUser.auto_policy_photo_url}
-                        alt="Insurance"
-                        className="w-full rounded-lg border-2 border-border"
-                      />
-                    ) : (
-                      <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <p className="text-gray-400">No insurance photo uploaded</p>
-                      </div>
-                    )}
-                  </div>
+                {/* Vehicle Exterior Photo */}
+                <div className="space-y-2">
+                  <p className="font-semibold text-secondary">outside of vehicle</p>
+                  {selectedUser.vehicle_exterior_photo_url ? (
+                    <img
+                      src={selectedUser.vehicle_exterior_photo_url}
+                      alt="Vehicle exterior"
+                      className="w-full rounded-lg border-2 border-border object-cover max-h-96"
+                    />
+                  ) : (
+                    <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <p className="text-gray-400">No exterior photo uploaded</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Vehicle Interior Photos */}
+                <div className="space-y-2">
+                  <p className="font-semibold text-secondary">inside of vehicle</p>
+                  {selectedUser.vehicle_interior_photo_urls && selectedUser.vehicle_interior_photo_urls.length > 0 ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      {selectedUser.vehicle_interior_photo_urls.map((url, idx) => (
+                        <img
+                          key={idx}
+                          src={url}
+                          alt={`Vehicle interior ${idx + 1}`}
+                          className="w-full rounded-lg border-2 border-border object-cover h-48"
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <p className="text-gray-400">No interior photos uploaded</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Insurance Policy */}
+                <div className="space-y-2">
+                  <p className="font-semibold text-secondary">insurance policy</p>
+                  {selectedUser.auto_policy_photo_url ? (
+                    <img
+                      src={selectedUser.auto_policy_photo_url}
+                      alt="Insurance"
+                      className="w-full rounded-lg border-2 border-border object-cover max-h-96"
+                    />
+                  ) : (
+                    <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <p className="text-gray-400">No insurance photo uploaded</p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex gap-3 pt-4">
