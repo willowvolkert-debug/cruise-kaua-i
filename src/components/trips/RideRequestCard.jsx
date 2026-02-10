@@ -35,7 +35,12 @@ export default function RideRequestCard({ request, onMessage }) {
                 
                 <div className="flex items-center gap-2 text-gray-600">
                   <Calendar className="w-4 h-4" />
-                  <span>{request.departure_date ? new Date(request.departure_date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : 'Date not set'}</span>
+                  <span>{request.departure_date ? (() => {
+                    const dateStr = request.departure_date;
+                    // Handle ISO format with time vs simple date format
+                    const date = dateStr.includes('T') ? new Date(dateStr) : new Date(dateStr + 'T00:00:00');
+                    return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+                  })() : 'Date not set'}</span>
                 </div>
                 
                 <div className="flex items-center gap-2 text-gray-600">
