@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ShieldCheck, X, CheckCircle, Clock, Users, AlertCircle, Eye, Car, MessageSquare, Phone, Mail } from "lucide-react";
+import { ShieldCheck, X, CheckCircle, Clock, Users, AlertCircle, Eye, Car, MessageSquare, Phone, Mail, MapPin, Edit } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import AdminMessageModal from "../components/admin/AdminMessageModal";
 import {
