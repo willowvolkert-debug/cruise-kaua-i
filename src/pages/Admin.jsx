@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ShieldCheck, X, CheckCircle, Clock, Users, AlertCircle, Eye, Car, MessageSquare, Phone, Mail, MapPin, Edit } from "lucide-react";
+import { ShieldCheck, X, CheckCircle, Clock, Users, AlertCircle, Eye, Car, MessageSquare, Phone, Mail, MapPin, Edit, Upload } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import AdminMessageModal from "../components/admin/AdminMessageModal";
 import {
@@ -42,6 +42,9 @@ export default function AdminPage() {
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [messageUser, setMessageUser] = useState(null);
   const [hasHawaiiId, setHasHawaiiId] = useState(false);
+  const [licenseFrontFile, setLicenseFrontFile] = useState(null);
+  const [licenseBackFile, setLicenseBackFile] = useState(null);
+  const [isUploadingLicense, setIsUploadingLicense] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -114,7 +117,54 @@ export default function AdminPage() {
   const handleViewLicense = (user) => {
     setSelectedUser(user);
     setHasHawaiiId(user.has_hawaii_id || false);
+    setLicenseFrontFile(null);
+    setLicenseBackFile(null);
     setShowLicenseModal(true);
+  };
+
+  const handleManualLicenseUpload = async () => {
+    if (!selectedUser || !licenseFrontFile || !licenseBackFile) {
+      alert("Please upload both front and back of the license.");
+      return;
+    }
+
+    setIsUploadingLicense(true);
+    try {
+      // Upload license files
+      const [frontResult, backResult] = await Promise.all([
+        base44.integrations.Core.UploadFile({ file: licenseFrontFile }),
+        base44.integrations.Core.UploadFile({ file: licenseBackFile })
+      ]);
+
+      // Update user with license URLs
+      await base44.entities.User.update(selectedUser.id, {
+        drivers_license_front_url: frontResult.file_url,
+        drivers_license_back_url: backResult.file_url,
+        drivers_license_pending_review: true
+      });
+
+      // Log the edit
+      await base44.entities.UserEdit.create({
+        user_id: selectedUser.id,
+        user_name: selectedUser.full_name,
+        user_email: selectedUser.email,
+        change_type: "license",
+        change_description: "Admin uploaded driver's license manually",
+        new_values: {
+          license_front_url: frontResult.file_url,
+          license_back_url: backResult.file_url
+        }
+      });
+
+      alert("License uploaded successfully! You can now review and approve it.");
+      setLicenseFrontFile(null);
+      setLicenseBackFile(null);
+      loadData();
+    } catch (error) {
+      console.error("Error uploading license:", error);
+      alert("Error uploading license. Please try again.");
+    }
+    setIsUploadingLicense(false);
   };
 
   const handleViewVehicle = (user) => {
@@ -1062,6 +1112,75 @@ export default function AdminPage() {
                   <p className="text-sm text-blue-700 mt-3">
                     Please verify the user's identity in your <a href="https://dashboard.stripe.com/identity/verification-sessions" target="_blank" rel="noopener noreferrer" className="underline font-medium">Stripe Dashboard</a> before approving.
                   </p>
+                  </div>
+
+                  {(selectedUser.drivers_license_front_url || selectedUser.drivers_license_back_url) && (
+                    <div className="space-y-3">
+                      <h4 className="font-semibold text-secondary">Manually Uploaded License</h4>
+                      <div className="grid grid-cols-2 gap-3">
+                        {selectedUser.drivers_license_front_url && (
+                          <div className="space-y-2">
+                            <p className="text-sm text-gray-600">Front</p>
+                            <img
+                              src={selectedUser.drivers_license_front_url}
+                              alt="License front"
+                              className="w-full rounded-lg border-2 border-border object-cover"
+                            />
+                          </div>
+                        )}
+                        {selectedUser.drivers_license_back_url && (
+                          <div className="space-y-2">
+                            <p className="text-sm text-gray-600">Back</p>
+                            <img
+                              src={selectedUser.drivers_license_back_url}
+                              alt="License back"
+                              className="w-full rounded-lg border-2 border-border object-cover"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="p-4 bg-gray-50 border border-gray-200 rounded-2xl space-y-4">
+                    <h4 className="font-semibold text-secondary">Upload License Manually (Admin Only)</h4>
+                    <p className="text-sm text-gray-600">If the user hasn't uploaded their license, you can do it here.</p>
+                    
+                    <div className="space-y-3">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Front of License</label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => setLicenseFrontFile(e.target.files[0])}
+                          className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-2xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
+                        />
+                        {licenseFrontFile && (
+                          <p className="text-xs text-green-600">✓ {licenseFrontFile.name}</p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Back of License</label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => setLicenseBackFile(e.target.files[0])}
+                          className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-2xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
+                        />
+                        {licenseBackFile && (
+                          <p className="text-xs text-green-600">✓ {licenseBackFile.name}</p>
+                        )}
+                      </div>
+
+                      <Button
+                        onClick={handleManualLicenseUpload}
+                        disabled={isUploadingLicense || !licenseFrontFile || !licenseBackFile}
+                        className="w-full bg-gray-700 hover:bg-gray-800"
+                      >
+                        {isUploadingLicense ? 'uploading...' : 'upload license'}
+                      </Button>
+                    </div>
                   </div>
 
                   <div className="p-4 bg-green-50 border border-green-200 rounded-2xl">
