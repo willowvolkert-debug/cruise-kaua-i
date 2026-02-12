@@ -1010,7 +1010,12 @@ export default function AdminPage() {
                           </AvatarFallback>
                         </Avatar>
                         <div className="min-w-0">
-                          <p className="font-medium text-secondary text-sm md:text-base truncate">{user.full_name}</p>
+                          <button 
+                            onClick={() => handleViewUserAccount(user.id)}
+                            className="font-medium text-secondary text-sm md:text-base truncate hover:text-primary transition-colors text-left"
+                          >
+                            {user.full_name}
+                          </button>
                           <p className="text-xs md:text-sm text-gray-600 truncate">{user.email}</p>
                         </div>
                       </div>
@@ -1034,7 +1039,12 @@ export default function AdminPage() {
                           </AvatarFallback>
                         </Avatar>
                         <div className="min-w-0">
-                          <p className="font-medium text-secondary text-sm md:text-base truncate">{user.full_name}</p>
+                          <button 
+                            onClick={() => handleViewUserAccount(user.id)}
+                            className="font-medium text-secondary text-sm md:text-base truncate hover:text-primary transition-colors text-left"
+                          >
+                            {user.full_name}
+                          </button>
                           <p className="text-xs md:text-sm text-gray-600 truncate">{user.email}</p>
                         </div>
                       </div>
@@ -1058,7 +1068,12 @@ export default function AdminPage() {
                           </AvatarFallback>
                         </Avatar>
                         <div className="min-w-0">
-                          <p className="font-medium text-secondary text-sm md:text-base truncate">{user.full_name}</p>
+                          <button 
+                            onClick={() => handleViewUserAccount(user.id)}
+                            className="font-medium text-secondary text-sm md:text-base truncate hover:text-primary transition-colors text-left"
+                          >
+                            {user.full_name}
+                          </button>
                           <p className="text-xs md:text-sm text-gray-600 truncate">{user.email}</p>
                         </div>
                       </div>
