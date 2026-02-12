@@ -9,6 +9,32 @@ import { createPageUrl } from "@/utils";
 export default function WelcomePage() {
   const navigate = useNavigate();
 
+  React.useEffect(() => {
+    // Track page view
+    const trackView = async () => {
+      try {
+        const sessionId = sessionStorage.getItem('session_id') || Math.random().toString(36).substring(7);
+        sessionStorage.setItem('session_id', sessionId);
+        
+        const isAuthenticated = await base44.auth.isAuthenticated();
+        let userId = null;
+        if (isAuthenticated) {
+          const user = await base44.auth.me();
+          userId = user?.id;
+        }
+        
+        await base44.entities.PageView.create({
+          page_name: "Welcome",
+          user_id: userId,
+          session_id: sessionId
+        });
+      } catch (e) {
+        console.error("Error tracking page view:", e);
+      }
+    };
+    trackView();
+  }, []);
+
   const handleSignUp = () => {
     base44.auth.redirectToLogin(createPageUrl("Trips"));
   };
