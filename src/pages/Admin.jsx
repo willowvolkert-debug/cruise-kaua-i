@@ -110,7 +110,6 @@ export default function AdminPage() {
 
       // Load landing page views (last 24 hours)
       const allPageViews = await base44.entities.PageView.list('-created_date', 500);
-      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
       const recentLandingViews = allPageViews.filter(v => 
         v.page_name === 'Welcome' && new Date(v.created_date) > oneDayAgo
       );
