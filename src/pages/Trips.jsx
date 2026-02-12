@@ -6,6 +6,14 @@ import RequestRide from "../components/trips/RequestRide";
 import PostRideForm from "../components/trips/PostRideForm";
 
 export default function TripsPage() {
+  const [isExploreMode, setIsExploreMode] = React.useState(false);
+
+  React.useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const exploreParam = urlParams.get('explore');
+    setIsExploreMode(exploreParam === 'true');
+  }, []);
+
   return (
     <div className="p-4 md:p-8 bg-white">
       <div className="max-w-7xl mx-auto">
@@ -14,6 +22,13 @@ export default function TripsPage() {
             plan your trip
           </h1>
           <p className="text-gray-600">find a ride, request a ride, or offer seats for your next drive</p>
+          {isExploreMode && (
+            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-2xl">
+              <p className="text-blue-800 text-sm">
+                You're in explore mode. <button onClick={() => window.location.href = '/'} className="underline font-semibold">Sign up</button> to post rides and book trips!
+              </p>
+            </div>
+          )}
         </div>
 
         <Tabs defaultValue="find" className="w-full">

@@ -74,6 +74,7 @@ export default function AccountPage() {
     const [allRidesData, setAllRidesData] = useState([]);
     const [ratings, setRatings] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isExploreMode, setIsExploreMode] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [showLicenseModal, setShowLicenseModal] = useState(false);
     const [editData, setEditData] = useState({});
@@ -95,6 +96,11 @@ export default function AccountPage() {
     const [acceptedRideAlert, setAcceptedRideAlert] = useState(null);
 
     useEffect(() => {
+        // Check for explore mode
+        const urlParams = new URLSearchParams(window.location.search);
+        const exploreParam = urlParams.get('explore');
+        setIsExploreMode(exploreParam === 'true');
+        
         loadData();
         if ('Notification' in window) {
             setNotificationsEnabled(Notification.permission === 'granted');
@@ -104,6 +110,12 @@ export default function AccountPage() {
     const loadData = async () => {
         setIsLoading(true);
         try {
+            const isAuthenticated = await base44.auth.isAuthenticated();
+            if (!isAuthenticated) {
+                setIsLoading(false);
+                return;
+            }
+            
             const currentUser = await base44.auth.me();
             setUser(currentUser);
             setEditData({
@@ -375,6 +387,33 @@ export default function AccountPage() {
     };
 
     if (isLoading) return <div className="p-8 text-center">Loading account...</div>;
+    
+    if (!user && isExploreMode) {
+        return (
+            <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 via-white to-orange-50">
+                <Card className="max-w-md w-full shadow-2xl rounded-3xl">
+                    <CardContent className="p-8 text-center space-y-6">
+                        <div className="flex justify-center">
+                            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
+                                <ShieldCheck className="w-12 h-12 text-primary" />
+                            </div>
+                        </div>
+                        <div>
+                            <h2 className="text-2xl font-bold text-secondary mb-2">Your account doesn't exist!</h2>
+                            <p className="text-gray-600">Create one to access all features of Cruise Kauaʻi</p>
+                        </div>
+                        <Button
+                            onClick={() => base44.auth.redirectToLogin(createPageUrl("Trips"))}
+                            className="w-full py-6 text-lg bg-primary hover:bg-primary/90 rounded-2xl"
+                        >
+                            Create one here
+                        </Button>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
+    
     if (!user) return <div className="p-8 text-center">Could not load user data. Please log in.</div>;
     
     const driverRatings = ratings.filter(r => r.trip_role === 'driver');

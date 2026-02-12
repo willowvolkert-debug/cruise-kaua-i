@@ -23,48 +23,67 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const navigationItems = [
-  {
-    title: "trips",
-    url: createPageUrl("Trips"),
-    icon: MapPin,
-  },
-  {
-    title: "account",
-    url: createPageUrl("Account"),
-    icon: User,
-  },
-  {
-    title: "inbox & confirmed rides",
-    url: createPageUrl("Inbox"),
-    icon: MessageSquare,
-  },
-  {
-    title: "contact us",
-    url: createPageUrl("ContactUs"),
-    icon: MessageSquare,
-  },
-  {
-    title: "community",
-    url: createPageUrl("Community"),
-    icon: Users,
-  },
-  {
-    title: "admin",
-    url: createPageUrl("Admin"),
-    icon: ShieldCheck,
-    adminOnly: true,
-  },
-];
+const getNavigationItems = (isExploreMode) => {
+  const baseItems = [
+    {
+      title: "trips",
+      url: createPageUrl("Trips") + (isExploreMode ? "?explore=true" : ""),
+      icon: MapPin,
+    },
+    {
+      title: "account",
+      url: createPageUrl("Account") + (isExploreMode ? "?explore=true" : ""),
+      icon: User,
+    },
+  ];
+
+  if (!isExploreMode) {
+    baseItems.push(
+      {
+        title: "inbox & confirmed rides",
+        url: createPageUrl("Inbox"),
+        icon: MessageSquare,
+      }
+    );
+  }
+
+  baseItems.push(
+    {
+      title: "contact us",
+      url: createPageUrl("ContactUs") + (isExploreMode ? "?explore=true" : ""),
+      icon: MessageSquare,
+    }
+  );
+
+  if (!isExploreMode) {
+    baseItems.push(
+      {
+        title: "community",
+        url: createPageUrl("Community"),
+        icon: Users,
+      },
+      {
+        title: "admin",
+        url: createPageUrl("Admin"),
+        icon: ShieldCheck,
+        adminOnly: true,
+      }
+    );
+  }
+
+  return baseItems;
+};
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
-function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal, location, unreadCount }) {
+function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal, location, unreadCount, isExploreMode }) {
   const { setOpenMobile } = useSidebar();
 
   const handleNavClick = () => {
     setOpenMobile(false);
   };
+
+  const navigationItems = getNavigationItems(isExploreMode);
 
   return (
     <>
@@ -75,13 +94,15 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
             <p className="text-xs text-gray-500">sharing aloha one ride at a time</p>
           </div>
         </div>
-        <button
-          onClick={() => setShowShareModal(true)}
-          className="flex items-center gap-2 text-sm text-gray-600 hover:text-primary transition-colors w-full py-2 px-3 rounded-xl hover:bg-gray-100"
-        >
-          <Share2 className="w-4 h-4" />
-          <span>share app</span>
-        </button>
+        {!isExploreMode && (
+          <button
+            onClick={() => setShowShareModal(true)}
+            className="flex items-center gap-2 text-sm text-gray-600 hover:text-primary transition-colors w-full py-2 px-3 rounded-xl hover:bg-gray-100"
+          >
+            <Share2 className="w-4 h-4" />
+            <span>share app</span>
+          </button>
+        )}
       </SidebarHeader>
       
       <SidebarContent className="p-3">
@@ -151,6 +172,7 @@ export default function Layout({ children, currentPageName }) {
   const [touchEnd, setTouchEnd] = React.useState(null);
   const [unreadCount, setUnreadCount] = React.useState(0);
   const sidebarRef = React.useRef(null);
+  const [isExploreMode, setIsExploreMode] = React.useState(false);
 
   const minSwipeDistance = 50;
 
@@ -177,6 +199,11 @@ export default function Layout({ children, currentPageName }) {
   };
 
   React.useEffect(() => {
+    // Check for explore mode
+    const urlParams = new URLSearchParams(window.location.search);
+    const exploreParam = urlParams.get('explore');
+    setIsExploreMode(exploreParam === 'true');
+
     const loadUser = async () => {
       try {
         const user = await base44.auth.me();
@@ -282,6 +309,7 @@ export default function Layout({ children, currentPageName }) {
             setShowShareModal={setShowShareModal}
             location={location}
             unreadCount={unreadCount}
+            isExploreMode={isExploreMode}
           />
         </Sidebar>
 
