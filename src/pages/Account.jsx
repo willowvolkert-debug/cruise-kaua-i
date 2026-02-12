@@ -399,14 +399,14 @@ export default function AccountPage() {
                             </div>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-secondary mb-2">Your account doesn't exist!</h2>
-                            <p className="text-gray-600">Create one to access all features of Cruise Kauaʻi</p>
+                            <h2 className="text-2xl font-bold text-secondary mb-2">your account doesn't exist!</h2>
+                            <p className="text-gray-600">create one to access all features of Cruise Kauaʻi</p>
                         </div>
                         <Button
                             onClick={() => base44.auth.redirectToLogin(createPageUrl("Trips"))}
                             className="w-full py-6 text-lg bg-primary hover:bg-primary/90 rounded-2xl"
                         >
-                            Create one here
+                            create one here
                         </Button>
                     </CardContent>
                 </Card>

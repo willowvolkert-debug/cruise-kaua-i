@@ -7,239 +7,73 @@ import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 export default function WelcomePage() {
-  const [step, setStep] = useState(1);
   const navigate = useNavigate();
 
-  const handleComplete = async () => {
-    try {
-      const currentUser = await base44.auth.me();
-      await base44.auth.updateMe({ has_seen_welcome: true });
+  const handleSignUp = () => {
+    base44.auth.redirectToLogin(createPageUrl("Trips"));
+  };
 
-      // Notify admin of new user
-      try {
-        await base44.entities.AdminMessage.create({
-          recipient_id: 'admin',
-          recipient_name: 'Admin',
-          subject: `New User: ${currentUser.full_name}`,
-          message: `A new user has joined Cruise Kauaʻi!\n\nName: ${currentUser.full_name}\nEmail: ${currentUser.email}\n\nThey have completed the welcome flow and are ready to start using the app.`,
-          message_type: 'info'
-        });
-      } catch (notifyErr) {
-        console.error("Error notifying admin:", notifyErr);
-      }
-
-      navigate(createPageUrl("Trips"));
-      
-      // Open tutorial after a short delay
-      setTimeout(() => {
-        const tutorialEvent = new CustomEvent('openTutorial');
-        window.dispatchEvent(tutorialEvent);
-      }, 500);
-    } catch (error) {
-      console.error("Error updating welcome status:", error);
-    }
+  const handleExplore = () => {
+    navigate(createPageUrl("Trips") + "?explore=true");
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-50 p-4 md:p-8">
-      <div className="max-w-3xl mx-auto">
-        {/* Step 1: Introduction */}
-        {step === 1 && (
-          <Card className="shadow-xl border-gray-200 rounded-3xl bg-white">
-            <CardContent className="p-8 md:p-12 text-center space-y-6">
-              <h1 className="text-4xl font-bold text-secondary">Welcome to Cruise Kauaʻi 🚗</h1>
-              <p className="text-xl text-gray-700 leading-relaxed">
-                Making transportation on Kauaʻi more <span className="font-semibold text-gray-500">social</span>, 
-                <span className="font-semibold text-blue-600"> affordable</span>, and 
-                <span className="font-semibold text-green-600"> sustainable</span>!
-              </p>
-              <p className="text-gray-600">
-                Share rides with kamaʻāina (residents) and malihini (visitors) to reduce the number of cars on our roads. 🚗💨
-              </p>
-              <Button onClick={() => setStep(2)} size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 py-6 text-lg rounded-2xl">
-                Get Started
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 flex items-center justify-center p-4">
+      <Card className="max-w-2xl w-full shadow-2xl border-gray-200 rounded-3xl bg-white">
+        <CardContent className="p-8 md:p-12 text-center space-y-8">
+          <div className="space-y-4">
+            <h1 className="text-5xl md:text-6xl font-bold text-secondary">cruise kauaʻi</h1>
+            <p className="text-xl text-gray-600 italic">sharing aloha one ride at a time</p>
+          </div>
 
-        {/* Step 2: Building Your Account */}
-        {step === 2 && (
-          <Card className="shadow-xl border-gray-200 rounded-3xl bg-white">
-            <CardContent className="p-8 md:p-12 space-y-6">
-              <h2 className="text-3xl font-bold text-secondary text-center">Build Your Profile 🌟</h2>
-              <div className="space-y-4">
-                <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
-                  <Shield className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-lg text-secondary">Verify Your License</h3>
-                    <p className="text-gray-600">Upload photos of your driverʻs license for instant verification through Stripe</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
-                  <Car className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-lg text-secondary">Add Vehicle Details</h3>
-                    <p className="text-gray-600">Share information about your vehicle, including photos and insurance, and sign Driver Agreement</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
-                  <CheckCircle className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-lg text-secondary">Maintain Good Ratings</h3>
-                    <p className="text-gray-600">Be respectful, punctual, and communicate clearly to build trust in our community.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex gap-3 pt-4">
-                <Button onClick={() => setStep(1)} variant="outline" className="flex-1 rounded-2xl border-gray-300">Back</Button>
-                <Button onClick={() => setStep(3)} className="flex-1 bg-primary hover:bg-primary/90 rounded-2xl">Next</Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+          <div className="space-y-4 py-6">
+            <p className="text-lg text-gray-700 leading-relaxed">
+              Making transportation on Kauaʻi more <span className="font-semibold text-gray-500">social</span>, 
+              <span className="font-semibold text-blue-600"> affordable</span>, and 
+              <span className="font-semibold text-green-600"> sustainable</span>!
+            </p>
+            <p className="text-gray-600">
+              Share rides with kamaʻāina (residents) and malihini (visitors) to reduce the number of cars on our roads and build community connections across the island. 🚗💨
+            </p>
+          </div>
 
-        {/* Step 3: How to Use */}
-        {step === 3 && (
-          <Card className="shadow-xl border-gray-200 rounded-3xl bg-white">
-            <CardContent className="p-8 md:p-12 space-y-6">
-              <h2 className="text-3xl font-bold text-secondary text-center">How It Works 🚀</h2>
-                      <div className="space-y-4">
-                        <div className="flex items-start gap-4 p-4 bg-orange-50 rounded-2xl border border-orange-300">
-                          <Smartphone className="w-8 h-8 text-orange-600 flex-shrink-0 mt-1" />
-                          <div>
-                            <h3 className="font-semibold text-lg text-secondary">Add Cruise Kauaʻi to your Home Screen</h3>
-                            <p className="text-gray-600">You must manually add this application to your home screen. Press the share button on your browser, scroll down to "Add to Home Screen" and press "Add" in the top right corner.</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-2xl border border-blue-200">
-                          <Users className="w-8 h-8 text-blue-600 flex-shrink-0 mt-1" />
-                          <div>
-                            <h3 className="font-semibold text-lg text-secondary">Book a Trip</h3>
-                    <p className="text-gray-600">Search for rides by date and hop in! Click on any ride to see the driver's profile, ratings, and vehicle details. Request seats, and your payment will be processed automatically when the driver accepts. Then chat in the Inbox to coordinate pickup details. 🎉</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4 p-4 bg-green-50 rounded-2xl border border-green-200">
-                  <Car className="w-8 h-8 text-green-600 flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-lg text-secondary">Post a Ride</h3>
-                    <p className="text-gray-600">Turn those empty seats into new friends (and gas money)! Post your upcoming trips, set your price per seat, choose your rider preferences, and wait for requests to roll in. Coordinate through in-app messaging. 🤙</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4 p-4 bg-orange-50 rounded-2xl border border-orange-200">
-                  <AlertCircle className="w-8 h-8 text-orange-600 flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-lg text-secondary">Beta Testing Notice</h3>
-                    <p className="text-gray-600">We're still working out the kinks – kind of like parallel parking on a steep hill! If you hit any bumps (pun intended), fill out a Contact Us form. Your feedback drives us forward! 🛠️</p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex gap-3 pt-4">
-                <Button onClick={() => setStep(2)} variant="outline" className="flex-1 rounded-2xl border-gray-300">Back</Button>
-                <Button onClick={() => setStep(4)} className="flex-1 bg-primary hover:bg-primary/90 rounded-2xl">Next</Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+          <div className="space-y-4">
+            <Button 
+              onClick={handleSignUp}
+              size="lg" 
+              className="w-full bg-primary hover:bg-primary/90 text-white px-8 py-6 text-lg rounded-2xl font-semibold"
+            >
+              sign up here!
+            </Button>
+            
+            <Button 
+              onClick={handleExplore}
+              size="lg"
+              variant="outline"
+              className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-6 text-lg rounded-2xl"
+            >
+              not ready to sign up? explore the app here.
+            </Button>
+          </div>
 
-        {/* Step 4: Communication & Support */}
-        {step === 4 && (
-          <Card className="shadow-xl border-gray-200 rounded-3xl bg-white">
-            <CardContent className="p-8 md:p-12 space-y-6">
-              <h2 className="text-3xl font-bold text-secondary text-center">Communication & Support 💬</h2>
-              <div className="space-y-4">
-                <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
-                  <MessageSquare className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-lg text-secondary">In-App Messaging</h3>
-                    <p className="text-gray-600">Chat with drivers or riders directly in the app! Keep all communication within the platform for safety. No need to exchange numbers – we've got you covered! 📱</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
-                  <Clock className="w-8 h-8 text-orange-600 flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-lg text-secondary">Ride Cancellations</h3>
-                    <p className="text-gray-600">Life happens! Cancel anytime with our flexible refund policy. 💰</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200">
-                  <HandHeart className="w-8 h-8 text-pink-600 flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-lg text-secondary">Need Help?</h3>
-                    <p className="text-gray-600">Hit a roadblock? Visit our Contact Us page for any questions or concerns. 🌊</p>
-                  </div>
-                </div>
+          <div className="pt-6 space-y-3">
+            <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4 text-primary" />
+                <span>verified drivers</span>
               </div>
-              <div className="flex gap-3 pt-4">
-                <Button onClick={() => setStep(3)} variant="outline" className="flex-1 rounded-2xl border-gray-300">Back</Button>
-                <Button onClick={() => setStep(5)} className="flex-1 bg-primary hover:bg-primary/90 rounded-2xl">Next</Button>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-green-600" />
+                <span>secure payments</span>
               </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Step 5: Community Agreement */}
-        {step === 5 && (
-          <Card className="shadow-xl border-gray-200 rounded-3xl bg-white">
-            <CardContent className="p-8 md:p-12 space-y-6">
-              <h2 className="text-3xl font-bold text-secondary text-center">Our Community Values 🤝</h2>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="flex flex-col items-center text-center p-4 bg-gray-50 rounded-2xl border border-gray-200">
-                  <Shield className="w-10 h-10 text-primary mb-2" />
-                  <h3 className="font-semibold text-secondary">Safety First</h3>
-                  <p className="text-sm text-gray-600">Verified drivers and secure payments</p>
-                </div>
-                <div className="flex flex-col items-center text-center p-4 bg-gray-50 rounded-2xl border border-gray-200">
-                  <HandHeart className="w-10 h-10 text-pink-600 mb-2" />
-                  <h3 className="font-semibold text-secondary">Respectful Shared Spaces</h3>
-                  <p className="text-sm text-gray-600">Treat vehicles and fellow travelers with respect</p>
-                </div>
-                <div className="flex flex-col items-center text-center p-4 bg-gray-50 rounded-2xl border border-gray-200">
-                  <DollarSign className="w-10 h-10 text-green-600 mb-2" />
-                  <h3 className="font-semibold text-secondary">Shared Transportation Costs</h3>
-                </div>
-                <div className="flex flex-col items-center text-center p-4 bg-gray-50 rounded-2xl border border-gray-200">
-                  <Leaf className="w-10 h-10 text-green-600 mb-2" />
-                  <h3 className="font-semibold text-secondary">Fewer Cars on the Road</h3>
-                </div>
-                <div className="flex flex-col items-center text-center p-4 bg-gray-50 rounded-2xl border border-gray-200">
-                  <CheckCircle className="w-10 h-10 text-blue-600 mb-2" />
-                  <h3 className="font-semibold text-secondary">Cash-Free Payments</h3>
-                  <p className="text-sm text-gray-600">Secure digital transactions only</p>
-                </div>
-                <div className="flex flex-col items-center text-center p-4 bg-gray-50 rounded-2xl border border-gray-200">
-                  <MessageSquare className="w-10 h-10 text-primary mb-2" />
-                  <h3 className="font-semibold text-secondary">Prompt & Clear Communication</h3>
-                  <p className="text-sm text-gray-600">Keep others informed about your plans</p>
-                </div>
-                <div className="flex flex-col items-center text-center p-4 bg-gray-50 rounded-2xl border border-gray-200 md:col-span-2">
-                  <Clock className="w-10 h-10 text-orange-600 mb-2" />
-                  <h3 className="font-semibold text-secondary">Punctuality & Flexibility</h3>
-                  <p className="text-sm text-gray-600">Be on time and understanding of delays</p>
-                </div>
+              <div className="flex items-center gap-2">
+                <Leaf className="w-4 h-4 text-green-600" />
+                <span>eco-friendly</span>
               </div>
-              <div className="flex gap-3 pt-4">
-                <Button onClick={() => setStep(4)} variant="outline" className="flex-1 rounded-2xl border-gray-300">Back</Button>
-                <Button onClick={handleComplete} className="flex-1 bg-primary hover:bg-primary/90 rounded-2xl">
-                  Let's Go!
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Progress Indicator */}
-        <div className="flex justify-center gap-2 mt-6">
-          {[1, 2, 3, 4, 5].map((s) => (
-            <div
-              key={s}
-              className={`w-3 h-3 rounded-full transition-all ${
-                s === step ? 'bg-primary w-8' : s < step ? 'bg-primary/50' : 'bg-gray-300'
-              }`}
-            />
-          ))}
-        </div>
-      </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
