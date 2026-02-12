@@ -622,7 +622,7 @@ export default function AdminPage() {
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-4">
           <Card className="bg-white border-gray-200 rounded-2xl md:rounded-3xl">
             <CardContent className="p-3 md:p-6 text-center">
               <Clock className="w-5 h-5 md:w-8 md:h-8 text-orange-500 mx-auto mb-1 md:mb-2" />
@@ -635,6 +635,13 @@ export default function AdminPage() {
               <Car className="w-5 h-5 md:w-8 md:h-8 text-blue-500 mx-auto mb-1 md:mb-2" />
               <p className="text-xl md:text-3xl font-bold text-secondary">{pendingVehicles.length}</p>
               <p className="text-xs md:text-base text-gray-600">pending vehicles</p>
+            </CardContent>
+          </Card>
+          <Card className="bg-white border-gray-200 rounded-2xl md:rounded-3xl">
+            <CardContent className="p-3 md:p-6 text-center">
+              <Eye className="w-5 h-5 md:w-8 md:h-8 text-purple-500 mx-auto mb-1 md:mb-2" />
+              <p className="text-xl md:text-3xl font-bold text-secondary">{landingPageViews}</p>
+              <p className="text-xs md:text-base text-gray-600">landing views (24h)</p>
             </CardContent>
           </Card>
           <Card className="bg-white border-gray-200 rounded-2xl md:rounded-3xl">
@@ -698,7 +705,7 @@ export default function AdminPage() {
         )}
 
         {/* New Ride Requests & Rides */}
-        {(recentRideRequests.length > 0 || recentRides.length > 0 || landingPageViews > 0) && (
+        {(recentRideRequests.length > 0 || recentRides.length > 0) && (
           <Card className="shadow-lg border-blue-300 bg-blue-50 rounded-3xl">
             <CardHeader>
               <CardTitle className="text-xl text-blue-800 flex items-center gap-2">
@@ -707,17 +714,6 @@ export default function AdminPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {landingPageViews > 0 && (
-                <div className="p-4 bg-white rounded-lg border border-blue-200">
-                  <div className="flex items-center gap-2">
-                    <Eye className="w-5 h-5 text-blue-600" />
-                    <span className="font-semibold text-secondary">Landing Page Views:</span>
-                    <Badge className="bg-blue-600 text-white text-lg px-3 py-1">
-                      {landingPageViews}
-                    </Badge>
-                  </div>
-                </div>
-              )}
               {recentRideRequests.length > 0 && (
                 <div>
                   <h3 className="font-semibold text-blue-900 mb-2">ride requests ({recentRideRequests.length})</h3>
