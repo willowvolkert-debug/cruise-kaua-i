@@ -50,6 +50,7 @@ export default function AdminPage() {
   const [showUserAccountView, setShowUserAccountView] = useState(false);
   const [viewingUserId, setViewingUserId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showNewActivity, setShowNewActivity] = useState(true);
 
   useEffect(() => {
     loadData();
@@ -676,6 +677,52 @@ export default function AdminPage() {
           </Card>
         </div>
 
+        {/* Pending Vehicle Reviews */}
+        {pendingVehicles.length > 0 && (
+          <Card className="shadow-lg border-blue-300 bg-blue-50 rounded-3xl">
+            <CardHeader>
+              <CardTitle className="text-xl text-blue-800 flex items-center gap-2">
+                <Car className="w-6 h-6" />
+                pending vehicle reviews ({pendingVehicles.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4">
+                {pendingVehicles.map(user => (
+                  <div key={user.id} className="bg-white rounded-lg p-4 border border-blue-200">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <Avatar className="w-12 h-12 bg-gradient-to-r from-primary to-secondary">
+                          <AvatarFallback className="text-white font-semibold">
+                            {getInitials(user.full_name)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-semibold text-secondary">{user.full_name}</p>
+                          <p className="text-sm text-gray-600">
+                            {user.vehicle_make} {user.vehicle_model} {user.vehicle_year}
+                          </p>
+                          <Badge variant="outline" className="mt-1 bg-blue-50 text-blue-700 border-blue-300">
+                            <Clock className="w-3 h-3 mr-1" />
+                            awaiting review
+                          </Badge>
+                        </div>
+                      </div>
+                      <Button
+                        onClick={() => handleViewVehicle(user)}
+                        className="bg-primary hover:bg-primary/90"
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        review vehicle
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Pending License Reviews */}
         {pendingLicenses.length > 0 && (
           <Card className="shadow-lg border-blue-200 bg-blue-50 rounded-3xl">
@@ -724,12 +771,23 @@ export default function AdminPage() {
         {(recentRideRequests.length > 0 || recentRides.length > 0) && (
           <Card className="shadow-lg border-blue-300 bg-blue-50 rounded-3xl">
             <CardHeader>
-              <CardTitle className="text-xl text-blue-800 flex items-center gap-2">
-                <MapPin className="w-6 h-6" />
-                new activity (last 24h)
+              <CardTitle className="text-xl text-blue-800 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-6 h-6" />
+                  new activity (last 24h)
+                </div>
+                <Button
+                  onClick={() => setShowNewActivity(!showNewActivity)}
+                  variant="ghost"
+                  size="sm"
+                  className="text-blue-700 hover:bg-blue-100"
+                >
+                  {showNewActivity ? 'hide' : 'show'}
+                </Button>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            {showNewActivity && (
+              <CardContent className="space-y-4">
               {recentRideRequests.length > 0 && (
                 <div>
                   <h3 className="font-semibold text-blue-900 mb-2">ride requests ({recentRideRequests.length})</h3>
@@ -782,7 +840,8 @@ export default function AdminPage() {
                   </div>
                 </div>
               )}
-            </CardContent>
+              </CardContent>
+            )}
           </Card>
         )}
 
@@ -839,103 +898,7 @@ export default function AdminPage() {
           </Card>
         )}
 
-        {/* Pending Vehicle Reviews */}
-        {pendingVehicles.length > 0 && (
-          <Card className="shadow-lg border-blue-300 bg-blue-50 rounded-3xl">
-            <CardHeader>
-              <CardTitle className="text-xl text-blue-800 flex items-center gap-2">
-                <Car className="w-6 h-6" />
-                pending vehicle reviews ({pendingVehicles.length})
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4">
-                {pendingVehicles.map(user => (
-                  <div key={user.id} className="bg-white rounded-lg p-4 border border-blue-200">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <Avatar className="w-12 h-12 bg-gradient-to-r from-primary to-secondary">
-                          <AvatarFallback className="text-white font-semibold">
-                            {getInitials(user.full_name)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-semibold text-secondary">{user.full_name}</p>
-                          <p className="text-sm text-gray-600">
-                            {user.vehicle_make} {user.vehicle_model} {user.vehicle_year}
-                          </p>
-                          <Badge variant="outline" className="mt-1 bg-blue-50 text-blue-700 border-blue-300">
-                            <Clock className="w-3 h-3 mr-1" />
-                            awaiting review
-                          </Badge>
-                        </div>
-                      </div>
-                      <Button
-                        onClick={() => handleViewVehicle(user)}
-                        className="bg-primary hover:bg-primary/90"
-                      >
-                        <Eye className="w-4 h-4 mr-2" />
-                        review vehicle
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
-        {/* Rejected Vehicle Reviews */}
-        {rejectedVehicles.length > 0 && (
-          <Card className="shadow-lg border-red-300 bg-red-50 rounded-3xl">
-            <CardHeader>
-              <CardTitle className="text-xl text-red-800 flex items-center gap-2">
-                <X className="w-6 h-6" />
-                rejected vehicles ({rejectedVehicles.length})
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4">
-                {rejectedVehicles.map(user => (
-                  <div key={user.id} className="bg-white rounded-lg p-4 border border-red-200">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <Avatar className="w-12 h-12 bg-gradient-to-r from-primary to-secondary">
-                          <AvatarFallback className="text-white font-semibold">
-                            {getInitials(user.full_name)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-semibold text-secondary">{user.full_name}</p>
-                          <p className="text-sm text-gray-600">
-                            {user.vehicle_make} {user.vehicle_model} {user.vehicle_year}
-                          </p>
-                          <Badge variant="outline" className="mt-1 bg-red-50 text-red-700 border-red-300">
-                            <X className="w-3 h-3 mr-1" />
-                            rejected
-                          </Badge>
-                          {user.vehicle_rejection_reason && (
-                            <p className="text-xs text-red-600 mt-1">
-                              Reason: {user.vehicle_rejection_reason}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                      <Button
-                        onClick={() => handleViewVehicle(user)}
-                        variant="outline"
-                        className="border-red-300 text-red-600 hover:bg-red-50"
-                      >
-                        <Eye className="w-4 h-4 mr-2" />
-                        review again
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* All Users */}
         <Card className="shadow-md bg-white border-gray-200 rounded-3xl">
