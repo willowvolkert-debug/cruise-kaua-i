@@ -902,14 +902,22 @@ export default function AdminPage() {
 
         {/* All Users */}
         <Card className="shadow-md bg-white border-gray-200 rounded-3xl">
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
             <CardTitle className="text-xl text-secondary">all users</CardTitle>
+            <div className="w-64">
+              <input
+                type="text"
+                placeholder="Search users..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+              />
+            </div>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="all" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 md:grid-cols-5 h-auto">
+              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto">
                 <TabsTrigger value="all" className="text-xs md:text-sm py-2">all ({users.length})</TabsTrigger>
-                <TabsTrigger value="search" className="text-xs md:text-sm py-2">search</TabsTrigger>
                 <TabsTrigger value="riders" className="text-xs md:text-sm py-2">riders ({verifiedRiders.length})</TabsTrigger>
                 <TabsTrigger value="verified" className="text-xs md:text-sm py-2">drivers ({verifiedUsers.length})</TabsTrigger>
                 <TabsTrigger value="pending" className="text-xs md:text-sm py-2">pending ({pendingLicenses.length})</TabsTrigger>
@@ -917,7 +925,7 @@ export default function AdminPage() {
 
               <TabsContent value="all" className="mt-4">
                 <div className="space-y-3 max-h-96 overflow-y-auto">
-                  {users.map(user => {
+                  {filteredSearchUsers.map(user => {
                     // Determine verification status for middle badge
                     let verificationStatus = 'not submitted';
                     let verificationBadgeClass = 'bg-gray-100 text-gray-600';
@@ -988,93 +996,6 @@ export default function AdminPage() {
                       </div>
                     );
                   })}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="search" className="mt-4">
-                <div className="mb-4">
-                  <input
-                    type="text"
-                    placeholder="Search by name, email, or username..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-                <div className="space-y-3 max-h-96 overflow-y-auto">
-                  {filteredSearchUsers.length > 0 ? filteredSearchUsers.map(user => {
-                    let verificationStatus = 'not submitted';
-                    let verificationBadgeClass = 'bg-gray-100 text-gray-600';
-                    
-                    if (user.user_type === 'driver' || user.vehicle_verified) {
-                      verificationStatus = 'verified driver';
-                      verificationBadgeClass = 'bg-green-100 text-green-800';
-                    } else if (user.user_type === 'rider' || user.drivers_license_verified) {
-                      verificationStatus = 'verified rider';
-                      verificationBadgeClass = 'bg-blue-100 text-blue-800';
-                    } else if (user.drivers_license_pending_review || user.vehicle_pending_review) {
-                      verificationStatus = 'pending';
-                      verificationBadgeClass = 'bg-orange-50 text-orange-700 border-orange-300';
-                    }
-
-                    let accountType = 'user';
-                    let accountBadgeClass = 'bg-gray-100 text-gray-600';
-                    
-                    if (user.role === 'admin') {
-                      accountType = 'admin';
-                      accountBadgeClass = 'bg-purple-100 text-purple-800';
-                    } else if (user.user_type === 'driver') {
-                      accountType = 'driver';
-                      accountBadgeClass = 'bg-green-100 text-green-800';
-                    } else if (user.user_type === 'rider') {
-                      accountType = 'rider';
-                      accountBadgeClass = 'bg-blue-100 text-blue-800';
-                    }
-
-                    return (
-                      <div key={user.id} className="flex flex-col md:flex-row md:items-center justify-between p-3 bg-white rounded-lg gap-2">
-                        <div className="flex items-center gap-2 md:gap-3">
-                          <Avatar className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-primary to-secondary">
-                            <AvatarFallback className="text-white font-semibold text-xs md:text-sm">
-                              {getInitials(user.full_name)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="min-w-0">
-                            <button 
-                              onClick={() => handleViewUserAccount(user.id)}
-                              className="font-medium text-secondary text-sm md:text-base truncate hover:text-primary transition-colors text-left"
-                            >
-                              {user.full_name}
-                            </button>
-                            <p className="text-xs md:text-sm text-gray-600 truncate">{user.email}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-1 md:gap-2 flex-wrap justify-end">
-                          <Button
-                            onClick={() => handleMessageUser(user)}
-                            size="sm"
-                            variant="outline"
-                            className="rounded-2xl border-blue-300 text-blue-600 hover:bg-blue-50 text-xs md:text-sm h-7 md:h-8 px-2 md:px-3"
-                          >
-                            <Mail className="w-3 h-3 mr-1" />
-                            message
-                          </Button>
-                          <Badge variant={verificationStatus === 'pending' ? 'outline' : 'default'} className={`text-xs ${verificationBadgeClass}`}>
-                            {verificationStatus === 'pending' && <Clock className="w-3 h-3 mr-1" />}
-                            {(verificationStatus === 'verified driver' || verificationStatus === 'verified rider') && <CheckCircle className="w-3 h-3 mr-1" />}
-                            {verificationStatus}
-                          </Badge>
-                          <Badge className={`text-xs ${accountBadgeClass}`}>
-                            {accountType}
-                          </Badge>
-                        </div>
-                      </div>
-                    );
-                  }) : (
-                    <div className="text-center py-8 text-gray-500">
-                      {searchQuery ? 'No users found matching your search' : 'Enter a name, email, or username to search'}
-                    </div>
-                  )}
                 </div>
               </TabsContent>
 
