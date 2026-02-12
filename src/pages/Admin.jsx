@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ShieldCheck, X, CheckCircle, Clock, Users, AlertCircle, Eye, Car, MessageSquare, Phone, Mail, MapPin, Edit, Upload } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import AdminMessageModal from "../components/admin/AdminMessageModal";
+import UserAccountView from "../components/admin/UserAccountView";
 import {
   Dialog,
   DialogContent,
@@ -46,6 +47,8 @@ export default function AdminPage() {
   const [licenseFrontFile, setLicenseFrontFile] = useState(null);
   const [licenseBackFile, setLicenseBackFile] = useState(null);
   const [isUploadingLicense, setIsUploadingLicense] = useState(false);
+  const [showUserAccountView, setShowUserAccountView] = useState(false);
+  const [viewingUserId, setViewingUserId] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -438,6 +441,11 @@ export default function AdminPage() {
   const handleMessageUser = (user) => {
     setMessageUser(user);
     setShowMessageModal(true);
+  };
+
+  const handleViewUserAccount = (userId) => {
+    setViewingUserId(userId);
+    setShowUserAccountView(true);
   };
 
   if (error && !currentUser) {
@@ -977,7 +985,12 @@ export default function AdminPage() {
                             </AvatarFallback>
                           </Avatar>
                           <div className="min-w-0">
-                            <p className="font-medium text-secondary text-sm md:text-base truncate">{user.full_name}</p>
+                            <button 
+                              onClick={() => handleViewUserAccount(user.id)}
+                              className="font-medium text-secondary text-sm md:text-base truncate hover:text-primary transition-colors text-left"
+                            >
+                              {user.full_name}
+                            </button>
                             <p className="text-xs md:text-sm text-gray-600 truncate">{user.email}</p>
                           </div>
                         </div>
@@ -1368,6 +1381,12 @@ export default function AdminPage() {
           onClose={() => setShowMessageModal(false)}
           user={messageUser}
           onSuccess={loadData}
+        />
+
+        <UserAccountView
+          isOpen={showUserAccountView}
+          onClose={() => setShowUserAccountView(false)}
+          userId={viewingUserId}
         />
 
         {/* Contact Inquiry Response Modal */}
