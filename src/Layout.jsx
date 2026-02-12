@@ -218,6 +218,12 @@ export default function Layout({ children, currentPageName }) {
         // Load unread counts
         loadUnreadCount(user);
       } catch (e) {
+        // User not authenticated - redirect to Welcome page unless already there or exploring
+        if (!exploreParam && location.pathname !== createPageUrl("Welcome") && 
+            location.pathname !== createPageUrl("ContactUs") && 
+            location.pathname !== createPageUrl("Account")) {
+          navigate(createPageUrl("Welcome"));
+        }
         console.error("Error loading user:", e);
       }
     };
