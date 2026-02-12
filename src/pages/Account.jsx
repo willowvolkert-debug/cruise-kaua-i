@@ -588,8 +588,8 @@ export default function AccountPage() {
                                                           </div>
                                                       )}
                                                       {user.drivers_license_pending_review && !user.drivers_license_verified && !user.license_rejection_reason && (
-                                                          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-300 rounded-2xl text-yellow-800 text-sm flex items-center gap-2">
-                                                              <Clock className="w-5 h-5 text-yellow-600" />
+                                                          <div className="mt-4 p-3 bg-gray-100 border border-gray-300 rounded-2xl text-gray-700 text-sm flex items-center gap-2">
+                                                              <Clock className="w-5 h-5 text-gray-600" />
                                                               <span><strong>License pending review.</strong> You'll be notified once it's approved.</span>
                                                           </div>
                                                       )}
@@ -605,8 +605,8 @@ export default function AccountPage() {
                                                           </div>
                                                       )}
                                                       {user.vehicle_pending_review && !user.vehicle_verified && !user.vehicle_rejection_reason && (
-                                                          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-300 rounded-2xl text-yellow-800 text-sm flex items-center gap-2">
-                                                              <Clock className="w-5 h-5 text-yellow-600" />
+                                                          <div className="mt-4 p-3 bg-gray-100 border border-gray-300 rounded-2xl text-gray-700 text-sm flex items-center gap-2">
+                                                              <Clock className="w-5 h-5 text-gray-600" />
                                                               <span><strong>Vehicle pending review.</strong> You'll be notified once it's approved.</span>
                                                           </div>
                                                       )}
@@ -644,7 +644,7 @@ export default function AccountPage() {
                                 <CardHeader><CardTitle className="text-xl text-secondary">verification</CardTitle></CardHeader>
                                 <CardContent className="space-y-4">
                                     {user.drivers_license_pending_review && !user.drivers_license_verified && (
-                                        <div className="p-3 bg-gray-50 border border-gray-300 rounded-2xl text-gray-700 text-sm mb-3">
+                                        <div className="p-3 bg-gray-100 border border-gray-300 rounded-2xl text-gray-700 text-sm mb-3">
                                             <strong>thanks!</strong> you will be able to book rides once your identity is verified. check back soon for approval!
                                         </div>
                                     )}
@@ -660,7 +660,7 @@ export default function AccountPage() {
                                                 <ShieldCheck className="w-4 h-4 mr-1"/>verified
                                             </Button>
                                         ) : user.drivers_license_pending_review ? (
-                                            <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-300 rounded-2xl">
+                                            <Badge variant="outline" className="bg-gray-100 text-gray-700 border-gray-300 rounded-2xl">
                                                 <Clock className="w-4 h-4 mr-1"/>pending review
                                             </Badge>
                                         ) : (
