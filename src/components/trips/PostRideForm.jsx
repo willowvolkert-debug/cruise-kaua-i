@@ -138,10 +138,7 @@ export default function PostRideForm() {
           return;
         }
 
-        if (!user.stripe_connect_onboarding_complete) {
-          setError("You must complete Stripe Connect onboarding before posting rides. Please complete this in your Account page.");
-          return;
-        }
+
 
         if (user.user_type !== 'driver' && user.role !== 'admin') {
           setError("You must be verified as a driver to post rides. Please complete all driver requirements in your Account page.");
@@ -299,10 +296,7 @@ export default function PostRideForm() {
       return;
     }
 
-    if (!currentUser.stripe_connect_onboarding_complete) {
-      setError("You must complete Stripe Connect onboarding before posting rides.");
-      return;
-    }
+
 
     if (currentUser.user_type !== 'driver' && currentUser.role !== 'admin') {
       setError("You must be verified as a driver to post rides.");
@@ -396,7 +390,6 @@ export default function PostRideForm() {
                       currentUser?.community_agreement_accepted &&
                       currentUser?.drivers_license_verified && 
                       currentUser?.vehicle_verified && 
-                      currentUser?.stripe_connect_onboarding_complete &&
                       (currentUser?.user_type === 'driver' || currentUser?.role === 'admin') &&
                       (!currentUser?.pending_ratings || currentUser.pending_ratings.length === 0);
 

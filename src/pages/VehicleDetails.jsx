@@ -182,8 +182,6 @@ export default function VehicleDetailsPage() {
       const updatedUser = await base44.auth.me();
       if (!updatedUser.driver_agreement_accepted) {
         navigate(createPageUrl("DriverAgreement"));
-      } else if (!updatedUser.stripe_connect_onboarding_complete) {
-        setShowStripeModal(true);
       } else {
         window.history.back();
       }
