@@ -613,7 +613,14 @@ export default function AccountPage() {
                                     <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
                                         <span className="font-medium">driver's license</span>
                                         {user.drivers_license_verified ? (
-                                            <Badge variant="default" className="bg-primary rounded-2xl border-primary"><ShieldCheck className="w-4 h-4 mr-1"/>verified</Badge>
+                                            <Button 
+                                                size="sm"
+                                                variant="default"
+                                                onClick={() => setShowLicenseModal(true)}
+                                                className="bg-primary rounded-2xl border-primary hover:bg-primary/90"
+                                            >
+                                                <ShieldCheck className="w-4 h-4 mr-1"/>verified
+                                            </Button>
                                         ) : user.drivers_license_pending_review ? (
                                             <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-300 rounded-2xl">
                                                 <Clock className="w-4 h-4 mr-1"/>pending review
@@ -959,7 +966,14 @@ export default function AccountPage() {
                         <CardContent className="space-y-4">
                             <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
                                 <span className="font-medium">driver's license</span>
-                                <Badge variant="default" className="bg-primary rounded-2xl border-primary"><ShieldCheck className="w-4 h-4 mr-1"/>verified</Badge>
+                                <Button 
+                                    size="sm"
+                                    variant="default"
+                                    onClick={() => setShowLicenseModal(true)}
+                                    className="bg-primary rounded-2xl border-primary hover:bg-primary/90"
+                                >
+                                    <ShieldCheck className="w-4 h-4 mr-1"/>verified
+                                </Button>
                             </div>
                             <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
                                 <span className="font-medium">vehicle</span>
