@@ -46,22 +46,28 @@ export default function WelcomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 flex items-center justify-center p-4">
       <Card className="max-w-2xl w-full shadow-2xl border-gray-200 rounded-3xl bg-white">
-        <CardContent className="p-8 md:p-12 text-center space-y-8">
-          <div className="space-y-4">
-            <h1 className="text-4xl md:text-5xl font-bold text-secondary">Welcome to Cruise Kauaʻi!</h1>
+        <CardContent className="p-6 md:p-10 text-center space-y-6">
+          <div className="space-y-3">
+            <h1 className="text-3xl md:text-4xl font-bold text-secondary">Welcome to Cruise Kauaʻi!</h1>
           </div>
 
-          <div className="space-y-4 py-6">
-            <p className="text-lg text-gray-700 leading-relaxed">
-              We are a community-based ridesharing app aimed at reducing traffic on Kauaʻi. Make money on your grocery runs or commutes by posting the rides you're already taking on the app. Riders can look at all rides on any date, or request a ride, paying a reasonable fare ($5-30) to get to their destination. Mahalo for being a part of the movement to reduce traffic, build community & make transportation more accessible on Kauaʻi!
+          <div className="space-y-4 py-4 text-left">
+            <p className="text-base md:text-lg text-gray-700 leading-relaxed">
+              We are a community-based ridesharing app aimed at reducing traffic on Kauaʻi.
+            </p>
+            <p className="text-base md:text-lg text-gray-700 leading-relaxed">
+              Make money on your grocery runs or commutes by posting the rides you're already taking on the app. Riders can look at all rides on any date, or request a ride, paying a reasonable fare ($5-30) to get to their destination.
+            </p>
+            <p className="text-base md:text-lg text-gray-700 leading-relaxed">
+              Mahalo for being a part of the movement to reduce traffic, build community & make transportation more accessible on Kauaʻi!
             </p>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             <Button 
               onClick={handleSignUp}
               size="lg" 
-              className="w-full bg-primary hover:bg-primary/90 text-white px-8 py-6 text-lg rounded-2xl font-semibold"
+              className="w-full bg-primary hover:bg-primary/90 text-white px-6 py-5 text-base md:text-lg rounded-2xl font-semibold"
             >
               sign up here!
             </Button>
@@ -70,7 +76,7 @@ export default function WelcomePage() {
               onClick={handleExplore}
               size="lg"
               variant="outline"
-              className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-6 text-lg rounded-2xl"
+              className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-5 text-base md:text-lg rounded-2xl"
             >
               not ready to sign up? explore the app here.
             </Button>

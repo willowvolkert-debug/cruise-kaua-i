@@ -391,11 +391,11 @@ export default function AccountPage() {
     if (!user && isExploreMode) {
         return (
             <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 via-white to-orange-50">
-                <Card className="max-w-md w-full shadow-2xl rounded-3xl">
+                <Card className="max-w-md w-full shadow-2xl rounded-3xl border-gray-200">
                     <CardContent className="p-8 text-center space-y-6">
                         <div className="flex justify-center">
-                            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
-                                <ShieldCheck className="w-12 h-12 text-primary" />
+                            <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center">
+                                <ShieldCheck className="w-12 h-12 text-blue-600" />
                             </div>
                         </div>
                         <div>
