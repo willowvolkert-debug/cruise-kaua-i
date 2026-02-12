@@ -48,18 +48,12 @@ export default function WelcomePage() {
       <Card className="max-w-2xl w-full shadow-2xl border-gray-200 rounded-3xl bg-white">
         <CardContent className="p-8 md:p-12 text-center space-y-8">
           <div className="space-y-4">
-            <h1 className="text-5xl md:text-6xl font-bold text-secondary">cruise kauaʻi</h1>
-            <p className="text-xl text-gray-600 italic">sharing aloha one ride at a time</p>
+            <h1 className="text-4xl md:text-5xl font-bold text-secondary">Welcome to Cruise Kauaʻi!</h1>
           </div>
 
           <div className="space-y-4 py-6">
             <p className="text-lg text-gray-700 leading-relaxed">
-              Making transportation on Kauaʻi more <span className="font-semibold text-gray-500">social</span>, 
-              <span className="font-semibold text-blue-600"> affordable</span>, and 
-              <span className="font-semibold text-green-600"> sustainable</span>!
-            </p>
-            <p className="text-gray-600">
-              Share rides with kamaʻāina (residents) and malihini (visitors) to reduce the number of cars on our roads and build community connections across the island. 🚗💨
+              We are a community-based ridesharing app aimed at reducing traffic on Kauaʻi. Make money on your grocery runs or commutes by posting the rides you're already taking on the app. Riders can look at all rides on any date, or request a ride, paying a reasonable fare ($5-30) to get to their destination. Mahalo for being a part of the movement to reduce traffic, build community & make transportation more accessible on Kauaʻi!
             </p>
           </div>
 
