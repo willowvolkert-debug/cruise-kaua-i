@@ -45,6 +45,11 @@ export default function WelcomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 flex items-center justify-center p-4">
+      <style>{`
+        [data-sidebar="trigger"] {
+          display: none !important;
+        }
+      `}</style>
       <Card className="max-w-2xl w-full shadow-2xl border-gray-200 rounded-3xl bg-white">
         <CardContent className="p-6 md:p-10 text-center space-y-6">
           <div className="space-y-3">
@@ -53,13 +58,13 @@ export default function WelcomePage() {
 
           <div className="space-y-4 py-4 text-left">
             <p className="text-base md:text-lg text-gray-700 leading-relaxed">
-              We are a community-based ridesharing app aimed at reducing traffic on Kauaʻi.
+              🌺 We are a community-based ridesharing app aimed at reducing traffic on Kauaʻi.
             </p>
             <p className="text-base md:text-lg text-gray-700 leading-relaxed">
-              Make money on your grocery runs or commutes by posting the rides you're already taking on the app. Riders can look at all rides on any date, or request a ride, paying a reasonable fare ($5-30) to get to their destination.
+              🚗 Make money on your grocery runs or commutes by posting the rides you're already taking on the app. Riders can look at all rides on any date, or request a ride, paying a reasonable fare ($5-30) to get to their destination.
             </p>
             <p className="text-base md:text-lg text-gray-700 leading-relaxed">
-              Mahalo for being a part of the movement to reduce traffic, build community & make transportation more accessible on Kauaʻi!
+              🤙 Mahalo for being a part of the movement to reduce traffic, build community & make transportation more accessible on Kauaʻi!
             </p>
           </div>
 
