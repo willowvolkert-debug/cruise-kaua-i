@@ -430,7 +430,7 @@ export default function VehicleDetailsPage() {
               <p>All drivers must have a connected bank account to receive payouts from completed rides.</p>
             </div>
 
-            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-sm text-amber-900">
+            <div className="bg-gray-100 border border-gray-300 rounded-2xl p-4 text-sm text-gray-900">
               <p className="font-semibold mb-2">Important - During Stripe setup:</p>
               <p className="mb-3">When creating your account, Stripe will ask you what industry you're a part of and to share the website where you are selling a service.</p>
               <ul className="list-disc list-inside space-y-1 mb-3">
@@ -442,10 +442,10 @@ export default function VehicleDetailsPage() {
                   navigator.clipboard.writeText("https://ride-connect-b7a57d59.base44.app");
                   alert("Website link copied to clipboard!");
                 }}
-                className="w-full p-3 bg-white border border-amber-300 rounded-xl text-amber-900 font-mono text-xs hover:bg-amber-100 transition-colors"
+                className="w-full p-3 bg-white border border-gray-300 rounded-xl text-gray-900 font-mono text-xs hover:bg-gray-200 transition-colors"
               >
                 https://ride-connect-b7a57d59.base44.app
-                <span className="ml-2 text-amber-600">(click to copy)</span>
+                <span className="ml-2 text-gray-600">(click to copy)</span>
               </button>
             </div>
           </div>
