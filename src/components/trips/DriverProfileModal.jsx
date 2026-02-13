@@ -21,8 +21,8 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
     : 0;
 
   const handleBookRide = () => {
-    onClose();
     onBookRide(ride);
+    onClose();
   };
 
   return (
