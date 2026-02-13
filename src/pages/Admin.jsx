@@ -938,7 +938,7 @@ export default function AdminPage() {
                       verificationBadgeClass = 'bg-blue-100 text-blue-800';
                     } else if (user.drivers_license_pending_review || user.vehicle_pending_review) {
                       verificationStatus = 'pending';
-                      verificationBadgeClass = 'bg-orange-50 text-orange-700 border-orange-300';
+                      verificationBadgeClass = 'bg-gray-100 text-gray-700 border-gray-300';
                     }
 
                     // Determine account type for far right badge
@@ -984,7 +984,7 @@ export default function AdminPage() {
                             <Mail className="w-3 h-3 mr-1" />
                             message
                           </Button>
-                          <Badge variant={verificationStatus === 'pending' ? 'outline' : 'default'} className={`text-xs ${verificationBadgeClass}`}>
+                          <Badge variant={verificationStatus === 'pending' ? 'outline' : 'default'} className={`text-xs ${verificationStatus === 'pending' ? 'bg-gray-100 text-gray-700 border-gray-300' : verificationBadgeClass}`}>
                             {verificationStatus === 'pending' && <Clock className="w-3 h-3 mr-1" />}
                             {(verificationStatus === 'verified driver' || verificationStatus === 'verified rider') && <CheckCircle className="w-3 h-3 mr-1" />}
                             {verificationStatus}
