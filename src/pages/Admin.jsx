@@ -803,7 +803,7 @@ export default function AdminPage() {
                           <div className="flex-1">
                             <p className="font-semibold text-secondary">{request.rider_name}</p>
                             <p className="text-sm text-gray-600">{request.departure_location} → {request.destination}</p>
-                            <p className="text-xs text-gray-500">{format(new Date(request.departure_date), "MMM d")} at {request.departure_time}</p>
+                            <p className="text-xs text-gray-500">{format(new Date(request.departure_date + 'T00:00:00'), "MMM d")} at {request.departure_time}</p>
                           </div>
                           <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300">
                             {request.seats_needed} seat{request.seats_needed > 1 ? 's' : ''}
@@ -829,7 +829,7 @@ export default function AdminPage() {
                           <div className="flex-1">
                             <p className="font-semibold text-secondary">{ride.driver_name}</p>
                             <p className="text-sm text-gray-600">{ride.departure_location} → {ride.destination}</p>
-                            <p className="text-xs text-gray-500">{format(new Date(ride.departure_date), "MMM d")} at {ride.departure_time}</p>
+                            <p className="text-xs text-gray-500">{format(new Date(ride.departure_date + 'T00:00:00'), "MMM d")} at {ride.departure_time}</p>
                           </div>
                           <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300">
                             {ride.seats_available} seat{ride.seats_available > 1 ? 's' : ''}
