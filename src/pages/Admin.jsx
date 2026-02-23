@@ -849,9 +849,22 @@ export default function AdminPage() {
         {userEdits.length > 0 && (
           <Card className="shadow-lg border-purple-300 bg-purple-50 rounded-3xl">
             <CardHeader>
-              <CardTitle className="text-xl text-purple-800 flex items-center gap-2">
-                <Edit className="w-6 h-6" />
-                user edits ({userEdits.length})
+              <CardTitle className="text-xl text-purple-800 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Edit className="w-6 h-6" />
+                  user edits ({userEdits.length})
+                </div>
+                <Button
+                  onClick={async () => {
+                    await Promise.all(userEdits.map(e => base44.entities.UserEdit.update(e.id, { is_reviewed: true })));
+                    loadData();
+                  }}
+                  size="sm"
+                  variant="outline"
+                  className="border-purple-300 text-purple-600 hover:bg-purple-50"
+                >
+                  mark all as reviewed
+                </Button>
               </CardTitle>
             </CardHeader>
             <CardContent>
