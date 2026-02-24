@@ -548,9 +548,18 @@ export default function AccountPage() {
                                                        <SelectItem value="Soft/chill">soft / chill</SelectItem>
                                                        <SelectItem value="Any genre">any genre</SelectItem>
                                                        <SelectItem value="Flexible">flexible</SelectItem>
+                                                       <SelectItem value="custom">write in...</SelectItem>
                                                    </SelectContent>
-                                               </Select>
-                                            </div>
+                                                   </Select>
+                                                   {editData.preferences_music === 'custom' && (
+                                                   <Input
+                                                       value={editData.preferences_music_custom || ''}
+                                                       onChange={(e) => setEditData({...editData, preferences_music_custom: e.target.value})}
+                                                       placeholder="e.g. Hawaiian, jazz, podcasts..."
+                                                       className="rounded-2xl mt-2"
+                                                   />
+                                                   )}
+                                                   </div>
                                             </div>
                                     </div>
                                 ) : (
