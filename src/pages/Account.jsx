@@ -206,6 +206,10 @@ export default function AccountPage() {
             profilePicUrl = uploadResult.file_url;
         }
 
+        const resolvedMusic = editData.preferences_music === 'custom' ? (editData.preferences_music_custom || '') : editData.preferences_music;
+        const saveData = { ...editData, preferences_music: resolvedMusic };
+        delete saveData.preferences_music_custom;
+
         const isProfileComplete = !!(editData.username && editData.bio && editData.age && editData.gender && profilePicUrl);
 
         // Track what changed
