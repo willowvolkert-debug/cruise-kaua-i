@@ -356,7 +356,7 @@ export default function RequestRide() {
       <div className="fixed bottom-6 right-6 z-50">
         <Button
           onClick={handleSubmit}
-          disabled={isSubmitting}
+          disabled={isSubmitting || !currentUser?.profile_complete || !currentUser?.drivers_license_verified || !currentUser?.profile_picture_url || !currentUser?.terms_accepted || !currentUser?.privacy_policy_accepted || !currentUser?.community_agreement_accepted}
           size="lg"
           className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-8 py-4 rounded-full shadow-lg"
         >
