@@ -162,7 +162,22 @@ export default function PostRideForm() {
   }, []);
 
   const handleInputChange = (field, value) => {
-    setRideData(prev => ({ ...prev, [field]: value }));
+    setRideData(prev => {
+      const updated = { ...prev, [field]: value };
+      if (field === 'departure_location' || field === 'destination') {
+        const from = field === 'departure_location' ? value : prev.departure_location;
+        const to = field === 'destination' ? value : prev.destination;
+        if (from && to) {
+          const { suggestion, cap } = getPricingInfo(from, to);
+          setPricingSuggestion(suggestion);
+          setPriceCapWarning(cap);
+        } else {
+          setPricingSuggestion(null);
+          setPriceCapWarning(null);
+        }
+      }
+      return updated;
+    });
   };
 
   const handleStopChange = (index, value) => {
