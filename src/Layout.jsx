@@ -209,9 +209,11 @@ export default function Layout({ children, currentPageName }) {
         const user = await base44.auth.me();
         setCurrentUser(user);
 
-        if (!user.has_seen_welcome && location.pathname !== createPageUrl("Welcome")) {
-          navigate(createPageUrl("Welcome"));
-        } else if (user.has_seen_welcome && !user.has_seen_tutorial && location.pathname === createPageUrl("Trips")) {
+        if (!user.has_seen_welcome) {
+          // Mark as seen since they're authenticated — no need to redirect back to Welcome
+          base44.auth.updateMe({ has_seen_welcome: true });
+        }
+        if (!user.has_seen_tutorial && location.pathname === createPageUrl("Trips")) {
           setShowTutorial(true);
         }
 
