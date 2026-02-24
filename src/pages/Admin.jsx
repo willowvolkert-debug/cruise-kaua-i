@@ -774,7 +774,7 @@ export default function AdminPage() {
               <CardTitle className="text-xl text-blue-800 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <MapPin className="w-6 h-6" />
-                  new activity (last 24h)
+                  new activity (last 72h)
                 </div>
                 <Button
                   onClick={() => setShowNewActivity(!showNewActivity)}
