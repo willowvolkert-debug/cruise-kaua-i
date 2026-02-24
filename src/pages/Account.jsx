@@ -127,7 +127,8 @@ export default function AccountPage() {
                 gender: currentUser.gender || '',
                 home_base: currentUser.home_base || '',
                 preferences_chattiness: currentUser.preferences_chattiness || 'Flexible',
-                preferences_scents: currentUser.preferences_scents || 'Any'
+                preferences_scents: currentUser.preferences_scents || 'Any',
+                preferences_music: currentUser.preferences_music || 'Flexible'
             });
             
 
