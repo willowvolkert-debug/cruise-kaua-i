@@ -244,7 +244,7 @@ export default function AccountPage() {
         });
 
         await base44.auth.updateMe({
-            ...editData,
+            ...saveData,
             profile_picture_url: profilePicUrl,
             profile_complete: isProfileComplete
         });
