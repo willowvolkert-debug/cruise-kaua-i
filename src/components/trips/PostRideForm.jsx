@@ -840,8 +840,11 @@ export default function PostRideForm() {
                       value={rideData.price_per_seat_local}
                       onChange={(e) => handleInputChange('price_per_seat_local', e.target.value)}
                       required
-                      className="rounded-2xl"
+                      className={`rounded-2xl ${priceCapWarning && parseFloat(rideData.price_per_seat_local) > priceCapWarning.local ? 'border-red-400' : ''}`}
                     />
+                    {priceCapWarning && parseFloat(rideData.price_per_seat_local) > priceCapWarning.local && (
+                      <p className="text-red-500 text-xs flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> exceeds cap of ${priceCapWarning.local}</p>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="priceTourist">ride price for tourists ($)</Label>
@@ -853,8 +856,11 @@ export default function PostRideForm() {
                       value={rideData.price_per_seat_tourist}
                       onChange={(e) => handleInputChange('price_per_seat_tourist', e.target.value)}
                       required
-                      className="rounded-2xl"
+                      className={`rounded-2xl ${priceCapWarning && parseFloat(rideData.price_per_seat_tourist) > priceCapWarning.visitor ? 'border-red-400' : ''}`}
                     />
+                    {priceCapWarning && parseFloat(rideData.price_per_seat_tourist) > priceCapWarning.visitor && (
+                      <p className="text-red-500 text-xs flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> exceeds cap of ${priceCapWarning.visitor}</p>
+                    )}
                   </div>
                 </div>
               ) : (
@@ -868,8 +874,11 @@ export default function PostRideForm() {
                     value={rideData.price_per_seat}
                     onChange={(e) => handleInputChange('price_per_seat', e.target.value)}
                     required
-                    className="rounded-2xl"
+                    className={`rounded-2xl ${priceCapWarning && parseFloat(rideData.price_per_seat) > priceCapWarning.local ? 'border-red-400' : ''}`}
                   />
+                  {priceCapWarning && parseFloat(rideData.price_per_seat) > priceCapWarning.local && (
+                    <p className="text-red-500 text-xs flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> exceeds cap of ${priceCapWarning.local}</p>
+                  )}
                 </div>
               )}
             </CardContent>
