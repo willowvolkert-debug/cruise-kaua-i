@@ -105,8 +105,8 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         detour_destination: bookingData.detour_destination,
         driver_id: ride.driver_id,
         driver_username: ride.driver_username || '',
-        success_url: window.location.origin + window.location.pathname,
-        cancel_url: window.location.origin + window.location.pathname
+        success_url: window.location.origin + '/trips',
+        cancel_url: window.location.origin + '/trips'
       });
 
       if (data.error) {
