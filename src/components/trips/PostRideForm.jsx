@@ -791,6 +791,43 @@ export default function PostRideForm() {
                 </Select>
               </div>
 
+              {pricingSuggestion && (
+                <div className="rounded-2xl bg-blue-50 border border-blue-200 p-4 space-y-2">
+                  <div className="flex items-center gap-2 text-blue-800 font-semibold text-sm">
+                    <Lightbulb className="w-4 h-4" />
+                    suggested price ({pricingSuggestion.distance} miles)
+                  </div>
+                  <div className="flex gap-4 text-sm text-blue-700">
+                    <span>local: <strong>${pricingSuggestion.local}</strong></span>
+                    <span>visitor: <strong>${pricingSuggestion.visitor}</strong></span>
+                  </div>
+                  {priceCapWarning && (
+                    <div className="flex items-start gap-2 text-amber-700 text-xs mt-1">
+                      <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                      <span>price cap for this route: local <strong>${priceCapWarning.local}</strong> / visitor <strong>${priceCapWarning.visitor}</strong>. pricing above this will be flagged.</span>
+                    </div>
+                  )}
+                  <div className="flex gap-2 mt-2">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="rounded-2xl border-blue-300 text-blue-700 hover:bg-blue-100 text-xs"
+                      onClick={() => {
+                        if (rideData.rider_preference === 'both_fine') {
+                          handleInputChange('price_per_seat_local', pricingSuggestion.local);
+                          handleInputChange('price_per_seat_tourist', pricingSuggestion.visitor);
+                        } else {
+                          handleInputChange('price_per_seat', pricingSuggestion.local);
+                        }
+                      }}
+                    >
+                      use suggested price
+                    </Button>
+                  </div>
+                </div>
+              )}
+
               {rideData.rider_preference === 'both_fine' ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
