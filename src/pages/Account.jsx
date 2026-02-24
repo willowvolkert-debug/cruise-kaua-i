@@ -259,6 +259,7 @@ export default function AccountPage() {
         await loadData();
         setIsEditing(false);
         setProfilePicFile(null);
+        setIsSaving(false);
     };
 
     const handleLicenseVerificationSuccess = async () => {
