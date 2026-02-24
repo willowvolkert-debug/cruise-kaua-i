@@ -94,6 +94,8 @@ export default function AccountPage() {
     const [isTransferring, setIsTransferring] = useState(false);
     const [showBankForm, setShowBankForm] = useState(false);
     const [acceptedRideAlert, setAcceptedRideAlert] = useState(null);
+    const [isSaving, setIsSaving] = useState(false);
+    const [saveError, setSaveError] = useState(null);
 
     useEffect(() => {
         // Check for explore mode
