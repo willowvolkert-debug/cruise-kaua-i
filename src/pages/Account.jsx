@@ -128,7 +128,8 @@ export default function AccountPage() {
                 home_base: currentUser.home_base || '',
                 preferences_chattiness: currentUser.preferences_chattiness || 'Flexible',
                 preferences_scents: currentUser.preferences_scents || 'Any',
-                preferences_music: currentUser.preferences_music || 'Flexible'
+                preferences_music: ['No music','Soft/chill','Any genre','Flexible'].includes(currentUser.preferences_music) ? currentUser.preferences_music : (currentUser.preferences_music ? 'custom' : 'Flexible'),
+                preferences_music_custom: ['No music','Soft/chill','Any genre','Flexible'].includes(currentUser.preferences_music) ? '' : (currentUser.preferences_music || '')
             });
             
 
