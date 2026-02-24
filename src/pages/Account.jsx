@@ -577,6 +577,13 @@ export default function AccountPage() {
                                                <span className="text-sm text-gray-600">scents:</span>
                                                <Badge variant="outline" className="rounded-2xl border-gray-300">{user.preferences_scents}</Badge>
                                            </div>
+                                           {user.preferences_music && (
+                                             <div className="flex items-center gap-2">
+                                               <Music className="w-4 h-4 text-gray-500"/>
+                                               <span className="text-sm text-gray-600">music:</span>
+                                               <Badge variant="outline" className="rounded-2xl border-gray-300">{user.preferences_music}</Badge>
+                                             </div>
+                                           )}
                                         </div>
                                     </>
                                 )}
