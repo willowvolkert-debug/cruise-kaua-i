@@ -533,13 +533,25 @@ export default function AccountPage() {
                                                 </Select>
                                             </div>
                                             <div className="space-y-2">
-                                                <Label className="flex items-center gap-2"><Wind className="w-4 h-4"/>scents</Label>
-                                                <Select value={editData.preferences_scents} onValueChange={(v) => setEditData({...editData, preferences_scents: v})}>
-                                                    <SelectTrigger className="rounded-2xl"><SelectValue/></SelectTrigger>
-                                                    <SelectContent className="rounded-2xl"><SelectItem value="None">none</SelectItem><SelectItem value="Light">light</SelectItem><SelectItem value="Any">any</SelectItem></SelectContent>
-                                                </Select>
+                                               <Label className="flex items-center gap-2"><Wind className="w-4 h-4"/>scents</Label>
+                                               <Select value={editData.preferences_scents} onValueChange={(v) => setEditData({...editData, preferences_scents: v})}>
+                                                   <SelectTrigger className="rounded-2xl"><SelectValue/></SelectTrigger>
+                                                   <SelectContent className="rounded-2xl"><SelectItem value="None">none</SelectItem><SelectItem value="Light">light</SelectItem><SelectItem value="Any">any</SelectItem></SelectContent>
+                                               </Select>
                                             </div>
-                                        </div>
+                                            <div className="space-y-2">
+                                               <Label className="flex items-center gap-2"><Music className="w-4 h-4"/>music</Label>
+                                               <Select value={editData.preferences_music} onValueChange={(v) => setEditData({...editData, preferences_music: v})}>
+                                                   <SelectTrigger className="rounded-2xl"><SelectValue/></SelectTrigger>
+                                                   <SelectContent className="rounded-2xl">
+                                                       <SelectItem value="No music">no music</SelectItem>
+                                                       <SelectItem value="Soft/chill">soft / chill</SelectItem>
+                                                       <SelectItem value="Any genre">any genre</SelectItem>
+                                                       <SelectItem value="Flexible">flexible</SelectItem>
+                                                   </SelectContent>
+                                               </Select>
+                                            </div>
+                                            </div>
                                     </div>
                                 ) : (
                                     <>
