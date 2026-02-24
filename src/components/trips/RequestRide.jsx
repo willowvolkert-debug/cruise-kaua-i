@@ -34,6 +34,26 @@ export default function RequestRide() {
       try {
         const user = await base44.auth.me();
         setCurrentUser(user);
+
+        if (!user.profile_picture_url) {
+          setError("Please upload a profile picture before requesting rides. Go to Account page.");
+          return;
+        }
+
+        if (!user.profile_complete) {
+          setError("Please complete your profile (username, bio, age, gender) before requesting rides. Go to Account page.");
+          return;
+        }
+
+        if (!user.terms_accepted || !user.privacy_policy_accepted || !user.community_agreement_accepted) {
+          setError("Please accept all legal agreements before requesting rides. Go to Account page.");
+          return;
+        }
+
+        if (!user.drivers_license_verified) {
+          setError("Please verify your driver's license before requesting rides. Go to Account page.");
+          return;
+        }
       } catch (e) {
         setError("You must be logged in to request a ride.");
       }
