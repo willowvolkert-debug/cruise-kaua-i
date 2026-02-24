@@ -195,6 +195,8 @@ export default function AccountPage() {
     };
     
     const handleSave = async () => {
+        setIsSaving(true);
+        setSaveError(null);
         let profilePicUrl = user.profile_picture_url || '';
 
         if (profilePicFile) {
