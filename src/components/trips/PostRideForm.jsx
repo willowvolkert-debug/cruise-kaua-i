@@ -36,6 +36,8 @@ export default function PostRideForm() {
   const [showRiderProfileModal, setShowRiderProfileModal] = useState(false);
   const [selectedRiderRequest, setSelectedRiderRequest] = useState(null);
   const [riderRatings, setRiderRatings] = useState([]);
+  const [pricingSuggestion, setPricingSuggestion] = useState(null);
+  const [priceCapWarning, setPriceCapWarning] = useState(null);
   const [rideData, setRideData] = useState({
     departure_location: '',
     destination: '',
