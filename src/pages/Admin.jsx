@@ -82,12 +82,12 @@ export default function AdminPage() {
       const allEdits = await base44.entities.UserEdit.list('-created_date', 50);
       const unreviewedEdits = allEdits.filter(e => !e.is_reviewed);
 
-      // Fetch recent ride requests and rides (last 24 hours)
-      const allRideRequests = await base44.entities.RideRequest.list('-created_date', 100);
-      const allRides = await base44.entities.Ride.list('-created_date', 100);
-      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-      const newRideRequests = allRideRequests.filter(r => new Date(r.created_date) > oneDayAgo && r.status === 'active');
-      const newRides = allRides.filter(r => new Date(r.created_date) > oneDayAgo && r.status === 'active');
+      // Fetch recent ride requests and rides (last 72 hours)
+      const allRideRequests = await base44.entities.RideRequest.list('-created_date', 500);
+      const allRides = await base44.entities.Ride.list('-created_date', 500);
+      const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
+      const newRideRequests = allRideRequests.filter(r => new Date(r.created_date) > threeDaysAgo && r.status === 'active');
+      const newRides = allRides.filter(r => new Date(r.created_date) > threeDaysAgo && r.status === 'active');
 
       setPendingLicenses(pendingLic);
       setPendingVehicles(pendingVeh);
