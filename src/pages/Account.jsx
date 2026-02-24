@@ -571,9 +571,13 @@ export default function AccountPage() {
                             </div>
                             <div className="flex flex-col gap-2">
                                 {isEditing ? (
-                                    <Button onClick={handleSave} className="bg-primary hover:bg-primary/90 rounded-2xl">
-                                        <Save className="w-4 h-4 mr-2"/>save changes
-                                    </Button>
+                                    <div className="flex flex-col gap-2">
+                                        <Button onClick={handleSave} disabled={isSaving} className="bg-primary hover:bg-primary/90 rounded-2xl">
+                                            {isSaving ? <><span className="animate-spin mr-2">⏳</span>saving...</> : <><Save className="w-4 h-4 mr-2"/>save changes</>}
+                                        </Button>
+                                        {saveError && <p className="text-xs text-red-500 text-center">{saveError}</p>}
+                                        {profilePicFile && <p className="text-xs text-gray-500 text-center">📎 {profilePicFile.name}</p>}
+                                    </div>
                                 ) : (
                                     <Button onClick={() => setIsEditing(true)} className="bg-primary hover:bg-primary/90 rounded-2xl">
                                         <Edit className="w-4 h-4 mr-2"/>edit profile
