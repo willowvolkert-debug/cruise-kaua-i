@@ -21,8 +21,8 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
     : 0;
 
   const handleBookRide = () => {
-    onBookRide(ride);
     onClose();
+    setTimeout(() => onBookRide(ride), 50);
   };
 
   return (
