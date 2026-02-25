@@ -459,7 +459,7 @@ export default function FindRide() {
 
       <DriverProfileModal
         isOpen={showDriverProfile}
-        onClose={() => setShowDriverProfile(false)}
+        onClose={handleCloseDriverProfile}
         ride={selectedRide}
         onBookRide={handleBookRide}
         currentUser={currentUser}
