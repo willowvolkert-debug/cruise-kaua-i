@@ -236,7 +236,7 @@ export default function FindRide() {
     }
 
     setSelectedRide(ride);
-    setShowBookingModal(true);
+    setTimeout(() => setShowBookingModal(true), 100);
   };
 
   // BookingModal now handles checkout redirect directly
