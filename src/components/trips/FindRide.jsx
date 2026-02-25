@@ -194,6 +194,7 @@ export default function FindRide() {
   };
 
   const handleBookRide = (ride) => {
+    setShowDriverProfile(false);
     if (!currentUser) {
       setError("Please log in to book a ride.");
       return;
