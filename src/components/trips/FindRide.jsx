@@ -194,48 +194,8 @@ export default function FindRide() {
   };
 
   const handleBookRide = (ride) => {
-    setShowDriverProfile(false);
-    if (!currentUser) {
-      setError("Please log in to book a ride.");
-      return;
-    }
-    
-    if (!currentUser.profile_picture_url) {
-      setError("Please upload a profile picture before booking rides.");
-      return;
-    }
-
-    if (!currentUser.profile_complete) {
-      setError("Please complete your profile before booking rides.");
-      return;
-    }
-
-    if (!currentUser.terms_accepted || !currentUser.privacy_policy_accepted || !currentUser.community_agreement_accepted) {
-      setError("Please accept all legal agreements before booking rides.");
-      return;
-    }
-
-    if (!currentUser.drivers_license_verified) {
-      setError("Please verify your driver's license before booking rides.");
-      return;
-    }
-
-    if (!currentUser.notifications_enabled) {
-      setError("Please enable notifications before booking rides. Go to Account page.");
-      return;
-    }
-
-    if (currentUser.user_type !== 'rider' && currentUser.user_type !== 'driver' && currentUser.role !== 'admin') {
-      setError("Your account must be upgraded to rider status before booking rides.");
-      return;
-    }
-    
-    if (currentUser.pending_ratings && currentUser.pending_ratings.length > 0) {
-      setError("Please complete your pending trip ratings in the Inbox before booking new rides.");
-      return;
-    }
-
     setSelectedRide(ride);
+    setShowDriverProfile(false);
     setShowBookingModal(true);
   };
 
