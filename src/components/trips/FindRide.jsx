@@ -188,6 +188,11 @@ export default function FindRide() {
     setShowDriverProfile(true);
   };
 
+  const handleCloseDriverProfile = () => {
+    setShowDriverProfile(false);
+    // Don't clear selectedRide here so BookingModal can still use it
+  };
+
   const handleBookRide = (ride) => {
     if (!currentUser) {
       setError("Please log in to book a ride.");
