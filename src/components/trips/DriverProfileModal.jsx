@@ -21,12 +21,11 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
     : 0;
 
   const handleBookRide = () => {
-    onClose();
-    setTimeout(() => onBookRide(ride), 50);
+    onBookRide(ride);
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
       <DialogContent className="sm:max-w-lg !bg-white rounded-3xl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-secondary">Driver Profile</DialogTitle>
