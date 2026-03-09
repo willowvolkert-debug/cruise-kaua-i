@@ -99,5 +99,12 @@ export function getRouteCap(from, to) {
 export function getPricingInfo(from, to) {
   const suggestion = suggestPrice(from, to);
   const cap = getRouteCap(from, to);
+
+  // Ensure suggestion never exceeds the cap
+  if (suggestion && cap) {
+    suggestion.local = Math.min(suggestion.local, cap.local);
+    suggestion.visitor = Math.min(suggestion.visitor, cap.visitor);
+  }
+
   return { suggestion, cap };
 }
