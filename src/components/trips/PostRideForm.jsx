@@ -567,6 +567,7 @@ export default function PostRideForm({ island = "Kauai" }) {
                     onChange={(value) => handleInputChange('departure_location', value)}
                     placeholder="e.g., Lihue"
                     onValidationChange={(isUnsupported) => setHasUnsupportedLocation(prev => isUnsupported || prev)}
+                    island={island}
                   />
                 </div>
                 <div className="space-y-2">
@@ -577,6 +578,7 @@ export default function PostRideForm({ island = "Kauai" }) {
                     onChange={(value) => handleInputChange('destination', value)}
                     placeholder="e.g., Hanalei"
                     onValidationChange={(isUnsupported) => setHasUnsupportedLocation(isUnsupported)}
+                    island={island}
                   />
                 </div>
               </div>
