@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin, Loader2, AlertTriangle } from "lucide-react";
 
-// Locations north of Lumahaʻi Beach - no service area
+// Locations north of Lumahaʻi Beach - no service area (Kauai only)
 const UNSUPPORTED_LOCATIONS = [
   "haena", "ha'ena", "hāʻena", "haʻena",
   "kee", "ke'e", "kēʻe", "keʻe", "kee beach",
@@ -13,12 +13,42 @@ const UNSUPPORTED_LOCATIONS = [
   "limahuli"
 ];
 
-const isUnsupportedLocation = (location) => {
-  if (!location) return false;
+const isUnsupportedLocation = (location, island) => {
+  if (!location || island !== 'Kauai') return false;
   const normalized = location.toLowerCase().trim();
   return UNSUPPORTED_LOCATIONS.some(loc => 
     normalized.includes(loc) || loc.includes(normalized)
   );
+};
+
+const ISLAND_FALLBACKS = {
+  Kauai: [
+    "Lihue, Kauai", "Kapaa, Kauai", "Poipu, Kauai", "Princeville, Kauai",
+    "Hanalei, Kauai", "Koloa, Kauai", "Waimea, Kauai", "Kilauea, Kauai",
+    "Hanapepe, Kauai", "Anahola, Kauai"
+  ],
+  Oahu: [
+    "Honolulu, Oahu", "Waikiki, Oahu", "Kailua, Oahu", "Kaneohe, Oahu",
+    "Pearl City, Oahu", "Aiea, Oahu", "Mililani, Oahu", "Waipahu, Oahu",
+    "Ewa Beach, Oahu", "Kapolei, Oahu", "North Shore, Oahu", "Haleiwa, Oahu"
+  ],
+  Maui: [
+    "Kahului, Maui", "Lahaina, Maui", "Kihei, Maui", "Wailea, Maui",
+    "Paia, Maui", "Hana, Maui", "Wailuku, Maui", "Makawao, Maui",
+    "Haiku, Maui", "Kaanapali, Maui"
+  ],
+  "Big Island": [
+    "Hilo, Big Island", "Kona, Big Island", "Waimea, Big Island", "Pahoa, Big Island",
+    "Volcano, Big Island", "Captain Cook, Big Island", "Honokaa, Big Island",
+    "Naalehu, Big Island", "Waikoloa, Big Island", "Kohala, Big Island"
+  ],
+  Molokai: [
+    "Kaunakakai, Molokai", "Hoolehua, Molokai", "Maunaloa, Molokai",
+    "Halawa, Molokai", "Kualapuu, Molokai"
+  ],
+  Lanai: [
+    "Lanai City, Lanai", "Manele Bay, Lanai", "Hulopo'e Beach, Lanai"
+  ]
 };
 
 export default function LocationAutocomplete({ 
@@ -27,7 +57,8 @@ export default function LocationAutocomplete({
   placeholder, 
   id,
   className = "",
-  onValidationChange
+  onValidationChange,
+  island = "Kauai"
 }) {
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
