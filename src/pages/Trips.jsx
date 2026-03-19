@@ -1,27 +1,73 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, MessageSquarePlus, Car } from "lucide-react";
+import { Search, MessageSquarePlus, Car, MapPin } from "lucide-react";
 import FindRide from "../components/trips/FindRide";
 import RequestRide from "../components/trips/RequestRide";
 import PostRideForm from "../components/trips/PostRideForm";
+import { base44 } from "@/api/base44Client";
+
+const ISLANDS = ["Kauai", "Oahu", "Maui", "Big Island", "Molokai", "Lanai"];
 
 export default function TripsPage() {
   const [isExploreMode, setIsExploreMode] = React.useState(false);
+  const [selectedIsland, setSelectedIsland] = React.useState("Kauai");
+  const [islandLoaded, setIslandLoaded] = React.useState(false);
 
   React.useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const exploreParam = urlParams.get('explore');
     setIsExploreMode(exploreParam === 'true');
+
+    // Load saved island preference from user profile
+    base44.auth.me().then(user => {
+      if (user?.preferred_island) {
+        setSelectedIsland(user.preferred_island);
+      }
+      setIslandLoaded(true);
+    }).catch(() => setIslandLoaded(true));
   }, []);
+
+  const handleIslandChange = async (island) => {
+    setSelectedIsland(island);
+    try {
+      await base44.auth.updateMe({ preferred_island: island });
+    } catch (e) {
+      // non-critical
+    }
+  };
 
   return (
     <div className="p-3 md:p-8 bg-white">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
+        <div className="mb-6">
           <h1 className="text-3xl md:text-4xl font-bold text-secondary mb-2">
             plan your trip
           </h1>
           <p className="text-gray-600">find a ride, request a ride, or offer seats for your next drive</p>
+
+          {/* Island Selector */}
+          <div className="mt-4 flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <MapPin className="w-4 h-4 text-primary" />
+              <span className="font-medium">island:</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {ISLANDS.map(island => (
+                <button
+                  key={island}
+                  onClick={() => handleIslandChange(island)}
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                    selectedIsland === island
+                      ? 'bg-primary text-white shadow-sm'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {island}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {isExploreMode && (
             <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-2xl">
               <p className="text-blue-800 text-sm">
@@ -44,13 +90,13 @@ export default function TripsPage() {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="find" className="mt-6">
-            <FindRide />
+            <FindRide island={selectedIsland} />
           </TabsContent>
           <TabsContent value="request" className="mt-6">
-            <RequestRide />
+            <RequestRide island={selectedIsland} />
           </TabsContent>
           <TabsContent value="post" className="mt-6">
-            <PostRideForm />
+            <PostRideForm island={selectedIsland} />
           </TabsContent>
         </Tabs>
 
