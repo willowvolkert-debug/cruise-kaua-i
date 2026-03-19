@@ -16,6 +16,16 @@ export default function MessageRiderModal({ isOpen, onClose, request, onMessageS
     try {
       setIsSending(true);
       const currentUser = await base44.auth.me();
+
+      // Look up rider's email
+      let riderEmail = '';
+      try {
+        const allUsers = await base44.entities.User.list();
+        const rider = allUsers.find(u => u.id === request.rider_id);
+        riderEmail = rider?.email || '';
+      } catch (e) {
+        console.error("Could not fetch rider email:", e);
+      }
       
       // Find or create booking for messaging
       const bookings = await base44.entities.RideBooking.filter({
