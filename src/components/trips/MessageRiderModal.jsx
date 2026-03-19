@@ -54,8 +54,29 @@ export default function MessageRiderModal({ isOpen, onClose, request, onMessageS
       ];
 
       await base44.entities.RideBooking.update(booking.id, {
-        messages: updatedMessages
+        messages: updatedMessages,
+        booking_status: 'confirmed'
       });
+
+      // Send email notification to rider
+      try {
+        const appUrl = 'https://ride-connect-b7a57d59.base44.app';
+        await base44.integrations.Core.SendEmail({
+          to: request.rider_email || '',
+          subject: `🌺 A driver responded to your ride request on Cruise Kauaʻi!`,
+          body: `
+<html><body style="font-family: Arial, sans-serif; line-height: 1.8; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+<p>Aloha ${request.rider_name},</p>
+<p>A driver has seen your ride request and sent you a message on Cruise Kauaʻi!</p>
+<p style="background: #f5f5f5; padding: 16px; border-radius: 8px; font-style: italic;">"${message}"</p>
+<p>Log in to the app to chat with them and book your ride: <a href="${appUrl}">${appUrl}</a></p>
+<p>Mahalo,<br/>Cruise Kauaʻi Team</p>
+</body></html>
+          `.trim()
+        });
+      } catch (emailErr) {
+        console.error("Error sending email to rider:", emailErr);
+      }
 
       onMessageSent(request);
       onClose();
