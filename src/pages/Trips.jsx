@@ -51,6 +51,13 @@ export default function TripsPage() {
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <MapPin className="w-4 h-4 text-primary" />
               <span className="font-medium">island:</span>
+              <button
+                onClick={() => setIslandSelectorVisible(v => !v)}
+                className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                title={islandSelectorVisible ? "hide" : "show"}
+              >
+                {islandSelectorVisible ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+              </button>
             </div>
             {islandSelectorVisible && (
               <div className="flex flex-wrap gap-2">
