@@ -262,13 +262,15 @@ export default function InboxPage() {
             setRejectedBookings(riderRejectedBookings);
 
             // Active bookings: confirmed status with paid payment for both drivers and riders
+            // Also include ride-request reply bookings (confirmed, total_amount=0, ride_id starts with 'ride-request-')
             const userActiveBookings = allBookings.filter(b => {
                 const isPassenger = String(b.passenger_id) === String(currentUser.id);
                 const isDriver = String(b.driver_id) === String(currentUser.id);
                 const isConfirmed = b.booking_status === 'confirmed';
                 const isPaid = b.payment_status === 'paid';
+                const isRideRequestReply = isConfirmed && b.total_amount === 0 && b.ride_id?.startsWith('ride-request-');
                 
-                return (isPassenger || isDriver) && isConfirmed && isPaid;
+                return (isPassenger || isDriver) && isConfirmed && (isPaid || isRideRequestReply);
             });
 
             const needsReview = [];
