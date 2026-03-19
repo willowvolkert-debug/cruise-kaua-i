@@ -232,46 +232,46 @@ export default function FindRide() {
           {Object.entries(ridesByDate)
             .sort(([a], [b]) => new Date(a) - new Date(b))
             .map(([date, dateRides]) => (
-              <Card key={date} className="shadow-md border-gray-200 bg-white rounded-3xl">
-                <CardHeader>
-                  <CardTitle className="text-lg text-secondary flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-primary" />
-                    {format(parseISO(date), "EEEE, MMMM d, yyyy")} — All Rides Around Kauaʻi
+              <Card key={date} className="shadow-sm border-gray-200 bg-white rounded-2xl">
+                <CardHeader className="pb-2 px-4 pt-4">
+                  <CardTitle className="text-sm font-semibold text-secondary flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-primary shrink-0" />
+                    {format(parseISO(date), "EEE, MMM d")}
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid gap-4 md:grid-cols-2">
+                <CardContent className="px-3 pb-3">
+                  <div className="flex flex-col gap-2">
                     {dateRides
                       .sort((a, b) => (a.departure_time || '').localeCompare(b.departure_time || ''))
                       .map((ride) => (
                         <div
                           key={ride.id}
-                          className="border border-border rounded-2xl p-4 hover:shadow-md transition-shadow cursor-pointer bg-white"
+                          className="border border-border rounded-xl p-3 hover:shadow-md transition-shadow cursor-pointer bg-white"
                           onClick={() => handleViewDriver(ride)}
                         >
-                          <div className="flex justify-between items-start mb-3">
-                            <div>
-                              <p className="font-semibold text-secondary">{ride.departure_time || 'Flexible time'}</p>
-                              <p className="text-sm text-gray-600">{ride.departure_location} → {ride.destination}</p>
+                          <div className="flex justify-between items-start mb-2">
+                            <div className="min-w-0 flex-1 pr-2">
+                              <p className="font-semibold text-secondary text-sm">{ride.departure_time || 'Flexible'}</p>
+                              <p className="text-xs text-gray-600 truncate">{ride.departure_location} → {ride.destination}</p>
                             </div>
-                            <div className="text-right">
-                              <p className="font-bold text-lg text-primary">
+                            <div className="text-right shrink-0">
+                              <p className="font-bold text-base text-primary">
                                 ${currentUser?.has_hawaii_id ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0)}
                               </p>
-                              <p className="text-xs text-gray-500">per seat</p>
+                              <p className="text-xs text-gray-500">/ seat</p>
                             </div>
                           </div>
 
                           <div className="flex justify-between items-center">
-                            <div className="flex items-center gap-3">
-                              <Avatar className="w-10 h-10">
+                            <div className="flex items-center gap-2">
+                              <Avatar className="w-8 h-8 shrink-0">
                                 <AvatarImage src={ride.driver_profile_picture_url} alt={ride.driver_name} />
-                                <AvatarFallback className="bg-gradient-to-r from-primary to-secondary text-white font-semibold text-sm">
+                                <AvatarFallback className="bg-gradient-to-r from-primary to-secondary text-white font-semibold text-xs">
                                   {ride.driver_name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'DR'}
                                 </AvatarFallback>
                               </Avatar>
                               <div>
-                                <span className="text-sm font-medium text-gray-700">
+                                <span className="text-xs font-medium text-gray-700">
                                   @{ride.driver_username || ride.driver_name}
                                 </span>
                                 {driverRatings[ride.driver_id]?.length > 0 && (
@@ -284,15 +284,11 @@ export default function FindRide() {
                                 )}
                               </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <Users className="w-4 h-4 text-gray-400" />
-                              <span className="text-sm text-gray-600">{ride.seats_available} seats</span>
+                            <div className="flex items-center gap-1 text-gray-500">
+                              <Users className="w-3 h-3" />
+                              <span className="text-xs">{ride.seats_available}</span>
                             </div>
                           </div>
-
-                          <p className="text-xs text-gray-500 mt-2 hover:text-primary">
-                            Click to view driver profile →
-                          </p>
                         </div>
                       ))}
                   </div>
