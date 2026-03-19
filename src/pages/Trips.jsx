@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, MessageSquarePlus, Car, MapPin } from "lucide-react";
+import { Search, MessageSquarePlus, Car, MapPin, EyeOff, Eye } from "lucide-react";
 import FindRide from "../components/trips/FindRide";
 import RequestRide from "../components/trips/RequestRide";
 import PostRideForm from "../components/trips/PostRideForm";
 import { base44 } from "@/api/base44Client";
 
-const ISLANDS = ["Kauai", "Oahu", "Maui", "Big Island", "Molokai", "Lanai"];
+const ISLANDS = ["Kauai", "Oahu", "Maui", "Big Island"];
 
 export default function TripsPage() {
   const [isExploreMode, setIsExploreMode] = React.useState(false);
   const [selectedIsland, setSelectedIsland] = React.useState("Kauai");
   const [islandLoaded, setIslandLoaded] = React.useState(false);
+  const [islandSelectorVisible, setIslandSelectorVisible] = React.useState(true);
 
   React.useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -51,21 +52,33 @@ export default function TripsPage() {
               <MapPin className="w-4 h-4 text-primary" />
               <span className="font-medium">island:</span>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {ISLANDS.map(island => (
-                <button
-                  key={island}
-                  onClick={() => handleIslandChange(island)}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-                    selectedIsland === island
-                      ? 'bg-primary text-white shadow-sm'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  }`}
-                >
-                  {island}
-                </button>
-              ))}
-            </div>
+            {islandSelectorVisible && (
+              <div className="flex flex-wrap gap-2">
+                {ISLANDS.map(island => (
+                  <button
+                    key={island}
+                    onClick={() => handleIslandChange(island)}
+                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                      selectedIsland === island
+                        ? 'bg-primary text-white shadow-sm'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                  >
+                    {island}
+                  </button>
+                ))}
+              </div>
+            )}
+            {!islandSelectorVisible && (
+              <span className="text-sm font-medium text-primary">{selectedIsland}</span>
+            )}
+            <button
+              onClick={() => setIslandSelectorVisible(v => !v)}
+              className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors ml-1"
+              title={islandSelectorVisible ? "hide" : "show"}
+            >
+              {islandSelectorVisible ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+            </button>
           </div>
 
           {isExploreMode && (
