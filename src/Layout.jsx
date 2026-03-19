@@ -87,10 +87,15 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
 
   return (
     <>
-      <SidebarHeader className="border-b border-gray-200 p-6 bg-white">
+      <SidebarHeader className="border-b border-gray-200 p-4 bg-white">
         <div className="flex items-center gap-3 mb-4">
-            <div>
-            <h2 className="font-bold text-blue-500 text-2xl tracking-wide">cruise kauaʻi</h2>
+          <img
+            src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
+            alt="Cruise Kauaʻi logo"
+            className="w-12 h-12 object-cover rounded-xl shadow-sm shrink-0"
+          />
+          <div>
+            <h2 className="font-bold text-blue-500 text-xl tracking-wide">cruise kauaʻi</h2>
             <p className="text-xs text-gray-500">sharing aloha one ride at a time</p>
           </div>
         </div>
