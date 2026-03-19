@@ -24,12 +24,13 @@ const AuthenticatedApp = () => {
   // Show loading spinner while checking app public settings or auth
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-white">
+      <div className="fixed inset-0 flex flex-col items-center justify-center bg-white gap-4">
         <img
           src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
           alt="Cruise Kauaʻi"
           className="w-48 h-48 object-cover rounded-2xl shadow-lg"
         />
+        <h1 className="text-2xl font-bold text-blue-500 tracking-wide">cruise kauaʻi</h1>
       </div>
     );
   }
