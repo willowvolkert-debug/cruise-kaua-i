@@ -121,7 +121,7 @@ export default function LocationAutocomplete({
     const newValue = e.target.value;
     setInputValue(newValue);
     
-    const unsupported = isUnsupportedLocation(newValue);
+    const unsupported = isUnsupportedLocation(newValue, island);
     setIsUnsupported(unsupported);
     onValidationChange?.(unsupported);
     
