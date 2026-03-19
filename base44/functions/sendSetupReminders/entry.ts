@@ -113,7 +113,7 @@ Deno.serve(async (req) => {
 
                     <p style="margin-bottom: 16px; font-weight: bold;">We also have two new features on our app:</p>
 
-                    <p style="margin-bottom: 12px;"><strong>(1) REQUEST A RIDE:</strong> riders can now request a ride in the trips tab. Requested rides are shown to all drivers posting a ride, helping drivers connect to riders quicker, and helping us understand the typical needs of riders.</p>
+                    <p style="margin-bottom: 12px;"><strong>(1) FIND A RIDE:</strong> riders can now browse all available rides in the trips tab without needing to search for a specific route. Simply open the app, tap "view all rides," and see all upcoming rides posted by drivers — making it easier than ever to find a trip that works for you.</p>
 
                     <p style="margin-bottom: 24px;"><strong>(2) RECURRING RIDES:</strong> drivers can now set up recurring rides when posting a trip. Simply fill out the recurring ride tab under "post a ride" with your morning commute or daily grocery run. Then, press on that ride and it will populate below, and the only field you have to fill out is the date.</p>
 
