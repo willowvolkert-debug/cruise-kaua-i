@@ -17,7 +17,7 @@ import MessageRiderModal from "./MessageRiderModal";
 import RecurringTripModal from "./RecurringTripModal";
 import RiderProfileModal from "./RiderProfileModal";
 
-export default function PostRideForm() {
+export default function PostRideForm({ island = "Kauai" }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [error, setError] = useState(null);
