@@ -790,6 +790,8 @@ Cruise Kauaʻi Team
     const recentChats = activeBookings
         .filter(booking => {
             if (!booking.messages || booking.messages.length === 0) return false;
+            // Ride-request reply bookings always show (no real ride attached)
+            if (booking.ride_id?.startsWith('ride-request-')) return true;
             // Check if ride is within 3 days after departure
             const ride = allRidesData.find(r => r.id === booking.ride_id);
             if (!ride) return true; // Show if ride not found
