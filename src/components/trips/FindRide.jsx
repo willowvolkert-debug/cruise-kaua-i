@@ -13,7 +13,7 @@ import BookingModal from "../rides/BookingModal";
 import FindRideTutorial from "../tutorial/FindRideTutorial";
 import { handlePaymentSuccess } from "@/functions/handlePaymentSuccess";
 
-export default function FindRide() {
+export default function FindRide({ island = "Kauai" }) {
   const today = new Date();
   const todayStr = format(today, 'yyyy-MM-dd');
   const nextWeekStr = format(addDays(today, 7), 'yyyy-MM-dd');
