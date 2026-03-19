@@ -95,7 +95,7 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
             className="w-12 h-12 object-cover rounded-xl shadow-sm shrink-0"
           />
           <div>
-            <h2 className="font-bold text-blue-500 text-xl tracking-wide">cruise kauaʻi</h2>
+            <h2 className="font-bold text-blue-500 text-xl tracking-wide">cruise {currentUser?.preferred_island ? currentUser.preferred_island.toLowerCase() : "kauaʻi"}</h2>
             <p className="text-xs text-gray-500">sharing aloha one ride at a time</p>
           </div>
         </div>
@@ -336,7 +336,7 @@ export default function Layout({ children, currentPageName }) {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <SidebarTrigger data-sidebar="trigger" className="hover:bg-gray-100 p-2 rounded-2xl transition-colors duration-200" />
-                            <h1 className="text-lg font-bold text-secondary">cruise kauaʻi</h1>
+                            <h1 className="text-lg font-bold text-secondary">cruise {currentUser?.preferred_island ? currentUser.preferred_island.toLowerCase() : "kauaʻi"}</h1>
                           </div>
                           <img
                             src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
