@@ -34,7 +34,7 @@ export default function TripsPage() {
         <Tabs defaultValue="find" className="w-full">
           <TabsList className="grid w-full grid-cols-3 bg-gray-100 p-1 rounded-3xl">
             <TabsTrigger value="find" className="py-2.5 text-base flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-md rounded-3xl">
-              <Search className="w-5 h-5"/> find a ride
+              <Search className="w-5 h-5"/> view all rides
             </TabsTrigger>
             <TabsTrigger value="request" className="py-2.5 text-base flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-md rounded-3xl">
               <MessageSquarePlus className="w-5 h-5"/> request a ride
