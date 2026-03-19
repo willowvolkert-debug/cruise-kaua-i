@@ -304,15 +304,15 @@ export default function FindRide() {
               </Card>
             ))}
         </div>
-      ) : !error ? (
+      ) : (
         <Card className="border-gray-200 rounded-3xl bg-white">
           <CardContent className="p-12 text-center">
             <MapPin className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-secondary mb-2">no rides found</h3>
-            <p className="text-gray-500">No rides posted for this date range. Try expanding the dates or check back later.</p>
+            <h3 className="text-xl font-semibold text-secondary mb-2">no rides posted</h3>
+            <p className="text-gray-500">No rides have been posted for this date range. Try expanding the dates or check back later.</p>
           </CardContent>
         </Card>
-      ) : null}
+      )}
 
       <DriverProfileModal
         isOpen={showDriverProfile}
