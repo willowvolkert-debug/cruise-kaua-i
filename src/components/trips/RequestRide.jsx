@@ -186,6 +186,7 @@ export default function RequestRide({ island = "Kauai" }) {
                     value={requestData.departure_location}
                     onChange={(value) => handleInputChange('departure_location', value)}
                     placeholder="e.g., Lihue"
+                    island={island}
                   />
                 </div>
                 <div className="space-y-2">
@@ -195,6 +196,7 @@ export default function RequestRide({ island = "Kauai" }) {
                     value={requestData.destination}
                     onChange={(value) => handleInputChange('destination', value)}
                     placeholder="e.g., Hanalei"
+                    island={island}
                   />
                 </div>
               </div>
