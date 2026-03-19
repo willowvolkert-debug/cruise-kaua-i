@@ -141,7 +141,7 @@ export default function LocationAutocomplete({
     const shortName = suggestion.name.split(',')[0].trim();
     setInputValue(shortName);
     
-    const unsupported = isUnsupportedLocation(shortName);
+    const unsupported = isUnsupportedLocation(shortName, island);
     setIsUnsupported(unsupported);
     onValidationChange?.(unsupported);
     
