@@ -177,48 +177,44 @@ export default function FindRide() {
       )}
 
       {/* Date Range Filter */}
-      <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
-        <CardContent className="pt-5 pb-4">
-          <div className="flex flex-col sm:flex-row sm:items-end gap-4">
-            <div className="flex items-center gap-2 flex-1">
-              <div className="space-y-1 flex-1">
-                <Label className="text-xs text-gray-500">from date</Label>
-                <Input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => handleDateChange(e.target.value, null)}
-                  className="rounded-2xl"
-                />
-              </div>
-              <span className="text-gray-400 mt-5">→</span>
-              <div className="space-y-1 flex-1">
-                <Label className="text-xs text-gray-500">to date</Label>
-                <Input
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => handleDateChange(null, e.target.value)}
-                  className="rounded-2xl"
-                />
-              </div>
+      <Card className="shadow-md border-gray-200 bg-white rounded-2xl">
+        <CardContent className="pt-4 pb-3 px-4">
+          <div className="flex items-end gap-2">
+            <div className="space-y-1 flex-1 min-w-0">
+              <Label className="text-xs text-gray-500">from</Label>
+              <Input
+                type="date"
+                value={startDate}
+                onChange={(e) => handleDateChange(e.target.value, null)}
+                className="rounded-xl text-sm h-9"
+              />
             </div>
-            <div className="flex gap-2 sm:pb-0">
-              <Button
-                onClick={handleRefresh}
-                disabled={isLoading}
-                className="bg-primary hover:bg-primary/90 text-white rounded-2xl px-6"
-              >
-                <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-                {isLoading ? 'loading...' : 'update'}
-              </Button>
-              <Button
-                onClick={() => setShowTutorial(true)}
-                variant="outline"
-                size="icon"
-                className="rounded-2xl border-gray-300"
-              >
-                <HelpCircle className="w-4 h-4" />
-              </Button>
+            <span className="text-gray-400 mb-2 text-sm">→</span>
+            <div className="space-y-1 flex-1 min-w-0">
+              <Label className="text-xs text-gray-500">to</Label>
+              <Input
+                type="date"
+                value={endDate}
+                onChange={(e) => handleDateChange(null, e.target.value)}
+                className="rounded-xl text-sm h-9"
+              />
             </div>
+            <Button
+              onClick={handleRefresh}
+              disabled={isLoading}
+              className="bg-primary hover:bg-primary/90 text-white rounded-xl px-4 h-9 mb-0 shrink-0"
+            >
+              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+              <span className="hidden sm:inline ml-2">{isLoading ? 'loading...' : 'update'}</span>
+            </Button>
+            <Button
+              onClick={() => setShowTutorial(true)}
+              variant="outline"
+              size="icon"
+              className="rounded-xl border-gray-300 h-9 w-9 shrink-0"
+            >
+              <HelpCircle className="w-4 h-4" />
+            </Button>
           </div>
         </CardContent>
       </Card>
