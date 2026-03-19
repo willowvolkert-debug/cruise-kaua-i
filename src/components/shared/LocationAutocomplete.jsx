@@ -89,11 +89,10 @@ export default function LocationAutocomplete({
     }
 
     setIsLoading(true);
+    const islandLabel = island === "Big Island" ? "Hawaii Island, Hawaii" : `${island}, Hawaii`;
     try {
-      // Use Nominatim (OpenStreetMap) for location search - free and no API key needed
-      // Bias search towards Kauai, Hawaii area
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query + ", Kauai, Hawaii")}&limit=5&addressdetails=1`
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query + ", " + islandLabel)}&limit=5&addressdetails=1`
       );
       
       if (response.ok) {
@@ -107,21 +106,9 @@ export default function LocationAutocomplete({
       }
     } catch (error) {
       console.error("Error fetching locations:", error);
-      // Fallback to common Kauai locations
-      const kauaiLocations = [
-        "Lihue, Kauai",
-        "Kapaa, Kauai", 
-        "Poipu, Kauai",
-        "Princeville, Kauai",
-        "Hanalei, Kauai",
-        "Koloa, Kauai",
-        "Waimea, Kauai",
-        "Kilauea, Kauai",
-        "Hanapepe, Kauai",
-        "Anahola, Kauai"
-      ].filter(loc => loc.toLowerCase().includes(query.toLowerCase()));
-      
-      setSuggestions(kauaiLocations.map((loc, idx) => ({
+      const fallbacks = (ISLAND_FALLBACKS[island] || ISLAND_FALLBACKS.Kauai)
+        .filter(loc => loc.toLowerCase().includes(query.toLowerCase()));
+      setSuggestions(fallbacks.map((loc, idx) => ({
         id: idx,
         name: loc,
         fullName: loc
