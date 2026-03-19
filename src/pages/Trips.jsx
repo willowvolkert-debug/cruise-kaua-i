@@ -79,13 +79,6 @@ export default function TripsPage() {
             {!islandSelectorVisible && (
               <span className="text-sm font-medium text-primary">{selectedIsland}</span>
             )}
-            <button
-              onClick={() => setIslandSelectorVisible(v => !v)}
-              className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors ml-1"
-              title={islandSelectorVisible ? "hide" : "show"}
-            >
-              {islandSelectorVisible ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-            </button>
           </div>
 
           {isExploreMode && (
