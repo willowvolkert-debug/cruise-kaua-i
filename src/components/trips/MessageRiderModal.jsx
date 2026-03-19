@@ -72,7 +72,7 @@ export default function MessageRiderModal({ isOpen, onClose, request, onMessageS
       try {
         const appUrl = 'https://ride-connect-b7a57d59.base44.app';
         await base44.integrations.Core.SendEmail({
-          to: request.rider_email || '',
+          to: riderEmail,
           subject: `🌺 A driver responded to your ride request on Cruise Kauaʻi!`,
           body: `
 <html><body style="font-family: Arial, sans-serif; line-height: 1.8; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
