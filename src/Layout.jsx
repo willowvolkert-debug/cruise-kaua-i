@@ -332,11 +332,16 @@ export default function Layout({ children, currentPageName }) {
                       onTouchMove={onTouchMove}
                       onTouchEnd={onTouchEnd}
                     >
-                      <header className="bg-white border-b border-gray-200 px-6 py-4 md:hidden">
-                        <div className="flex items-center gap-4">
-                            <SidebarTrigger data-sidebar="trigger" className="hover:bg-gray-100 p-2 rounded-2xl transition-colors duration-200" />
-                            <h1 className="text-xl font-bold text-secondary">cruise kauaʻi</h1>
-                          </div>
+                      <header className="bg-white border-b border-gray-200 px-4 py-3 md:hidden">
+                        <div className="flex items-center gap-3">
+                          <SidebarTrigger data-sidebar="trigger" className="hover:bg-gray-100 p-2 rounded-2xl transition-colors duration-200" />
+                          <img
+                            src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
+                            alt="Cruise Kauaʻi logo"
+                            className="w-8 h-8 object-cover rounded-lg"
+                          />
+                          <h1 className="text-lg font-bold text-secondary">cruise kauaʻi</h1>
+                        </div>
                       </header>
 
                       <div className="flex-1 overflow-auto bg-white">
