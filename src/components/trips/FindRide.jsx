@@ -297,11 +297,11 @@ export default function FindRide() {
             ))}
         </div>
       ) : (
-        <Card className="border-gray-200 rounded-3xl bg-white">
-          <CardContent className="p-12 text-center">
-            <MapPin className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-secondary mb-2">no rides posted</h3>
-            <p className="text-gray-500">No rides have been posted for this date range. Try expanding the dates or check back later.</p>
+        <Card className="border-gray-200 rounded-2xl bg-white">
+          <CardContent className="p-8 text-center">
+            <MapPin className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+            <h3 className="text-base font-semibold text-secondary mb-1">no rides posted</h3>
+            <p className="text-sm text-gray-500">No rides for this date range. Try expanding the dates or check back later.</p>
           </CardContent>
         </Card>
       )}
