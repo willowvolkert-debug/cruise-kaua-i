@@ -72,6 +72,15 @@ export default function LocationAutocomplete({
     setInputValue(value || '');
   }, [value]);
 
+  // Clear the input when island changes
+  useEffect(() => {
+    setInputValue('');
+    onChange('');
+    setSuggestions([]);
+    setIsUnsupported(false);
+    onValidationChange?.(false);
+  }, [island]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
