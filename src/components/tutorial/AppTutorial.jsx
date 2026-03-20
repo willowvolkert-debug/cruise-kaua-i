@@ -14,8 +14,8 @@ const tutorialSteps = [
     position: "bottom"
   },
   {
-    title: "Find a Ride",
-    description: "Enter your departure location, destination, and date to search for available rides. View driver profiles and ratings before booking.",
+    title: "View all rides",
+    description: "Pick your island, choose your date(s), and view all rides available on island during that time. Press on any ride to view driver profile & ratings before booking.",
     highlight: "find-ride-form",
     position: "bottom"
   },
