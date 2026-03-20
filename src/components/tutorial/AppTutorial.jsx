@@ -21,7 +21,7 @@ const tutorialSteps = [
   },
   {
     title: "Post a Ride",
-    description: "Share your upcoming trip by entering route details, date, time, and price. Set rider preferences and specify if you allow bags. When riders request to join, review their profile and accept or reject.",
+    description: "If you are a driver, share your upcoming trips by entering route details, date, time, and price. Set rider preferences and specify if you allow bags. When riders request to join, review their profile and accept or reject.",
     highlight: "post-ride-form",
     position: "top"
   },
