@@ -13,37 +13,37 @@ Deno.serve(async (req) => {
   const oneMonthAgo = new Date(now);
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
-  let purgedCount = 0;
+  let purgedLicense = 0;
+  let purgedInsurance = 0;
 
   for (const u of users) {
-    // Only purge if both license AND vehicle are verified
-    if (!u.drivers_license_verified || !u.vehicle_verified) continue;
+    const updates = {};
 
-    // Check if license expiry date exists and is at least 1 month old (approval happened)
-    // We use updated_date as a proxy for when verification was approved,
-    // but also check that expiry dates are present (meaning docs were submitted)
-    const hasLicenseDoc = u.drivers_license_front_url || u.drivers_license_back_url;
-    const hasInsuranceDoc = u.auto_policy_photo_url;
+    // Purge license photos if submitted more than 1 month ago
+    if (
+      (u.drivers_license_front_url || u.drivers_license_back_url) &&
+      u.license_submitted_date &&
+      new Date(u.license_submitted_date) < oneMonthAgo
+    ) {
+      updates.drivers_license_front_url = null;
+      updates.drivers_license_back_url = null;
+      purgedLicense++;
+    }
 
-    if (!hasLicenseDoc && !hasInsuranceDoc) continue;
+    // Purge insurance photo if submitted more than 1 month ago
+    if (
+      u.auto_policy_photo_url &&
+      u.insurance_submitted_date &&
+      new Date(u.insurance_submitted_date) < oneMonthAgo
+    ) {
+      updates.auto_policy_photo_url = null;
+      purgedInsurance++;
+    }
 
-    // Check if verification was approved at least 1 month ago
-    // We use the presence of expiry dates + verified flags to determine this
-    // Use updated_date of the user record as a conservative proxy
-    const approvalDate = new Date(u.updated_date);
-    if (approvalDate > oneMonthAgo) continue;
-
-    // Purge sensitive document URLs and expiry dates
-    await base44.asServiceRole.entities.User.update(u.id, {
-      drivers_license_front_url: null,
-      drivers_license_back_url: null,
-      auto_policy_photo_url: null,
-      license_expiry_date: null,
-      insurance_expiry_date: null,
-    });
-
-    purgedCount++;
+    if (Object.keys(updates).length > 0) {
+      await base44.asServiceRole.entities.User.update(u.id, updates);
+    }
   }
 
-  return Response.json({ success: true, purged: purgedCount });
+  return Response.json({ success: true, purgedLicense, purgedInsurance });
 });
