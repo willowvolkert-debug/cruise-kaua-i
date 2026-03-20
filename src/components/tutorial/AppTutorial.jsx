@@ -27,7 +27,7 @@ const tutorialSteps = [
   },
   {
     title: "Inbox",
-    description: "View all your active trips, pending requests, and messages. Chat with drivers or riders to coordinate pickup details. Complete ratings after each trip.",
+    description: "View all your active trips, pending requests, and messages. Chat with drivers or riders to coordinate pickup details. Complete ratings after each trip to keep everyone using the platform verified by other community members. We encourage you to use your best judgement before making the choice to ride with someone, and practice safe & respectful driver & rider behavior during the ride.",
     highlight: "inbox-nav",
     position: "right"
   },
