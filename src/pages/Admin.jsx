@@ -1307,9 +1307,10 @@ export default function AdminPage() {
 
                   <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-2xl space-y-2">
                     <label className="font-semibold text-yellow-900 block">License Expiration Date</label>
-                    <p className="text-sm text-yellow-700">Enter the expiry date from the license. You'll be notified when it expires.</p>
+                    <p className="text-sm text-yellow-700">Enter the expiry date from the license (e.g. 12/2028). You'll be notified when it expires.</p>
                     <input
-                      type="date"
+                      type="text"
+                      placeholder="MM/YYYY"
                       value={licenseExpiryDate}
                       onChange={(e) => setLicenseExpiryDate(e.target.value)}
                       className="w-full px-3 py-2 border border-yellow-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
@@ -1429,9 +1430,10 @@ export default function AdminPage() {
                 {/* Insurance Expiry Date */}
                 <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-2xl space-y-2">
                   <label className="font-semibold text-yellow-900 block">Insurance Expiration Date</label>
-                  <p className="text-sm text-yellow-700">Enter the expiry date from the insurance card. You'll be notified when it expires.</p>
+                  <p className="text-sm text-yellow-700">Enter the expiry date from the insurance card (e.g. 06/2026). You'll be notified when it expires.</p>
                   <input
-                    type="date"
+                    type="text"
+                    placeholder="MM/YYYY"
                     value={insuranceExpiryDate}
                     onChange={(e) => setInsuranceExpiryDate(e.target.value)}
                     className="w-full px-3 py-2 border border-yellow-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
