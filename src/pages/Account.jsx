@@ -469,7 +469,7 @@ export default function AccountPage() {
                                             <p className="font-medium text-secondary">{user.full_name} ({user.email})</p>
                                         </div>
                                         <div className="space-y-2">
-                                            <Label>Username *</Label>
+                                            <Label>Username</Label>
                                             <Input 
                                                 value={editData.username} 
                                                 onChange={(e) => setEditData({...editData, username: e.target.value})} 
@@ -479,7 +479,7 @@ export default function AccountPage() {
                                         </div>
                                         <div className="grid grid-cols-2 gap-4 max-w-xs">
                                             <div className="space-y-2">
-                                                <Label>Age *</Label>
+                                                <Label>Age</Label>
                                                 <Input 
                                                     type="number"
                                                     min="18"
@@ -490,7 +490,7 @@ export default function AccountPage() {
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <Label>Gender *</Label>
+                                                <Label>Gender</Label>
                                                 <Select 
                                                     value={editData.gender} 
                                                     onValueChange={(v) => setEditData({...editData, gender: v})}
@@ -507,7 +507,7 @@ export default function AccountPage() {
                                             </div>
                                         </div>
                                         <div className="space-y-2">
-                                            <Label>Bio *</Label>
+                                            <Label>Bio</Label>
                                             <p className="text-sm text-gray-600">
                                                 Tell us a bit about yourself and why you're using Cruise Kauaʻi!
                                             </p>
@@ -653,11 +653,7 @@ export default function AccountPage() {
                                                               <span><strong>Vehicle pending review.</strong> You'll be notified once it's approved.</span>
                                                           </div>
                                                       )}
-                                                      {!profileComplete && (
-                                                          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-2xl text-blue-800 text-sm">
-                                                              <strong>Complete your profile:</strong> Username, bio, age, gender, and profile picture are required to book or post rides.
-                                                          </div>
-                                                      )}
+
                     </CardContent>
                 </Card>
 
