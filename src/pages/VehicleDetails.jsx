@@ -161,6 +161,7 @@ export default function VehicleDetailsPage() {
         vehicle_exterior_photo_url: vehicleExteriorPhotoUrl,
         vehicle_interior_photo_urls: vehicleInteriorPhotoUrls,
         auto_policy_photo_url: policyPhotoUrl,
+        insurance_submitted_date: insuranceSubmittedDate,
         vehicle_pending_review: true,
         vehicle_verified: false
       });
