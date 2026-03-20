@@ -204,7 +204,8 @@ export default function AdminPage() {
         drivers_license_pending_review: false,
         license_rejection_reason: null,
         user_type: newUserType,
-        has_hawaii_id: hasHawaiiId
+        has_hawaii_id: hasHawaiiId,
+        license_expiry_date: licenseExpiryDate || null
       });
 
       // Send approval email notification
@@ -278,7 +279,8 @@ export default function AdminPage() {
         vehicle_pending_review: false,
         vehicle_rejection_reason: null,
         can_drive: true,
-        user_type: newUserType
+        user_type: newUserType,
+        insurance_expiry_date: insuranceExpiryDate || null
       });
 
       // Send approval email notification
