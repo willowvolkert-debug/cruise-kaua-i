@@ -64,7 +64,7 @@ export default function WelcomePage() {
               🚗 Make money on your grocery runs or commutes by posting the rides you're already taking on the app. Riders can look at all rides on any date, or request a ride, paying a reasonable fare ($5-30) to get to their destination.
             </p>
             <p className="text-base md:text-lg text-gray-700 leading-relaxed">
-              🤙 Mahalo for being a part of the movement to reduce traffic, build community & make transportation more accessible on Kauaʻi!
+              🤙 Mahalo for being a part of the movement to reduce traffic, build community & make transportation more accessible in Hawaiʻi!
             </p>
           </div>
 
