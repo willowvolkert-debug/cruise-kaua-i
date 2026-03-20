@@ -178,6 +178,7 @@ export default function Layout({ children, currentPageName }) {
   const [unreadCount, setUnreadCount] = React.useState(0);
   const sidebarRef = React.useRef(null);
   const [isExploreMode, setIsExploreMode] = React.useState(false);
+  const [currentIsland, setCurrentIsland] = React.useState(null);
 
   const minSwipeDistance = 50;
 
