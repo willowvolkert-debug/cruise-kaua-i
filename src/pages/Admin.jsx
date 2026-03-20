@@ -40,6 +40,9 @@ export default function AdminPage() {
   const [showLicenseModal, setShowLicenseModal] = useState(false);
   const [showVehicleModal, setShowVehicleModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [licenseExpiryDate, setLicenseExpiryDate] = useState('');
+  const [insuranceExpiryDate, setInsuranceExpiryDate] = useState('');
+  const [expiredDocUsers, setExpiredDocUsers] = useState([]);
   const [error, setError] = useState(null);
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [messageUser, setMessageUser] = useState(null);
@@ -132,6 +135,7 @@ export default function AdminPage() {
     setHasHawaiiId(user.has_hawaii_id || false);
     setLicenseFrontFile(null);
     setLicenseBackFile(null);
+    setLicenseExpiryDate(user.license_expiry_date || '');
     setShowLicenseModal(true);
   };
 
@@ -182,6 +186,7 @@ export default function AdminPage() {
 
   const handleViewVehicle = (user) => {
     setSelectedUser(user);
+    setInsuranceExpiryDate(user.insurance_expiry_date || '');
     setShowVehicleModal(true);
   };
 
