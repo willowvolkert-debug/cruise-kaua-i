@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, MessageSquarePlus, Car, MapPin, EyeOff, Eye } from "lucide-react";
+import { Search, MessageSquarePlus, Car, MapPin } from "lucide-react";
 import FindRide from "../components/trips/FindRide";
 import RequestRide from "../components/trips/RequestRide";
 import PostRideForm from "../components/trips/PostRideForm";
