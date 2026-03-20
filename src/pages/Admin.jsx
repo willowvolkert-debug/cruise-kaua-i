@@ -540,6 +540,60 @@ export default function AdminPage() {
           </Card>
         )}
 
+        {/* Expired Documents Alert */}
+        {expiredDocUsers.length > 0 && (
+          <Card className="shadow-lg border-yellow-300 bg-yellow-50 rounded-3xl">
+            <CardHeader>
+              <CardTitle className="text-xl text-yellow-800 flex items-center gap-2">
+                <AlertCircle className="w-6 h-6 text-yellow-600" />
+                expired documents ({expiredDocUsers.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-yellow-700 mb-4 text-sm">
+                These users have expired licenses or insurance. Message them to re-verify.
+              </p>
+              <div className="space-y-3">
+                {expiredDocUsers.map(u => {
+                  const licExpired = u.drivers_license_verified && u.license_expiry_date && new Date(u.license_expiry_date + 'T00:00:00') <= new Date();
+                  const insExpired = u.vehicle_verified && u.insurance_expiry_date && new Date(u.insurance_expiry_date + 'T00:00:00') <= new Date();
+                  return (
+                    <div key={u.id} className="bg-white rounded-lg p-4 border border-yellow-200">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-semibold text-secondary">{u.full_name}</p>
+                          <p className="text-sm text-gray-600">{u.email}</p>
+                          <div className="flex gap-2 mt-1 flex-wrap">
+                            {licExpired && (
+                              <Badge className="bg-red-100 text-red-700 border-red-300 text-xs">
+                                license expired {u.license_expiry_date}
+                              </Badge>
+                            )}
+                            {insExpired && (
+                              <Badge className="bg-orange-100 text-orange-700 border-orange-300 text-xs">
+                                insurance expired {u.insurance_expiry_date}
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                        <Button
+                          onClick={() => handleMessageUser(u)}
+                          size="sm"
+                          variant="outline"
+                          className="border-yellow-400 text-yellow-700 hover:bg-yellow-50"
+                        >
+                          <Mail className="w-4 h-4 mr-1" />
+                          message
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Pending Community Posts */}
         {pendingCommunityPosts.length > 0 && (
           <Card className="shadow-lg border-purple-300 bg-purple-50 rounded-3xl">
