@@ -30,12 +30,19 @@ export default function TripsPage() {
 
   const handleIslandChange = async (island) => {
     setSelectedIsland(island);
+    window.dispatchEvent(new CustomEvent('islandChanged', { detail: island }));
     try {
       await base44.auth.updateMe({ preferred_island: island });
     } catch (e) {
       // non-critical
     }
   };
+
+  React.useEffect(() => {
+    if (islandLoaded) {
+      window.dispatchEvent(new CustomEvent('islandChanged', { detail: selectedIsland }));
+    }
+  }, [islandLoaded, selectedIsland]);
 
   return (
     <div className="p-3 md:p-8 bg-white">
@@ -53,10 +60,9 @@ export default function TripsPage() {
               <span className="font-medium">island:</span>
               <button
                 onClick={() => setIslandSelectorVisible(v => !v)}
-                className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors"
-                title={islandSelectorVisible ? "hide" : "show"}
+                className="text-xs text-gray-400 hover:text-gray-600 transition-colors underline"
               >
-                {islandSelectorVisible ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                {islandSelectorVisible ? "hide" : "show"}
               </button>
             </div>
             {islandSelectorVisible && (
