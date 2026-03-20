@@ -119,9 +119,11 @@ export default function VehicleDetailsPage() {
         vehicleInteriorPhotoUrls = results.map(r => r.file_url);
       }
 
+      let insuranceSubmittedDate = user?.insurance_submitted_date;
       if (vehicleData.auto_policy_image) {
         const result = await base44.integrations.Core.UploadFile({ file: vehicleData.auto_policy_image });
         policyPhotoUrl = result.file_url;
+        insuranceSubmittedDate = new Date().toISOString();
       }
 
       // Log the vehicle edit

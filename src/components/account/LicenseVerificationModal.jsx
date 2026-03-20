@@ -97,7 +97,8 @@ export default function LicenseVerificationModal({ isOpen, onClose, onSuccess })
       await base44.auth.updateMe({
         drivers_license_front_url: frontResult.file_url,
         drivers_license_back_url: backResult.file_url,
-        drivers_license_pending_review: true
+        drivers_license_pending_review: true,
+        license_submitted_date: new Date().toISOString()
       });
 
       // Log the license edit
