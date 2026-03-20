@@ -267,6 +267,10 @@ export default function Layout({ children, currentPageName }) {
 
     loadUser();
 
+    // Listen for island changes
+    const handleIslandChanged = (e) => setCurrentIsland(e.detail);
+    window.addEventListener('islandChanged', handleIslandChanged);
+
     // Listen for tutorial trigger
     const handleOpenTutorial = () => setShowTutorial(true);
     window.addEventListener('openTutorial', handleOpenTutorial);
@@ -277,6 +281,7 @@ export default function Layout({ children, currentPageName }) {
     }, 30000);
 
     return () => {
+      window.removeEventListener('islandChanged', handleIslandChanged);
       window.removeEventListener('openTutorial', handleOpenTutorial);
       clearInterval(interval);
     };
