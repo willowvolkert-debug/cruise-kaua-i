@@ -219,7 +219,7 @@ export default function Layout({ children, currentPageName }) {
           // Mark as seen since they're authenticated — no need to redirect back to Welcome
           base44.auth.updateMe({ has_seen_welcome: true });
         }
-        if (!user.has_seen_tutorial && location.pathname === createPageUrl("Trips")) {
+        if (!user.has_seen_tutorial && (location.pathname === createPageUrl("Trips") || location.pathname === "/")) {
           setShowTutorial(true);
         }
 
