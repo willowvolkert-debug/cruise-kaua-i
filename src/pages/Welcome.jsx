@@ -58,7 +58,7 @@ export default function WelcomePage() {
 
           <div className="space-y-4 py-4 text-left">
             <p className="text-base md:text-lg text-gray-700 leading-relaxed">
-              🌺 We are a community-based ridesharing app aimed at reducing traffic on Kauaʻi.
+              🌺 We are a community-based ridesharing app in Hawaiʻi aimed at reducing traffic & improving accessible transportation throughout the paeʻāina. We are completely launched on all islands, but our name currently remains as Cruise Kauaʻi to honor our roots 🌿
             </p>
             <p className="text-base md:text-lg text-gray-700 leading-relaxed">
               🚗 Make money on your grocery runs or commutes by posting the rides you're already taking on the app. Riders can look at all rides on any date, or request a ride, paying a reasonable fare ($5-30) to get to their destination.
