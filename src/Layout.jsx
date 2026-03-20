@@ -76,7 +76,7 @@ const getNavigationItems = (isExploreMode) => {
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
-function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal, location, unreadCount, isExploreMode }) {
+function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal, location, unreadCount, isExploreMode, currentIsland }) {
   const { setOpenMobile } = useSidebar();
 
   const handleNavClick = () => {
@@ -329,6 +329,7 @@ export default function Layout({ children, currentPageName }) {
             location={location}
             unreadCount={unreadCount}
             isExploreMode={isExploreMode}
+            currentIsland={currentIsland}
           />
         </Sidebar>
 
