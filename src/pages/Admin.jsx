@@ -116,6 +116,16 @@ export default function AdminPage() {
       const pendingPosts = allCommunityPosts.filter(p => p.status === 'pending');
       setPendingCommunityPosts(pendingPosts);
 
+      // Find users with expired docs
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const expired = allUsers.filter(u => {
+        const licExpired = u.drivers_license_verified && u.license_expiry_date && new Date(u.license_expiry_date + 'T00:00:00') <= today;
+        const insExpired = u.vehicle_verified && u.insurance_expiry_date && new Date(u.insurance_expiry_date + 'T00:00:00') <= today;
+        return licExpired || insExpired;
+      });
+      setExpiredDocUsers(expired);
+
       // Load landing page views (last 24 hours)
       const allPageViews = await base44.entities.PageView.list('-created_date', 500);
       const recentLandingViews = allPageViews.filter(v => 
