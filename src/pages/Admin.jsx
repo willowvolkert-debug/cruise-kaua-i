@@ -1362,6 +1362,18 @@ export default function AdminPage() {
                   )}
                 </div>
 
+                {/* Insurance Expiry Date */}
+                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-2xl space-y-2">
+                  <label className="font-semibold text-yellow-900 block">Insurance Expiration Date</label>
+                  <p className="text-sm text-yellow-700">Enter the expiry date from the insurance card. You'll be notified when it expires.</p>
+                  <input
+                    type="date"
+                    value={insuranceExpiryDate}
+                    onChange={(e) => setInsuranceExpiryDate(e.target.value)}
+                    className="w-full px-3 py-2 border border-yellow-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                  />
+                </div>
+
                 {/* Insurance Policy */}
                 <div className="space-y-2">
                   <p className="font-semibold text-secondary">insurance policy</p>
