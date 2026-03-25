@@ -20,8 +20,8 @@ Deno.serve(async (req) => {
     const firstName = recipient.full_name?.split(' ')[0] || 'there';
     await base44.asServiceRole.integrations.Core.SendEmail({
       to: recipient.email,
-      subject: "Plan your next ride on Cruise Hawaiʻi 🌺",
-      body: `Aloha ${firstName}!\n\nJust a friendly reminder that Cruise Hawaiʻi is here to help you get around the island.\n\n🚗 Driving soon? Post your ride and offer seats to fellow community members.\n🙋 Need a ride? Request one in advance so drivers can plan accordingly.\n\nLog in and plan your next trip at https://cruisekauai.org\n\nMahalo for being part of the Cruise Hawaiʻi community!\n\n– The Cruise Hawaiʻi Team`
+      subject: "Plan your next ride on Cruise Kauaʻi 🌺", 🌺",
+      body: `Aloha ${firstName}!\n\nJust a friendly reminder that Cruise Kauaʻi is here to help you get around the island.\n\n🚗 Driving soon? Post your ride and offer seats to fellow community members.\n🙋 Need a ride? Request one in advance so drivers can plan accordingly.\n\nLog in and plan your next trip at https://cruisekauai.org\n\nMahalo for being part of the Cruise Kauaʻi community!\n\n– The Cruise Kauaʻi Team`
     });
     sent++;
   }
