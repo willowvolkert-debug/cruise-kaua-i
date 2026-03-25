@@ -72,10 +72,7 @@ export default function FindRide({ island = "Kauai" }) {
           setError("Please accept all legal agreements before booking rides. Go to Account page.");
           return;
         }
-        if (!user.drivers_license_verified) {
-          setError("Please verify your driver's license before booking rides. Go to Account page.");
-          return;
-        }
+
         if (!user.notifications_enabled) {
           setError("Please enable notifications before booking rides. Go to Account page and tap 'enable now' under notifications.");
           return;
