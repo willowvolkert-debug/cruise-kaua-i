@@ -77,10 +77,7 @@ export default function FindRide({ island = "Kauai" }) {
           setError("Please enable notifications before booking rides. Go to Account page and tap 'enable now' under notifications.");
           return;
         }
-        if (user.user_type !== 'rider' && user.user_type !== 'driver' && user.role !== 'admin') {
-          setError("Your account must be upgraded to rider status before booking rides. Please complete your profile and license verification.");
-          return;
-        }
+
         if (user.pending_ratings && user.pending_ratings.length > 0) {
           setError("Please complete your pending trip ratings in the Inbox before booking new rides.");
           return;
