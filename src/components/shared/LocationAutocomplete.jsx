@@ -182,12 +182,7 @@ export default function LocationAutocomplete({
         </div>
       </div>
       
-      {isUnsupported && (
-        <p className="text-red-500 text-sm mt-1 flex items-start gap-1">
-          <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" />
-          <span>There is no service north of Lumahaʻi Beach, so Cruise Kauaʻi cannot be used. If you are a local wanting access to the app in order to get to and from home, please fill out the contact us form.</span>
-        </p>
-      )}
+
 
       {showSuggestions && suggestions.length > 0 && (
         <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-2xl shadow-lg max-h-60 overflow-y-auto">
