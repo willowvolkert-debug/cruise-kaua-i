@@ -7,7 +7,7 @@ const UNSUPPORTED_LOCATIONS = [
   "haena", "ha'ena", "hāʻena", "haʻena",
   "kee", "ke'e", "kēʻe", "keʻe", "kee beach",
   "tunnels", "tunnels beach", "makua beach",
-  "wainiha", "wainihā",
+
   "napali", "na pali", "nā pali",
   "kalalau", "hanakapi'ai", "hanakapiai",
   "limahuli"
