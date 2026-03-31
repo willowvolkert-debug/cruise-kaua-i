@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, DollarSign, Car, X, Plus, AlertCircle, Clock, Users, HelpCircle, MessageSquare, ChevronDown, ChevronUp, Repeat, Pencil, Lightbulb, AlertTriangle } from "lucide-react";
+import { MapPin, DollarSign, Car, X, Plus, AlertCircle, Clock, Users, HelpCircle, MessageSquare, ChevronDown, ChevronUp, Repeat, Pencil, Lightbulb, AlertTriangle, Trash2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { getPricingInfo } from "./pricingUtils";
 import PostRideTutorial from "../tutorial/PostRideTutorial";
@@ -263,6 +263,13 @@ export default function PostRideForm({ island = "Kauai" }) {
     } else {
       setRecurringTrips([...recurringTrips, savedTrip]);
     }
+  };
+
+  const handleDeleteTrip = async (trip, e) => {
+    e.stopPropagation();
+    if (!confirm(`Delete "${trip.trip_name}"?`)) return;
+    await base44.entities.RecurringTrip.delete(trip.id);
+    setRecurringTrips(recurringTrips.filter(t => t.id !== trip.id));
   };
 
   const handleCloseModal = () => {
@@ -528,15 +535,26 @@ export default function PostRideForm({ island = "Kauai" }) {
                           {trip.departure_time} • {trip.seats_available} seats
                         </p>
                       </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={(e) => handleEditTrip(trip, e)}
-                        className="rounded-2xl ml-2"
-                      >
-                        <Pencil className="w-4 h-4 text-gray-500" />
-                      </Button>
+                      <div className="flex gap-1">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => handleEditTrip(trip, e)}
+                          className="rounded-2xl"
+                        >
+                          <Pencil className="w-4 h-4 text-gray-500" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => handleDeleteTrip(trip, e)}
+                          className="rounded-2xl"
+                        >
+                          <Trash2 className="w-4 h-4 text-red-400" />
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
