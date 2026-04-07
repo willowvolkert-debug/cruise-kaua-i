@@ -1405,7 +1405,7 @@ export default function AdminPage() {
                      <div className="space-y-2">
                        <a href={selectedUser.vehicle_exterior_photo_url.replace(/^http:/, 'https:')} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline block">open photo in new tab ↗</a>
                        <img
-                         src={selectedUser.vehicle_exterior_photo_url}
+                         src={selectedUser.vehicle_exterior_photo_url.replace(/^http:/, 'https:')}
                          alt="Vehicle exterior"
                          className="w-full rounded-lg border-2 border-border object-cover max-h-96"
                          onError={(e) => { e.target.style.display='none'; }}
@@ -1432,7 +1432,7 @@ export default function AdminPage() {
                          {selectedUser.vehicle_interior_photo_urls.map((url, idx) => (
                            <img
                              key={idx}
-                             src={url}
+                             src={url.replace(/^http:/, 'https:')}
                              alt={`Vehicle interior ${idx + 1}`}
                              className="w-full rounded-lg border-2 border-border object-cover h-48"
                              onError={(e) => { e.target.style.display='none'; }}
