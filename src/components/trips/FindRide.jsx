@@ -230,7 +230,7 @@ export default function FindRide({ island = "Kauai" }) {
                 <CardHeader className="pb-2 px-4 pt-4">
                   <CardTitle className="text-sm font-semibold text-secondary flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-primary shrink-0" />
-                    {format(parseISO(date), "EEE, MMM d")}
+                    {format(parseISO(date), "MM/dd/yyyy")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="px-3 pb-3">
