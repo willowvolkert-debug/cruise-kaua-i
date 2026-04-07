@@ -93,6 +93,7 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
             src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
             alt="Cruise Kauaʻi logo"
             className="w-12 h-12 object-cover rounded-xl shadow-sm shrink-0"
+            onError={(e) => { e.target.style.display='none'; }}
           />
           <div>
             <h2 className="font-bold text-blue-500 text-xl tracking-wide">cruise {(currentIsland || currentUser?.preferred_island || "kauaʻi").toLowerCase()}</h2>

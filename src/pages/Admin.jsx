@@ -1403,7 +1403,7 @@ export default function AdminPage() {
                    <p className="font-semibold text-secondary">outside of vehicle</p>
                    {selectedUser.vehicle_exterior_photo_url ? (
                      <div className="space-y-2">
-                       <a href={selectedUser.vehicle_exterior_photo_url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline block">open photo in new tab ↗</a>
+                       <a href={selectedUser.vehicle_exterior_photo_url.replace(/^http:/, 'https:')} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline block">open photo in new tab ↗</a>
                        <img
                          src={selectedUser.vehicle_exterior_photo_url}
                          alt="Vehicle exterior"
@@ -1425,7 +1425,7 @@ export default function AdminPage() {
                      <div className="space-y-2">
                        <div className="flex flex-wrap gap-2">
                          {selectedUser.vehicle_interior_photo_urls.map((url, idx) => (
-                           <a key={idx} href={url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline">photo {idx + 1} ↗</a>
+                           <a key={idx} href={url.replace(/^http:/, 'https:')} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline">photo {idx + 1} ↗</a>
                          ))}
                        </div>
                        <div className="grid grid-cols-2 gap-3">
