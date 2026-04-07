@@ -1414,11 +1414,11 @@ export default function AdminPage() {
                    {selectedUser.vehicle_exterior_photo_url ? (
                      <div className="space-y-2">
                        <a href={toPublicUrl(selectedUser.vehicle_exterior_photo_url)} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline block">open photo in new tab ↗</a>
+                       <p className="text-xs text-gray-400 break-all">{toPublicUrl(selectedUser.vehicle_exterior_photo_url)}</p>
                        <img
                          src={toPublicUrl(selectedUser.vehicle_exterior_photo_url)}
                          alt="Vehicle exterior"
                          className="w-full rounded-lg border-2 border-border object-cover max-h-96"
-                         onError={(e) => { e.target.style.display='none'; }}
                        />
                      </div>
                    ) : (
@@ -1441,11 +1441,10 @@ export default function AdminPage() {
                        <div className="grid grid-cols-2 gap-3">
                          {selectedUser.vehicle_interior_photo_urls.map((url, idx) => (
                            <img
-                             key={idx}
-                             src={toPublicUrl(url)}
-                             alt={`Vehicle interior ${idx + 1}`}
-                             className="w-full rounded-lg border-2 border-border object-cover h-48"
-                             onError={(e) => { e.target.style.display='none'; }}
+                            key={idx}
+                            src={toPublicUrl(url)}
+                            alt={`Vehicle interior ${idx + 1}`}
+                            className="w-full rounded-lg border-2 border-border object-cover h-48"
                            />
                          ))}
                        </div>
