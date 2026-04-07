@@ -20,6 +20,16 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
+// Convert internal base44 file URLs to public CDN URLs
+const toPublicUrl = (url) => {
+  if (!url) return url;
+  // Transform: https://base44.app/api/apps/{appId}/files/mp/public/{appId}/{file}
+  // To:        https://media.base44.com/images/public/{appId}/{file}
+  const match = url.match(/\/files\/mp\/public\/([^/]+)\/(.+)$/);
+  if (match) return `https://media.base44.com/images/public/${match[1]}/${match[2]}`;
+  return url;
+};
+
 export default function AdminPage() {
   const [users, setUsers] = useState([]);
   const [pendingLicenses, setPendingLicenses] = useState([]);
@@ -1403,9 +1413,9 @@ export default function AdminPage() {
                    <p className="font-semibold text-secondary">outside of vehicle</p>
                    {selectedUser.vehicle_exterior_photo_url ? (
                      <div className="space-y-2">
-                       <a href={selectedUser.vehicle_exterior_photo_url.replace(/^http:/, 'https:')} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline block">open photo in new tab ↗</a>
+                       <a href={toPublicUrl(selectedUser.vehicle_exterior_photo_url)} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline block">open photo in new tab ↗</a>
                        <img
-                         src={selectedUser.vehicle_exterior_photo_url.replace(/^http:/, 'https:')}
+                         src={toPublicUrl(selectedUser.vehicle_exterior_photo_url)}
                          alt="Vehicle exterior"
                          className="w-full rounded-lg border-2 border-border object-cover max-h-96"
                          onError={(e) => { e.target.style.display='none'; }}
@@ -1425,14 +1435,14 @@ export default function AdminPage() {
                      <div className="space-y-2">
                        <div className="flex flex-wrap gap-2">
                          {selectedUser.vehicle_interior_photo_urls.map((url, idx) => (
-                           <a key={idx} href={url.replace(/^http:/, 'https:')} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline">photo {idx + 1} ↗</a>
+                           <a key={idx} href={toPublicUrl(url)} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline">photo {idx + 1} ↗</a>
                          ))}
                        </div>
                        <div className="grid grid-cols-2 gap-3">
                          {selectedUser.vehicle_interior_photo_urls.map((url, idx) => (
                            <img
                              key={idx}
-                             src={url.replace(/^http:/, 'https:')}
+                             src={toPublicUrl(url)}
                              alt={`Vehicle interior ${idx + 1}`}
                              className="w-full rounded-lg border-2 border-border object-cover h-48"
                              onError={(e) => { e.target.style.display='none'; }}
@@ -1465,7 +1475,7 @@ export default function AdminPage() {
                   <p className="font-semibold text-secondary">insurance policy</p>
                   {selectedUser.auto_policy_photo_url ? (
                     <img
-                      src={selectedUser.auto_policy_photo_url}
+                      src={toPublicUrl(selectedUser.auto_policy_photo_url)}
                       alt="Insurance"
                       className="w-full rounded-lg border-2 border-border object-cover max-h-96"
                     />
