@@ -1399,41 +1399,53 @@ export default function AdminPage() {
                 </div>
 
                 {/* Vehicle Exterior Photo */}
-                <div className="space-y-2">
-                  <p className="font-semibold text-secondary">outside of vehicle</p>
-                  {selectedUser.vehicle_exterior_photo_url ? (
-                    <img
-                      src={selectedUser.vehicle_exterior_photo_url}
-                      alt="Vehicle exterior"
-                      className="w-full rounded-lg border-2 border-border object-cover max-h-96"
-                    />
-                  ) : (
-                    <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
-                      <p className="text-gray-400">No exterior photo uploaded</p>
-                    </div>
-                  )}
-                </div>
+                 <div className="space-y-2">
+                   <p className="font-semibold text-secondary">outside of vehicle</p>
+                   {selectedUser.vehicle_exterior_photo_url ? (
+                     <div className="space-y-2">
+                       <a href={selectedUser.vehicle_exterior_photo_url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline block">open photo in new tab ↗</a>
+                       <img
+                         src={selectedUser.vehicle_exterior_photo_url}
+                         alt="Vehicle exterior"
+                         className="w-full rounded-lg border-2 border-border object-cover max-h-96"
+                         onError={(e) => { e.target.style.display='none'; }}
+                       />
+                     </div>
+                   ) : (
+                     <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
+                       <p className="text-gray-400">No exterior photo uploaded</p>
+                     </div>
+                   )}
+                 </div>
 
                 {/* Vehicle Interior Photos */}
-                <div className="space-y-2">
-                  <p className="font-semibold text-secondary">inside of vehicle</p>
-                  {selectedUser.vehicle_interior_photo_urls && selectedUser.vehicle_interior_photo_urls.length > 0 ? (
-                    <div className="grid grid-cols-2 gap-3">
-                      {selectedUser.vehicle_interior_photo_urls.map((url, idx) => (
-                        <img
-                          key={idx}
-                          src={url}
-                          alt={`Vehicle interior ${idx + 1}`}
-                          className="w-full rounded-lg border-2 border-border object-cover h-48"
-                        />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
-                      <p className="text-gray-400">No interior photos uploaded</p>
-                    </div>
-                  )}
-                </div>
+                 <div className="space-y-2">
+                   <p className="font-semibold text-secondary">inside of vehicle</p>
+                   {selectedUser.vehicle_interior_photo_urls && selectedUser.vehicle_interior_photo_urls.length > 0 ? (
+                     <div className="space-y-2">
+                       <div className="flex flex-wrap gap-2">
+                         {selectedUser.vehicle_interior_photo_urls.map((url, idx) => (
+                           <a key={idx} href={url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline">photo {idx + 1} ↗</a>
+                         ))}
+                       </div>
+                       <div className="grid grid-cols-2 gap-3">
+                         {selectedUser.vehicle_interior_photo_urls.map((url, idx) => (
+                           <img
+                             key={idx}
+                             src={url}
+                             alt={`Vehicle interior ${idx + 1}`}
+                             className="w-full rounded-lg border-2 border-border object-cover h-48"
+                             onError={(e) => { e.target.style.display='none'; }}
+                           />
+                         ))}
+                       </div>
+                     </div>
+                   ) : (
+                     <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
+                       <p className="text-gray-400">No interior photos uploaded</p>
+                     </div>
+                   )}
+                 </div>
 
                 {/* Insurance Expiry Date */}
                 <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-2xl space-y-2">
