@@ -194,9 +194,17 @@ export default function AdminPage() {
     setIsUploadingLicense(false);
   };
 
-  const handleViewVehicle = (user) => {
-    setSelectedUser(user);
-    setInsuranceExpiryDate(user.insurance_expiry_date || '');
+  const handleViewVehicle = async (user) => {
+    // Re-fetch fresh user data to get latest photo URLs
+    try {
+      const allUsers = await base44.entities.User.list();
+      const freshUser = allUsers.find(u => u.id === user.id) || user;
+      setSelectedUser(freshUser);
+      setInsuranceExpiryDate(freshUser.insurance_expiry_date || '');
+    } catch (e) {
+      setSelectedUser(user);
+      setInsuranceExpiryDate(user.insurance_expiry_date || '');
+    }
     setShowVehicleModal(true);
   };
 
