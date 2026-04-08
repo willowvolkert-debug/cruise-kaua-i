@@ -140,10 +140,22 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
                 <span className="text-gray-600">Seats requested:</span>
                 <span className="font-medium">{booking.seats_booked}</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Total payment:</span>
-                <span className="font-medium">${booking.total_amount.toFixed(2)}</span>
-              </div>
+              {booking.is_partial_ride && booking.partial_from && booking.partial_to && (
+                <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-xl">
+                  <p className="text-xs font-semibold text-blue-700 mb-1">⚠️ Partial ride request</p>
+                  <p className="text-sm text-blue-800">
+                    This rider only wants a <strong>section</strong> of your route:<br />
+                    <strong>{booking.partial_from}</strong> → <strong>{booking.partial_to}</strong>
+                  </p>
+                  <p className="text-sm text-blue-700 mt-1">They would pay: <strong>${booking.total_amount.toFixed(2)}</strong></p>
+                </div>
+              )}
+              {!booking.is_partial_ride && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Total payment:</span>
+                  <span className="font-medium">${booking.total_amount.toFixed(2)}</span>
+                </div>
+              )}
             </div>
 
             {/* Recent Reviews */}

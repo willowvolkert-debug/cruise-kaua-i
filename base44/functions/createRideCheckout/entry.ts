@@ -21,6 +21,9 @@ Deno.serve(async (req) => {
             has_luggage,
             wants_detour_service,
             detour_destination,
+            is_partial_ride,
+            partial_from,
+            partial_to,
             driver_id,
             driver_username,
             success_url,
@@ -81,6 +84,9 @@ Deno.serve(async (req) => {
             wants_detour_service: wants_detour_service || false,
             detour_destination: detour_destination || '',
             detour_fee: detour_fee || 0,
+            is_partial_ride: is_partial_ride || false,
+            partial_from: partial_from || '',
+            partial_to: partial_to || '',
             messages: [],
             initial_notification_sent: false
         });

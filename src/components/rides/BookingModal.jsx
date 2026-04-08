@@ -7,7 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
-import { CreditCard, Navigation, Star, Loader2, MessageCircle, Wind, HelpCircle } from "lucide-react";
+import { CreditCard, Navigation, Star, Loader2, MessageCircle, Wind, HelpCircle, MapPin } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { createRideCheckout } from "@/functions/createRideCheckout";
 import { format } from "date-fns";
@@ -19,7 +20,10 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
     description: '', 
     has_luggage: false,
     wants_detour_service: false,
-    detour_destination: ''
+    detour_destination: '',
+    is_partial_ride: false,
+    partial_from: '',
+    partial_to: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -36,7 +40,10 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
           description: '', 
           has_luggage: false,
           wants_detour_service: false,
-          detour_destination: ''
+          detour_destination: '',
+          is_partial_ride: false,
+          partial_from: '',
+          partial_to: ''
         });
     }
   }, [isOpen, ride]);
@@ -103,6 +110,9 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         has_luggage: bookingData.has_luggage,
         wants_detour_service: bookingData.wants_detour_service,
         detour_destination: bookingData.detour_destination,
+        is_partial_ride: bookingData.is_partial_ride,
+        partial_from: bookingData.partial_from,
+        partial_to: bookingData.partial_to,
         driver_id: ride.driver_id,
         driver_username: ride.driver_username || '',
         success_url: window.location.origin + '/trips',
@@ -252,6 +262,51 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                   className="h-20"
                 />
             </div>
+
+            {ride.offers_midpoint_pickup && (
+              <div className="space-y-3 p-4 bg-blue-50 border border-blue-200 rounded-2xl">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="partial_ride"
+                    checked={bookingData.is_partial_ride}
+                    onCheckedChange={(checked) => setBookingData(p => ({ ...p, is_partial_ride: checked, partial_from: '', partial_to: '' }))}
+                  />
+                  <Label htmlFor="partial_ride" className="cursor-pointer font-medium text-blue-800">
+                    are you only looking for a section of this ride, not the whole thing?
+                  </Label>
+                </div>
+                {bookingData.is_partial_ride && (
+                  <div className="space-y-3 mt-2">
+                    <div className="space-y-1">
+                      <Label className="text-sm">coming from</Label>
+                      <Input
+                        value={bookingData.partial_from}
+                        onChange={(e) => setBookingData(p => ({ ...p, partial_from: e.target.value }))}
+                        placeholder="e.g., Kapaa"
+                        className="rounded-2xl"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-sm">going to</Label>
+                      <Input
+                        value={bookingData.partial_to}
+                        onChange={(e) => setBookingData(p => ({ ...p, partial_to: e.target.value }))}
+                        placeholder="e.g., Hanalei"
+                        className="rounded-2xl"
+                      />
+                    </div>
+                    {bookingData.partial_from && bookingData.partial_to && (
+                      <div className="flex items-start gap-2 p-3 bg-white border border-blue-300 rounded-2xl">
+                        <MapPin className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
+                        <p className="text-sm text-blue-800">
+                          driving from <strong>{bookingData.partial_from}</strong> to <strong>{bookingData.partial_to}</strong> with this driver will cost <strong>${(pricePerSeat * (bookingData.seats_booked || 1)).toFixed(2)}</strong>
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="flex items-center space-x-2">
               <Checkbox 

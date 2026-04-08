@@ -1,0 +1,139 @@
+{
+  "name": "RideBooking",
+  "type": "object",
+  "properties": {
+    "ride_id": {
+      "type": "string"
+    },
+    "driver_id": {
+      "type": "string"
+    },
+    "passenger_id": {
+      "type": "string"
+    },
+    "passenger_name": {
+      "type": "string"
+    },
+    "passenger_username": {
+      "type": "string"
+    },
+    "driver_username": {
+      "type": "string"
+    },
+    "seats_booked": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "total_amount": {
+      "type": "number"
+    },
+    "booking_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "cancelled",
+        "rejected",
+        "completed"
+      ],
+      "default": "pending"
+    },
+    "description": {
+      "type": "string",
+      "description": "Why the passenger needs a ride"
+    },
+    "has_luggage": {
+      "type": "boolean",
+      "default": false
+    },
+    "wants_detour_service": {
+      "type": "boolean",
+      "default": false
+    },
+    "detour_destination": {
+      "type": "string"
+    },
+    "detour_fee": {
+      "type": "number",
+      "default": 0
+    },
+    "is_partial_ride": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether rider is only taking a section of the full route"
+    },
+    "partial_from": {
+      "type": "string",
+      "description": "Where rider wants to be picked up (partial ride)"
+    },
+    "partial_to": {
+      "type": "string",
+      "description": "Where rider wants to be dropped off (partial ride)"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "refunded"
+      ],
+      "default": "pending"
+    },
+    "payment_method_id": {
+      "type": "string"
+    },
+    "stripe_charge_id": {
+      "type": "string"
+    },
+    "cancellation_reason": {
+      "type": "string"
+    },
+    "cancellation_date": {
+      "type": "string"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "sender_id": {
+            "type": "string"
+          },
+          "sender_name": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "phone_number_detected": {
+      "type": "boolean",
+      "default": false
+    },
+    "reminder_count": {
+      "type": "integer",
+      "default": 0
+    },
+    "last_reminder_date": {
+      "type": "string"
+    },
+    "initial_notification_sent": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "ride_id",
+    "driver_id",
+    "passenger_id",
+    "passenger_name",
+    "seats_booked",
+    "total_amount"
+  ]
+}
