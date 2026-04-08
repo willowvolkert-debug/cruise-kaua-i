@@ -214,7 +214,6 @@ export default function PostRideForm({ island = "Kauai" }) {
 
   const handleMessageSent = (request) => {
     setMatchedRequest(request);
-    // Pre-fill route details
     setRideData(prev => ({
       ...prev,
       departure_location: request.departure_location,
@@ -226,6 +225,9 @@ export default function PostRideForm({ island = "Kauai" }) {
     if (request.stops && request.stops.length > 0) {
       setStops(request.stops);
     }
+    const { suggestion, cap } = getPricingInfo(request.departure_location, request.destination);
+    setPricingSuggestion(suggestion);
+    setPriceCapWarning(cap);
   };
 
   const handleSelectRecurringTrip = (trip) => {
@@ -249,6 +251,9 @@ export default function PostRideForm({ island = "Kauai" }) {
     if (trip.stops && trip.stops.length > 0) {
       setStops(trip.stops);
     }
+    const { suggestion, cap } = getPricingInfo(trip.departure_location, trip.destination);
+    setPricingSuggestion(suggestion);
+    setPriceCapWarning(cap);
   };
 
   const handleEditTrip = (trip, e) => {

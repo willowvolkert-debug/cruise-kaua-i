@@ -15,7 +15,9 @@ const LOCATION_MILES = {
   kilauea: 46,
   princeville: 53,
   hanalei: 56,
+  wainiha: 59,
   haena: 62,
+  kokee: 19,
 };
 
 // Price caps per route segment (bidirectional)

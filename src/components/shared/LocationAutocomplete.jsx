@@ -2,12 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin, Loader2, AlertTriangle } from "lucide-react";
 
-// Locations north of Lumahaʻi Beach - no service area (Kauai only)
+// Locations beyond service area (Kauai only)
 const UNSUPPORTED_LOCATIONS = [
-  "haena", "ha'ena", "hāʻena", "haʻena",
   "kee", "ke'e", "kēʻe", "keʻe", "kee beach",
   "tunnels", "tunnels beach", "makua beach",
-
   "napali", "na pali", "nā pali",
   "kalalau", "hanakapi'ai", "hanakapiai",
   "limahuli"
@@ -25,7 +23,7 @@ const ISLAND_FALLBACKS = {
   Kauai: [
     "Lihue, Kauai", "Kapaa, Kauai", "Poipu, Kauai", "Princeville, Kauai",
     "Hanalei, Kauai", "Koloa, Kauai", "Waimea, Kauai", "Kilauea, Kauai",
-    "Hanapepe, Kauai", "Anahola, Kauai"
+    "Hanapepe, Kauai", "Anahola, Kauai", "Wainiha, Kauai", "Haena, Kauai", "Kokee, Kauai"
   ],
   Oahu: [
     "Honolulu, Oahu", "Waikiki, Oahu", "Kailua, Oahu", "Kaneohe, Oahu",
