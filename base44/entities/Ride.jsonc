@@ -1,0 +1,172 @@
+{
+  "name": "Ride",
+  "type": "object",
+  "properties": {
+    "departure_location": {
+      "type": "string",
+      "description": "Starting point of the ride"
+    },
+    "destination": {
+      "type": "string",
+      "description": "End destination"
+    },
+    "stops": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Optional stops along the way"
+    },
+    "departure_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of departure"
+    },
+    "departure_time": {
+      "type": "string",
+      "description": "Time of departure"
+    },
+    "is_flexible": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the departure time is flexible"
+    },
+    "is_last_minute": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is a last minute ride (within 2 hours)"
+    },
+    "seats_available": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 8,
+      "description": "Number of available seats"
+    },
+    "price_per_seat": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Cost per seat in dollars"
+    },
+    "price_per_seat_local": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Cost per seat for locals"
+    },
+    "price_per_seat_tourist": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Cost per seat for tourists"
+    },
+    "rider_preference": {
+      "type": "string",
+      "enum": [
+        "locals_only",
+        "tourists_only",
+        "both_fine"
+      ],
+      "default": "both_fine",
+      "description": "Who can ride with the driver"
+    },
+    "description": {
+      "type": "string",
+      "description": "Why the driver is making this trip"
+    },
+    "driver_id": {
+      "type": "string",
+      "description": "ID of the driver"
+    },
+    "driver_name": {
+      "type": "string",
+      "description": "Name of the driver"
+    },
+    "driver_username": {
+      "type": "string",
+      "description": "Username of the driver"
+    },
+    "driver_profile_picture_url": {
+      "type": "string",
+      "description": "Profile picture URL of the driver"
+    },
+    "driver_bio": {
+      "type": "string",
+      "description": "Bio of the driver"
+    },
+    "driver_age": {
+      "type": "integer",
+      "description": "Age of the driver"
+    },
+    "driver_gender": {
+      "type": "string",
+      "description": "Gender of the driver"
+    },
+    "driver_preferences_chattiness": {
+      "type": "string",
+      "description": "Driver's chattiness preference"
+    },
+    "driver_preferences_scents": {
+      "type": "string",
+      "description": "Driver's scents preference"
+    },
+    "driver_license_state": {
+      "type": "string",
+      "description": "State of driver's license"
+    },
+    "driver_vehicle_exterior_photo_url": {
+      "type": "string",
+      "description": "URL to driver's vehicle exterior photo"
+    },
+    "driver_vehicle_interior_photo_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URLs to driver's vehicle interior photos"
+    },
+    "car_model": {
+      "type": "string",
+      "description": "Car make and model"
+    },
+    "smoking_allowed": {
+      "type": "boolean",
+      "default": false
+    },
+    "pets_allowed": {
+      "type": "boolean",
+      "default": false
+    },
+    "offers_detour_service": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether driver is willing to drive riders to final destination off highway for added fee"
+    },
+    "offers_midpoint_pickup": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether driver can pick up or drop off riders along the way"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "full",
+        "completed",
+        "cancelled"
+      ],
+      "default": "active"
+    },
+    "needs_rating": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this completed ride needs ratings"
+    }
+  },
+  "required": [
+    "departure_location",
+    "destination",
+    "departure_date",
+    "departure_time",
+    "seats_available",
+    "driver_name",
+    "driver_id"
+  ]
+}

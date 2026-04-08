@@ -52,7 +52,8 @@ export default function PostRideForm({ island = "Kauai" }) {
     rider_preference: 'both_fine',
     description: '',
     car_model: '',
-    offers_detour_service: false
+    offers_detour_service: false,
+    offers_midpoint_pickup: false
   });
 
   useEffect(() => {
@@ -386,7 +387,8 @@ export default function PostRideForm({ island = "Kauai" }) {
         rider_preference: 'both_fine',
         description: '',
         car_model: '',
-        offers_detour_service: false
+        offers_detour_service: false,
+        offers_midpoint_pickup: false
       });
       setStops(['']);
       
@@ -634,6 +636,20 @@ export default function PostRideForm({ island = "Kauai" }) {
                   <Plus className="w-4 h-4 mr-2" />
                   add stop
                 </Button>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label htmlFor="midpointPickup" className="font-medium">pickup/dropoff along the way</Label>
+                    <p className="text-xs text-gray-500 mt-0.5">can you pick up or drop off riders at points along your route?</p>
+                  </div>
+                  <Switch
+                    id="midpointPickup"
+                    checked={rideData.offers_midpoint_pickup}
+                    onCheckedChange={(checked) => handleInputChange('offers_midpoint_pickup', checked)}
+                  />
+                </div>
               </div>
 
               <div className="space-y-3">
