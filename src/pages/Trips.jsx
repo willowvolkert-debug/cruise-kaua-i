@@ -12,7 +12,7 @@ export default function TripsPage() {
   const [isExploreMode, setIsExploreMode] = React.useState(false);
   const [selectedIsland, setSelectedIsland] = React.useState("Kauai");
   const [islandLoaded, setIslandLoaded] = React.useState(false);
-  const [islandSelectorVisible, setIslandSelectorVisible] = React.useState(true);
+  const [islandSelectorVisible, setIslandSelectorVisible] = React.useState(false);
 
   React.useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
