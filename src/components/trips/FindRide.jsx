@@ -232,9 +232,14 @@ export default function FindRide({ island = "Kauai" }) {
                                 )}
                               </div>
                             </div>
-                            <div className="flex items-center gap-1 text-gray-500">
-                              <Users className="w-3 h-3" />
-                              <span className="text-xs">{ride.seats_available}</span>
+                            <div className="flex items-center gap-2">
+                              {ride.offers_midpoint_pickup && (
+                                <span className="text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-full">pickup/dropoff along route</span>
+                              )}
+                              <div className="flex items-center gap-1 text-gray-500">
+                                <Users className="w-3 h-3" />
+                                <span className="text-xs">{ride.seats_available}</span>
+                              </div>
                             </div>
                           </div>
                         </div>
