@@ -4,7 +4,7 @@ import { MapPin, Loader2, AlertTriangle } from "lucide-react";
 
 // Locations beyond service area (Kauai only)
 const UNSUPPORTED_LOCATIONS = [
-  "kee", "ke'e", "kēʻe", "keʻe", "kee beach",
+  "ke'e", "ḳēʼe", "keʻe", "kee beach",
   "tunnels", "tunnels beach", "makua beach",
   "napali", "na pali", "nā pali",
   "kalalau", "hanakapi'ai", "hanakapiai",
