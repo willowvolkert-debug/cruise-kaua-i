@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,12 +15,17 @@ import { format } from "date-fns";
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
 export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, currentUser, driverRatings = [] }) {
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
   const averageRating = driverRatings.length > 0 
     ? (driverRatings.reduce((sum, r) => sum + r.rating_value, 0) / driverRatings.length).toFixed(1)
     : 0;
 
   const handleBookRide = () => {
+    if (!currentUser) {
+      setShowLoginPrompt(true);
+      return;
+    }
     onBookRide(ride);
   };
 
@@ -179,6 +184,20 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
                 </div>
               )}
             </div>
+
+            {/* Login Prompt */}
+            {showLoginPrompt && (
+              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 text-center">
+                <p className="text-blue-800 font-semibold mb-1">Create an account to book this ride</p>
+                <p className="text-blue-700 text-sm mb-3">Join Cruise Hawaiʻi to connect with drivers and book rides.</p>
+                <Button
+                  onClick={() => base44.auth.redirectToLogin()}
+                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6"
+                >
+                  Sign Up / Log In
+                </Button>
+              </div>
+            )}
 
             {/* Book Button - Outside scrollable area */}
             <div className="flex justify-center pt-4 border-t border-gray-200">
