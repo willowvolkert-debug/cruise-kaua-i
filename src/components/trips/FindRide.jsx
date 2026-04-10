@@ -62,31 +62,19 @@ export default function FindRide({ island = "Kauai" }) {
 
         if (!user.profile_picture_url) {
           setError("Please upload a profile picture before booking rides. Go to Account page.");
-          return;
-        }
-        if (!user.profile_complete) {
+        } else if (!user.profile_complete) {
           setError("Please complete your profile (username, bio, age, gender) before booking rides. Go to Account page.");
-          return;
-        }
-        if (!user.terms_accepted || !user.privacy_policy_accepted || !user.community_agreement_accepted) {
+        } else if (!user.terms_accepted || !user.privacy_policy_accepted || !user.community_agreement_accepted) {
           setError("Please accept all legal agreements before booking rides. Go to Account page.");
-          return;
-        }
-
-        if (!user.notifications_enabled) {
+        } else if (!user.notifications_enabled) {
           setError("Please enable notifications before booking rides. Go to Account page and tap 'enable now' under notifications.");
-          return;
-        }
-
-        if (user.pending_ratings && user.pending_ratings.length > 0) {
+        } else if (user.pending_ratings && user.pending_ratings.length > 0) {
           setError("Please complete your pending trip ratings in the Inbox before booking new rides.");
-          return;
         }
-
-        // Auto-load rides after user checks pass
         await loadRides(user);
       } catch (e) {
-        setError("You must be logged in to use this feature.");
+        // Not logged in — load rides in view-only mode
+        await loadRides(null);
       }
     };
     init();
