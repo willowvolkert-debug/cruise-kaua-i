@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { getPublicRides } from "@/functions/getPublicRides";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,13 +21,12 @@ export default function FindRide({ island = "Kauai" }) {
 
   const [startDate, setStartDate] = useState(todayStr);
   const [endDate, setEndDate] = useState(nextWeekStr);
-
   const [rides, setRides] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRide, setSelectedRide] = useState(null);
   const [showDriverProfile, setShowDriverProfile] = useState(false);
   const [showBookingModal, setShowBookingModal] = useState(false);
-  const [error, setError] = useState(null);
+  const [bookingError, setBookingError] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [showTutorial, setShowTutorial] = useState(false);
   const [driverRatings, setDriverRatings] = useState({});
@@ -34,6 +34,7 @@ export default function FindRide({ island = "Kauai" }) {
 
   useEffect(() => {
     const init = async () => {
+      // Try to load current user (optional)
       try {
         const user = await base44.auth.me();
         setCurrentUser(user);
@@ -43,88 +44,68 @@ export default function FindRide({ island = "Kauai" }) {
         const paymentStatus = urlParams.get('payment');
 
         if (bookingId && paymentStatus === 'success') {
-          const sessionId = urlParams.get('session_id');
           try {
-            await handlePaymentSuccess({ booking_id: bookingId, session_id: sessionId });
+            await handlePaymentSuccess({ booking_id: bookingId, session_id: urlParams.get('session_id') });
             setPaymentSuccess(true);
             window.history.replaceState({}, '', window.location.pathname);
           } catch (err) {
             console.error("Error handling payment success:", err);
           }
         } else if (bookingId && paymentStatus === 'cancelled') {
-          try {
-            await base44.entities.RideBooking.delete(bookingId);
-          } catch (err) {
-            console.error("Error deleting cancelled booking:", err);
-          }
+          try { await base44.entities.RideBooking.delete(bookingId); } catch (e) {}
           window.history.replaceState({}, '', window.location.pathname);
         }
 
+        // Set booking-specific errors for logged-in users
         if (!user.profile_picture_url) {
-          setError("Please upload a profile picture before booking rides. Go to Account page.");
+          setBookingError("Please upload a profile picture before booking rides. Go to Account page.");
         } else if (!user.profile_complete) {
-          setError("Please complete your profile (username, bio, age, gender) before booking rides. Go to Account page.");
+          setBookingError("Please complete your profile before booking rides. Go to Account page.");
         } else if (!user.terms_accepted || !user.privacy_policy_accepted || !user.community_agreement_accepted) {
-          setError("Please accept all legal agreements before booking rides. Go to Account page.");
+          setBookingError("Please accept all legal agreements before booking rides. Go to Account page.");
         } else if (!user.notifications_enabled) {
-          setError("Please enable notifications before booking rides. Go to Account page and tap 'enable now' under notifications.");
+          setBookingError("Please enable notifications before booking rides. Go to Account page.");
         } else if (user.pending_ratings && user.pending_ratings.length > 0) {
-          setError("Please complete your pending trip ratings in the Inbox before booking new rides.");
+          setBookingError("Please complete your pending trip ratings in the Inbox before booking new rides.");
         }
-        await loadRides(user);
       } catch (e) {
-        // Not logged in — load rides in view-only mode
-        await loadRides(null);
+        // Not logged in — view-only mode
       }
+
+      await loadRides(todayStr, nextWeekStr);
     };
     init();
   }, []);
 
-  const loadRides = async (user, start = startDate, end = endDate) => {
+  const loadRides = async (start = startDate, end = endDate) => {
     setIsLoading(true);
     try {
-      const allRides = await base44.entities.Ride.list("-departure_date");
-      const filtered = allRides.filter(ride => {
-        if (ride.status !== 'active') return false;
-        if (ride.departure_date < start || ride.departure_date > end) return false;
-        if (user && ride.driver_id === user.id) return false;
-        return true;
-      });
+      const res = await getPublicRides({ start_date: start, end_date: end });
+      const allRides = res.data?.rides || [];
 
+      // Filter out current user's own rides
+      const filtered = allRides.filter(r => !currentUser || r.driver_id !== currentUser.id);
       setRides(filtered);
 
-      const allRatings = await base44.entities.Rating.list();
+      const allRatings = await base44.entities.Rating.list().catch(() => []);
       const ratings = {};
       filtered.forEach(ride => {
-        const dRatings = allRatings.filter(r =>
+        ratings[ride.driver_id] = allRatings.filter(r =>
           String(r.rated_user_id) === String(ride.driver_id) && r.trip_role === 'driver'
         );
-        ratings[ride.driver_id] = dRatings;
       });
       setDriverRatings(ratings);
     } catch (err) {
       console.error("Error loading rides:", err);
-      setError("Error loading rides. Please try again.");
     }
     setIsLoading(false);
   };
 
-  const handleDateChange = (newStart, newEnd) => {
-    if (newStart) setStartDate(newStart);
-    if (newEnd) setEndDate(newEnd);
-  };
-
-  const handleRefresh = () => {
-    if (currentUser) loadRides(currentUser, startDate, endDate);
-  };
+  const handleRefresh = () => loadRides(startDate, endDate);
 
   const handleViewDriver = (ride) => {
     setSelectedRide(ride);
     setShowDriverProfile(true);
-  };
-
-  const handleCloseDriverProfile = () => {
-    setShowDriverProfile(false);
   };
 
   const handleBookRide = (ride) => {
@@ -134,9 +115,8 @@ export default function FindRide({ island = "Kauai" }) {
   };
 
   const ridesByDate = rides.reduce((acc, ride) => {
-    const date = ride.departure_date;
-    if (!acc[date]) acc[date] = [];
-    acc[date].push(ride);
+    if (!acc[ride.departure_date]) acc[ride.departure_date] = [];
+    acc[ride.departure_date].push(ride);
     return acc;
   }, {});
 
@@ -146,15 +126,23 @@ export default function FindRide({ island = "Kauai" }) {
         <Alert className="rounded-2xl border-green-200 bg-green-50">
           <CheckCircle className="h-4 w-4 text-green-600" />
           <AlertDescription className="text-green-800">
-            Payment successful! Your ride request has been sent to the driver. They will be notified by email.
+            Payment successful! Your ride request has been sent to the driver.
           </AlertDescription>
         </Alert>
       )}
 
-      {error && (
+      {bookingError && (
         <Alert variant="destructive" className="rounded-2xl border-red-200">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription>{bookingError}</AlertDescription>
+        </Alert>
+      )}
+
+      {!currentUser && (
+        <Alert className="rounded-2xl border-blue-200 bg-blue-50">
+          <AlertDescription className="text-blue-800">
+            <button onClick={() => base44.auth.redirectToLogin()} className="underline font-semibold">Sign up or log in</button> to book a ride.
+          </AlertDescription>
         </Alert>
       )}
 
@@ -164,37 +152,18 @@ export default function FindRide({ island = "Kauai" }) {
           <div className="flex items-end gap-2">
             <div className="space-y-1 flex-1 min-w-0">
               <Label className="text-xs text-gray-500">from</Label>
-              <Input
-                type="date"
-                value={startDate}
-                onChange={(e) => handleDateChange(e.target.value, null)}
-                className="rounded-xl text-sm h-9"
-              />
+              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="rounded-xl text-sm h-9" />
             </div>
             <span className="text-gray-400 mb-2 text-sm">→</span>
             <div className="space-y-1 flex-1 min-w-0">
               <Label className="text-xs text-gray-500">to</Label>
-              <Input
-                type="date"
-                value={endDate}
-                onChange={(e) => handleDateChange(null, e.target.value)}
-                className="rounded-xl text-sm h-9"
-              />
+              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="rounded-xl text-sm h-9" />
             </div>
-            <Button
-              onClick={handleRefresh}
-              disabled={isLoading}
-              className="bg-primary hover:bg-primary/90 text-white rounded-xl px-4 h-9 mb-0 shrink-0"
-            >
+            <Button onClick={handleRefresh} disabled={isLoading} className="bg-primary hover:bg-primary/90 text-white rounded-xl px-4 h-9 shrink-0">
               <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
               <span className="hidden sm:inline ml-2">{isLoading ? 'loading...' : 'update'}</span>
             </Button>
-            <Button
-              onClick={() => setShowTutorial(true)}
-              variant="outline"
-              size="icon"
-              className="rounded-xl border-gray-300 h-9 w-9 shrink-0"
-            >
+            <Button onClick={() => setShowTutorial(true)} variant="outline" size="icon" className="rounded-xl border-gray-300 h-9 w-9 shrink-0">
               <HelpCircle className="w-4 h-4" />
             </Button>
           </div>
@@ -243,7 +212,6 @@ export default function FindRide({ island = "Kauai" }) {
                               <p className="text-xs text-gray-500">/ seat</p>
                             </div>
                           </div>
-
                           <div className="flex justify-between items-center">
                             <div className="flex items-center gap-2">
                               <Avatar className="w-8 h-8 shrink-0">
@@ -253,9 +221,7 @@ export default function FindRide({ island = "Kauai" }) {
                                 </AvatarFallback>
                               </Avatar>
                               <div>
-                                <span className="text-xs font-medium text-gray-700">
-                                  @{ride.driver_username || ride.driver_name}
-                                </span>
+                                <span className="text-xs font-medium text-gray-700">@{ride.driver_username || ride.driver_name}</span>
                                 {driverRatings[ride.driver_id]?.length > 0 && (
                                   <div className="flex items-center gap-1">
                                     <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
@@ -290,7 +256,7 @@ export default function FindRide({ island = "Kauai" }) {
 
       <DriverProfileModal
         isOpen={showDriverProfile}
-        onClose={handleCloseDriverProfile}
+        onClose={() => setShowDriverProfile(false)}
         ride={selectedRide}
         onBookRide={handleBookRide}
         currentUser={currentUser}
@@ -303,10 +269,7 @@ export default function FindRide({ island = "Kauai" }) {
         ride={selectedRide}
       />
 
-      <FindRideTutorial
-        isOpen={showTutorial}
-        onClose={() => setShowTutorial(false)}
-      />
+      <FindRideTutorial isOpen={showTutorial} onClose={() => setShowTutorial(false)} />
     </div>
   );
 }
