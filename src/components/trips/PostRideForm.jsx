@@ -484,7 +484,19 @@ export default function PostRideForm({ island = "Kauai" }) {
         </Card>
       )}
 
-      {error && currentUser?.profile_complete && currentUser?.drivers_license_verified && (
+      {currentUser && (!currentUser.drivers_license_verified || !currentUser.vehicle_verified) && (
+        <Alert className="rounded-2xl border-amber-300 bg-amber-50">
+          <AlertTriangle className="h-4 w-4 text-amber-600" />
+          <AlertDescription className="text-amber-800">
+            you can't post a ride yet because you haven't submitted your license & vehicle info.{" "}
+            <a href="/VehicleDetails" className="font-semibold underline hover:text-amber-900">
+              click here to submit your license & vehicle information
+            </a>
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {error && currentUser?.profile_complete && currentUser?.drivers_license_verified && currentUser?.vehicle_verified && (
         <Alert variant="destructive" className="rounded-2xl border-red-200">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>{error}</AlertDescription>
