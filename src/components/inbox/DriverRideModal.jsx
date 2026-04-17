@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Calendar, Clock, MapPin, Users, DollarSign, Edit, X, AlertTriangle } from "lucide-react";
 import { format } from "date-fns";
 import { base44 } from "@/api/base44Client";
+import { sendBookingEmail } from "@/functions/sendBookingEmail";
 
 // Helper to convert 24-hour time to 12-hour format with AM/PM
 const formatTime12Hour = (timeStr) => {
@@ -78,28 +79,11 @@ export default function DriverRideModal({ isOpen, onClose, ride, bookings = [], 
 
                     // Send email notification to rider
                     try {
-                        const riders = await base44.entities.User.list();
-                        const rider = riders.find(u => u.id === booking.passenger_id);
-                        if (rider?.email) {
-                            await base44.integrations.Core.SendEmail({
-                                to: rider.email,
-                                subject: `Ride Cancelled - Cruise Kauaʻi`,
-                                body: `
-Aloha ${booking.passenger_name},
-
-Unfortunately, the driver has cancelled the ride scheduled for ${format(new Date(ride.departure_date), "EEE, MMM d, yyyy")} at ${formatTime12Hour(ride.departure_time)}.
-
-Route: ${ride.departure_location} → ${ride.destination}
-
-A full refund will be processed to your original payment method.
-
-We apologize for any inconvenience. Please log into Cruise Kauaʻi to find another ride.
-
-Mahalo,
-Cruise Kauaʻi Team
-                                `.trim()
-                            });
-                        }
+                        await sendBookingEmail({
+                            userId: booking.passenger_id,
+                            subject: `Ride Cancelled - Cruise Kauaʻi`,
+                            body: `Aloha ${booking.passenger_name},\n\nUnfortunately, the driver has cancelled the ride scheduled for ${format(new Date(ride.departure_date), "EEE, MMM d, yyyy")} at ${formatTime12Hour(ride.departure_time)}.\n\nRoute: ${ride.departure_location} → ${ride.destination}\n\nA full refund will be processed to your original payment method.\n\nWe apologize for any inconvenience. Please log into Cruise Kauaʻi to find another ride.\n\nMahalo,\nCruise Kauaʻi Team`
+                        });
                     } catch (emailError) {
                         console.error("Error sending cancellation email:", emailError);
                     }

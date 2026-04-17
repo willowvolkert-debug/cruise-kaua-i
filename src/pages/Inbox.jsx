@@ -21,6 +21,7 @@ import MyRideRequestsCard from "../components/inbox/MyRideRequestsCard";
 
 import { format } from "date-fns";
 import { sendNotification } from "../components/utils/notifications";
+import { sendBookingEmail } from "../functions/sendBookingEmail";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -470,33 +471,15 @@ export default function InboxPage() {
                 });
             }
 
-            // Send confirmation email and notification to rider
-            const riders = await base44.entities.User.list();
-            const rider = riders.find(u => u.id === booking.passenger_id);
-            if (rider?.email) {
-                try {
-                    await base44.integrations.Core.SendEmail({
-                        to: rider.email,
-                        subject: `🎉 Your ride request was accepted!`,
-                        body: `
-            Hi ${booking.passenger_name},
-
-            Great news! Your ride request has been accepted by the driver.
-
-            Trip Details:
-            ${ride.departure_location} → ${ride.destination}
-            Date: ${ride.departure_date}
-            Time: ${ride.departure_time}
-
-            Please log into Cruise Kauaʻi to chat with your driver.
-
-            Mahalo,
-            Cruise Kauaʻi Team
-                        `.trim()
-                    });
-                } catch (emailError) {
-                    console.error("Error sending confirmation email:", emailError);
-                }
+            // Send confirmation email to rider
+            try {
+                await sendBookingEmail({
+                    userId: booking.passenger_id,
+                    subject: `🎉 Your ride request was accepted!`,
+                    body: `Hi ${booking.passenger_name},\n\nGreat news! Your ride request has been accepted by the driver.\n\nTrip Details:\n${ride ? `${ride.departure_location} → ${ride.destination}\nDate: ${ride.departure_date}\nTime: ${ride.departure_time}` : ''}\n\nPlease log into Cruise Kauaʻi to chat with your driver.\n\nMahalo,\nCruise Kauaʻi Team`
+                });
+            } catch (emailError) {
+                console.error("Error sending confirmation email:", emailError);
             }
 
             // Browser notification for driver
@@ -504,14 +487,6 @@ export default function InboxPage() {
                 'Ride Request Accepted!',
                 `${booking.passenger_name} can now join your trip.`
             );
-
-            // Browser notification for rider (if they're online and have notifications enabled)
-            if (rider?.notifications_enabled) {
-                sendNotification(
-                    '🎉 Ride Request Accepted!',
-                    `Your ride on ${ride.departure_date} has been accepted. Go to Inbox to chat with your driver!`
-                );
-            }
 
             alert(`Request accepted! The rider has already paid and will be notified.`);
             loadData();
@@ -530,27 +505,14 @@ export default function InboxPage() {
         });
 
         // Send email notification to rider about rejection
-        const riders = await base44.entities.User.list();
-        const rider = riders.find(u => u.id === booking.passenger_id);
-        if (rider?.email) {
-            try {
-                await base44.integrations.Core.SendEmail({
-                    to: rider.email,
-                    subject: `Ride request update - Cruise Kauaʻi`,
-                    body: `
-    Aloha ${booking.passenger_name},
-
-    Unfortunately, the driver was unable to accept your ride request at this time. Your payment will be refunded.
-
-    Please log into Cruise Kauaʻi to find another ride.
-
-    Mahalo,
-    Cruise Kauaʻi Team
-                    `.trim()
-                });
-            } catch (emailError) {
-                console.error("Error sending rejection email:", emailError);
-            }
+        try {
+            await sendBookingEmail({
+                userId: booking.passenger_id,
+                subject: `Ride request update - Cruise Kauaʻi`,
+                body: `Aloha ${booking.passenger_name},\n\nUnfortunately, the driver was unable to accept your ride request at this time. Your payment will be refunded.\n\nPlease log into Cruise Kauaʻi to find another ride.\n\nMahalo,\nCruise Kauaʻi Team`
+            });
+        } catch (emailError) {
+            console.error("Error sending rejection email:", emailError);
         }
 
         sendNotification(
@@ -583,27 +545,14 @@ export default function InboxPage() {
             });
 
             // Notify driver that rider cancelled
-            const drivers = await base44.entities.User.list();
-            const driver = drivers.find(u => u.id === booking.driver_id);
-            if (driver?.email) {
-                try {
-                    await base44.integrations.Core.SendEmail({
-                        to: driver.email,
-                        subject: `Ride request cancelled - Cruise Kauaʻi`,
-                        body: `
-Aloha ${driver.full_name},
-
-${booking.passenger_name} has cancelled their ride request before you accepted it.
-
-No action is needed on your end.
-
-Mahalo,
-Cruise Kauaʻi Team
-                        `.trim()
-                    });
-                } catch (emailError) {
-                    console.error("Error sending cancellation email to driver:", emailError);
-                }
+            try {
+                await sendBookingEmail({
+                    userId: booking.driver_id,
+                    subject: `Ride request cancelled - Cruise Kauaʻi`,
+                    body: `Aloha,\n\n${booking.passenger_name} has cancelled their ride request before you accepted it.\n\nNo action is needed on your end.\n\nMahalo,\nCruise Kauaʻi Team`
+                });
+            } catch (emailError) {
+                console.error("Error sending cancellation email to driver:", emailError);
             }
             
             alert("Ride request cancelled successfully. Your payment will be refunded.");
@@ -673,29 +622,14 @@ Please process the refund manually via Stripe.
             });
 
             // Notify driver about cancellation
-            const drivers = await base44.entities.User.list();
-            const driver = drivers.find(u => u.id === booking.driver_id);
-            if (driver?.email) {
-                try {
-                    await base44.integrations.Core.SendEmail({
-                        to: driver.email,
-                        subject: `Rider cancelled - Cruise Kauaʻi`,
-                        body: `
-Aloha ${driver.full_name},
-
-${booking.passenger_name} has cancelled their confirmed booking for your ride on ${ride?.departure_date ? format(parseDateString(ride.departure_date), "EEE, MMM d, yyyy") : 'TBD'} at ${ride?.departure_time ? formatTime12Hour(ride.departure_time) : 'TBD'}.
-
-Reason: ${reason}
-
-The seat(s) have been made available again for your ride.
-
-Mahalo,
-Cruise Kauaʻi Team
-                        `.trim()
-                    });
-                } catch (emailError) {
-                    console.error("Error sending cancellation email to driver:", emailError);
-                }
+            try {
+                await sendBookingEmail({
+                    userId: booking.driver_id,
+                    subject: `Rider cancelled - Cruise Kauaʻi`,
+                    body: `Aloha,\n\n${booking.passenger_name} has cancelled their confirmed booking for your ride on ${ride?.departure_date ? format(parseDateString(ride.departure_date), "EEE, MMM d, yyyy") : 'TBD'} at ${ride?.departure_time ? formatTime12Hour(ride.departure_time) : 'TBD'}.\n\nReason: ${reason}\n\nThe seat(s) have been made available again for your ride.\n\nMahalo,\nCruise Kauaʻi Team`
+                });
+            } catch (emailError) {
+                console.error("Error sending cancellation email to driver:", emailError);
             }
 
             alert(`Booking cancelled. A ${refundPercentage} refund will be processed by our team.`);

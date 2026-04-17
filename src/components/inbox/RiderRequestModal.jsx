@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Star, Check, X, Wind, MessageCircle, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import { sendBookingEmail } from "@/functions/sendBookingEmail";
 import { format } from "date-fns";
 
 
@@ -22,9 +23,15 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
       
       setIsLoading(true);
       try {
-        const allUsers = await base44.entities.User.list();
-        const rider = allUsers.find(u => u.id === booking.passenger_id);
-        setRiderProfile(rider);
+        // Use passenger info from booking — no need to list all users
+        setRiderProfile({
+          profile_picture_url: booking.passenger_profile_picture_url || null,
+          bio: booking.passenger_bio || null,
+          gender: booking.passenger_gender || null,
+          age: booking.passenger_age || null,
+          preferences_chattiness: booking.passenger_preferences_chattiness || null,
+          preferences_scents: booking.passenger_preferences_scents || null,
+        });
 
         const allRatings = await base44.entities.Rating.list();
         const ratings = allRatings.filter(r => 
