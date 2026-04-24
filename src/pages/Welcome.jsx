@@ -23,6 +23,8 @@ export default function WelcomePage() {
 
   useEffect(() => {
     loadRides();
+    // Track landing page view
+    base44.entities.PageView.create({ page_name: 'Welcome' }).catch(() => {});
   }, []);
 
   const loadRides = async (start = startDate, end = endDate) => {
