@@ -214,17 +214,28 @@ export default function RecurringAutoPostModal({ isOpen, onClose, trip, existing
             {/* Monthly picker */}
             {scheduleType === "monthly" && (
               <div className="space-y-2">
-                <Label className="text-sm text-gray-600">which day of the month?</Label>
-                <Select value={String(monthlyDay)} onValueChange={(v) => setMonthlyDay(parseInt(v))}>
-                  <SelectTrigger className="rounded-2xl">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Array.from({ length: 28 }, (_, i) => (
-                      <SelectItem key={i + 1} value={String(i + 1)}>day {i + 1}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label className="text-sm text-gray-600">which day of the month? (tap to select)</Label>
+                <div className="grid grid-cols-7 gap-1">
+                  {Array.from({ length: 28 }, (_, i) => {
+                    const day = i + 1;
+                    const selected = monthlyDay === day;
+                    return (
+                      <button
+                        key={day}
+                        type="button"
+                        onClick={() => setMonthlyDay(day)}
+                        className={`py-2 rounded-xl text-sm font-medium transition-colors border ${
+                          selected
+                            ? "bg-primary text-white border-primary"
+                            : "bg-white text-gray-600 border-gray-200 hover:bg-orange-50"
+                        }`}
+                      >
+                        {day}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-xs text-gray-400">* limited to day 28 to work for all months</p>
               </div>
             )}
 
