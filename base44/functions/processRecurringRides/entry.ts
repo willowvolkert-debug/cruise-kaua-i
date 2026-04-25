@@ -91,7 +91,7 @@ Deno.serve(async (req) => {
           await base44.asServiceRole.integrations.Core.SendEmail({
             to: user.email,
             subject: `⏰ Confirm your auto-posted ride on ${dateStr} - Cruise Kauaʻi`,
-            body: `Aloha ${user.full_name}!\n\nYour recurring ride "${schedule.trip_name}" is scheduled to auto-post in 48 hours for ${dateStr}.\n\nPlease confirm you'll be making this trip:\n👉 ${confirmUrl}\n\nIf you don't confirm within 48 hours, the ride will NOT be posted.\n\nMahalo,\nCruise Kauaʻi Team`
+            body: `Aloha ${user.full_name}!\n\nYour recurring ride "${schedule.trip_name}" is scheduled to auto-post in 48 hours for ${dateStr}.\n\nPlease confirm you'll be making this trip:\n\n<a href="${confirmUrl}" style="background-color:#f97316;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block;">✅ Confirm My Ride</a>\n\nIf you don't confirm within 48 hours, the ride will NOT be posted.\n\nMahalo,\nCruise Kauaʻi Team`
           });
 
           // Mark confirmation sent
