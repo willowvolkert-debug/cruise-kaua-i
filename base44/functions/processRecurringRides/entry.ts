@@ -81,8 +81,12 @@ Deno.serve(async (req) => {
         const confirmationSent = (schedule.confirmation_sent_dates || []).includes(dateStr);
         const isConfirmed = (schedule.confirmed_dates || []).includes(dateStr);
 
-        // If date is 2 days away and no confirmation sent yet — send email
-        if (dateStr === twoDaysStr && !confirmationSent) {
+        // Send confirmation email if ride is within 48 hours and no confirmation sent yet
+        // This covers: tomorrow (1 day away) and 2 days away
+        const rideDate = new Date(dateStr + 'T00:00:00');
+        const isWithin48Hours = rideDate <= twoDaysFromNow && rideDate >= today;
+
+        if (isWithin48Hours && !confirmationSent) {
           const confirmUrl = `https://cruisekauai.base44.app/ConfirmRide?schedule_id=${schedule.id}&date=${dateStr}`;
           await base44.asServiceRole.integrations.Core.SendEmail({
             to: user.email,
