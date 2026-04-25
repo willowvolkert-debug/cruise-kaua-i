@@ -560,15 +560,15 @@ export default function AdminPage() {
 
         {/* Expired Documents Alert */}
         {expiredDocUsers.length > 0 && (
-          <Card className="shadow-lg border-yellow-300 bg-yellow-50 rounded-3xl">
+          <Card className="shadow-lg border-orange-300 bg-orange-50 rounded-3xl">
             <CardHeader>
-              <CardTitle className="text-xl text-yellow-800 flex items-center gap-2">
-                <AlertCircle className="w-6 h-6 text-yellow-600" />
+              <CardTitle className="text-xl text-orange-800 flex items-center gap-2">
+                <AlertCircle className="w-6 h-6 text-orange-600" />
                 expired documents ({expiredDocUsers.length})
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-yellow-700 mb-4 text-sm">
+              <p className="text-orange-700 mb-4 text-sm">
                 These users have expired licenses or insurance. Message them to re-verify.
               </p>
               <div className="space-y-3">
@@ -576,7 +576,7 @@ export default function AdminPage() {
                   const licExpired = u.drivers_license_verified && u.license_expiry_date && new Date(u.license_expiry_date + 'T00:00:00') <= new Date();
                   const insExpired = u.vehicle_verified && u.insurance_expiry_date && new Date(u.insurance_expiry_date + 'T00:00:00') <= new Date();
                   return (
-                    <div key={u.id} className="bg-white rounded-lg p-4 border border-yellow-200">
+                    <div key={u.id} className="bg-white rounded-lg p-4 border border-orange-200">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="font-semibold text-secondary">{u.full_name}</p>
@@ -598,7 +598,7 @@ export default function AdminPage() {
                           onClick={() => handleMessageUser(u)}
                           size="sm"
                           variant="outline"
-                          className="border-yellow-400 text-yellow-700 hover:bg-yellow-50"
+                          className="border-orange-400 text-orange-700 hover:bg-orange-50"
                         >
                           <Mail className="w-4 h-4 mr-1" />
                           message
@@ -689,7 +689,7 @@ export default function AdminPage() {
                           <p className="font-semibold text-secondary">{inquiry.subject}</p>
                           <Badge variant="outline" className={
                             inquiry.priority === 'high' ? 'bg-red-50 text-red-700 border-red-300' :
-                            inquiry.priority === 'medium' ? 'bg-yellow-50 text-yellow-700 border-yellow-300' :
+                            inquiry.priority === 'medium' ? 'bg-orange-50 text-orange-700 border-orange-300' :
                             'bg-gray-50 text-gray-700'
                           }>
                             {inquiry.priority}
@@ -1323,17 +1323,17 @@ export default function AdminPage() {
                   </label>
                   </div>
 
-                  <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-2xl space-y-2">
-                    <label className="font-semibold text-yellow-900 block">License Expiration Date</label>
-                    <p className="text-sm text-yellow-700">Enter the expiry date from the license (e.g. 12/2028). You'll be notified when it expires.</p>
-                    <input
-                      type="text"
-                      placeholder="MM/YYYY"
-                      value={licenseExpiryDate}
-                      onChange={(e) => setLicenseExpiryDate(e.target.value)}
-                      className="w-full px-3 py-2 border border-yellow-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    />
-                  </div>
+                  <div className="p-4 bg-gray-50 border border-gray-200 rounded-2xl space-y-2">
+                     <label className="font-semibold text-gray-900 block">License Expiration Date</label>
+                     <p className="text-sm text-gray-600">Enter the expiry date from the license (e.g. 12/2028). You'll be notified when it expires.</p>
+                     <input
+                       type="text"
+                       placeholder="MM/YYYY"
+                       value={licenseExpiryDate}
+                       onChange={(e) => setLicenseExpiryDate(e.target.value)}
+                       className="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                     />
+                   </div>
 
                 <div className="flex gap-3 pt-4">
                   <Button
@@ -1457,15 +1457,15 @@ export default function AdminPage() {
                  </div>
 
                 {/* Insurance Expiry Date */}
-                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-2xl space-y-2">
-                  <label className="font-semibold text-yellow-900 block">Insurance Expiration Date</label>
-                  <p className="text-sm text-yellow-700">Enter the expiry date from the insurance card (e.g. 06/2026). You'll be notified when it expires.</p>
+                <div className="p-4 bg-gray-50 border border-gray-200 rounded-2xl space-y-2">
+                  <label className="font-semibold text-gray-900 block">Insurance Expiration Date</label>
+                  <p className="text-sm text-gray-600">Enter the expiry date from the insurance card (e.g. 06/2026). You'll be notified when it expires.</p>
                   <input
                     type="text"
                     placeholder="MM/YYYY"
                     value={insuranceExpiryDate}
                     onChange={(e) => setInsuranceExpiryDate(e.target.value)}
-                    className="w-full px-3 py-2 border border-yellow-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
 

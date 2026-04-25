@@ -382,7 +382,7 @@ Please process full refunds for all affected riders.
                                     <li>Notify all affected riders via email</li>
                                     <li>Show up in your reviews that you cancelled your ride</li>
                                 </ul>
-                                <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-2xl text-yellow-800 text-sm">
+                                <div className="p-3 bg-orange-50 border border-orange-200 rounded-2xl text-orange-800 text-sm">
                                     <strong>Affected riders:</strong>
                                     {confirmedBookings.map(b => (
                                         <p key={b.id}>• {b.passenger_name} - ${b.total_amount?.toFixed(2)} refund</p>

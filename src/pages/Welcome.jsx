@@ -95,7 +95,7 @@ export default function WelcomePage() {
               onClick={handleExplore}
               size="lg"
               variant="outline"
-              className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-5 text-base md:text-lg rounded-2xl"
+              className="w-full bg-white border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-5 text-base md:text-lg rounded-2xl"
             >
               not ready to sign up? explore the app here.
             </Button>
