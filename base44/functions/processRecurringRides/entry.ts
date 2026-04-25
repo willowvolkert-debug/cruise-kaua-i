@@ -91,7 +91,14 @@ Deno.serve(async (req) => {
           await base44.asServiceRole.integrations.Core.SendEmail({
             to: user.email,
             subject: `⏰ Confirm your auto-posted ride on ${dateStr} - Cruise Kauaʻi`,
-            body: `Aloha ${user.full_name}!\n\nYour recurring ride "${schedule.trip_name}" is scheduled to auto-post in 48 hours for ${dateStr}.\n\nPlease confirm you'll be making this trip:\n\n<a href="${confirmUrl}" style="background-color:#f97316;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block;">✅ Confirm My Ride</a>\n\nIf you don't confirm within 48 hours, the ride will NOT be posted.\n\nMahalo,\nCruise Kauaʻi Team`
+            body: `<html><body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;">
+<h2 style="color:#3b82f6;">Aloha ${user.full_name}! 👋</h2>
+<p>Your recurring ride <strong>${schedule.trip_name}</strong> is scheduled to auto-post for <strong>${dateStr}</strong>.</p>
+<p>Please confirm you'll be making this trip:</p>
+<p><a href="${confirmUrl}" style="background-color:#f97316;color:white;padding:14px 28px;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block;font-size:16px;">✅ Confirm My Ride</a></p>
+<p style="color:#6b7280;font-size:14px;">If you don't confirm, the ride will <strong>not</strong> be posted.</p>
+<p>Mahalo,<br/>Cruise Kauaʻi Team</p>
+</body></html>`
           });
 
           // Mark confirmation sent
