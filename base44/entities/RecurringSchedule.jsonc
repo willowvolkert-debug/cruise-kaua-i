@@ -1,0 +1,70 @@
+{
+  "name": "RecurringSchedule",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "ID of the driver"
+    },
+    "recurring_trip_id": {
+      "type": "string",
+      "description": "ID of the RecurringTrip template"
+    },
+    "trip_name": {
+      "type": "string",
+      "description": "Name of the trip (copied for display)"
+    },
+    "schedule_type": {
+      "type": "string",
+      "enum": [
+        "weekly",
+        "monthly",
+        "specific_dates"
+      ],
+      "description": "How the ride should be auto-posted"
+    },
+    "weekly_days": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      },
+      "description": "Days of week to post (0=Sun, 1=Mon, ..., 6=Sat). Used for weekly schedule."
+    },
+    "monthly_day": {
+      "type": "integer",
+      "description": "Day of month to post (1-31). Used for monthly schedule."
+    },
+    "specific_dates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of specific dates (YYYY-MM-DD) to post rides. Used for specific_dates schedule."
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this schedule is active"
+    },
+    "confirmation_sent_dates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Dates for which a 48hr confirmation email has been sent"
+    },
+    "confirmed_dates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Dates that the driver has confirmed"
+    }
+  },
+  "required": [
+    "user_id",
+    "recurring_trip_id",
+    "trip_name",
+    "schedule_type"
+  ]
+}

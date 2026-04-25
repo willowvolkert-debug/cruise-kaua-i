@@ -15,6 +15,7 @@ import LocationAutocomplete from "../shared/LocationAutocomplete";
 import RideRequestCard from "./RideRequestCard";
 import MessageRiderModal from "./MessageRiderModal";
 import RecurringTripModal from "./RecurringTripModal";
+import RecurringAutoPostModal from "./RecurringAutoPostModal";
 import RiderProfileModal from "./RiderProfileModal";
 
 export default function PostRideForm({ island = "Kauai" }) {
@@ -36,6 +37,9 @@ export default function PostRideForm({ island = "Kauai" }) {
   const [showRiderProfileModal, setShowRiderProfileModal] = useState(false);
   const [selectedRiderRequest, setSelectedRiderRequest] = useState(null);
   const [riderRatings, setRiderRatings] = useState([]);
+  const [showAutoPostModal, setShowAutoPostModal] = useState(false);
+  const [autoPostTrip, setAutoPostTrip] = useState(null);
+  const [recurringSchedules, setRecurringSchedules] = useState([]);
   const [pricingSuggestion, setPricingSuggestion] = useState(null);
   const [priceCapWarning, setPriceCapWarning] = useState(null);
   const [rideData, setRideData] = useState({
@@ -111,6 +115,10 @@ export default function PostRideForm({ island = "Kauai" }) {
         // Fetch recurring trips
         const trips = await base44.entities.RecurringTrip.filter({ user_id: user.id });
         setRecurringTrips(trips);
+
+        // Fetch recurring schedules
+        const schedules = await base44.entities.RecurringSchedule.filter({ user_id: user.id });
+        setRecurringSchedules(schedules);
         
         if (!user.profile_picture_url) {
           setError("Please upload a profile picture before posting rides. Go to Account page.");
@@ -554,24 +562,46 @@ export default function PostRideForm({ island = "Kauai" }) {
                           {trip.departure_time} • {trip.seats_available} seats
                         </p>
                       </div>
-                      <div className="flex gap-1">
+                      <div className="flex flex-col gap-1 items-end">
+                        <div className="flex gap-1">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => handleEditTrip(trip, e)}
+                            className="rounded-2xl"
+                          >
+                            <Pencil className="w-4 h-4 text-gray-500" />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => handleDeleteTrip(trip, e)}
+                            className="rounded-2xl"
+                          >
+                            <Trash2 className="w-4 h-4 text-red-400" />
+                          </Button>
+                        </div>
                         <Button
                           type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={(e) => handleEditTrip(trip, e)}
-                          className="rounded-2xl"
+                          size="sm"
+                          variant="outline"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setAutoPostTrip(trip);
+                            setShowAutoPostModal(true);
+                          }}
+                          className={`rounded-2xl text-xs px-2 py-1 h-auto ${
+                            recurringSchedules.find(s => s.recurring_trip_id === trip.id && s.is_active)
+                              ? "border-green-400 text-green-700 bg-green-50"
+                              : "border-secondary text-secondary"
+                          }`}
                         >
-                          <Pencil className="w-4 h-4 text-gray-500" />
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={(e) => handleDeleteTrip(trip, e)}
-                          className="rounded-2xl"
-                        >
-                          <Trash2 className="w-4 h-4 text-red-400" />
+                          <Repeat className="w-3 h-3 mr-1" />
+                          {recurringSchedules.find(s => s.recurring_trip_id === trip.id && s.is_active)
+                            ? "auto-posting ✓"
+                            : "post automatically?"}
                         </Button>
                       </div>
                     </CardContent>
@@ -977,6 +1007,21 @@ export default function PostRideForm({ island = "Kauai" }) {
         }}
         request={selectedRiderRequest}
         riderRatings={riderRatings}
+      />
+
+      <RecurringAutoPostModal
+        isOpen={showAutoPostModal}
+        onClose={() => {
+          setShowAutoPostModal(false);
+          setAutoPostTrip(null);
+          // Refresh schedules
+          if (currentUser) {
+            base44.entities.RecurringSchedule.filter({ user_id: currentUser.id })
+              .then(setRecurringSchedules).catch(() => {});
+          }
+        }}
+        trip={autoPostTrip}
+        existingSchedule={recurringSchedules.find(s => s.recurring_trip_id === autoPostTrip?.id)}
       />
     </div>
   );

@@ -62,6 +62,7 @@ import Trips from './pages/Trips';
 import Unsubscribe from './pages/Unsubscribe';
 import VehicleDetails from './pages/VehicleDetails';
 import Welcome from './pages/Welcome';
+import ConfirmRide from './pages/ConfirmRide';
 import __Layout from './Layout.jsx';
 
 
@@ -81,6 +82,7 @@ export const PAGES = {
     "Unsubscribe": Unsubscribe,
     "VehicleDetails": VehicleDetails,
     "Welcome": Welcome,
+    "ConfirmRide": ConfirmRide,
 }
 
 export const pagesConfig = {
