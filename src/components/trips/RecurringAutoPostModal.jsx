@@ -81,6 +81,78 @@ function MultiDateCalendar({ selectedDates, onToggleDate }) {
   );
 }
 
+function MonthlyCalendarPicker({ selectedDay, onSelectDay }) {
+  const [viewMonth, setViewMonth] = useState(new Date());
+
+  const monthStart = startOfMonth(viewMonth);
+  const monthEnd = endOfMonth(viewMonth);
+  const days = eachDayOfInterval({ start: monthStart, end: monthEnd });
+  const startPad = monthStart.getDay();
+  const paddedDays = [...Array(startPad).fill(null), ...days];
+
+  return (
+    <div className="space-y-2">
+      <Label className="text-sm text-gray-600">which day of the month should this ride post?</Label>
+      <div className="border border-gray-200 rounded-2xl p-3 bg-white">
+        {/* Month nav */}
+        <div className="flex items-center justify-between mb-3">
+          <button
+            type="button"
+            onClick={() => setViewMonth(subMonths(viewMonth, 1))}
+            className="p-1.5 rounded-full hover:bg-gray-100 transition-colors"
+          >
+            <ChevronLeft className="w-4 h-4 text-gray-600" />
+          </button>
+          <span className="font-semibold text-secondary text-sm">{format(viewMonth, "MMMM yyyy")}</span>
+          <button
+            type="button"
+            onClick={() => setViewMonth(addMonths(viewMonth, 1))}
+            className="p-1.5 rounded-full hover:bg-gray-100 transition-colors"
+          >
+            <ChevronRight className="w-4 h-4 text-gray-600" />
+          </button>
+        </div>
+
+        {/* Day headers */}
+        <div className="grid grid-cols-7 gap-0.5 text-center mb-1">
+          {DAYS_OF_WEEK.map(d => (
+            <div key={d} className="text-xs text-gray-400 font-medium py-1">{d}</div>
+          ))}
+        </div>
+
+        {/* Calendar grid */}
+        <div className="grid grid-cols-7 gap-0.5 text-center">
+          {paddedDays.map((day, idx) => {
+            if (!day) return <div key={`pad-${idx}`} />;
+            const dayNum = day.getDate();
+            const selected = selectedDay === dayNum;
+            const today = isToday(day);
+            return (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => onSelectDay(dayNum)}
+                className={`
+                  py-1.5 rounded-xl text-sm font-medium transition-colors
+                  ${selected ? "bg-primary text-white" : "text-gray-700 hover:bg-orange-100"}
+                  ${today && !selected ? "ring-1 ring-primary text-primary" : ""}
+                `}
+              >
+                {dayNum}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      {selectedDay && (
+        <p className="text-xs text-gray-500">
+          This ride will auto-post on the <strong>{selectedDay}{selectedDay === 1 ? "st" : selectedDay === 2 ? "nd" : selectedDay === 3 ? "rd" : "th"}</strong> of each month.
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function RecurringAutoPostModal({ isOpen, onClose, trip, existingSchedule }) {
   const [scheduleType, setScheduleType] = useState("weekly");
   const [weeklyDays, setWeeklyDays] = useState([]);
@@ -213,30 +285,7 @@ export default function RecurringAutoPostModal({ isOpen, onClose, trip, existing
 
             {/* Monthly picker */}
             {scheduleType === "monthly" && (
-              <div className="space-y-2">
-                <Label className="text-sm text-gray-600">which day of the month? (tap to select)</Label>
-                <div className="grid grid-cols-7 gap-1">
-                  {Array.from({ length: 28 }, (_, i) => {
-                    const day = i + 1;
-                    const selected = monthlyDay === day;
-                    return (
-                      <button
-                        key={day}
-                        type="button"
-                        onClick={() => setMonthlyDay(day)}
-                        className={`py-2 rounded-xl text-sm font-medium transition-colors border ${
-                          selected
-                            ? "bg-primary text-white border-primary"
-                            : "bg-white text-gray-600 border-gray-200 hover:bg-orange-50"
-                        }`}
-                      >
-                        {day}
-                      </button>
-                    );
-                  })}
-                </div>
-                <p className="text-xs text-gray-400">* limited to day 28 to work for all months</p>
-              </div>
+              <MonthlyCalendarPicker selectedDay={monthlyDay} onSelectDay={setMonthlyDay} />
             )}
 
             {/* Specific dates calendar */}
