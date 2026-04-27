@@ -613,9 +613,16 @@ export default function AccountPage() {
                                         {profilePicFile && <p className="text-xs text-gray-500 text-center">📎 {profilePicFile.name}</p>}
                                     </div>
                                 ) : (
-                                    <Button onClick={() => setIsEditing(true)} className="bg-primary hover:bg-primary/90 rounded-2xl">
-                                        <Edit className="w-4 h-4 mr-2"/>edit profile
-                                    </Button>
+                                    <div className="flex flex-col gap-2">
+                                        <Button onClick={() => setIsEditing(true)} className="bg-primary hover:bg-primary/90 rounded-2xl">
+                                            <Edit className="w-4 h-4 mr-2"/>edit profile
+                                        </Button>
+                                        <Link to={createPageUrl("Welcome")}>
+                                            <Button variant="outline" className="w-full border-blue-200 text-blue-600 hover:bg-blue-50 rounded-2xl text-sm">
+                                                🌺 re-watch welcome
+                                            </Button>
+                                        </Link>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -1114,20 +1121,8 @@ export default function AccountPage() {
                     </Card>
                 )}
 
-                {/* Re-watch Welcome Flow */}
-                <div className="pt-4">
-                    <Link to={createPageUrl("Welcome")}>
-                        <Button
-                            variant="outline"
-                            className="w-full border-blue-200 text-blue-600 hover:bg-blue-50 rounded-2xl"
-                        >
-                            🌺 re-watch the welcome flow
-                        </Button>
-                    </Link>
-                </div>
-
                 {/* Logout Button */}
-                <div className="pt-2">
+                <div className="pt-4">
                     <Button
                         onClick={() => base44.auth.logout()}
                         variant="outline"
