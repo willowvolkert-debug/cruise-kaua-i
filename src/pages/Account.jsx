@@ -619,7 +619,7 @@ export default function AccountPage() {
                                         </Button>
                                         <Link to={createPageUrl("Welcome")}>
                                             <Button variant="outline" className="w-full border-blue-200 text-blue-600 hover:bg-blue-50 rounded-2xl text-sm">
-                                                🌺 re-watch welcome
+                                                🌺 re-watch welcome tutorial
                                             </Button>
                                         </Link>
                                     </div>
