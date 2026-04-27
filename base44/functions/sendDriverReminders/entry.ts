@@ -43,16 +43,32 @@ Deno.serve(async (req) => {
                     await base44.asServiceRole.integrations.Core.SendEmail({
                         to: driver.email,
                         subject: `🚗 Pending ride request from ${booking.passenger_name}`,
-                        body: `<html><body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;">
-<h2 style="color:#3b82f6;">Hi ${driver.full_name || 'Driver'} 👋</h2>
-<p>You have a pending ride request waiting for your response!</p>
-<p><strong>Rider:</strong> ${booking.passenger_name}<br/>
-<strong>Seats requested:</strong> ${booking.seats_booked}<br/>
-<strong>Amount:</strong> $${booking.total_amount}</p>
-${booking.description ? `<p><strong>Rider's message:</strong> "${booking.description}"</p>` : ''}
-<p>Please log into Cruise Kauaʻi to accept or decline this request:</p>
-<p><a href="https://cruisekauai.base44.app" style="background-color:#f97316;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block;">Open Cruise Kauaʻi →</a></p>
-<p>Mahalo,<br/>Cruise Kauaʻi Team</p>
+                        body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px;">
+
+<h2 style="color:#3b82f6;margin-bottom:16px;">Hi ${driver.full_name || 'Driver'} 👋</h2>
+
+<p style="margin-bottom:16px;">You have a pending ride request waiting for your response!</p>
+
+<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-bottom:20px;">
+  <p style="margin:0 0 8px 0;"><strong>Rider:</strong> ${booking.passenger_name}</p>
+  <p style="margin:0 0 8px 0;"><strong>Seats requested:</strong> ${booking.seats_booked}</p>
+  <p style="margin:0;"><strong>Amount:</strong> $${booking.total_amount}</p>
+  ${booking.description ? `<p style="margin:8px 0 0 0;"><strong>Rider's message:</strong> "${booking.description}"</p>` : ''}
+</div>
+
+<p style="margin-bottom:20px;">Please log into Cruise Kauaʻi to accept or decline this request:</p>
+
+<p style="margin-bottom:32px;">
+  <a href="https://cruisekauai.base44.app" style="background-color:#f97316;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block;">Open Cruise Kauaʻi →</a>
+</p>
+
+<p style="margin-bottom:4px;">Mahalo,</p>
+<p style="margin:0;"><strong>Cruise Kauaʻi Team</strong></p>
+
+<hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0;">
+<p style="font-size:13px;color:#666;margin-bottom:8px;">Not sure how to use the app? <a href="https://cruisekauai.base44.app/Welcome" style="color:#3b82f6;">Re-watch our welcome flow here</a>.</p>
+<p style="font-size:12px;color:#999;margin:0;">Replies to this email are not monitored. Please use the Contact Us form on the app or email willowvolkert@gmail.com with any questions.</p>
+
 </body></html>`
                     });
 
