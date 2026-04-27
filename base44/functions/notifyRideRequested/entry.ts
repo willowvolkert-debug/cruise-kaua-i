@@ -23,7 +23,7 @@ Deno.serve(async (req) => {
         base44.asServiceRole.integrations.Core.SendEmail({
           to: u.email,
           subject: `🙋 New ride request: ${request.departure_location} → ${request.destination}`,
-          body: `Aloha ${u.full_name || 'there'}!\n\nSomeone is looking for a ride on Cruise Kauaʻi!\n\n📍 Route: ${request.departure_location} → ${request.destination}\n📅 Date: ${request.departure_date} at ${request.departure_time}\n💺 Seats needed: ${request.seats_needed}\n🙋 Rider: ${request.rider_name}\n\nIf you're driving that route, open the app to connect with them!\n\nMahalo,\nThe Cruise Kauaʻi Team`
+          body: `<html><body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;"><h2 style="color:#3b82f6;">Aloha ${u.full_name || 'there'}! 🙋</h2><p>Someone is looking for a ride on Cruise Kauaʻi!</p><p>📍 <strong>Route:</strong> ${request.departure_location} → ${request.destination}<br/>📅 <strong>Date:</strong> ${request.departure_date} at ${request.departure_time}<br/>💺 <strong>Seats needed:</strong> ${request.seats_needed}<br/>🙋 <strong>Rider:</strong> ${request.rider_name}</p><p><a href="https://cruisekauai.base44.app" style="background-color:#f97316;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block;">Open Cruise Kauaʻi →</a></p><p>Mahalo,<br/>The Cruise Kauaʻi Team</p></body></html>`
         }).then(() => { sent++; }).catch(() => null)
       ));
       if (i + BATCH_SIZE < recipients.length) await sleep(DELAY_MS);
