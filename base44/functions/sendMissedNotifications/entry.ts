@@ -41,6 +41,10 @@ Deno.serve(async (req) => {
         `🚗 New ride posted: ${ride.departure_location} → ${ride.destination}`,
         `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px;">
 
+<div style="text-align:center;margin-bottom:24px;">
+  <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:80px;height:80px;border-radius:16px;object-fit:cover;" />
+</div>
+
 <h2 style="color:#3b82f6;margin-bottom:16px;">Aloha! 🚗</h2>
 
 <p style="margin-bottom:16px;">A new ride has been posted on Cruise Kauaʻi!</p>
@@ -78,6 +82,10 @@ Deno.serve(async (req) => {
         recipients,
         `🙋 New ride request: ${request.departure_location} → ${request.destination}`,
         `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px;">
+
+<div style="text-align:center;margin-bottom:24px;">
+  <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:80px;height:80px;border-radius:16px;object-fit:cover;" />
+</div>
 
 <h2 style="color:#3b82f6;margin-bottom:16px;">Aloha! 🙋</h2>
 
