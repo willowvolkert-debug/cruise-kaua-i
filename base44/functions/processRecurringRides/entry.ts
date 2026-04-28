@@ -93,7 +93,8 @@ Deno.serve(async (req) => {
             subject: `⏰ Confirm your auto-posted ride on ${dateStr} - Cruise Kauaʻi`,
             body: `<html><body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;">
 <div style="text-align:center;margin-bottom:24px;">
-  <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:80px;height:80px;border-radius:16px;object-fit:cover;" />
+  <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #f97316;" />
+  <p style="margin:8px 0 0 0;font-weight:bold;color:#3b82f6;font-size:15px;">Cruise Kauaʻi</p>
 </div>
 <h2 style="color:#3b82f6;">Aloha ${user.full_name}! 👋</h2>
 <p>Your recurring ride <strong>${schedule.trip_name}</strong> is scheduled to auto-post for <strong>${dateStr}</strong>.</p>
