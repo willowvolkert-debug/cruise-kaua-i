@@ -890,7 +890,13 @@ export default function AdminPage() {
                             </AvatarFallback>
                           </Avatar>
                           <div className="flex-1">
-                            <p className="font-semibold text-secondary">{request.rider_name}</p>
+                            <button
+                              onClick={() => {
+                                const u = users.find(u => u.id === request.rider_id);
+                                if (u) handleViewUserAccount(u.id);
+                              }}
+                              className="font-semibold text-secondary hover:text-primary transition-colors text-left"
+                            >{request.rider_name}</button>
                             <p className="text-sm text-gray-600">{request.departure_location} → {request.destination}</p>
                             <p className="text-xs text-gray-500">{format(new Date(request.departure_date + 'T00:00:00'), "MMM d")} at {request.departure_time}</p>
                           </div>
@@ -916,7 +922,13 @@ export default function AdminPage() {
                             </AvatarFallback>
                           </Avatar>
                           <div className="flex-1">
-                            <p className="font-semibold text-secondary">{ride.driver_name}</p>
+                            <button
+                              onClick={() => {
+                                const u = users.find(u => u.id === ride.driver_id);
+                                if (u) handleViewUserAccount(u.id);
+                              }}
+                              className="font-semibold text-secondary hover:text-primary transition-colors text-left"
+                            >{ride.driver_name}</button>
                             <p className="text-sm text-gray-600">{ride.departure_location} → {ride.destination}</p>
                             <p className="text-xs text-gray-500">{format(new Date(ride.departure_date + 'T00:00:00'), "MMM d")} at {ride.departure_time}</p>
                           </div>
