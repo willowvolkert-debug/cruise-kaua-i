@@ -80,29 +80,64 @@ export default function AppTutorial({ isOpen, onClose }) {
   if (showIntro) {
     return (
       <Dialog open={true} onOpenChange={handleSkip}>
-        <DialogContent className="sm:max-w-md bg-white rounded-3xl">
+        <DialogContent className="sm:max-w-lg bg-white rounded-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-secondary text-center">
-              how to use this app
+              welcome to cruise kauaʻi!
             </DialogTitle>
-            <DialogDescription className="text-center text-gray-600 pt-2">
-              these steps will show you how to use this app. if you don't need it, press skip
+            <DialogDescription className="text-center text-gray-600 pt-1">
+              a community-based ridesharing app to reduce traffic on kauaʻi
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-3 pt-4">
-            <Button
-              onClick={handleStart}
-              className="w-full bg-primary hover:bg-primary/90 rounded-2xl py-6 text-lg"
-            >
-              OK
-            </Button>
-            <Button
-              onClick={handleSkip}
-              variant="outline"
-              className="w-full rounded-2xl py-6 text-lg border-gray-300"
-            >
-              skip
-            </Button>
+
+          <div className="space-y-4 pt-2">
+            {/* How it works */}
+            <div className="bg-green-50 rounded-2xl p-4 space-y-3">
+              <p className="font-bold text-green-800 text-sm uppercase tracking-wide">how it works</p>
+              <div className="space-y-2 text-sm text-gray-700">
+                <div className="flex gap-2"><span>🚗</span><p><strong>Drivers</strong> offer rides on trips they're already taking & cover gas + vehicle maintenance costs.</p></div>
+                <div className="flex gap-2"><span>🙋</span><p><strong>Riders</strong> find affordable, reliable transportation around the island.</p></div>
+                <div className="flex gap-2"><span>🌿</span><p><strong>Simple:</strong> locals happy, visitors happy, & less cars on the road.</p></div>
+              </div>
+            </div>
+
+            {/* How to use */}
+            <div className="space-y-2">
+              <p className="font-bold text-secondary text-sm uppercase tracking-wide">how to use the platform</p>
+              <div className="space-y-2 text-sm text-gray-700">
+                <div className="flex gap-3 items-start">
+                  <span className="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shrink-0 mt-0.5">1</span>
+                  <p>On your phone, open <strong>cruisekauai.org</strong> in your browser.</p>
+                </div>
+                <div className="flex gap-3 items-start">
+                  <span className="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shrink-0 mt-0.5">2</span>
+                  <p>At the bottom of your browser, press the <strong>share icon</strong>. Scroll down & press <strong>"Add to Home Screen"</strong>.</p>
+                </div>
+                <div className="flex gap-3 items-start">
+                  <span className="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shrink-0 mt-0.5">3</span>
+                  <p>Find the app on your home screen. Access the <strong>sidebar</strong> in the top left corner, or by swiping right. Navigate between <strong>trips, inbox & more!</strong></p>
+                </div>
+              </div>
+            </div>
+
+            {/* Get involved */}
+            <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 space-y-2 text-sm text-gray-700">
+              <p className="font-bold text-orange-800 text-sm uppercase tracking-wide">get involved</p>
+              <p>🏡 <strong>Local?</strong> Register as a driver & start posting rides to make money on your commutes.</p>
+              <p>✈️ <strong>Visiting?</strong> Consider alternatives to car rentals — get around with Cruise Kauaʻi & The Hanalei Initiative Shuttles.</p>
+              <p>📣 <strong>Spread the word!</strong> Share the app with family, friends & folks visiting!</p>
+            </div>
+
+            <p className="text-xs text-center text-gray-400 italic">🤙 mahalo for being a part of the movement</p>
+
+            <div className="space-y-2 pt-1">
+              <Button onClick={handleStart} className="w-full bg-primary hover:bg-primary/90 rounded-2xl py-5 text-base">
+                start tutorial →
+              </Button>
+              <Button onClick={handleSkip} variant="outline" className="w-full rounded-2xl py-5 text-base border-gray-300">
+                skip
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

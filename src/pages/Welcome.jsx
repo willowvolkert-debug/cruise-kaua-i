@@ -70,17 +70,70 @@ export default function WelcomePage() {
             <h1 className="text-3xl md:text-4xl font-bold text-secondary">Welcome to Cruise Kauaʻi!</h1>
           </div>
 
-          <div className="space-y-4 py-4 text-left">
-            <p className="text-base md:text-lg text-gray-700 leading-relaxed">
-              🌺 We are a community-based ridesharing app in Hawaiʻi aimed at reducing traffic & improving accessible transportation throughout the paeʻāina. We are completely launched on all islands, but our name currently remains as Cruise Kauaʻi to honor our roots 🌿
-            </p>
-            <p className="text-base md:text-lg text-gray-700 leading-relaxed">
-              🚗 Make money on your grocery runs or commutes by posting the rides you're already taking on the app. Riders can look at all rides on any date, or request a ride, paying a reasonable fare ($5-30) to get to their destination.
-            </p>
-            <p className="text-base md:text-lg text-gray-700 leading-relaxed">
-              🤙 Mahalo for being a part of the movement to reduce traffic, build community & make transportation more accessible in Hawaiʻi!
+          {/* We get it section */}
+          <div className="bg-green-50 rounded-2xl p-5 text-left space-y-3">
+            <h2 className="font-bold text-green-800 text-lg">we get it... transportation is tough on kauaʻi</h2>
+            <ul className="space-y-1 text-gray-700 text-sm">
+              {["expensive gas", "loads of traffic", "pricey car rentals", "a shortage of affordable mechanics"].map(item => (
+                <li key={item} className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-600 shrink-0" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <p className="text-gray-700 text-sm font-medium">
+              That's why we launched Cruise Kauaʻi — our mission is to provide <strong>accessible & affordable transportation options</strong> and divert more money into our local economy.
             </p>
           </div>
+
+          {/* How it works */}
+          <div className="text-left space-y-3">
+            <h2 className="font-bold text-secondary text-lg">how it works</h2>
+            <div className="space-y-3">
+              <div className="flex gap-3 items-start">
+                <span className="text-2xl">🚗</span>
+                <div>
+                  <p className="font-semibold text-gray-800 text-sm">drivers</p>
+                  <p className="text-gray-600 text-sm">Offer rides on the trips they're already taking & cover gas + vehicle maintenance costs.</p>
+                </div>
+              </div>
+              <div className="flex gap-3 items-start">
+                <span className="text-2xl">🙋</span>
+                <div>
+                  <p className="font-semibold text-gray-800 text-sm">riders</p>
+                  <p className="text-gray-600 text-sm">Find affordable, reliable transportation around the island ($5–30/ride).</p>
+                </div>
+              </div>
+              <div className="flex gap-3 items-start">
+                <span className="text-2xl">🌿</span>
+                <div>
+                  <p className="font-semibold text-gray-800 text-sm">simple</p>
+                  <p className="text-gray-600 text-sm">Locals happy, visitors happy, & less cars on the road.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Carpooling is a cultural shift */}
+          <div className="bg-orange-50 border border-orange-200 rounded-2xl p-5 text-left space-y-3">
+            <h2 className="font-bold text-orange-800 text-base">carpooling is a cultural shift & we need everyone's help to make it a reality</h2>
+            <div className="space-y-3">
+              <div>
+                <p className="font-semibold text-gray-800 text-sm">🏡 if you're local — register as a driver & start posting rides</p>
+                <p className="text-gray-600 text-sm ml-5">Start making money on your commutes while improving transportation options on the island.</p>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-800 text-sm">✈️ if you're visiting — consider alternatives to car rentals</p>
+                <p className="text-gray-600 text-sm ml-5">Get around with Cruise Kauaʻi & The Hanalei Initiative Shuttles in Kapaʻa, Princeville, Hanalei & Hāʻena.</p>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-800 text-sm">📣 spread the word!</p>
+                <p className="text-gray-600 text-sm ml-5">The more people use Cruise Kauaʻi, the more ride options there are. Share with family, friends & folks visiting!</p>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-sm text-gray-500 italic text-center">🤙 mahalo for being a part of the movement</p>
 
           <div className="space-y-3">
             <Button 
