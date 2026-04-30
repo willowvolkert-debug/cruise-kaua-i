@@ -58,14 +58,14 @@ export default function WelcomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 flex items-center justify-center p-4 overflow-x-hidden">
       <style>{`
         [data-sidebar="trigger"] {
           display: none !important;
         }
       `}</style>
-      <Card className="max-w-2xl w-full shadow-2xl border-gray-200 rounded-3xl bg-white">
-        <CardContent className="p-6 md:p-10 text-center space-y-6">
+      <Card className="max-w-2xl w-full shadow-2xl border-gray-200 rounded-3xl bg-white overflow-hidden">
+        <CardContent className="p-5 md:p-10 text-center space-y-6 w-full min-w-0">
           <div className="space-y-3">
             <h1 className="text-3xl md:text-4xl font-bold text-secondary">Welcome to Cruise Kauaʻi!</h1>
           </div>
@@ -87,49 +87,42 @@ export default function WelcomePage() {
           </div>
 
           {/* How it works */}
-          <div className="text-left space-y-3">
+          <div className="text-left space-y-3 w-full min-w-0">
             <h2 className="font-bold text-secondary text-lg">how it works</h2>
             <div className="space-y-3">
-              <div className="flex gap-3 items-start">
-                <span className="text-2xl">🚗</span>
-                <div>
-                  <p className="font-semibold text-gray-800 text-sm">drivers</p>
-                  <p className="text-gray-600 text-sm">Offer rides on the trips they're already taking & cover gas + vehicle maintenance costs.</p>
+              {[
+                { emoji: "🚗", title: "drivers", desc: "Offer rides on the trips they're already taking & cover gas + vehicle maintenance costs." },
+                { emoji: "🙋", title: "riders", desc: "Find affordable, reliable transportation around the island ($5–30/ride)." },
+                { emoji: "🌿", title: "simple", desc: "Locals happy, visitors happy, & less cars on the road." },
+              ].map(({ emoji, title, desc }) => (
+                <div key={title} className="flex gap-3 items-start">
+                  <span className="text-xl shrink-0">{emoji}</span>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-gray-800 text-sm">{title}</p>
+                    <p className="text-gray-600 text-sm break-words">{desc}</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex gap-3 items-start">
-                <span className="text-2xl">🙋</span>
-                <div>
-                  <p className="font-semibold text-gray-800 text-sm">riders</p>
-                  <p className="text-gray-600 text-sm">Find affordable, reliable transportation around the island ($5–30/ride).</p>
-                </div>
-              </div>
-              <div className="flex gap-3 items-start">
-                <span className="text-2xl">🌿</span>
-                <div>
-                  <p className="font-semibold text-gray-800 text-sm">simple</p>
-                  <p className="text-gray-600 text-sm">Locals happy, visitors happy, & less cars on the road.</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
           {/* Carpooling is a cultural shift */}
-          <div className="bg-orange-50 border border-orange-200 rounded-2xl p-5 text-left space-y-3">
-            <h2 className="font-bold text-orange-800 text-base">carpooling is a cultural shift & we need everyone's help to make it a reality</h2>
+          <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 text-left space-y-3 w-full min-w-0">
+            <h2 className="font-bold text-orange-800 text-sm leading-snug">carpooling is a cultural shift & we need everyone's help to make it a reality</h2>
             <div className="space-y-3">
-              <div>
-                <p className="font-semibold text-gray-800 text-sm">🏡 if you're local — register as a driver & start posting rides</p>
-                <p className="text-gray-600 text-sm ml-5">Start making money on your commutes while improving transportation options on the island.</p>
-              </div>
-              <div>
-                <p className="font-semibold text-gray-800 text-sm">✈️ if you're visiting — consider alternatives to car rentals</p>
-                <p className="text-gray-600 text-sm ml-5">Get around with Cruise Kauaʻi & The Hanalei Initiative Shuttles in Kapaʻa, Princeville, Hanalei & Hāʻena.</p>
-              </div>
-              <div>
-                <p className="font-semibold text-gray-800 text-sm">📣 spread the word!</p>
-                <p className="text-gray-600 text-sm ml-5">The more people use Cruise Kauaʻi, the more ride options there are. Share with family, friends & folks visiting!</p>
-              </div>
+              {[
+                { emoji: "🏡", title: "if you're local — register as a driver & start posting rides", desc: "Start making money on your commutes while improving transportation options on the island." },
+                { emoji: "✈️", title: "if you're visiting — consider alternatives to car rentals", desc: "Get around with Cruise Kauaʻi & The Hanalei Initiative Shuttles in Kapaʻa, Princeville, Hanalei & Hāʻena." },
+                { emoji: "📣", title: "spread the word!", desc: "The more people use Cruise Kauaʻi, the more ride options there are. Share with family, friends & folks visiting!" },
+              ].map(({ emoji, title, desc }) => (
+                <div key={title} className="flex gap-2 items-start">
+                  <span className="shrink-0 text-base">{emoji}</span>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-gray-800 text-sm break-words">{title}</p>
+                    <p className="text-gray-600 text-sm break-words">{desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
