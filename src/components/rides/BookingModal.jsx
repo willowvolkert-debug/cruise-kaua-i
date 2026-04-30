@@ -13,6 +13,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { createRideCheckout } from "@/functions/createRideCheckout";
 import { format } from "date-fns";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { suggestPrice } from "@/components/trips/pricingUtils";
 
 export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }) {
   const [bookingData, setBookingData] = useState({ 
@@ -97,8 +98,17 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
     try {
       const detourFee = bookingData.wants_detour_service ? 5 : 0;
       const isLocal = currentUser?.has_hawaii_id === true;
-      const pricePerSeat = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);
-      const baseAmount = (bookingData.seats_booked || 0) * pricePerSeat;
+      const fullPricePerSeatSubmit = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);
+      let submitPricePerSeat = fullPricePerSeatSubmit;
+      if (bookingData.is_partial_ride && bookingData.partial_from && bookingData.partial_to) {
+        const fullRouteSuggestion = suggestPrice(ride.departure_location, ride.destination);
+        const partialRouteSuggestion = suggestPrice(bookingData.partial_from, bookingData.partial_to);
+        if (fullRouteSuggestion && partialRouteSuggestion && fullRouteSuggestion.distance > 0) {
+          const ratio = partialRouteSuggestion.distance / fullRouteSuggestion.distance;
+          submitPricePerSeat = Math.max(3, Math.round(fullPricePerSeatSubmit * ratio));
+        }
+      }
+      const baseAmount = (bookingData.seats_booked || 0) * submitPricePerSeat;
 
       // Create checkout session
       const { data } = await createRideCheckout({
@@ -136,7 +146,19 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   
   const detourFee = bookingData.wants_detour_service ? 5 : 0;
   const isLocal = currentUser?.has_hawaii_id === true;
-  const pricePerSeat = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);
+  const fullPricePerSeat = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);
+
+  // Calculate partial ride price ratio based on distance
+  let pricePerSeat = fullPricePerSeat;
+  if (bookingData.is_partial_ride && bookingData.partial_from && bookingData.partial_to) {
+    const fullRouteSuggestion = suggestPrice(ride.departure_location, ride.destination);
+    const partialRouteSuggestion = suggestPrice(bookingData.partial_from, bookingData.partial_to);
+    if (fullRouteSuggestion && partialRouteSuggestion && fullRouteSuggestion.distance > 0) {
+      const ratio = partialRouteSuggestion.distance / fullRouteSuggestion.distance;
+      pricePerSeat = Math.max(3, Math.round(fullPricePerSeat * ratio));
+    }
+  }
+
   const rideAmount = (bookingData.seats_booked || 0) * pricePerSeat + detourFee;
   const connectFee = rideAmount * 0.10;
   const licenseVerificationFee = isFirstBooking ? 1.50 : 0;
@@ -299,7 +321,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                       <div className="flex items-start gap-2 p-3 bg-white border border-blue-300 rounded-2xl">
                         <MapPin className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
                         <p className="text-sm text-blue-800">
-                          driving from <strong>{bookingData.partial_from}</strong> to <strong>{bookingData.partial_to}</strong> with this driver will cost <strong>${(pricePerSeat * (bookingData.seats_booked || 1)).toFixed(2)}</strong>
+                          driving from <strong>{bookingData.partial_from}</strong> to <strong>{bookingData.partial_to}</strong> with this driver will cost <strong>${(pricePerSeat * (bookingData.seats_booked || 1)).toFixed(2)}</strong> per seat (prorated by distance)
                         </p>
                       </div>
                     )}
