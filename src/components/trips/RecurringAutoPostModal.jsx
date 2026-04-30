@@ -219,6 +219,14 @@ export default function RecurringAutoPostModal({ isOpen, onClose, trip, existing
         await base44.entities.RecurringSchedule.create(payload);
       }
 
+      // Trigger immediate ride posting for all upcoming dates
+      try {
+        await base44.functions.invoke('processRecurringRides', {});
+      } catch (e) {
+        // Non-fatal: rides will be posted on next scheduled run
+        console.warn('Could not trigger immediate ride posting:', e);
+      }
+
       setSuccess(true);
     } catch (err) {
       console.error("Error saving schedule:", err);
@@ -240,7 +248,7 @@ export default function RecurringAutoPostModal({ isOpen, onClose, trip, existing
           <div className="py-8 text-center space-y-4">
             <CheckCircle className="w-12 h-12 text-green-500 mx-auto" />
             <p className="font-semibold text-secondary text-lg">schedule saved!</p>
-            <p className="text-gray-600 text-sm">your ride will be auto-posted based on your schedule. you'll get a confirmation email 48 hours before each posting.</p>
+            <p className="text-gray-600 text-sm">your rides have been posted! you'll get a confirmation email 48 hours before each ride — confirm to keep it posted, or it will be removed if you don't respond within 24 hours.</p>
             <Button onClick={onClose} className="rounded-2xl bg-primary">done</Button>
           </div>
         ) : (
@@ -319,7 +327,7 @@ export default function RecurringAutoPostModal({ isOpen, onClose, trip, existing
             <Alert className="rounded-2xl border-blue-200 bg-blue-50">
               <Bell className="h-4 w-4 text-blue-600" />
               <AlertDescription className="text-blue-800 text-sm">
-                <strong>heads up:</strong> you'll receive an email 48 hours before each auto-posted ride. you must confirm the ride via email or in the app, or it will be automatically deleted.
+                <strong>heads up:</strong> rides are posted immediately for all upcoming dates. you'll get a confirmation email 48 hours before each ride — if you don't confirm within 24 hours, the ride will be automatically removed.
               </AlertDescription>
             </Alert>
 

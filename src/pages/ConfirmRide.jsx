@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
 import { CheckCircle, XCircle, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { confirmRecurringRide } from "@/functions/confirmRecurringRide";
 
 export default function ConfirmRidePage() {
   const navigate = useNavigate();
-  const [status, setStatus] = useState("loading"); // loading | confirming | confirmed | error
+  const [status, setStatus] = useState("pending"); // pending | confirming | confirmed | error
   const [scheduleId, setScheduleId] = useState(null);
   const [date, setDate] = useState(null);
   const [tripName, setTripName] = useState("");
@@ -16,6 +16,7 @@ export default function ConfirmRidePage() {
     const params = new URLSearchParams(window.location.search);
     const sid = params.get("schedule_id");
     const d = params.get("date");
+    const name = params.get("trip_name");
 
     if (!sid || !d) {
       setStatus("error");
@@ -24,41 +25,19 @@ export default function ConfirmRidePage() {
 
     setScheduleId(sid);
     setDate(d);
-    loadSchedule(sid, d);
+    if (name) setTripName(decodeURIComponent(name));
   }, []);
-
-  const loadSchedule = async (sid, d) => {
-    try {
-      const schedules = await base44.entities.RecurringSchedule.list();
-      const schedule = schedules.find(s => s.id === sid);
-      if (!schedule) {
-        setStatus("error");
-        return;
-      }
-      setTripName(schedule.trip_name);
-
-      // Check if already confirmed
-      if ((schedule.confirmed_dates || []).includes(d)) {
-        setStatus("confirmed");
-        return;
-      }
-
-      setStatus("pending");
-    } catch (e) {
-      setStatus("error");
-    }
-  };
 
   const handleConfirm = async () => {
     setStatus("confirming");
     try {
-      const schedules = await base44.entities.RecurringSchedule.list();
-      const schedule = schedules.find(s => s.id === scheduleId);
-      if (!schedule) throw new Error("Schedule not found");
-
-      const confirmedDates = [...(schedule.confirmed_dates || []), date];
-      await base44.entities.RecurringSchedule.update(scheduleId, { confirmed_dates: confirmedDates });
-      setStatus("confirmed");
+      const res = await confirmRecurringRide({ schedule_id: scheduleId, date });
+      if (res.data?.success) {
+        if (res.data.trip_name) setTripName(res.data.trip_name);
+        setStatus("confirmed");
+      } else {
+        setStatus("error");
+      }
     } catch (e) {
       setStatus("error");
     }
@@ -73,18 +52,11 @@ export default function ConfirmRidePage() {
           className="w-16 h-16 rounded-2xl mx-auto"
         />
 
-        {status === "loading" && (
-          <div className="space-y-3">
-            <Loader className="w-8 h-8 animate-spin text-primary mx-auto" />
-            <p className="text-gray-500">loading...</p>
-          </div>
-        )}
-
         {status === "pending" && (
           <div className="space-y-4">
             <h1 className="text-2xl font-bold text-secondary">confirm your ride</h1>
             <p className="text-gray-600">
-              please confirm you'll be making the <strong>{tripName}</strong> trip on <strong>{date}</strong>.
+              please confirm you'll be making the{tripName ? <> <strong>{tripName}</strong></> : ""} trip on <strong>{date}</strong>.
             </p>
             <p className="text-sm text-gray-500">
               if you don't confirm, this ride will not be posted.
@@ -113,7 +85,7 @@ export default function ConfirmRidePage() {
             <CheckCircle className="w-12 h-12 text-green-500 mx-auto" />
             <h1 className="text-2xl font-bold text-secondary">ride confirmed!</h1>
             <p className="text-gray-600">
-              your <strong>{tripName}</strong> ride on <strong>{date}</strong> will be auto-posted. mahalo!
+              your {tripName && <strong>{tripName}</strong>} ride on <strong>{date}</strong> is confirmed. mahalo!
             </p>
             <Button onClick={() => navigate(createPageUrl("Trips"))} className="w-full rounded-2xl bg-primary">
               back to trips
