@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ArrowUpRight, ArrowDownLeft, CreditCard, ChevronDown, ChevronRight, MapPin, Calendar, Clock } from "lucide-react";
+import { ArrowUpRight, ArrowDownLeft, CreditCard, ChevronDown, ChevronRight, MapPin, Calendar, Clock, Banknote } from "lucide-react";
 import { format } from "date-fns";
 
 export default function TransactionHistory() {
@@ -137,6 +137,19 @@ export default function TransactionHistory() {
                       <p className={`font-bold ${isPayment ? 'text-red-600' : 'text-green-600'}`}>
                         {isPayment ? '-' : '+'}${isPayment ? transaction.total_amount.toFixed(2) : transaction.ride_amount.toFixed(2)}
                       </p>
+                      {!isPayment && transaction.payout_status && (
+                        <p className={`text-xs mt-0.5 ${
+                          transaction.payout_status === 'completed' ? 'text-green-600' :
+                          transaction.payout_status === 'processing' ? 'text-blue-600' :
+                          transaction.payout_status === 'failed' ? 'text-red-500' :
+                          'text-gray-400'
+                        }`}>
+                          {transaction.payout_status === 'completed' ? '✓ paid out' :
+                           transaction.payout_status === 'processing' ? '⟳ processing' :
+                           transaction.payout_status === 'failed' ? '✗ payout failed' :
+                           'payout pending'}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </button>
@@ -217,6 +230,50 @@ export default function TransactionHistory() {
                   )}
                 </div>
               </div>
+
+              {/* Payout Details (for earnings) */}
+              {getTransactionType(selectedTransaction) === 'earning' && (
+                <div className="p-4 bg-green-50 rounded-2xl border border-green-200">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Banknote className="w-4 h-4 text-green-700" />
+                    <p className="font-semibold text-green-800">bank payout</p>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Amount transferred:</span>
+                      <span className="font-medium text-green-700">+${selectedTransaction.ride_amount?.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Payout status:</span>
+                      <Badge className={
+                        selectedTransaction.payout_status === 'completed' ? 'bg-green-100 text-green-800 border-green-200' :
+                        selectedTransaction.payout_status === 'processing' ? 'bg-blue-100 text-blue-800 border-blue-200' :
+                        selectedTransaction.payout_status === 'failed' ? 'bg-red-100 text-red-800 border-red-200' :
+                        'bg-gray-100 text-gray-700 border-gray-200'
+                      }>
+                        {selectedTransaction.payout_status || 'pending'}
+                      </Badge>
+                    </div>
+                    {selectedTransaction.payout_date && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Payout date:</span>
+                        <span className="font-medium">{format(new Date(selectedTransaction.payout_date), "MMM d, yyyy")}</span>
+                      </div>
+                    )}
+                    {selectedTransaction.stripe_transfer_id && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Transfer ID:</span>
+                        <span className="font-mono text-xs text-gray-500">{selectedTransaction.stripe_transfer_id}</span>
+                      </div>
+                    )}
+                    {selectedTransaction.payout_failure_reason && (
+                      <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-xl">
+                        <p className="text-xs text-red-700">⚠ {selectedTransaction.payout_failure_reason}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Ride Details */}
               {isLoadingRide ? (
