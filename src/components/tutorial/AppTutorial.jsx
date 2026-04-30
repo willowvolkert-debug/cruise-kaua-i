@@ -44,6 +44,13 @@ export default function AppTutorial({ isOpen, onClose }) {
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (isOpen) {
+      setShowIntro(true);
+      setCurrentStep(0);
+    }
+  }, [isOpen]);
+
   const handleSkip = async () => {
     await base44.auth.updateMe({ has_seen_tutorial: true });
     onClose();

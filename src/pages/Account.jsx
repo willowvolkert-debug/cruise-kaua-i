@@ -617,11 +617,13 @@ export default function AccountPage() {
                                         <Button onClick={() => setIsEditing(true)} className="bg-primary hover:bg-primary/90 rounded-2xl">
                                             <Edit className="w-4 h-4 mr-2"/>edit profile
                                         </Button>
-                                        <Link to={createPageUrl("Welcome")}>
-                                            <Button variant="outline" className="w-full border-blue-200 text-blue-600 hover:bg-blue-50 rounded-2xl text-sm">
-                                                🌺 re-watch welcome tutorial
-                                            </Button>
-                                        </Link>
+                                        <Button
+                                             variant="outline"
+                                             className="w-full border-blue-200 text-blue-600 hover:bg-blue-50 rounded-2xl text-sm"
+                                             onClick={() => window.dispatchEvent(new CustomEvent('openTutorial'))}
+                                         >
+                                             🌺 re-watch welcome tutorial
+                                         </Button>
                                     </div>
                                 )}
                             </div>
