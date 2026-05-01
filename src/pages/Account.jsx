@@ -875,7 +875,7 @@ export default function AccountPage() {
                             </CardContent>
                         </Card>
 
-                        {user.vehicle_verified && user.stripe_connect_onboarding_complete && (
+                        {user.vehicle_verified && (
                         <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
                             <CardHeader>
                                 <CardTitle className="text-xl text-secondary flex items-center gap-2">
@@ -884,7 +884,21 @@ export default function AccountPage() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
+                                {/* Stripe Connect prompt if not onboarded */}
+                                {!user.stripe_connect_onboarding_complete && (
+                                    <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-2xl">
+                                        <p className="text-sm font-semibold text-yellow-800 mb-1">⚠ Bank account not connected</p>
+                                        <p className="text-xs text-yellow-700 mb-3">You need to complete Stripe Connect setup to receive payouts and transfer funds to your bank.</p>
+                                        <Link to={createPageUrl("Payout")}>
+                                            <Button className="w-full bg-primary hover:bg-primary/90 rounded-2xl">
+                                                connect bank account
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                )}
+
                                 {/* Available Balance */}
+                                {user.stripe_connect_onboarding_complete && (
                                 <div className="p-4 bg-gradient-to-r from-primary/10 to-green-100 border border-primary/20 rounded-2xl">
                                     <p className="text-sm text-gray-600 mb-1">available balance</p>
                                     <p className="text-3xl font-bold text-primary">${availableBalance.toFixed(2)}</p>
@@ -899,6 +913,7 @@ export default function AccountPage() {
                                         <p className="text-xs text-gray-500 mt-2 text-center">Link a bank account to transfer funds</p>
                                     )}
                                 </div>
+                                )}
 
                                 {/* Bank Account Status */}
                                 {user.bank_account_linked ? (
