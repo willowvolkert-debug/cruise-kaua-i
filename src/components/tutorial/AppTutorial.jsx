@@ -109,20 +109,73 @@ export default function AppTutorial({ isOpen, onClose }) {
             </div>
 
             {/* How to use */}
-            <div className="space-y-2">
+            <div className="space-y-3">
               <p className="font-bold text-secondary text-sm uppercase tracking-wide">how to use the platform</p>
-              <div className="space-y-2 text-sm text-gray-700">
+              <div className="space-y-3 text-sm text-gray-700">
+                {/* Step 1 */}
                 <div className="flex gap-3 items-start">
                   <span className="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shrink-0 mt-0.5">1</span>
-                  <p>On your phone, open <strong>cruisekauai.org</strong> in your browser.</p>
+                  <div className="flex-1">
+                    <p>On your phone, open <strong>cruisekauai.org</strong> in your browser.</p>
+                    <div className="flex gap-3 mt-2">
+                      <div className="flex items-center gap-1.5 bg-gray-100 rounded-xl px-2.5 py-1.5">
+                        <span className="text-base">🌐</span>
+                        <span className="text-xs font-medium text-gray-600">Safari / Chrome</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
+                {/* Step 2 - iOS */}
                 <div className="flex gap-3 items-start">
                   <span className="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shrink-0 mt-0.5">2</span>
-                  <p>At the bottom of your browser, press the <strong>share icon</strong>. Scroll down & press <strong>"Add to Home Screen"</strong>.</p>
+                  <div className="flex-1">
+                    <p className="font-semibold text-gray-800 mb-1">Add to Home Screen</p>
+                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-2.5 mb-2">
+                      <p className="text-xs font-semibold text-blue-800 mb-1.5">🍎 iPhone (Safari)</p>
+                      <div className="flex items-center gap-2 text-xs text-blue-700">
+                        <span className="text-lg leading-none">⬆️</span>
+                        <span>Tap the <strong>Share</strong> button at the bottom of Safari</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-blue-700 mt-1.5">
+                        <span className="text-lg leading-none">➕</span>
+                        <span>Scroll down & tap <strong>"Add to Home Screen"</strong></span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-blue-700 mt-1.5">
+                        <span className="text-lg leading-none">✅</span>
+                        <span>Tap <strong>"Add"</strong> in the top right corner</span>
+                      </div>
+                    </div>
+                    <div className="bg-green-50 border border-green-200 rounded-xl p-2.5">
+                      <p className="text-xs font-semibold text-green-800 mb-1.5">🤖 Android (Chrome)</p>
+                      <div className="flex items-center gap-2 text-xs text-green-700">
+                        <span className="text-lg leading-none">⋮</span>
+                        <span>Tap the <strong>three-dot menu</strong> (⋮) in the top right of Chrome</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-green-700 mt-1.5">
+                        <span className="text-lg leading-none">📲</span>
+                        <span>Tap <strong>"Add to Home screen"</strong></span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-green-700 mt-1.5">
+                        <span className="text-lg leading-none">✅</span>
+                        <span>Tap <strong>"Add"</strong> to confirm</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
+                {/* Step 3 */}
                 <div className="flex gap-3 items-start">
                   <span className="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shrink-0 mt-0.5">3</span>
-                  <p>Find the app on your home screen. Access the <strong>sidebar</strong> in the top left corner, or by swiping right. Navigate between <strong>trips, inbox & more!</strong></p>
+                  <div className="flex-1">
+                    <p>Find the <strong>Cruise Kauaʻi icon</strong> on your home screen and open it like a regular app!</p>
+                    <div className="flex gap-3 mt-2">
+                      <div className="flex items-center gap-1.5 bg-gray-100 rounded-xl px-2.5 py-1.5">
+                        <span className="text-base">☰</span>
+                        <span className="text-xs font-medium text-gray-600">Sidebar: top left or swipe right</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
