@@ -72,26 +72,8 @@ export default function WelcomePage() {
             className="w-40 h-40 md:w-52 md:h-52 object-cover rounded-3xl shadow-2xl border-4 border-white/30"
           />
           <div>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-lg">cruise kauaʻi</h1>
-            <p className="mt-2 text-lg md:text-xl text-green-100 font-medium">sharing aloha one ride at a time</p>
-            <p className="mt-1 text-sm text-green-200">a community-based ridesharing app to reduce traffic on kauaʻi</p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-3 w-full max-w-sm">
-            <Button
-              onClick={handleSignUp}
-              size="lg"
-              className="flex-1 bg-white text-green-800 hover:bg-green-50 font-bold text-base rounded-2xl py-5 shadow-lg"
-            >
-              sign up here!
-            </Button>
-            <Button
-              onClick={handleExplore}
-              size="lg"
-              variant="outline"
-              className="flex-1 bg-transparent border-white/60 text-white hover:bg-white/10 text-sm rounded-2xl py-5"
-            >
-              explore first
-            </Button>
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-lg text-white">cruise kauaʻi</h1>
+            <p className="mt-2 text-lg md:text-xl text-green-100 font-medium">a community-based ridesharing app to reduce traffic on kauaʻi</p>
           </div>
         </div>
       </div>
@@ -100,8 +82,8 @@ export default function WelcomePage() {
 
         {/* WE GET IT — dark card */}
         <div className="bg-green-900 text-white rounded-3xl p-6 shadow-lg">
-          <h2 className="text-2xl font-extrabold uppercase tracking-wide mb-1">we get it...</h2>
-          <h3 className="text-lg font-bold text-green-300 uppercase tracking-wider mb-4">transportation is tough on kauaʻi</h3>
+          <h2 className="text-2xl font-extrabold uppercase tracking-wide mb-1 text-white">We get it...</h2>
+          <h3 className="text-lg font-bold text-green-300 uppercase tracking-wider mb-4">Transportation is tough on kauaʻi</h3>
           <div className="grid grid-cols-2 gap-3 mb-5">
             {[
               { icon: "⛽", label: "expensive gas" },
@@ -116,7 +98,7 @@ export default function WelcomePage() {
             ))}
           </div>
           <div className="border-t border-green-700 pt-4">
-            <p className="text-base font-bold uppercase tracking-wide text-green-300 mb-1">that's why we launched cruise kauaʻi</p>
+            <p className="text-base font-bold uppercase tracking-wide text-green-300 mb-1">That's why we launched cruise kauaʻi</p>
             <p className="text-green-100 text-sm leading-relaxed">Our mission is to provide <strong className="text-white">accessible & affordable transportation options</strong>, and divert more money into our local economy.</p>
           </div>
         </div>
@@ -128,12 +110,12 @@ export default function WelcomePage() {
             {[
               { emoji: "🚗", role: "drivers", color: "bg-blue-50 border-blue-200", titleColor: "text-blue-800", desc: "Offer rides on trips you're already taking & cover gas + vehicle maintenance costs." },
               { emoji: "🙋", role: "riders", color: "bg-amber-50 border-amber-200", titleColor: "text-amber-800", desc: "Find affordable, reliable transportation around the island ($5–30/ride)." },
-              { emoji: "🌿", role: "simple", color: "bg-green-50 border-green-200", titleColor: "text-green-800", desc: "Locals happy, visitors happy, & less cars on the road." },
+              { emoji: "🌿", role: "Simple!", color: "bg-green-50 border-green-200", titleColor: "text-green-800", desc: "Locals happy, visitors happy, & less cars on the road." },
             ].map(({ emoji, role, color, titleColor, desc }) => (
               <div key={role} className={`flex items-start gap-4 rounded-2xl border p-4 ${color}`}>
                 <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-2xl shadow-sm shrink-0">{emoji}</div>
                 <div>
-                  <p className={`font-bold text-base uppercase tracking-wide ${titleColor}`}>{role}</p>
+                  <p className={`font-bold text-base tracking-wide ${titleColor}`}>{role}</p>
                   <p className="text-gray-700 text-sm mt-0.5">{desc}</p>
                 </div>
               </div>
@@ -142,13 +124,13 @@ export default function WelcomePage() {
         </div>
 
         {/* CARPOOLING IS A CULTURAL SHIFT */}
-        <div className="bg-amber-50 border border-amber-200 rounded-3xl overflow-hidden shadow">
-          <div className="bg-amber-700 text-white px-6 py-4 text-center">
-            <h2 className="text-xl font-extrabold uppercase tracking-wide leading-tight">carpooling is a cultural shift</h2>
-            <p className="text-amber-200 text-sm font-medium mt-1">& we need everyone's help to make it a reality</p>
+        <div className="rounded-3xl overflow-hidden shadow" style={{background: "#f5f0eb", border: "1px solid #e8d5c4"}}>
+          <div className="text-white px-6 py-4 text-center" style={{backgroundColor: "#b02a2a"}}>
+            <h2 className="text-xl font-extrabold uppercase tracking-wide leading-tight text-white">Carpooling is a cultural shift</h2>
+            <p className="text-red-200 text-sm font-medium mt-1">& we need everyone's help to make it a reality</p>
           </div>
           <div className="p-5 space-y-4">
-            <p className="text-amber-900 font-bold text-sm uppercase tracking-wider text-center">get involved</p>
+            <p className="text-red-900 font-bold text-sm uppercase tracking-wider text-center">get involved</p>
             {[
               { emoji: "🏡", title: "if you're local — register as a driver & start posting rides", desc: "Start making money on your commutes while improving transportation options on the island." },
               { emoji: "✈️", title: "if you're visiting — consider alternatives to car rentals", desc: "Get around with Cruise Kauaʻi & The Hanalei Initiative Shuttles in Kapaʻa, Princeville, Hanalei & Hāʻena." },
