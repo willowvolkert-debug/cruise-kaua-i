@@ -50,6 +50,11 @@ const getNavigationItems = (isExploreMode) => {
 
   baseItems.push(
     {
+      title: "about us",
+      url: createPageUrl("AboutUs") + (isExploreMode ? "?explore=true" : ""),
+      icon: Users,
+    },
+    {
       title: "contact us",
       url: createPageUrl("ContactUs") + (isExploreMode ? "?explore=true" : ""),
       icon: MessageSquare,
