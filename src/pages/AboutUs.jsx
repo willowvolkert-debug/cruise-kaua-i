@@ -35,6 +35,9 @@ export default function AboutUsPage() {
           <p>
             In all that time, she wondered about carpooling. It would solve all her problems! Help pay for gas, reduce traffic, and give her someone to talk to on some of these long drives — not to mention helping someone out.
           </p>
+          <p>
+            cruise kauaʻi stayed as a theory to help the island for about a year, but with persistence, willow learned how to build an app, and started turning ideas into reality.
+          </p>
         </div>
 
         {/* Divider */}
