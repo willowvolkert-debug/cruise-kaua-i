@@ -83,7 +83,7 @@ export default function WelcomePage() {
         {/* WE GET IT — dark card */}
         <div className="bg-green-900 text-white rounded-3xl p-6 shadow-lg">
           <h2 className="text-2xl font-extrabold uppercase tracking-wide mb-1 text-white">We get it...</h2>
-          <h3 className="text-lg font-bold text-green-300 uppercase tracking-wider mb-4">Transportation is tough on kauaʻi</h3>
+          <h3 className="text-lg font-bold text-green-300 tracking-wider mb-4">Transportation is tough on kauaʻi</h3>
           <div className="grid grid-cols-2 gap-3 mb-5">
             {[
               { icon: "⛽", label: "expensive gas" },
@@ -98,7 +98,7 @@ export default function WelcomePage() {
             ))}
           </div>
           <div className="border-t border-green-700 pt-4">
-            <p className="text-base font-bold uppercase tracking-wide text-green-300 mb-1">That's why we launched cruise kauaʻi</p>
+            <p className="text-base font-bold tracking-wide text-green-300 mb-1">Thatʻs why we launched Cruise Kauaʻi</p>
             <p className="text-green-100 text-sm leading-relaxed">Our mission is to provide <strong className="text-white">accessible & affordable transportation options</strong>, and divert more money into our local economy.</p>
           </div>
         </div>
@@ -108,8 +108,8 @@ export default function WelcomePage() {
           <h2 className="text-2xl font-extrabold uppercase tracking-wide text-green-900 mb-4">how it works</h2>
           <div className="grid grid-cols-1 gap-4">
             {[
-              { emoji: "🚗", role: "drivers", color: "bg-blue-50 border-blue-200", titleColor: "text-blue-800", desc: "Offer rides on trips you're already taking & cover gas + vehicle maintenance costs." },
-              { emoji: "🙋", role: "riders", color: "bg-amber-50 border-amber-200", titleColor: "text-amber-800", desc: "Find affordable, reliable transportation around the island ($5–30/ride)." },
+              { emoji: "🚗", role: "Drivers", color: "bg-blue-50 border-blue-200", titleColor: "text-blue-800", desc: "Offer rides on trips you're already taking & cover gas + vehicle maintenance costs." },
+              { emoji: "🙋", role: "Riders", color: "bg-amber-50 border-amber-200", titleColor: "text-amber-800", desc: "Find affordable, reliable transportation around the island ($5–30/ride)." },
               { emoji: "🌿", role: "Simple!", color: "bg-green-50 border-green-200", titleColor: "text-green-800", desc: "Locals happy, visitors happy, & less cars on the road." },
             ].map(({ emoji, role, color, titleColor, desc }) => (
               <div key={role} className={`flex items-start gap-4 rounded-2xl border p-4 ${color}`}>
