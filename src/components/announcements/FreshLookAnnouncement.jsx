@@ -20,12 +20,11 @@ export default function FreshLookAnnouncement({ isOpen, onClose }) {
             alt="Cruise Kauaʻi"
             className="w-16 h-16 object-cover rounded-2xl mx-auto mb-3 shadow-lg border-2 border-white/30"
           />
-          <div className="flex items-center justify-center gap-2 mb-1">
+          <div className="flex items-center justify-center gap-2">
             <Sparkles className="w-4 h-4 text-yellow-300" />
-            <h2 className="text-lg font-extrabold tracking-wide">fresh new look!</h2>
+            <h2 className="text-lg font-extrabold tracking-wide text-white">cruise kauaʻi just got a refresh</h2>
             <Sparkles className="w-4 h-4 text-yellow-300" />
           </div>
-          <p className="text-green-100 text-sm">cruise kauaʻi just got a refresh 🌿</p>
         </div>
 
         {/* Body */}
@@ -37,7 +36,7 @@ export default function FreshLookAnnouncement({ isOpen, onClose }) {
           {/* Home screen reminder */}
           <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 space-y-2">
             <p className="font-bold text-blue-800 text-sm flex items-center gap-2">
-              <Share className="w-4 h-4" /> add to your home screen
+              <Share className="w-4 h-4" /> add this website to your home screen as an app
             </p>
             <div className="text-xs text-blue-700 space-y-1.5">
               <div className="flex gap-2 items-start">
