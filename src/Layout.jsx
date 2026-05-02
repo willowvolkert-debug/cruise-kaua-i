@@ -340,7 +340,7 @@ export default function Layout({ children, currentPageName }) {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <SidebarTrigger data-sidebar="trigger" className="hover:bg-gray-100 p-2 rounded-2xl transition-colors duration-200" />
-                            <h1 className="text-base font-bold text-secondary">{currentPageName?.toLowerCase() || ""}</h1>
+                            <h1 className="text-base font-bold text-secondary">{currentPageName?.toLowerCase() || ""}{currentPageName === "Welcome" ? "!" : ""}</h1>
                           </div>
                           <img
                             src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
