@@ -96,7 +96,7 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
             onError={(e) => { e.target.style.display='none'; }}
           />
           <div>
-            <h2 className="font-bold text-blue-500 text-xl tracking-wide">cruise {(currentIsland || currentUser?.preferred_island || "kauaʻi").toLowerCase()}</h2>
+            <h2 className="font-bold text-primary text-xl tracking-wide">cruise {(currentIsland || currentUser?.preferred_island || "kauaʻi").toLowerCase()}</h2>
             <p className="text-xs text-gray-500">sharing aloha one ride at a time</p>
           </div>
         </div>
@@ -125,8 +125,8 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton 
                       asChild 
-                      className={`hover:bg-orange-50 hover:text-orange-700 transition-all duration-200 rounded-2xl mb-1 ${
-                        location.pathname === item.url ? 'bg-orange-100 text-orange-900 shadow-sm font-semibold' : ''
+                      className={`hover:bg-green-50 hover:text-primary transition-all duration-200 rounded-2xl mb-1 ${
+                        location.pathname === item.url ? 'bg-green-100 text-primary shadow-sm font-semibold' : ''
                       }`}
                     >
                       <Link to={item.url} onClick={handleNavClick} className="flex items-center gap-3 px-4 py-3">
@@ -295,15 +295,6 @@ export default function Layout({ children, currentPageName }) {
           @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&display=swap');
           
           :root {
-            --primary: 251 146 60;
-            --primary-foreground: 255 255 255;
-            --secondary: 59 130 246;
-            --accent: 148 163 184;
-            --background: 255 255 255;
-            --card: 249 250 251;
-            --border: 209 213 219;
-            --muted: 243 244 246;
-            --ring: 251 146 60;
             --font-sans: 'Nunito', sans-serif;
           }
 

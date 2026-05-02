@@ -30,7 +30,7 @@ const AuthenticatedApp = () => {
           alt="Cruise Kauaʻi"
           className="w-48 h-48 object-cover rounded-2xl shadow-lg"
         />
-        <h1 className="text-2xl font-bold text-blue-500 tracking-wide">cruise kauaʻi</h1>
+        <h1 className="text-2xl font-bold text-primary tracking-wide">cruise kauaʻi</h1>
       </div>
     );
   }
