@@ -350,7 +350,7 @@ export default function Layout({ children, currentPageName }) {
                         </div>
                       </header>
 
-                      <div className="flex-1 overflow-auto bg-white">
+                      <div className="flex-1 overflow-auto overflow-x-hidden bg-white">
                         {children}
                       </div>
                     </main>

@@ -45,13 +45,13 @@ export default function TripsPage() {
   }, [islandLoaded, selectedIsland]);
 
   return (
-    <div className="p-3 md:p-8 bg-white">
+    <div className="p-3 md:p-8 bg-white overflow-x-hidden">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-3xl md:text-4xl font-bold text-secondary mb-2">
+        <div className="mb-4">
+          <h1 className="text-2xl md:text-4xl font-bold text-secondary mb-1">
             plan your trip
           </h1>
-          <p className="text-gray-600">find a ride, request a ride, or offer seats for your next drive</p>
+          <p className="text-sm md:text-base text-gray-600">find a ride, request a ride, or offer seats for your next drive</p>
 
           {/* Island Selector */}
           <div className="mt-4 flex items-center gap-3 flex-wrap">
@@ -98,14 +98,17 @@ export default function TripsPage() {
 
         <Tabs defaultValue="find" className="w-full">
           <TabsList className="grid w-full grid-cols-3 bg-gray-100 p-1 rounded-3xl">
-            <TabsTrigger value="find" className="py-2.5 text-base flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-md rounded-3xl">
-              <Search className="w-5 h-5"/> view all rides
+            <TabsTrigger value="find" className="py-2.5 flex flex-col sm:flex-row items-center gap-1 sm:gap-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-md rounded-3xl text-xs sm:text-base">
+              <Search className="w-4 h-4 sm:w-5 sm:h-5 shrink-0"/>
+              <span className="leading-tight text-center">view rides</span>
             </TabsTrigger>
-            <TabsTrigger value="request" className="py-2.5 text-base flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-md rounded-3xl">
-              <MessageSquarePlus className="w-5 h-5"/> request a ride
+            <TabsTrigger value="request" className="py-2.5 flex flex-col sm:flex-row items-center gap-1 sm:gap-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-md rounded-3xl text-xs sm:text-base">
+              <MessageSquarePlus className="w-4 h-4 sm:w-5 sm:h-5 shrink-0"/>
+              <span className="leading-tight text-center">request</span>
             </TabsTrigger>
-            <TabsTrigger value="post" className="py-2.5 text-base flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-md rounded-3xl">
-              <Car className="w-5 h-5"/> post a ride
+            <TabsTrigger value="post" className="py-2.5 flex flex-col sm:flex-row items-center gap-1 sm:gap-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-md rounded-3xl text-xs sm:text-base">
+              <Car className="w-4 h-4 sm:w-5 sm:h-5 shrink-0"/>
+              <span className="leading-tight text-center">post a ride</span>
             </TabsTrigger>
           </TabsList>
           <TabsContent value="find" className="mt-6">
