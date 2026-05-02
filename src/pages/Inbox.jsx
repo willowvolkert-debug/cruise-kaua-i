@@ -758,16 +758,17 @@ Please process the refund manually via Stripe.
     return (
         <div className="p-4 md:p-8 bg-white">
             <div className="max-w-4xl mx-auto space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                        <h1 className="text-3xl font-bold text-secondary">inbox & confirmed rides</h1>
-                        <p className="text-gray-600">manage your trips, message drivers & riders, and leave ratings</p>
+                <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                        <h1 className="text-xl font-bold text-secondary leading-tight">inbox & confirmed rides</h1>
+                        <p className="text-gray-500 text-xs mt-0.5">manage trips, messages & ratings</p>
                     </div>
                     <Button
                         onClick={() => setShowReportModal(true)}
-                        className="bg-orange-500 hover:bg-orange-600 text-white rounded-2xl w-full sm:w-auto"
+                        className="bg-orange-500 hover:bg-orange-600 text-white rounded-2xl shrink-0"
+                        size="sm"
                     >
-                        <AlertTriangle className="w-4 h-4 mr-2" />
+                        <AlertTriangle className="w-4 h-4 mr-1" />
                         report
                     </Button>
                 </div>
@@ -823,11 +824,9 @@ Please process the refund manually via Stripe.
                                 return (
                                     <div key={booking.id} className="bg-white rounded-lg p-4 border border-orange-200">
                                         <div className="space-y-2">
-                                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                                                <Calendar className="w-4 h-4" />
-                                                <span>{format(parseDateString(ride.departure_date), "EEE, MMM d, yyyy")}</span>
-                                                <Clock className="w-4 h-4 ml-2" />
-                                                <span>{formatTime12Hour(ride.departure_time)}</span>
+                                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-600">
+                                                <span className="flex items-center gap-1"><Calendar className="w-4 h-4" />{format(parseDateString(ride.departure_date), "EEE, MMM d")}</span>
+                                                <span className="flex items-center gap-1"><Clock className="w-4 h-4" />{formatTime12Hour(ride.departure_time)}</span>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <MapPin className="w-4 h-4 text-primary" />
@@ -888,15 +887,13 @@ Please process the refund manually via Stripe.
                                         className={`w-full text-left bg-white rounded-lg p-4 border border-blue-200 ${isDriver ? 'hover:shadow-md cursor-pointer' : ''} transition-shadow`}
                                     >
                                         <div className="space-y-2">
-                                            <div className="flex items-center justify-between">
-                                               <div className="flex items-center gap-2 text-sm text-gray-600">
-                                                   <Calendar className="w-4 h-4" />
-                                                   <span>{format(parseDateString(ride.departure_date), "EEE, MMM d, yyyy")}</span>
-                                                   <Clock className="w-4 h-4 ml-2" />
-                                                   <span>{formatTime12Hour(ride.departure_time)}</span>
-                                               </div>
+                                            <div className="flex items-center justify-between gap-2">
+                                              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-600 min-w-0">
+                                                  <span className="flex items-center gap-1"><Calendar className="w-4 h-4" />{format(parseDateString(ride.departure_date), "EEE, MMM d")}</span>
+                                                  <span className="flex items-center gap-1"><Clock className="w-4 h-4" />{formatTime12Hour(ride.departure_time)}</span>
+                                              </div>
                                                 {isDriver && (
-                                                    <ChevronRight className="w-5 h-5 text-gray-400" />
+                                                    <ChevronRight className="w-5 h-5 text-gray-400 shrink-0" />
                                                 )}
                                             </div>
                                             <div className="flex items-center gap-2">
@@ -1019,11 +1016,9 @@ Please process the refund manually via Stripe.
                                         <div key={booking.id} className="p-4 bg-gray-50 rounded-2xl border border-gray-200">
                                             {ride ? (
                                                 <div className="mb-3">
-                                                    <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
-                                                        <Calendar className="w-4 h-4" />
-                                                        <span>{format(parseDateString(ride.departure_date), "EEE, MMM d, yyyy")}</span>
-                                                        <Clock className="w-4 h-4 ml-2" />
-                                                        <span>{formatTime12Hour(ride.departure_time)}</span>
+                                                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-600 mb-1">
+                                                        <span className="flex items-center gap-1"><Calendar className="w-4 h-4" />{format(parseDateString(ride.departure_date), "EEE, MMM d")}</span>
+                                                        <span className="flex items-center gap-1"><Clock className="w-4 h-4" />{formatTime12Hour(ride.departure_time)}</span>
                                                     </div>
                                                     <div className="flex items-center gap-2 mb-2">
                                                         <MapPin className="w-4 h-4 text-primary" />

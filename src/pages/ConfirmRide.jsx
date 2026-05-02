@@ -45,7 +45,7 @@ export default function ConfirmRidePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl shadow-xl p-8 max-w-md w-full text-center space-y-6">
+      <div className="bg-white rounded-3xl shadow-xl p-6 max-w-md w-full text-center space-y-5">
         <img
           src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
           alt="Cruise Kauaʻi"
