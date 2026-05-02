@@ -132,7 +132,7 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
                       <Link to={item.url} onClick={handleNavClick} className="flex items-center gap-3 px-4 py-3">
                         <item.icon className="w-5 h-5" />
                         <span>{item.title}</span>
-                        {item.title === "inbox" && unreadCount > 0 && (
+                        {item.title === "inbox & confirmed rides" && unreadCount > 0 && (
                           <Badge className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
                             {unreadCount > 99 ? '99+' : unreadCount}
                           </Badge>

@@ -20,6 +20,7 @@ import TransactionHistory from "../components/payment/TransactionHistory";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import EnableNotificationsModal from "../components/notifications/EnableNotificationsModal";
 import { requestNotificationPermission } from "../components/utils/notifications";
+import AdminMessageCard from "../components/inbox/AdminMessageCard";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -96,6 +97,7 @@ export default function AccountPage() {
     const [acceptedRideAlert, setAcceptedRideAlert] = useState(null);
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState(null);
+    const [adminMessages, setAdminMessages] = useState([]);
 
     useEffect(() => {
         // Check for explore mode
@@ -161,6 +163,11 @@ export default function AccountPage() {
                 b.payment_status === 'paid'
             );
             setPendingRequests(pendingBookingRequests);
+
+            // Load admin messages for this user
+            const allAdminMessages = await base44.entities.AdminMessage.list('-created_date');
+            const myAdminMessages = allAdminMessages.filter(m => m.recipient_id === currentUser.id && !m.is_read);
+            setAdminMessages(myAdminMessages);
 
             // Calculate available balance from completed transactions where user is recipient
             const allTransactions = await base44.entities.Transaction.list();
@@ -670,6 +677,15 @@ export default function AccountPage() {
 
                     </CardContent>
                 </Card>
+
+                {/* Admin Messages */}
+                {adminMessages.length > 0 && (
+                    <AdminMessageCard
+                        adminMessages={adminMessages}
+                        onMessageRead={loadData}
+                        onReplySuccess={loadData}
+                    />
+                )}
 
                 <div className="grid md:grid-cols-3 gap-8">
                     <div className="md:col-span-2 space-y-8">
