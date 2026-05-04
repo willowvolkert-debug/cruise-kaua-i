@@ -57,7 +57,11 @@ export default function FindRide({ island = "Kauai" }) {
         }
 
         // Set booking-specific errors for logged-in users
-        if (!user.profile_picture_url) {
+        if (!user.drivers_license_verified && !user.drivers_license_pending_review) {
+          setBookingError("🪪 You must submit your driver's license to book a ride. Go to Account → Verification to submit.");
+        } else if (user.drivers_license_pending_review && !user.drivers_license_verified) {
+          setBookingError("⏳ Your license is currently under review. You'll be able to book once it's approved (usually within 24 hours).");
+        } else if (!user.profile_picture_url) {
           setBookingError("Please upload a profile picture before booking rides. Go to Account page.");
         } else if (!user.profile_complete) {
           setBookingError("Please complete your profile before booking rides. Go to Account page.");

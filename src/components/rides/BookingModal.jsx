@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
-import { CreditCard, Navigation, Star, Loader2, MessageCircle, Wind, HelpCircle, MapPin } from "lucide-react";
+import { CreditCard, Navigation, Star, Loader2, MessageCircle, Wind, HelpCircle, MapPin, ShieldAlert } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { createRideCheckout } from "@/functions/createRideCheckout";
@@ -432,18 +432,34 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               </div>
             </div>
 
-            <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <CreditCard className="w-5 h-5 text-blue-600" />
-              <p className="text-sm text-blue-800">
-                You'll be redirected to Stripe to complete payment securely.
-              </p>
-            </div>
+            {currentUser && !currentUser.drivers_license_verified && (
+              <div className="flex items-start gap-3 p-4 bg-red-50 border-2 border-red-300 rounded-xl">
+                <ShieldAlert className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-bold text-red-800 mb-1">License verification required</p>
+                  <p className="text-sm text-red-700">
+                    {currentUser.drivers_license_pending_review
+                      ? "Your license is under review. You can book once it's approved (usually within 24 hours)."
+                      : "You must submit your driver's license before booking. Go to Account → Verification."}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {(!currentUser || currentUser.drivers_license_verified) && (
+              <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <CreditCard className="w-5 h-5 text-blue-600" />
+                <p className="text-sm text-blue-800">
+                  You'll be redirected to Stripe to complete payment securely.
+                </p>
+              </div>
+            )}
 
             <DialogFooter className="pt-4">
               <Button type="button" variant="outline" onClick={onClose}>cancel</Button>
               <Button 
                 type="submit" 
-                disabled={isSubmitting} 
+                disabled={isSubmitting || (currentUser && !currentUser.drivers_license_verified)} 
                 className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 {isSubmitting ? (
