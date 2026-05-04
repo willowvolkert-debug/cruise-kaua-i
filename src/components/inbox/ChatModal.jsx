@@ -57,16 +57,8 @@ export default function ChatModal({ isOpen, onClose, booking, otherPartyName, ot
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !currentUser) return;
 
-    // Check for phone numbers
     const hasPhoneNumber = detectPhoneNumber(newMessage);
-    
-    if (hasPhoneNumber && !booking.phone_number_detected) {
-      // Flag this booking for admin review
-      await base44.entities.RideBooking.update(booking.id, {
-        phone_number_detected: true
-      });
-      setShowPhoneWarning(true);
-    }
+    if (hasPhoneNumber) setShowPhoneWarning(true);
 
     const messageObj = {
       sender_id: currentUser.id,
@@ -79,11 +71,13 @@ export default function ChatModal({ isOpen, onClose, booking, otherPartyName, ot
     setMessages(updatedMessages);
     setNewMessage('');
 
-    // Update booking with new message
+    // Update booking with new message (single write to avoid race conditions)
     try {
-      await base44.entities.RideBooking.update(booking.id, {
-        messages: updatedMessages
-      });
+      const updatePayload = { messages: updatedMessages };
+      if (hasPhoneNumber && !booking.phone_number_detected) {
+        updatePayload.phone_number_detected = true;
+      }
+      await base44.entities.RideBooking.update(booking.id, updatePayload);
 
       // Send email notification to the OTHER party, not the sender
       const isDriver = currentUser.id === booking.driver_id;

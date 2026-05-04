@@ -67,8 +67,6 @@ export default function FindRide({ island = "Kauai" }) {
           setBookingError("Please complete your profile before booking rides. Go to Account page.");
         } else if (!user.terms_accepted || !user.privacy_policy_accepted || !user.community_agreement_accepted) {
           setBookingError("Please accept all legal agreements before booking rides. Go to Account page.");
-        } else if (!user.notifications_enabled) {
-          setBookingError("Please enable notifications before booking rides. Go to Account page.");
         } else if (user.pending_ratings && user.pending_ratings.length > 0) {
           setBookingError("Please complete your pending trip ratings in the Inbox before booking new rides.");
         }
