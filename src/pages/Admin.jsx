@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ShieldCheck, X, CheckCircle, Clock, Users, AlertCircle, Eye, Car, MessageSquare, Phone, Mail, MapPin, Edit, Upload } from "lucide-react";
+import { ShieldCheck, X, CheckCircle, Clock, Users, AlertCircle, Eye, Car, MessageSquare, Phone, Mail, MapPin, Edit, Upload, ChevronRight } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import AdminMessageModal from "../components/admin/AdminMessageModal";
 import UserAccountView from "../components/admin/UserAccountView";
@@ -64,6 +64,8 @@ export default function AdminPage() {
   const [viewingUserId, setViewingUserId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showNewActivity, setShowNewActivity] = useState(true);
+  const [showPhoneAlertModal, setShowPhoneAlertModal] = useState(false);
+  const [selectedPhoneAlert, setSelectedPhoneAlert] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -536,22 +538,29 @@ export default function AdminPage() {
               </p>
               <div className="space-y-3">
                 {phoneAlerts.map(booking => (
-                  <div key={booking.id} className="bg-white rounded-lg p-4 border border-red-200">
+                  <button
+                    key={booking.id}
+                    onClick={() => { setSelectedPhoneAlert(booking); setShowPhoneAlertModal(true); }}
+                    className="w-full bg-white rounded-lg p-4 border border-red-200 hover:shadow-md transition-shadow text-left"
+                  >
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-semibold text-secondary">
-                          Booking ID: {booking.id.substring(0, 8)}...
+                          {booking.passenger_name} ↔ {booking.driver_username || 'Driver'}
                         </p>
                         <p className="text-sm text-gray-600">
-                          Between: {booking.passenger_name} & Driver
+                          Booking ID: {booking.id.substring(0, 8)}...
                         </p>
                         <p className="text-xs text-gray-500 mt-1">
-                          {booking.messages?.length || 0} messages in conversation
+                          {booking.messages?.length || 0} messages — tap to review
                         </p>
                       </div>
-                      <Badge className="bg-red-600">needs review</Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-red-600">needs review</Badge>
+                        <ChevronRight className="w-4 h-4 text-red-400" />
+                      </div>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </CardContent>
@@ -1514,6 +1523,68 @@ export default function AdminPage() {
                   >
                     <CheckCircle className="w-4 h-4 mr-2" />
                     approve vehicle
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
+        {/* Phone Alert Review Modal */}
+        <Dialog open={showPhoneAlertModal} onOpenChange={setShowPhoneAlertModal}>
+          <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold text-red-800 flex items-center gap-2">
+                <Phone className="w-5 h-5 text-red-600" />
+                phone number alert — review messages
+              </DialogTitle>
+            </DialogHeader>
+            {selectedPhoneAlert && (
+              <div className="space-y-4 py-2">
+                <div className="p-3 bg-red-50 rounded-xl border border-red-200">
+                  <p className="text-sm font-semibold text-secondary">
+                    {selectedPhoneAlert.passenger_name} ↔ {selectedPhoneAlert.driver_username || 'Driver'}
+                  </p>
+                  <p className="text-xs text-gray-500">Booking ID: {selectedPhoneAlert.id}</p>
+                </div>
+
+                <div className="space-y-3 max-h-96 overflow-y-auto">
+                  {(selectedPhoneAlert.messages || []).length === 0 ? (
+                    <p className="text-gray-500 text-sm text-center py-4">No messages found.</p>
+                  ) : (
+                    (selectedPhoneAlert.messages || []).map((msg, idx) => (
+                      <div key={idx} className={`p-3 rounded-xl border text-sm ${msg.sender_id === selectedPhoneAlert.passenger_id ? 'bg-blue-50 border-blue-200 ml-4' : 'bg-gray-50 border-gray-200 mr-4'}`}>
+                        <p className="font-semibold text-secondary text-xs mb-1">@{msg.sender_name} · {msg.timestamp ? new Date(msg.timestamp).toLocaleString() : ''}</p>
+                        <p className="text-gray-800 whitespace-pre-wrap">{msg.message}</p>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                <div className="flex gap-3 pt-2 border-t border-gray-200">
+                  <Button
+                    onClick={async () => {
+                      await base44.entities.RideBooking.update(selectedPhoneAlert.id, { phone_number_detected: false });
+                      setShowPhoneAlertModal(false);
+                      setSelectedPhoneAlert(null);
+                      loadData();
+                    }}
+                    variant="outline"
+                    className="flex-1 border-green-300 text-green-700 hover:bg-green-50"
+                  >
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    mark reviewed (dismiss)
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      const u = users.find(u => u.id === selectedPhoneAlert.passenger_id);
+                      if (u) { handleMessageUser(u); setShowPhoneAlertModal(false); }
+                      else alert('User not found.');
+                    }}
+                    className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                  >
+                    <Mail className="w-4 h-4 mr-2" />
+                    warn passenger
                   </Button>
                 </div>
               </div>
