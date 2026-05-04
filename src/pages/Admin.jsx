@@ -989,7 +989,13 @@ export default function AdminPage() {
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
-                          <p className="font-semibold text-secondary">{edit.user_name}</p>
+                          <button
+                            onClick={() => {
+                              const u = users.find(u => u.id === edit.user_id);
+                              if (u) handleViewUserAccount(u.id);
+                            }}
+                            className="font-semibold text-secondary hover:text-primary transition-colors text-left"
+                          >{edit.user_name}</button>
                           <p className="text-sm text-gray-600">{edit.user_email}</p>
                           <div className="flex items-center gap-2 mt-1">
                             <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-300">
