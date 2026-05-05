@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { User, MessageSquare, ShieldCheck, Share2, MapPin, Users } from "lucide-react";
+import { User, MessageSquare, ShieldCheck, Share2, MapPin, Users, CheckCircle } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -39,13 +39,18 @@ const getNavigationItems = (isExploreMode) => {
   ];
 
   if (!isExploreMode) {
-    baseItems.push(
-      {
-        title: "inbox & confirmed rides",
-        url: createPageUrl("Inbox"),
-        icon: MessageSquare,
-      }
-    );
+  baseItems.push(
+    {
+      title: "inbox",
+      url: createPageUrl("Inbox"),
+      icon: MessageSquare,
+    },
+    {
+      title: "confirmed rides",
+      url: createPageUrl("ConfirmedRides"),
+      icon: CheckCircle,
+    }
+  );
   }
 
   baseItems.push(
@@ -138,7 +143,7 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
                       <Link to={item.url} onClick={handleNavClick} className="flex items-center gap-3 px-4 py-3">
                         <item.icon className="w-5 h-5" />
                         <span>{item.title}</span>
-                        {item.title === "inbox & confirmed rides" && unreadCount > 0 && (
+                        {item.title === "inbox" && unreadCount > 0 && (
                           <Badge className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
                             {unreadCount > 99 ? '99+' : unreadCount}
                           </Badge>

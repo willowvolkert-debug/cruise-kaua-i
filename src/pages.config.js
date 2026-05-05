@@ -64,6 +64,7 @@ import VehicleDetails from './pages/VehicleDetails';
 import Welcome from './pages/Welcome';
 import AboutUs from './pages/AboutUs';
 import ConfirmRide from './pages/ConfirmRide';
+import ConfirmedRides from './pages/ConfirmedRides';
 import __Layout from './Layout.jsx';
 
 
@@ -85,6 +86,7 @@ export const PAGES = {
     "Welcome": Welcome,
     "AboutUs": AboutUs,
     "ConfirmRide": ConfirmRide,
+    "ConfirmedRides": ConfirmedRides,
 }
 
 export const pagesConfig = {

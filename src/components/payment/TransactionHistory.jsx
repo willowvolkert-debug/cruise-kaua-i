@@ -196,27 +196,37 @@ export default function TransactionHistory() {
                 </div>
                 
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Ride amount:</span>
-                    <span className="font-medium">${selectedTransaction.ride_amount?.toFixed(2)}</span>
-                  </div>
-                  {getTransactionType(selectedTransaction) === 'payment' && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Connect fee:</span>
-                      <span className="font-medium">${selectedTransaction.connect_fee?.toFixed(2)}</span>
-                    </div>
+                  {getTransactionType(selectedTransaction) === 'payment' ? (
+                    <>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Ride cost:</span>
+                        <span className="font-medium">${selectedTransaction.ride_amount?.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Connect fee (10%):</span>
+                        <span className="font-medium">${selectedTransaction.connect_fee?.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between border-t border-gray-200 pt-2">
+                        <span className="font-semibold text-secondary">Total charged:</span>
+                        <span className="font-bold text-lg text-red-600">-${selectedTransaction.total_amount?.toFixed(2)}</span>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Rider paid:</span>
+                        <span className="font-medium">${selectedTransaction.total_amount?.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between text-red-600">
+                        <span>Platform fee deducted:</span>
+                        <span>-${selectedTransaction.connect_fee?.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between border-t border-gray-200 pt-2">
+                        <span className="font-semibold text-secondary">You receive:</span>
+                        <span className="font-bold text-lg text-green-600">+${selectedTransaction.ride_amount?.toFixed(2)}</span>
+                      </div>
+                    </>
                   )}
-                  <div className="flex justify-between border-t border-gray-200 pt-2">
-                    <span className="font-semibold text-secondary">Total:</span>
-                    <span className={`font-bold text-lg ${
-                      getTransactionType(selectedTransaction) === 'payment' ? 'text-red-600' : 'text-green-600'
-                    }`}>
-                      {getTransactionType(selectedTransaction) === 'payment' ? '-' : '+'}$
-                      {getTransactionType(selectedTransaction) === 'payment' 
-                        ? selectedTransaction.total_amount?.toFixed(2) 
-                        : selectedTransaction.ride_amount?.toFixed(2)}
-                    </span>
-                  </div>
                 </div>
 
                 <div className="mt-3 pt-3 border-t border-gray-200">
