@@ -1,12 +1,12 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MapPin, Calendar, Clock, Users, MessageCircle } from "lucide-react";
+import { MapPin, Calendar, Clock, Users, MessageCircle, Car } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
-export default function RideRequestCard({ request, onMessage, onViewProfile }) {
+export default function RideRequestCard({ request, onMessage, onViewProfile, onRespondWithRide }) {
   return (
     <Card className="border-gray-200 hover:border-primary/50 transition-all rounded-3xl">
       <CardContent className="p-4">
@@ -69,13 +69,26 @@ export default function RideRequestCard({ request, onMessage, onViewProfile }) {
             </div>
           </div>
           
-          <Button
-            onClick={() => onMessage(request)}
-            size="icon"
-            className="bg-primary hover:bg-primary/90 rounded-2xl shrink-0"
-          >
-            <MessageCircle className="w-5 h-5" />
-          </Button>
+          <div className="flex flex-col gap-2 shrink-0">
+            <Button
+              onClick={() => onMessage(request)}
+              size="icon"
+              className="bg-primary hover:bg-primary/90 rounded-2xl"
+            >
+              <MessageCircle className="w-5 h-5" />
+            </Button>
+            {onRespondWithRide && (
+              <Button
+                onClick={() => onRespondWithRide(request)}
+                size="icon"
+                variant="outline"
+                className="border-secondary text-secondary hover:bg-secondary/10 rounded-2xl"
+                title="Post a ride for this request"
+              >
+                <Car className="w-5 h-5" />
+              </Button>
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>

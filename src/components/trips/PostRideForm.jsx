@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, DollarSign, Car, X, Plus, AlertCircle, Clock, Users, HelpCircle, MessageSquare, ChevronDown, ChevronUp, Repeat, Pencil, Lightbulb, AlertTriangle, Trash2 } from "lucide-react";
+import { MapPin, Car, X, Plus, AlertCircle, Clock, Users, HelpCircle, MessageSquare, ChevronDown, ChevronUp, Repeat, Pencil, Lightbulb, AlertTriangle, Trash2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { getPricingInfo } from "./pricingUtils";
 import PostRideTutorial from "../tutorial/PostRideTutorial";
@@ -29,6 +29,7 @@ export default function PostRideForm({ island = "Kauai" }) {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [matchedRequest, setMatchedRequest] = useState(null);
+  const [respondingToRequest, setRespondingToRequest] = useState(null);
   const [showRideRequests, setShowRideRequests] = useState(true);
   const [recurringTrips, setRecurringTrips] = useState([]);
   const [showRecurringTrips, setShowRecurringTrips] = useState(true);
@@ -220,6 +221,25 @@ export default function PostRideForm({ island = "Kauai" }) {
     setShowRiderProfileModal(true);
   };
 
+  const handleRespondWithRide = (request) => {
+    setRespondingToRequest(request);
+    setRideData(prev => ({
+      ...prev,
+      departure_location: request.departure_location,
+      destination: request.destination,
+      departure_date: request.departure_date?.substring(0, 10) || '',
+      departure_time: request.departure_time || '',
+      is_flexible: request.is_flexible || false,
+      seats_available: request.seats_needed || 1,
+    }));
+    if (request.stops && request.stops.length > 0) setStops(request.stops);
+    const { suggestion, cap } = getPricingInfo(request.departure_location, request.destination);
+    setPricingSuggestion(suggestion);
+    setPriceCapWarning(cap);
+    // Scroll down to the form
+    setTimeout(() => window.scrollTo({ top: 400, behavior: 'smooth' }), 100);
+  };
+
   const handleMessageSent = (request) => {
     setMatchedRequest(request);
     setRideData(prev => ({
@@ -384,8 +404,30 @@ export default function PostRideForm({ island = "Kauai" }) {
         delete ridePayload.price_per_seat_tourist;
       }
 
-      await base44.entities.Ride.create(ridePayload);
-      
+      const newRide = await base44.entities.Ride.create(ridePayload);
+
+      // If responding to a specific ride request, notify the requester
+      if (respondingToRequest) {
+        try {
+          await base44.integrations.Core.SendEmail({
+            to: respondingToRequest.rider_email || '',
+            subject: `A driver responded to your ride request!`,
+            body: `Aloha ${respondingToRequest.rider_name},\n\nA driver has posted a ride that matches your request!\n\nRoute: ${ridePayload.departure_location} → ${ridePayload.destination}\nDate: ${ridePayload.departure_date}\nTime: ${ridePayload.departure_time}\n\nLog in to Cruise Kauaʻi to book it: https://cruisekauai.org\n\nMahalo,\nCruise Kauaʻi Team`
+          });
+        } catch (e) { /* email optional */ }
+        // Also send an in-app notification
+        try {
+          await base44.entities.AdminMessage.create({
+            recipient_id: respondingToRequest.rider_id,
+            recipient_name: respondingToRequest.rider_name,
+            subject: 'A driver responded to your ride request!',
+            message: `A driver has posted a ride matching your request (${respondingToRequest.departure_location} → ${respondingToRequest.destination} on ${ridePayload.departure_date}). Check the "find a ride" tab to book it!`,
+            message_type: 'info'
+          });
+        } catch (e) { /* notification optional */ }
+        setRespondingToRequest(null);
+      }
+
       setRideData({
         departure_location: '',
         destination: '',
@@ -448,7 +490,16 @@ export default function PostRideForm({ island = "Kauai" }) {
         </Button>
       </div>
 
-      {matchedRequest && (
+      {respondingToRequest && (
+        <Alert className="rounded-2xl bg-blue-50 border-blue-200">
+          <Car className="h-4 w-4 text-blue-600" />
+          <AlertDescription className="text-blue-800">
+            responding to <strong>@{respondingToRequest.rider_username || respondingToRequest.rider_name}</strong>'s request — the form has been pre-filled. fill in pricing and post!
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {matchedRequest && !respondingToRequest && (
         <Alert className="rounded-2xl bg-green-50 border-green-200">
           <MessageSquare className="h-4 w-4 text-green-600" />
           <AlertDescription className="text-green-800">
@@ -485,6 +536,7 @@ export default function PostRideForm({ island = "Kauai" }) {
                   request={request}
                   onMessage={handleMessageRequest}
                   onViewProfile={handleViewRiderProfile}
+                  onRespondWithRide={handleRespondWithRide}
                 />
               ))}
             </CardContent>
