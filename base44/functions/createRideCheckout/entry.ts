@@ -88,7 +88,14 @@ Deno.serve(async (req) => {
             partial_from: partial_from || '',
             partial_to: partial_to || '',
             messages: [],
-            initial_notification_sent: false
+            initial_notification_sent: false,
+            // Passenger profile info for driver to review
+            passenger_profile_picture_url: user.profile_picture_url || null,
+            passenger_bio: user.bio || null,
+            passenger_age: user.age || null,
+            passenger_gender: user.gender || null,
+            passenger_preferences_chattiness: user.preferences_chattiness || null,
+            passenger_preferences_scents: user.preferences_scents || null,
         });
 
         // Build line items
