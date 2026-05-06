@@ -88,14 +88,27 @@ export default function ChatModal({ isOpen, onClose, booking, otherPartyName, ot
       if (otherUsers && otherUsers.length > 0) {
         const otherUser = otherUsers[0];
         if (otherUser.email) {
+          const senderName = `@${currentUser.username || currentUser.full_name}`;
+          const preview = `${newMessage.substring(0, 200)}${newMessage.length > 200 ? '...' : ''}`;
           try {
             await base44.integrations.Core.SendEmail({
               to: otherUser.email,
-              subject: `New message from @${currentUser.username || currentUser.full_name} - Cruise Kauaʻi`,
-              body: `Aloha ${otherUser.full_name},\n\nYou have a new message from @${currentUser.username || currentUser.full_name}:\n\n"${newMessage.substring(0, 200)}${newMessage.length > 200 ? '...' : ''}"\n\nLog into Cruise Kauaʻi to reply.\n\nMahalo,\nCruise Kauaʻi Team`
+              subject: `New message from ${senderName} - Cruise Kauaʻi`,
+              body: `Aloha ${otherUser.full_name},\n\nYou have a new message from ${senderName}:\n\n"${preview}"\n\nLog into Cruise Kauaʻi to reply.\n\nMahalo,\nCruise Kauaʻi Team`
             });
           } catch (emailError) {
-            console.error("Error sending message notification:", emailError);
+            console.error("Error sending message email:", emailError);
+          }
+          // SMS notification
+          if (otherUser.sms_notifications_enabled && otherUser.phone_number) {
+            try {
+              await base44.functions.invoke('sendSmsNotification', {
+                userId: otherUser.id,
+                message: `Cruise Kauaʻi: New message from ${senderName}: "${preview.substring(0, 100)}${preview.length > 100 ? '...' : ''}" — log in to reply`
+              });
+            } catch (smsError) {
+              console.error("Error sending SMS:", smsError);
+            }
           }
         }
       }

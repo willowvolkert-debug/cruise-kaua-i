@@ -131,7 +131,9 @@ export default function AccountPage() {
                 preferences_chattiness: currentUser.preferences_chattiness || 'Flexible',
                 preferences_scents: currentUser.preferences_scents || 'Any',
                 preferences_music: ['No music','Soft/chill','Any genre','Flexible'].includes(currentUser.preferences_music) ? currentUser.preferences_music : (currentUser.preferences_music ? 'custom' : 'Flexible'),
-                preferences_music_custom: ['No music','Soft/chill','Any genre','Flexible'].includes(currentUser.preferences_music) ? '' : (currentUser.preferences_music || '')
+                preferences_music_custom: ['No music','Soft/chill','Any genre','Flexible'].includes(currentUser.preferences_music) ? '' : (currentUser.preferences_music || ''),
+                phone_number: currentUser.phone_number || '',
+                sms_notifications_enabled: currentUser.sms_notifications_enabled || false
             });
             
 
@@ -216,6 +218,9 @@ export default function AccountPage() {
         const resolvedMusic = editData.preferences_music === 'custom' ? (editData.preferences_music_custom || '') : editData.preferences_music;
         const saveData = { ...editData, preferences_music: resolvedMusic };
         delete saveData.preferences_music_custom;
+        // Persist phone fields explicitly
+        saveData.phone_number = editData.phone_number || '';
+        saveData.sms_notifications_enabled = !!editData.sms_notifications_enabled;
 
         const isProfileComplete = !!(editData.username && editData.bio && editData.age && editData.gender && profilePicUrl);
 
@@ -534,6 +539,28 @@ export default function AccountPage() {
                                                 className="rounded-2xl"
                                             />
                                             <p className="text-xs text-gray-500">Your home town on Kauai (optional) - you'll get notifications for ride requests in your area</p>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>📱 phone number for text alerts</Label>
+                                            <Input 
+                                                value={editData.phone_number || ''} 
+                                                onChange={(e) => setEditData({...editData, phone_number: e.target.value})} 
+                                                placeholder="e.g., (808) 555-1234"
+                                                className="rounded-2xl"
+                                                type="tel"
+                                            />
+                                            <div className="flex items-center gap-2 mt-1">
+                                                <input
+                                                    type="checkbox"
+                                                    id="sms-opt-in"
+                                                    checked={!!editData.sms_notifications_enabled}
+                                                    onChange={(e) => setEditData({...editData, sms_notifications_enabled: e.target.checked})}
+                                                    className="rounded"
+                                                />
+                                                <label htmlFor="sms-opt-in" className="text-xs text-gray-600">
+                                                    text me when someone messages me or books my ride
+                                                </label>
+                                            </div>
                                         </div>
                                         <div className="space-y-4 pt-2">
                                             <h4 className="font-semibold text-secondary">preferences</h4>

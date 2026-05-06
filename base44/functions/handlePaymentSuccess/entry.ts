@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
                         });
                     }
 
-                    // Send notification email to driver
+                    // Send notification email + SMS to driver
                     if (driver?.email) {
                         await base44.integrations.Core.SendEmail({
                             to: driver.email,
@@ -106,6 +106,12 @@ Please log into Cruise Kauaʻi to accept or decline this request.
 Mahalo,
 Cruise Kauaʻi Team
                             `.trim()
+                        });
+                    }
+                    if (driver?.sms_notifications_enabled && driver?.phone_number) {
+                        await base44.asServiceRole.functions.invoke('sendSmsNotification', {
+                            userId: booking.driver_id,
+                            message: `Cruise Kauaʻi: New ride request from ${booking.passenger_name}! Log in to accept or decline: https://cruisekauai.org`
                         });
                     }
                 }
