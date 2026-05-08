@@ -7,10 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, X, Plus, AlertCircle, Clock } from "lucide-react";
+import { MapPin, X, Plus, AlertCircle, Clock, Repeat, RefreshCw } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import LocationAutocomplete from "../shared/LocationAutocomplete";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+
+const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
 export default function RequestRide({ island = "Kauai" }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,6 +21,10 @@ export default function RequestRide({ island = "Kauai" }) {
   const [error, setError] = useState(null);
   const [stops, setStops] = useState(['']);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [postedRequest, setPostedRequest] = useState(null);
+  const [isRecurring, setIsRecurring] = useState(false);
+  const [recurringDays, setRecurringDays] = useState([]);
+  const [myRecurring, setMyRecurring] = useState([]);
   const [requestData, setRequestData] = useState({
     departure_location: '',
     destination: '',
@@ -50,6 +57,9 @@ export default function RequestRide({ island = "Kauai" }) {
           return;
         }
 
+        // Load recurring ride requests
+        const recurring = await base44.entities.RecurringRideRequest.filter({ user_id: user.id });
+        setMyRecurring(recurring);
 
       } catch (e) {
         setError("You must be logged in to request a ride.");
@@ -106,7 +116,31 @@ export default function RequestRide({ island = "Kauai" }) {
         status: 'active'
       };
 
-      await base44.entities.RideRequest.create(requestPayload);
+      const newRequest = await base44.entities.RideRequest.create(requestPayload);
+
+      // Save recurring ride request if enabled
+      if (isRecurring && recurringDays.length > 0) {
+        await base44.entities.RecurringRideRequest.create({
+          user_id: currentUser.id,
+          departure_location: requestData.departure_location,
+          destination: requestData.destination,
+          stops: stops.filter(s => s.trim() !== ''),
+          departure_time: requestData.departure_time,
+          is_flexible: requestData.is_flexible,
+          seats_needed: parseInt(requestData.seats_needed),
+          description: requestData.description,
+          has_luggage: requestData.has_luggage,
+          schedule_type: 'weekly',
+          weekly_days: recurringDays,
+          is_active: true,
+          rider_name: currentUser.full_name,
+          rider_username: currentUser.username || null,
+          rider_profile_picture_url: currentUser.profile_picture_url || null,
+          rider_bio: currentUser.bio || null,
+          rider_age: currentUser.age || null,
+          rider_gender: currentUser.gender || null,
+        });
+      }
 
       // Notify drivers with matching home base
       try {
@@ -142,7 +176,9 @@ export default function RequestRide({ island = "Kauai" }) {
         has_luggage: false
       });
       setStops(['']);
-      
+      setIsRecurring(false);
+      setRecurringDays([]);
+      setPostedRequest(newRequest);
       setShowSuccessModal(true);
       
     } catch (error) {
@@ -161,6 +197,36 @@ export default function RequestRide({ island = "Kauai" }) {
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>{error}</AlertDescription>
         </Alert>
+      )}
+
+      {myRecurring.length > 0 && (
+        <Card className="border-secondary/20 bg-blue-50 rounded-3xl">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3 text-secondary text-base">
+              <Repeat className="w-5 h-5" />
+              your recurring ride requests
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-4 space-y-3">
+            {myRecurring.map(r => (
+              <div key={r.id} className="flex items-start justify-between bg-white rounded-2xl p-3 border border-secondary/20">
+                <div className="flex-1">
+                  <p className="font-medium text-secondary text-sm">{r.departure_location} → {r.destination}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {(r.weekly_days || []).map(d => DAY_NAMES[d]).join(', ')} • {r.departure_time}
+                  </p>
+                </div>
+                <Switch
+                  checked={r.is_active}
+                  onCheckedChange={async (val) => {
+                    await base44.entities.RecurringRideRequest.update(r.id, { is_active: val });
+                    setMyRecurring(prev => prev.map(x => x.id === r.id ? { ...x, is_active: val } : x));
+                  }}
+                />
+              </div>
+            ))}
+          </CardContent>
+        </Card>
       )}
 
       <form onSubmit={handleSubmit}>
@@ -312,6 +378,46 @@ export default function RequestRide({ island = "Kauai" }) {
                   onCheckedChange={(checked) => handleInputChange('is_flexible', checked)}
                 />
               </div>
+
+              <div className="border-t pt-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label htmlFor="recurring" className="font-medium flex items-center gap-2">
+                      <Repeat className="w-4 h-4 text-secondary" />
+                      recurring request
+                    </Label>
+                    <p className="text-xs text-gray-500 mt-0.5">auto-post this request weekly on selected days</p>
+                  </div>
+                  <Switch
+                    id="recurring"
+                    checked={isRecurring}
+                    onCheckedChange={setIsRecurring}
+                  />
+                </div>
+                {isRecurring && (
+                  <div className="space-y-2">
+                    <Label className="text-sm text-gray-600">which days?</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((day, idx) => (
+                        <button
+                          key={day}
+                          type="button"
+                          onClick={() => setRecurringDays(prev =>
+                            prev.includes(idx) ? prev.filter(d => d !== idx) : [...prev, idx]
+                          )}
+                          className={`px-3 py-1.5 rounded-2xl text-sm font-medium border transition-colors ${
+                            recurringDays.includes(idx)
+                              ? 'bg-secondary text-white border-secondary'
+                              : 'bg-white text-gray-600 border-gray-300 hover:border-secondary'
+                          }`}
+                        >
+                          {day}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
 
@@ -351,6 +457,51 @@ export default function RequestRide({ island = "Kauai" }) {
           </Card>
         </div>
       </form>
+
+      {postedRequest && (
+        <Card className="border-green-300 bg-green-50 rounded-3xl shadow-md">
+          <CardContent className="p-6 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-green-100 rounded-2xl">
+                <MapPin className="w-5 h-5 text-green-700" />
+              </div>
+              <div>
+                <p className="font-bold text-green-800 text-lg">request submitted! 🎉</p>
+                <p className="text-sm text-green-700">{postedRequest.departure_location} → {postedRequest.destination}</p>
+              </div>
+            </div>
+            <p className="text-green-800 font-medium">want to also request a return ride?</p>
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                className="flex-1 bg-green-600 hover:bg-green-700 rounded-2xl"
+                onClick={() => {
+                  setRequestData(prev => ({
+                    ...prev,
+                    departure_location: postedRequest.destination,
+                    destination: postedRequest.departure_location,
+                    departure_date: '',
+                    departure_time: '',
+                  }));
+                  setStops(['']);
+                  setPostedRequest(null);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              >
+                yes, pre-fill return request
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1 rounded-2xl border-green-400 text-green-700"
+                onClick={() => setPostedRequest(null)}
+              >
+                no thanks
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="fixed bottom-6 right-6 z-50">
         <Button

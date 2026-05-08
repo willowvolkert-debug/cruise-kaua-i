@@ -1,0 +1,92 @@
+{
+  "name": "RecurringRideRequest",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "departure_location": {
+      "type": "string"
+    },
+    "destination": {
+      "type": "string"
+    },
+    "stops": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "departure_time": {
+      "type": "string"
+    },
+    "is_flexible": {
+      "type": "boolean",
+      "default": false
+    },
+    "seats_needed": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "has_luggage": {
+      "type": "boolean",
+      "default": false
+    },
+    "schedule_type": {
+      "type": "string",
+      "enum": [
+        "weekly",
+        "specific_days"
+      ],
+      "description": "How often to auto-post"
+    },
+    "weekly_days": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      },
+      "description": "Days of week (0=Sun...6=Sat)"
+    },
+    "departure_time_period": {
+      "type": "string",
+      "enum": [
+        "AM",
+        "PM"
+      ],
+      "default": "AM"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "rider_name": {
+      "type": "string"
+    },
+    "rider_username": {
+      "type": "string"
+    },
+    "rider_profile_picture_url": {
+      "type": "string"
+    },
+    "rider_bio": {
+      "type": "string"
+    },
+    "rider_age": {
+      "type": "integer"
+    },
+    "rider_gender": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id",
+    "departure_location",
+    "destination",
+    "departure_time",
+    "seats_needed",
+    "schedule_type"
+  ]
+}
