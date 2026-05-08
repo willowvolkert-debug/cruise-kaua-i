@@ -520,24 +520,31 @@ export default function AdminPage() {
           <div className="flex items-center gap-3">
             <Button
               onClick={() => {
-                const unverified = users.filter(u => u.user_type !== 'driver' && u.user_type !== 'rider' && u.role !== 'admin');
-                const rows = [
-                  ['Name', 'Email', 'Username', 'Joined'],
-                  ...unverified.map(u => [
-                    u.full_name,
-                    u.email,
-                    u.username || '',
-                    new Date(u.created_date).toLocaleDateString()
-                  ])
-                ];
-                const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
-                const blob = new Blob([csv], { type: 'text/csv' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `unverified-users-${new Date().toISOString().split('T')[0]}.csv`;
-                a.click();
-                URL.revokeObjectURL(url);
+                const unverified = users
+                  .filter(u => u.user_type !== 'driver' && u.user_type !== 'rider' && u.role !== 'admin')
+                  .sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
+                const batchSize = 50;
+                for (let i = 0; i < unverified.length; i += batchSize) {
+                  const batch = unverified.slice(i, i + batchSize);
+                  const batchNum = Math.floor(i / batchSize) + 1;
+                  const rows = [
+                    ['Name', 'Email', 'Username', 'Joined'],
+                    ...batch.map(u => [
+                      u.full_name,
+                      u.email,
+                      u.username || '',
+                      new Date(u.created_date).toLocaleDateString()
+                    ])
+                  ];
+                  const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+                  const blob = new Blob([csv], { type: 'text/csv' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `unverified-users-batch${batchNum}-${new Date().toISOString().split('T')[0]}.csv`;
+                  a.click();
+                  URL.revokeObjectURL(url);
+                }
               }}
               variant="outline"
               size="sm"
