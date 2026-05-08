@@ -41,6 +41,7 @@ export default function PostRideForm({ island = "Kauai" }) {
   const [showAutoPostModal, setShowAutoPostModal] = useState(false);
   const [autoPostTrip, setAutoPostTrip] = useState(null);
   const [recurringSchedules, setRecurringSchedules] = useState([]);
+  const [postedRide, setPostedRide] = useState(null);
   const [pricingSuggestion, setPricingSuggestion] = useState(null);
   const [priceCapWarning, setPriceCapWarning] = useState(null);
   const [rideData, setRideData] = useState({
@@ -455,8 +456,8 @@ export default function PostRideForm({ island = "Kauai" }) {
           car_model: `${refreshedUser.vehicle_make} ${refreshedUser.vehicle_model} ${refreshedUser.vehicle_year || ''}`.trim()
         }));
       }
-      
-      alert("Ride posted successfully!");
+
+      setPostedRide(newRide);
       
     } catch (error) {
       console.error("Error creating ride:", error);
@@ -1020,6 +1021,54 @@ export default function PostRideForm({ island = "Kauai" }) {
           </Card>
         </div>
       </form>
+
+      {postedRide && (
+        <Card className="border-green-300 bg-green-50 rounded-3xl shadow-md">
+          <CardContent className="p-6 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-green-100 rounded-2xl">
+                <MapPin className="w-5 h-5 text-green-700" />
+              </div>
+              <div>
+                <p className="font-bold text-green-800 text-lg">ride posted! 🎉</p>
+                <p className="text-sm text-green-700">{postedRide.departure_location} → {postedRide.destination}</p>
+              </div>
+            </div>
+            <p className="text-green-800 font-medium">want to also post your return route?</p>
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                className="flex-1 bg-green-600 hover:bg-green-700 rounded-2xl"
+                onClick={() => {
+                  setRideData(prev => ({
+                    ...prev,
+                    departure_location: postedRide.destination,
+                    destination: postedRide.departure_location,
+                    departure_date: '',
+                    departure_time: '',
+                  }));
+                  setStops(['']);
+                  const { suggestion, cap } = getPricingInfo(postedRide.destination, postedRide.departure_location);
+                  setPricingSuggestion(suggestion);
+                  setPriceCapWarning(cap);
+                  setPostedRide(null);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              >
+                yes, pre-fill return route
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1 rounded-2xl border-green-400 text-green-700"
+                onClick={() => setPostedRide(null)}
+              >
+                no thanks
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="fixed bottom-6 right-6 z-50">
         <Button
