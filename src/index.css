@@ -161,6 +161,24 @@ button:focus-visible {
   @media (max-width: 768px) {
     input, textarea, select {
       font-size: 16px !important;
+      touch-action: manipulation;
+      -webkit-user-select: text;
+      user-select: text;
+    }
+  }
+
+  /* Prevent iOS scroll containers from blocking input focus */
+  [data-sidebar="sidebar"],
+  [data-sidebar="content"] {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Fix iOS keyboard: SidebarProvider's flex+min-h-svh traps the viewport 
+     and prevents the keyboard from scrolling inputs into view */
+  @media (max-width: 768px) {
+    .group\/sidebar-wrapper {
+      min-height: unset !important;
+      height: auto !important;
     }
   }
 }
