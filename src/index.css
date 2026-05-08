@@ -176,9 +176,14 @@ button:focus-visible {
   /* Fix iOS keyboard: SidebarProvider's flex+min-h-svh traps the viewport 
      and prevents the keyboard from scrolling inputs into view */
   @media (max-width: 768px) {
-    .group\/sidebar-wrapper {
+    .group\/sidebar-wrapper,
+    [data-slot="sidebar-wrapper"] {
       min-height: unset !important;
       height: auto !important;
+    }
+    /* Also override any inline style set by SidebarProvider */
+    div[style*="min-height"] {
+      min-height: unset !important;
     }
   }
 }

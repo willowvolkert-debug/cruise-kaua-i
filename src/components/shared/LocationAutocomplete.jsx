@@ -168,6 +168,11 @@ export default function LocationAutocomplete({
           onFocus={() => inputValue && setShowSuggestions(true)}
           className={`rounded-2xl pr-10 ${isUnsupported ? 'border-red-500 focus:ring-red-500' : ''} ${className}`}
           autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="words"
+          spellCheck="false"
+          inputMode="text"
+          type="search"
         />
         <div className="absolute right-3 top-1/2 -translate-y-1/2">
           {isLoading ? (
