@@ -86,7 +86,11 @@ export default function LocationAutocomplete({
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
   }, []);
 
   const searchLocations = async (query) => {
@@ -188,7 +192,8 @@ export default function LocationAutocomplete({
             <button
               key={suggestion.id}
               type="button"
-              onClick={() => handleSuggestionClick(suggestion)}
+              onMouseDown={(e) => { e.preventDefault(); handleSuggestionClick(suggestion); }}
+              onTouchEnd={(e) => { e.preventDefault(); handleSuggestionClick(suggestion); }}
               className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-3 first:rounded-t-2xl last:rounded-b-2xl transition-colors"
             >
               <MapPin className="w-4 h-4 text-primary flex-shrink-0" />
