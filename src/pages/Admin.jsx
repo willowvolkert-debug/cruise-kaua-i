@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ShieldCheck, X, CheckCircle, Clock, Users, AlertCircle, Eye, Car, MessageSquare, Phone, Mail, MapPin, Edit, Upload, ChevronRight } from "lucide-react";
+import { ShieldCheck, X, CheckCircle, Clock, Users, AlertCircle, Eye, Car, MessageSquare, Phone, Mail, MapPin, Edit, Upload, ChevronRight, Download } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import AdminMessageModal from "../components/admin/AdminMessageModal";
 import UserAccountView from "../components/admin/UserAccountView";
@@ -517,10 +517,40 @@ export default function AdminPage() {
             <h1 className="text-3xl font-bold text-secondary">admin dashboard</h1>
             <p className="text-gray-600">manage verifications, inquiries, and safety alerts</p>
           </div>
-          <Badge className="bg-primary text-lg px-4 py-2">
-            <ShieldCheck className="w-5 h-5 mr-2" />
-            admin access
-          </Badge>
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={() => {
+                const unverified = users.filter(u => u.user_type !== 'driver' && u.user_type !== 'rider' && u.role !== 'admin');
+                const rows = [
+                  ['Name', 'Email', 'Username', 'Joined'],
+                  ...unverified.map(u => [
+                    u.full_name,
+                    u.email,
+                    u.username || '',
+                    new Date(u.created_date).toLocaleDateString()
+                  ])
+                ];
+                const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `unverified-users-${new Date().toISOString().split('T')[0]}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
+              variant="outline"
+              size="sm"
+              className="rounded-2xl border-gray-300 text-gray-700"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              export unverified ({users.filter(u => u.user_type !== 'driver' && u.user_type !== 'rider' && u.role !== 'admin').length})
+            </Button>
+            <Badge className="bg-primary text-lg px-4 py-2">
+              <ShieldCheck className="w-5 h-5 mr-2" />
+              admin access
+            </Badge>
+          </div>
         </div>
 
         {/* Phone Number Alerts - Top Priority */}
