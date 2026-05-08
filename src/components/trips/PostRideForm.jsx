@@ -1070,14 +1070,14 @@ export default function PostRideForm({ island = "Kauai" }) {
         </Card>
       )}
 
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="mt-6 pb-8">
         <Button
           onClick={handleSubmit}
           disabled={isSubmitting || !canPostRide || hasUnsupportedLocation}
           size="lg"
-          className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-8 py-4 rounded-full shadow-lg"
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-8 py-4 rounded-2xl shadow-lg"
         >
-          {isSubmitting ? 'posting...' : 'go'}
+          {isSubmitting ? 'posting...' : 'post ride'}
         </Button>
       </div>
 
