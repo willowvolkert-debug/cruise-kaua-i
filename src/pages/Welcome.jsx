@@ -83,7 +83,7 @@ export default function WelcomePage() {
         {/* WE GET IT — dark card */}
         <div className="bg-green-900 text-white rounded-3xl p-6 shadow-lg">
           <h2 className="text-2xl font-extrabold uppercase tracking-wide mb-1 text-white">We get it...</h2>
-          <h3 className="text-lg font-bold text-green-300 tracking-wider mb-4">Transportation is tough on kauaʻi</h3>
+          <h3 className="text-lg font-bold text-green-300 tracking-wider mb-4">Transportation is tough in hawaiʻi</h3>
           <div className="grid grid-cols-2 gap-3 mb-5">
             {[
               { icon: "⛽", label: "expensive gas" },
@@ -100,6 +100,7 @@ export default function WelcomePage() {
           <div className="border-t border-green-700 pt-4">
             <p className="text-base font-bold tracking-wide text-green-300 mb-1">Thatʻs why we launched Cruise Kauaʻi</p>
             <p className="text-green-100 text-sm leading-relaxed">Our mission is to provide <strong className="text-white">accessible & affordable transportation options</strong>, and divert more money into our local economy.</p>
+            <p className="text-green-200 text-sm leading-relaxed mt-3">We started on kauaʻi due to traffic, and we have expanded to serve all islands, but maintain our name cruise kauaʻi to pay homage to the foundation of our service 🌿</p>
           </div>
         </div>
 
