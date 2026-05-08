@@ -196,11 +196,14 @@ export default function Layout({ children, currentPageName }) {
   const minSwipeDistance = 50;
 
   const onTouchStart = (e) => {
+    // Only track swipes starting from the left edge (within 50px)
+    if (e.targetTouches[0].clientX > 50) return;
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
   };
 
   const onTouchMove = (e) => {
+    if (!touchStart) return;
     setTouchEnd(e.targetTouches[0].clientX);
   };
 
