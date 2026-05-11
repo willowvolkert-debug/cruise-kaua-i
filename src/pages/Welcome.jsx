@@ -72,8 +72,8 @@ export default function WelcomePage() {
             className="w-40 h-40 md:w-52 md:h-52 object-cover rounded-3xl shadow-2xl border-4 border-white/30"
           />
           <div>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-lg text-white">cruise kauaʻi</h1>
-            <p className="mt-2 text-lg md:text-xl text-green-100 font-medium">a community-based ridesharing app to reduce traffic on kauaʻi</p>
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-lg text-white">cruise hawaiʻi</h1>
+            <p className="mt-2 text-lg md:text-xl text-green-100 font-medium">a community ridesharing app to reduce traffic in hawaiʻi</p>
           </div>
         </div>
       </div>
@@ -98,7 +98,7 @@ export default function WelcomePage() {
             ))}
           </div>
           <div className="border-t border-green-700 pt-4">
-            <p className="text-base font-bold tracking-wide text-green-300 mb-1">Thatʻs why we launched Cruise Kauaʻi</p>
+            <p className="text-base font-bold tracking-wide text-green-300 mb-1">Thatʻs why we launched Cruise Hawaiʻi</p>
             <p className="text-green-100 text-sm leading-relaxed">Our mission is to provide <strong className="text-white">accessible & affordable transportation options</strong>, and divert more money into our local economy.</p>
             <p className="text-green-200 text-sm leading-relaxed mt-3">We started on kauaʻi due to traffic, and we have expanded to serve all islands, but maintain our name cruise kauaʻi to pay homage to the foundation of our service 🌿</p>
           </div>
@@ -134,8 +134,8 @@ export default function WelcomePage() {
             <p className="text-red-900 font-bold text-sm uppercase tracking-wider text-center">get involved</p>
             {[
               { emoji: "🏡", title: "if you're local — register as a driver & start posting rides", desc: "Start making money on your commutes while improving transportation options on the island." },
-              { emoji: "✈️", title: "if you're visiting — consider alternatives to car rentals", desc: "Get around with Cruise Kauaʻi & The Hanalei Initiative Shuttles in Kapaʻa, Princeville, Hanalei & Hāʻena." },
-              { emoji: "📣", title: "spread the word!", desc: "The more people use Cruise Kauaʻi, the more ride options there are. Share with family, friends & folks visiting!" },
+              { emoji: "✈️", title: "if you're visiting — consider alternatives to car rentals", desc: "Get around with Cruise Hawaiʻi & The Hanalei Initiative Shuttles in Kapaʻa, Princeville, Hanalei & Hāʻena." },
+              { emoji: "📣", title: "spread the word!", desc: "The more people use Cruise Hawaiʻi, the more ride options there are. Share with family, friends & folks visiting!" },
             ].map(({ emoji, title, desc }) => (
               <div key={title} className="flex gap-3 items-start bg-white rounded-2xl p-3 shadow-sm">
                 <span className="text-2xl shrink-0">{emoji}</span>
