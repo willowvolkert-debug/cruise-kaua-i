@@ -28,7 +28,7 @@ export const ISLAND_CONFIG = {
     name: "Oʻahu",
     appName: "cruise oʻahu",
     domain: "cruiseoahu.org",
-    heroImage: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80",
+    heroImage: "https://images.unsplash.com/photo-1721357555154-789c11332b58?w=1200&q=80",
     visitingDesc: "Get around with Cruise Oʻahu as an alternative to rental cars and traffic on H1.",
     trafficDesc: "traffic on oʻahu",
     sidebarLabel: "cruise oʻahu",
