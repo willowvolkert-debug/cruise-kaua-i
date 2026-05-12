@@ -9,8 +9,58 @@ import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
+const ISLAND_CONFIG = {
+  Kauai: {
+    name: "kauaʻi",
+    displayName: "Kauaʻi",
+    appName: "cruise kauaʻi",
+    tagline: "a community ridesharing app to reduce traffic on kauaʻi",
+    missionBlurb: "We started on kauaʻi to fight traffic and have expanded to serve all islands — but maintain our name to pay homage to our roots 🌿",
+    visitingDesc: "Get around with Cruise Kauaʻi & The Hanalei Initiative Shuttles in Kapaʻa, Princeville, Hanalei & Hāʻena.",
+    driverRecruit: "We are currently recruiting DRIVERS on Kauaʻi.",
+  },
+  Oahu: {
+    name: "oʻahu",
+    displayName: "Oʻahu",
+    appName: "cruise oʻahu",
+    tagline: "a community ridesharing app to reduce traffic on oʻahu",
+    missionBlurb: "Oʻahu has some of the worst traffic in the nation. Together, we can change that — one shared ride at a time 🌺",
+    visitingDesc: "Skip the rental car and get around with Cruise Oʻahu — from Honolulu to the North Shore and everywhere in between.",
+    driverRecruit: "We are currently recruiting DRIVERS on Oʻahu.",
+  },
+  Maui: {
+    name: "maui",
+    displayName: "Maui",
+    appName: "cruise maui",
+    tagline: "a community ridesharing app to reduce traffic on maui",
+    missionBlurb: "Maui roads are beautiful but congested. Help us build a culture of carpooling and keep Maui moving 🌸",
+    visitingDesc: "From Lahaina to Hāna, get around Maui with locals who know the island best.",
+    driverRecruit: "We are currently recruiting DRIVERS on Maui.",
+  },
+  'Big Island': {
+    name: "hawaiʻi island",
+    displayName: "Hawaiʻi Island",
+    appName: "cruise hawaiʻi island",
+    tagline: "a community ridesharing app to reduce traffic on hawaiʻi island",
+    missionBlurb: "The Big Island is vast and gas is expensive. Let's make getting around more affordable and sustainable for everyone 🌋",
+    visitingDesc: "From Kona to Hilo, find affordable rides across the Big Island with community drivers.",
+    driverRecruit: "We are currently recruiting DRIVERS on Hawaiʻi Island.",
+  },
+};
+
+function getIslandFromDomain() {
+  const hostname = window.location.hostname;
+  if (hostname.includes('cruiseoahu')) return 'Oahu';
+  if (hostname.includes('cruisemaui')) return 'Maui';
+  if (hostname.includes('cruisebigisland')) return 'Big Island';
+  return 'Kauai';
+}
+
 export default function WelcomePage() {
   const navigate = useNavigate();
+  const island = getIslandFromDomain();
+  const config = ISLAND_CONFIG[island] || ISLAND_CONFIG.Kauai;
+
   const today = new Date();
   const todayStr = format(today, 'yyyy-MM-dd');
   const nextWeekStr = format(addDays(today, 7), 'yyyy-MM-dd');
@@ -25,15 +75,25 @@ export default function WelcomePage() {
     base44.entities.PageView.create({ page_name: 'Welcome' }).catch(() => {});
   }, []);
 
+  const ISLAND_KEYWORDS = {
+    Kauai: ['kauai', 'kauaʻi', 'lihue', 'hanalei', 'poipu', 'waimea', 'kapaa', 'princeville', 'kilauea', 'koloa', 'hanapepe', 'eleele', 'kalaheo', 'haena', 'anahola', 'nawiliwili'],
+    Oahu: ['oahu', 'oʻahu', 'honolulu', 'waikiki', 'kailua', 'kaneohe', 'pearl city', 'ewa', 'aiea', 'haleiwa', 'mililani', 'waipahu', 'kapolei', 'hawaii kai', 'manoa', 'waimanalo'],
+    Maui: ['maui', 'lahaina', 'kihei', 'kahului', 'paia', 'hana', 'wailea', 'makawao', 'haiku', 'wailuku', 'napili', 'kapalua', 'kaanapali'],
+    'Big Island': ['big island', 'hawaii island', 'hilo', 'kona', 'pahoa', 'captain cook', 'holualoa', 'keaau', 'volcano', 'naalehu'],
+  };
+
   const loadRides = async (start = startDate, end = endDate) => {
     setIsLoadingRides(true);
     try {
       const allRides = await base44.entities.Ride.list("-departure_date");
-      const filtered = allRides.filter(r =>
-        r.status === 'active' &&
-        r.departure_date >= start &&
-        r.departure_date <= end
-      );
+      const keywords = ISLAND_KEYWORDS[island] || [];
+      const filtered = allRides.filter(r => {
+        if (r.status !== 'active') return false;
+        if (r.departure_date < start || r.departure_date > end) return false;
+        const dep = (r.departure_location || '').toLowerCase();
+        const dest = (r.destination || '').toLowerCase();
+        return keywords.some(k => dep.includes(k) || dest.includes(k));
+      });
       setRides(filtered);
     } catch (e) {
       console.error("Error loading rides:", e);
@@ -72,8 +132,8 @@ export default function WelcomePage() {
             className="w-40 h-40 md:w-52 md:h-52 object-cover rounded-3xl shadow-2xl border-4 border-white/30"
           />
           <div>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-lg text-white">cruise hawaiʻi</h1>
-            <p className="mt-2 text-lg md:text-xl text-green-100 font-medium">a community ridesharing app to reduce traffic in hawaiʻi</p>
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-lg text-white">{config.appName}</h1>
+            <p className="mt-2 text-lg md:text-xl text-green-100 font-medium">{config.tagline}</p>
           </div>
         </div>
       </div>
@@ -98,9 +158,9 @@ export default function WelcomePage() {
             ))}
           </div>
           <div className="border-t border-green-700 pt-4">
-            <p className="text-base font-bold tracking-wide text-green-300 mb-1">Thatʻs why we launched Cruise Hawaiʻi</p>
+            <p className="text-base font-bold tracking-wide text-green-300 mb-1">Thatʻs why we launched {config.appName}</p>
             <p className="text-green-100 text-sm leading-relaxed">Our mission is to provide <strong className="text-white">accessible & affordable transportation options</strong>, and divert more money into our local economy.</p>
-            <p className="text-green-200 text-sm leading-relaxed mt-3">We started on kauaʻi due to traffic, and we have expanded to serve all islands, but maintain our name cruise kauaʻi to pay homage to the foundation of our service 🌿</p>
+            <p className="text-green-200 text-sm leading-relaxed mt-3">{config.missionBlurb}</p>
           </div>
         </div>
 
@@ -134,8 +194,8 @@ export default function WelcomePage() {
             <p className="text-red-900 font-bold text-sm uppercase tracking-wider text-center">get involved</p>
             {[
               { emoji: "🏡", title: "if you're local — register as a driver & start posting rides", desc: "Start making money on your commutes while improving transportation options on the island." },
-              { emoji: "✈️", title: "if you're visiting — consider alternatives to car rentals", desc: "Get around with Cruise Hawaiʻi & The Hanalei Initiative Shuttles in Kapaʻa, Princeville, Hanalei & Hāʻena." },
-              { emoji: "📣", title: "spread the word!", desc: "The more people use Cruise Hawaiʻi, the more ride options there are. Share with family, friends & folks visiting!" },
+              { emoji: "✈️", title: "if you're visiting — consider alternatives to car rentals", desc: config.visitingDesc },
+              { emoji: "📣", title: "spread the word!", desc: `The more people use ${config.appName}, the more ride options there are. Share with family, friends & folks visiting!` },
             ].map(({ emoji, title, desc }) => (
               <div key={title} className="flex gap-3 items-start bg-white rounded-2xl p-3 shadow-sm">
                 <span className="text-2xl shrink-0">{emoji}</span>
@@ -160,6 +220,28 @@ export default function WelcomePage() {
               <span className="text-xs text-gray-600 font-medium leading-tight">{label}</span>
             </div>
           ))}
+        </div>
+
+        {/* DRIVER RECRUITMENT CARD */}
+        <div className="rounded-3xl overflow-hidden shadow-lg border-2 border-amber-300" style={{background: "linear-gradient(135deg, #78350f 0%, #92400e 100%)"}}>
+          <div className="p-6 text-white">
+            <div className="flex items-start gap-4">
+              <div className="text-4xl shrink-0">🚗</div>
+              <div className="flex-1">
+                <p className="text-amber-200 text-xs font-bold uppercase tracking-widest mb-1">now recruiting</p>
+                <h3 className="text-xl font-extrabold text-white leading-tight mb-2">{config.driverRecruit}</h3>
+                <p className="text-amber-100 text-sm leading-relaxed mb-4">
+                  Interested in making some extra cash on your daily commute? Join our driver community and start earning today.
+                </p>
+                <Button
+                  onClick={() => navigate(createPageUrl("DriverSignup"))}
+                  className="bg-amber-400 hover:bg-amber-300 text-amber-900 font-bold rounded-2xl px-6 py-2 text-sm"
+                >
+                  sign up here →
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* MAHALO */}

@@ -19,13 +19,25 @@ export default function TripsPage() {
     const exploreParam = urlParams.get('explore');
     setIsExploreMode(exploreParam === 'true');
 
+    // Detect domain-based default island
+    const hostname = window.location.hostname;
+    const domainDefaultIsland = hostname.includes('cruiseoahu') ? 'Oahu'
+      : hostname.includes('cruisemaui') ? 'Maui'
+      : hostname.includes('cruisebigisland') ? 'Big Island'
+      : 'Kauai';
+
     // Load saved island preference from user profile
     base44.auth.me().then(user => {
       if (user?.preferred_island) {
         setSelectedIsland(user.preferred_island);
+      } else {
+        setSelectedIsland(domainDefaultIsland);
       }
       setIslandLoaded(true);
-    }).catch(() => setIslandLoaded(true));
+    }).catch(() => {
+      setSelectedIsland(domainDefaultIsland);
+      setIslandLoaded(true);
+    });
   }, []);
 
   const handleIslandChange = async (island) => {
