@@ -174,37 +174,32 @@ export default function WelcomePage() {
           ))}
         </div>
 
-        {/* DRIVER RECRUITMENT CARD */}
-        <div className="rounded-2xl bg-white border border-gray-200 shadow-sm overflow-hidden">
-          <div className="bg-primary px-5 py-3 flex items-center gap-2">
-            <Car className="w-4 h-4 text-white" />
-            <p className="text-xs font-bold text-white uppercase tracking-widest">now recruiting</p>
+        {/* RECRUITMENT CARDS */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-xl bg-white border border-gray-200 overflow-hidden flex flex-col">
+            <div className="bg-primary px-3 py-2 flex items-center gap-1.5">
+              <Car className="w-3.5 h-3.5 text-white shrink-0" />
+              <p className="text-xs font-semibold text-white">drivers</p>
+            </div>
+            <div className="p-3 flex flex-col gap-2 flex-1">
+              <p className="text-gray-600 text-xs leading-relaxed">Make extra cash on trips you're already taking.</p>
+              <Button onClick={handleDriverSignup} size="sm" className="w-full bg-primary hover:bg-primary/90 text-white text-xs rounded-lg mt-auto">
+                join as driver 🚗
+              </Button>
+            </div>
           </div>
-          <div className="p-5 space-y-3">
-            <h3 className="text-lg font-extrabold text-gray-900">drivers on {config.name}</h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
-              Make extra cash on trips you're already taking. Help your community & cover gas costs while improving transportation on the island.
-            </p>
-            <Button onClick={handleDriverSignup} className="w-full bg-primary hover:bg-primary/90 text-white font-bold rounded-xl">
-              sign up as a driver 🚗
-            </Button>
-          </div>
-        </div>
 
-        {/* RIDER RECRUITMENT CARD */}
-        <div className="rounded-2xl bg-white border border-gray-200 shadow-sm overflow-hidden">
-          <div className="bg-secondary px-5 py-3 flex items-center gap-2">
-            <span className="text-sm">🙋</span>
-            <p className="text-xs font-bold text-white uppercase tracking-widest">looking for a ride?</p>
-          </div>
-          <div className="p-5 space-y-3">
-            <h3 className="text-lg font-extrabold text-gray-900">riders on {config.name}</h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
-              Skip the rental car. Get affordable rides from local drivers already heading your way — $5–$30 per ride.
-            </p>
-            <Button onClick={handleRiderSignup} className="w-full bg-secondary hover:bg-secondary/90 text-white font-bold rounded-xl">
-              find a ride 🌺
-            </Button>
+          <div className="rounded-xl bg-white border border-gray-200 overflow-hidden flex flex-col">
+            <div className="bg-secondary px-3 py-2 flex items-center gap-1.5">
+              <span className="text-xs">🙋</span>
+              <p className="text-xs font-semibold text-white">riders</p>
+            </div>
+            <div className="p-3 flex flex-col gap-2 flex-1">
+              <p className="text-gray-600 text-xs leading-relaxed">Affordable rides from locals — $5–$30/ride.</p>
+              <Button onClick={handleRiderSignup} size="sm" className="w-full bg-secondary hover:bg-secondary/90 text-white text-xs rounded-lg mt-auto">
+                find a ride 🌺
+              </Button>
+            </div>
           </div>
         </div>
 
