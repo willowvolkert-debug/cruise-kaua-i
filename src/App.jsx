@@ -8,6 +8,7 @@ import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import DriverSignupFlow from './pages/DriverSignupFlow';
+import RiderSignupFlow from './pages/RiderSignupFlow';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
@@ -67,6 +68,7 @@ const AuthenticatedApp = () => {
         />
       ))}
       <Route path="/DriverSignupFlow" element={<DriverSignupFlow />} />
+      <Route path="/RiderSignupFlow" element={<RiderSignupFlow />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

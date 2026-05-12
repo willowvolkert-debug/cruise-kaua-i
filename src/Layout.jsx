@@ -250,7 +250,8 @@ export default function Layout({ children, currentPageName }) {
         if (!exploreParam && location.pathname !== createPageUrl("Welcome") && 
             location.pathname !== createPageUrl("ContactUs") && 
             location.pathname !== createPageUrl("Account") &&
-            location.pathname !== createPageUrl("DriverSignupFlow")) {
+            location.pathname !== createPageUrl("DriverSignupFlow") &&
+            location.pathname !== createPageUrl("RiderSignupFlow")) {
           navigate(createPageUrl("Welcome"));
         }
         console.error("Error loading user:", e);

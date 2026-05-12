@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Shield, Users, Leaf, CheckCircle, MapPin, Calendar, RefreshCw, Car } from "lucide-react";
+import { Shield, Users, Leaf, CheckCircle, MapPin, Calendar, RefreshCw, Car, PersonStanding } from "lucide-react";
 import { format, addDays, parseISO } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -61,6 +61,10 @@ export default function WelcomePage() {
 
   const handleDriverSignup = () => {
     navigate(createPageUrl("DriverSignupFlow"));
+  };
+
+  const handleRiderSignup = () => {
+    navigate(createPageUrl("RiderSignupFlow"));
   };
 
   return (
@@ -190,6 +194,30 @@ export default function WelcomePage() {
               className="w-full bg-green-400 hover:bg-green-300 text-green-900 font-bold rounded-2xl py-4 text-base shadow-md"
             >
               sign up here 🚗
+            </Button>
+          </div>
+        </div>
+
+        {/* RIDER RECRUITMENT CARD */}
+        <div className="rounded-3xl overflow-hidden shadow-lg border-2 border-amber-300" style={{background: "linear-gradient(135deg, #78350f 0%, #b45309 100%)"}}>
+          <div className="p-6 text-white space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-amber-300/20 rounded-2xl flex items-center justify-center shrink-0">
+                <span className="text-2xl">🙋</span>
+              </div>
+              <div>
+                <p className="text-xs font-bold text-amber-300 uppercase tracking-widest">looking for a ride?</p>
+                <h3 className="text-lg font-extrabold text-white leading-tight">riders on {config.name}</h3>
+              </div>
+            </div>
+            <p className="text-amber-100 text-sm leading-relaxed">
+              Skip the rental car. Riders on Cruise {config.name} get <strong className="text-white">affordable rides from local drivers</strong> who are already heading your way — $5–$30 per ride.
+            </p>
+            <Button
+              onClick={handleRiderSignup}
+              className="w-full bg-amber-400 hover:bg-amber-300 text-amber-900 font-bold rounded-2xl py-4 text-base shadow-md"
+            >
+              find a ride 🌺
             </Button>
           </div>
         </div>
