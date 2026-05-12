@@ -175,47 +175,37 @@ export default function WelcomePage() {
         </div>
 
         {/* DRIVER RECRUITMENT CARD */}
-        <div className="rounded-2xl border border-primary/30 bg-muted p-5 space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shrink-0">
-              <Car className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <div>
-              <p className="text-xs font-bold text-primary uppercase tracking-widest">now recruiting</p>
-              <h3 className="text-base font-extrabold text-secondary leading-tight">drivers on {config.name}</h3>
-            </div>
+        <div className="rounded-2xl bg-white border border-gray-200 shadow-sm overflow-hidden">
+          <div className="bg-primary px-5 py-3 flex items-center gap-2">
+            <Car className="w-4 h-4 text-white" />
+            <p className="text-xs font-bold text-white uppercase tracking-widest">now recruiting</p>
           </div>
-          <p className="text-gray-600 text-sm leading-relaxed">
-            Make extra cash on trips you're already taking. Help your community & cover gas costs while improving transportation on the island.
-          </p>
-          <Button
-            onClick={handleDriverSignup}
-            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl py-4 text-sm"
-          >
-            sign up as a driver 🚗
-          </Button>
+          <div className="p-5 space-y-3">
+            <h3 className="text-lg font-extrabold text-gray-900">drivers on {config.name}</h3>
+            <p className="text-gray-600 text-sm leading-relaxed">
+              Make extra cash on trips you're already taking. Help your community & cover gas costs while improving transportation on the island.
+            </p>
+            <Button onClick={handleDriverSignup} className="w-full bg-primary hover:bg-primary/90 text-white font-bold rounded-xl">
+              sign up as a driver 🚗
+            </Button>
+          </div>
         </div>
 
         {/* RIDER RECRUITMENT CARD */}
-        <div className="rounded-2xl border border-secondary/30 bg-muted p-5 space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-secondary rounded-xl flex items-center justify-center shrink-0">
-              <span className="text-lg">🙋</span>
-            </div>
-            <div>
-              <p className="text-xs font-bold text-secondary uppercase tracking-widest">looking for a ride?</p>
-              <h3 className="text-base font-extrabold text-secondary leading-tight">riders on {config.name}</h3>
-            </div>
+        <div className="rounded-2xl bg-white border border-gray-200 shadow-sm overflow-hidden">
+          <div className="bg-secondary px-5 py-3 flex items-center gap-2">
+            <span className="text-sm">🙋</span>
+            <p className="text-xs font-bold text-white uppercase tracking-widest">looking for a ride?</p>
           </div>
-          <p className="text-gray-600 text-sm leading-relaxed">
-            Skip the rental car. Get affordable rides from local drivers already heading your way — $5–$30 per ride.
-          </p>
-          <Button
-            onClick={handleRiderSignup}
-            className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold rounded-xl py-4 text-sm"
-          >
-            find a ride 🌺
-          </Button>
+          <div className="p-5 space-y-3">
+            <h3 className="text-lg font-extrabold text-gray-900">riders on {config.name}</h3>
+            <p className="text-gray-600 text-sm leading-relaxed">
+              Skip the rental car. Get affordable rides from local drivers already heading your way — $5–$30 per ride.
+            </p>
+            <Button onClick={handleRiderSignup} className="w-full bg-secondary hover:bg-secondary/90 text-white font-bold rounded-xl">
+              find a ride 🌺
+            </Button>
+          </div>
         </div>
 
         {/* MAHALO */}
