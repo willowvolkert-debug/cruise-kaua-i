@@ -1,0 +1,54 @@
+/**
+ * Detects the current island based on the hostname.
+ * cruisekauai.org / cruisekauai → Kauai
+ * cruiseoahu.org  / cruiseoahu  → Oahu
+ * cruisemaui.org  / cruisemaui  → Maui
+ * Default (dev/unknown)         → Kauai
+ */
+export function getIslandFromDomain() {
+  const hostname = window.location.hostname.toLowerCase();
+  if (hostname.includes('cruiseoahu') || hostname.includes('oahu')) return 'Oahu';
+  if (hostname.includes('cruisemaui') || hostname.includes('maui')) return 'Maui';
+  if (hostname.includes('cruisebigisland') || hostname.includes('bigisland')) return 'Big Island';
+  // Default / cruisekauai / preview
+  return 'Kauai';
+}
+
+export const ISLAND_CONFIG = {
+  Kauai: {
+    name: "Kauaʻi",
+    appName: "cruise kauaʻi",
+    domain: "cruisekauai.org",
+    heroImage: "https://images.unsplash.com/photo-1505852679233-d9fd70aff56d?w=1200&q=80",
+    visitingDesc: "Get around with Cruise Kauaʻi & The Hanalei Initiative Shuttles in Kapaʻa, Princeville, Hanalei & Hāʻena.",
+    trafficDesc: "traffic on kauaʻi",
+    sidebarLabel: "cruise kauaʻi",
+  },
+  Oahu: {
+    name: "Oʻahu",
+    appName: "cruise oʻahu",
+    domain: "cruiseoahu.org",
+    heroImage: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80",
+    visitingDesc: "Get around with Cruise Oʻahu as an alternative to rental cars and traffic on H1.",
+    trafficDesc: "traffic on oʻahu",
+    sidebarLabel: "cruise oʻahu",
+  },
+  Maui: {
+    name: "Maui",
+    appName: "cruise maui",
+    domain: "cruisemaui.org",
+    heroImage: "https://images.unsplash.com/photo-1542259009477-d625272157b7?w=1200&q=80",
+    visitingDesc: "Get around with Cruise Maui as an affordable alternative to car rentals.",
+    trafficDesc: "traffic on maui",
+    sidebarLabel: "cruise maui",
+  },
+  "Big Island": {
+    name: "Big Island",
+    appName: "cruise big island",
+    domain: "cruisebigisland.org",
+    heroImage: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&q=80",
+    visitingDesc: "Get around the Big Island affordably with Cruise Big Island.",
+    trafficDesc: "traffic on the big island",
+    sidebarLabel: "cruise big island",
+  },
+};

@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { User, MessageSquare, ShieldCheck, Share2, MapPin, Users, CheckCircle } from "lucide-react";
+import { getIslandFromDomain, ISLAND_CONFIG } from "@/lib/islandConfig";
 import { base44 } from "@/api/base44Client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -107,7 +108,7 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
             onError={(e) => { e.target.style.display='none'; }}
           />
           <div>
-            <h2 className="font-bold text-primary text-xl tracking-wide">cruise {(currentIsland || currentUser?.preferred_island || "kauaʻi").toLowerCase()}</h2>
+            <h2 className="font-bold text-primary text-xl tracking-wide">{ISLAND_CONFIG[getIslandFromDomain()]?.sidebarLabel || `cruise ${(currentIsland || currentUser?.preferred_island || "kauaʻi").toLowerCase()}`}</h2>
             <p className="text-xs text-gray-500">sharing aloha one ride at a time</p>
           </div>
         </div>
@@ -248,7 +249,8 @@ export default function Layout({ children, currentPageName }) {
         // User not authenticated - redirect to Welcome page unless already there or exploring
         if (!exploreParam && location.pathname !== createPageUrl("Welcome") && 
             location.pathname !== createPageUrl("ContactUs") && 
-            location.pathname !== createPageUrl("Account")) {
+            location.pathname !== createPageUrl("Account") &&
+            location.pathname !== createPageUrl("DriverSignupFlow")) {
           navigate(createPageUrl("Welcome"));
         }
         console.error("Error loading user:", e);

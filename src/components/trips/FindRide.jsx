@@ -82,7 +82,7 @@ export default function FindRide({ island = "Kauai" }) {
   const loadRides = async (start = startDate, end = endDate) => {
     setIsLoading(true);
     try {
-      const res = await getPublicRides({ start_date: start, end_date: end });
+      const res = await getPublicRides({ start_date: start, end_date: end, island });
       const allRides = res.data?.rides || [];
 
       // Filter out current user's own rides

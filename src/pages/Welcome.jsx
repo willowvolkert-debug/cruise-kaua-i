@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Shield, Users, Leaf, CheckCircle, MapPin, Calendar, Star, RefreshCw, Car, Navigation } from "lucide-react";
+import { Shield, Users, Leaf, CheckCircle, MapPin, Calendar, RefreshCw, Car } from "lucide-react";
 import { format, addDays, parseISO } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { getIslandFromDomain, ISLAND_CONFIG } from "@/lib/islandConfig";
 
 export default function WelcomePage() {
   const navigate = useNavigate();
@@ -19,6 +20,9 @@ export default function WelcomePage() {
   const [rides, setRides] = useState([]);
   const [isLoadingRides, setIsLoadingRides] = useState(true);
   const [showRides, setShowRides] = useState(false);
+
+  const island = getIslandFromDomain();
+  const config = ISLAND_CONFIG[island] || ISLAND_CONFIG.Kauai;
 
   useEffect(() => {
     loadRides();
@@ -55,24 +59,28 @@ export default function WelcomePage() {
     navigate(createPageUrl("Trips") + "?explore=true");
   };
 
+  const handleDriverSignup = () => {
+    navigate(createPageUrl("DriverSignupFlow"));
+  };
+
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
       <style>{`
         [data-sidebar="trigger"] { display: none !important; }
       `}</style>
 
-      {/* HERO — big logo + tagline */}
+      {/* HERO */}
       <div className="relative bg-gradient-to-b from-green-900 via-green-800 to-green-700 text-white">
         <div className="absolute inset-0 opacity-20"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1505852679233-d9fd70aff56d?w=1200&q=80')", backgroundSize: "cover", backgroundPosition: "center" }} />
+          style={{ backgroundImage: `url('${config.heroImage}')`, backgroundSize: "cover", backgroundPosition: "center" }} />
         <div className="relative flex flex-col items-center justify-center px-6 py-14 text-center space-y-6">
           <img
             src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
-            alt="Cruise Kauaʻi logo"
+            alt={`${config.appName} logo`}
             className="w-40 h-40 md:w-52 md:h-52 object-cover rounded-3xl shadow-2xl border-4 border-white/30"
           />
           <div>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-lg text-white">cruise hawaiʻi</h1>
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-lg text-white">{config.appName}</h1>
             <p className="mt-2 text-lg md:text-xl text-green-100 font-medium">a community ridesharing app to reduce traffic in hawaiʻi</p>
           </div>
         </div>
@@ -80,7 +88,7 @@ export default function WelcomePage() {
 
       <div className="max-w-2xl mx-auto px-4 py-8 space-y-8">
 
-        {/* WE GET IT — dark card */}
+        {/* WE GET IT */}
         <div className="bg-green-900 text-white rounded-3xl p-6 shadow-lg">
           <h2 className="text-2xl font-extrabold uppercase tracking-wide mb-1 text-white">We get it...</h2>
           <h3 className="text-lg font-bold text-green-300 tracking-wider mb-4">Transportation is tough in hawaiʻi</h3>
@@ -98,13 +106,13 @@ export default function WelcomePage() {
             ))}
           </div>
           <div className="border-t border-green-700 pt-4">
-            <p className="text-base font-bold tracking-wide text-green-300 mb-1">Thatʻs why we launched Cruise Hawaiʻi</p>
+            <p className="text-base font-bold tracking-wide text-green-300 mb-1">Thatʻs why we launched {config.appName}</p>
             <p className="text-green-100 text-sm leading-relaxed">Our mission is to provide <strong className="text-white">accessible & affordable transportation options</strong>, and divert more money into our local economy.</p>
             <p className="text-green-200 text-sm leading-relaxed mt-3">We started on kauaʻi due to traffic, and we have expanded to serve all islands, but maintain our name cruise kauaʻi to pay homage to the foundation of our service 🌿</p>
           </div>
         </div>
 
-        {/* HOW IT WORKS — 3 graphic cards */}
+        {/* HOW IT WORKS */}
         <div>
           <h2 className="text-2xl font-extrabold uppercase tracking-wide text-green-900 mb-4">how it works</h2>
           <div className="grid grid-cols-1 gap-4">
@@ -134,8 +142,8 @@ export default function WelcomePage() {
             <p className="text-red-900 font-bold text-sm uppercase tracking-wider text-center">get involved</p>
             {[
               { emoji: "🏡", title: "if you're local — register as a driver & start posting rides", desc: "Start making money on your commutes while improving transportation options on the island." },
-              { emoji: "✈️", title: "if you're visiting — consider alternatives to car rentals", desc: "Get around with Cruise Hawaiʻi & The Hanalei Initiative Shuttles in Kapaʻa, Princeville, Hanalei & Hāʻena." },
-              { emoji: "📣", title: "spread the word!", desc: "The more people use Cruise Hawaiʻi, the more ride options there are. Share with family, friends & folks visiting!" },
+              { emoji: "✈️", title: "if you're visiting — consider alternatives to car rentals", desc: config.visitingDesc },
+              { emoji: "📣", title: "spread the word!", desc: `The more people use ${config.appName}, the more ride options there are. Share with family, friends & folks visiting!` },
             ].map(({ emoji, title, desc }) => (
               <div key={title} className="flex gap-3 items-start bg-white rounded-2xl p-3 shadow-sm">
                 <span className="text-2xl shrink-0">{emoji}</span>
@@ -160,6 +168,30 @@ export default function WelcomePage() {
               <span className="text-xs text-gray-600 font-medium leading-tight">{label}</span>
             </div>
           ))}
+        </div>
+
+        {/* DRIVER RECRUITMENT CARD */}
+        <div className="rounded-3xl overflow-hidden shadow-lg border-2 border-green-300" style={{background: "linear-gradient(135deg, #052e16 0%, #14532d 100%)"}}>
+          <div className="p-6 text-white space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-green-400/20 rounded-2xl flex items-center justify-center shrink-0">
+                <Car className="w-6 h-6 text-green-300" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-green-400 uppercase tracking-widest">now recruiting</p>
+                <h3 className="text-lg font-extrabold text-white leading-tight">drivers on {config.name}</h3>
+              </div>
+            </div>
+            <p className="text-green-100 text-sm leading-relaxed">
+              We are currently recruiting <strong className="text-white">drivers on {config.name}</strong>. If you are interested in making some extra cash while helping your community, we want you on the team!
+            </p>
+            <Button
+              onClick={handleDriverSignup}
+              className="w-full bg-green-400 hover:bg-green-300 text-green-900 font-bold rounded-2xl py-4 text-base shadow-md"
+            >
+              sign up here 🚗
+            </Button>
+          </div>
         </div>
 
         {/* MAHALO */}

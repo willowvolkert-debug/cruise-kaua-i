@@ -5,12 +5,13 @@ import FindRide from "../components/trips/FindRide";
 import RequestRide from "../components/trips/RequestRide";
 import PostRideForm from "../components/trips/PostRideForm";
 import { base44 } from "@/api/base44Client";
+import { getIslandFromDomain } from "@/lib/islandConfig";
 
 const ISLANDS = ["Kauai", "Oahu", "Maui", "Big Island"];
 
 export default function TripsPage() {
   const [isExploreMode, setIsExploreMode] = React.useState(false);
-  const [selectedIsland, setSelectedIsland] = React.useState("Kauai");
+  const [selectedIsland, setSelectedIsland] = React.useState(getIslandFromDomain());
   const [islandLoaded, setIslandLoaded] = React.useState(false);
   const [islandSelectorVisible, setIslandSelectorVisible] = React.useState(false);
 
@@ -19,10 +20,16 @@ export default function TripsPage() {
     const exploreParam = urlParams.get('explore');
     setIsExploreMode(exploreParam === 'true');
 
-    // Load saved island preference from user profile
+    // Load saved island preference from user profile, but domain takes priority
+    const domainIsland = getIslandFromDomain();
     base44.auth.me().then(user => {
-      if (user?.preferred_island) {
+      // Only use saved preference if not on a domain-specific URL
+      const hostname = window.location.hostname.toLowerCase();
+      const isGenericDomain = !hostname.includes('cruisekauai') && !hostname.includes('cruiseoahu') && !hostname.includes('cruisemaui') && !hostname.includes('cruisebigisland');
+      if (isGenericDomain && user?.preferred_island) {
         setSelectedIsland(user.preferred_island);
+      } else {
+        setSelectedIsland(domainIsland);
       }
       setIslandLoaded(true);
     }).catch(() => setIslandLoaded(true));
