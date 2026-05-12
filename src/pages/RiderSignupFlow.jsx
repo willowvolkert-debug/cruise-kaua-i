@@ -15,7 +15,7 @@ const STEPS = [
           Drivers on Cruise {island} are <strong>real community members</strong> heading somewhere anyway. They need <strong>riders to make it worthwhile</strong> — and you need affordable, reliable transportation.
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 space-y-2">
-          <p className="font-bold text-amber-800">The problem riders face:</p>
+          <p className="font-bold text-amber-800">The problemS riders face:</p>
           <ul className="text-amber-700 text-sm space-y-1">
             <li>🚗 Rental cars cost $80–$200/day</li>
             <li>🚌 Bus routes are limited and slow</li>
@@ -32,7 +32,7 @@ const STEPS = [
   {
     id: "benefits",
     title: "what you get 🌿",
-    content: () => (
+    content: (island) => (
       <div className="space-y-4">
         <div className="grid grid-cols-1 gap-3">
           {[
@@ -49,6 +49,9 @@ const STEPS = [
               </div>
             </div>
           ))}
+        </div>
+        <div className="bg-gray-100 border border-gray-300 rounded-2xl p-3">
+          <p className="text-xs text-gray-600 leading-relaxed"><strong>💡 Fee note:</strong> Cruise {island} adds a 10% connect fee on top of the driver's listed price — that's what you pay. For example, a $20 ride costs you $22. The driver receives exactly what they posted.</p>
         </div>
       </div>
     ),

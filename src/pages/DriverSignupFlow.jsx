@@ -15,7 +15,7 @@ const STEPS = [
           Cruise {island} only works when there are <strong>consistent, reliable drivers</strong> on the platform. Without drivers, riders can't get around — and the whole mission falls apart.
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 space-y-2">
-          <p className="font-bold text-amber-800">The problem we're solving:</p>
+          <p className="font-bold text-amber-800">The problemS we're solving:</p>
           <ul className="text-amber-700 text-sm space-y-1">
             <li>⛽ Gas is expensive in Hawaiʻi</li>
             <li>🚗 Traffic is getting worse every year</li>
@@ -32,7 +32,7 @@ const STEPS = [
   {
     id: "earn",
     title: "what you can earn 💰",
-    content: () => (
+    content: (island) => (
       <div className="space-y-4">
         <p className="text-gray-700 text-base leading-relaxed">
           Drivers set their own prices. Here's what consistent drivers typically earn:
@@ -53,7 +53,9 @@ const STEPS = [
           <p className="font-bold text-blue-800 text-sm">📅 Drive consistently = real income</p>
           <p className="text-blue-700 text-sm mt-1">Drivers who post 3–5 rides per week cover their gas costs and earn $200–$600/month in supplemental income.</p>
         </div>
-        <p className="text-xs text-gray-500">Cruise Hawaiʻi takes a 10% connect fee. You keep the rest.</p>
+        <div className="bg-gray-100 border border-gray-300 rounded-2xl p-3">
+          <p className="text-xs text-gray-600 leading-relaxed"><strong>💡 Fee note:</strong> Cruise {island} adds a 10% connect fee on top of your listed price — which the rider pays. The price you post is exactly what you receive. For example, if you post $20, the rider pays $22.</p>
+        </div>
       </div>
     ),
   },
@@ -65,8 +67,8 @@ const STEPS = [
         <div className="grid grid-cols-1 gap-3">
           {[
             { step: "1", icon: "📋", title: "Complete your profile", desc: "Add your photo, bio, and vehicle info." },
-            { step: "2", icon: "🪪", title: "Get verified", desc: "Submit your driver's license for a quick review (usually 24 hrs)." },
-            { step: "3", icon: "🚗", title: "Post rides", desc: "When you're heading somewhere, post your route, time & price." },
+            { step: "2", icon: "🪪", title: "Get verified", desc: "Submit your driver's license, vehicle & insurance info, and sign our driver agreement. Usually reviewed within 24 hrs." },
+            { step: "3", icon: "🚗", title: "Post rides", desc: "Once you know your schedule, post your commutes, grocery runs, & more with the time, route & price. You can also set recurring trips." },
             { step: "4", icon: "💳", title: "Get paid", desc: "Riders book and pay via the app. Funds go directly to your bank account." },
           ].map(({ step, icon, title, desc }) => (
             <div key={step} className="flex items-start gap-3 bg-gray-50 rounded-2xl p-3">
