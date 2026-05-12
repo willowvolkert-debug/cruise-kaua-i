@@ -24,22 +24,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const ISLAND_NAME_MAP = {
-  Kauai: "cruise kauaʻi",
-  Oahu: "cruise oʻahu",
-  Maui: "cruise maui",
-  'Big Island': "cruise hawaiʻi island",
-};
-
-function getSidebarIslandName(currentIsland) {
-  if (currentIsland && ISLAND_NAME_MAP[currentIsland]) return ISLAND_NAME_MAP[currentIsland];
-  const hostname = window.location.hostname;
-  if (hostname.includes('cruiseoahu')) return "cruise oʻahu";
-  if (hostname.includes('cruisemaui')) return "cruise maui";
-  if (hostname.includes('cruisebigisland')) return "cruise hawaiʻi island";
-  return "cruise kauaʻi";
-}
-
 const getNavigationItems = (isExploreMode) => {
   const baseItems = [
     {
@@ -123,7 +107,7 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
             onError={(e) => { e.target.style.display='none'; }}
           />
           <div>
-            <h2 className="font-bold text-primary text-xl tracking-wide">{getSidebarIslandName(currentIsland)}</h2>
+            <h2 className="font-bold text-primary text-xl tracking-wide">cruise {(currentIsland || currentUser?.preferred_island || "kauaʻi").toLowerCase()}</h2>
             <p className="text-xs text-gray-500">sharing aloha one ride at a time</p>
           </div>
         </div>

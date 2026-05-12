@@ -69,23 +69,7 @@ export default function PostRideForm({ island = "Kauai" }) {
         setCurrentUser(user);
         
         // Fetch active ride requests and filter out past ones
-        const allRequests = await base44.entities.RideRequest.filter({ status: 'active' });
-
-        // Filter by island using keyword matching
-        const ISLAND_KEYWORDS = {
-          Kauai: ['kauai', 'kauaʻi', 'lihue', 'hanalei', 'poipu', 'waimea', 'kapaa', 'princeville', 'kilauea', 'koloa', 'hanapepe', 'eleele', 'kalaheo', 'haena', 'anahola', 'nawiliwili'],
-          Oahu: ['oahu', 'oʻahu', 'honolulu', 'waikiki', 'kailua', 'kaneohe', 'pearl city', 'ewa', 'aiea', 'haleiwa', 'mililani', 'waipahu', 'kapolei', 'hawaii kai', 'manoa', 'waimanalo'],
-          Maui: ['maui', 'lahaina', 'kihei', 'kahului', 'paia', 'hana', 'wailea', 'makawao', 'haiku', 'wailuku', 'napili', 'kapalua', 'kaanapali'],
-          'Big Island': ['big island', 'hawaii island', 'hilo', 'kona', 'pahoa', 'captain cook', 'holualoa', 'keaau', 'volcano', 'naalehu'],
-        };
-        const islandKeywords = ISLAND_KEYWORDS[island] || [];
-        const requests = islandKeywords.length > 0
-          ? allRequests.filter(r => {
-              const dep = (r.departure_location || '').toLowerCase();
-              const dest = (r.destination || '').toLowerCase();
-              return islandKeywords.some(k => dep.includes(k) || dest.includes(k));
-            })
-          : allRequests;
+        const requests = await base44.entities.RideRequest.filter({ status: 'active' });
         
         // Get current Hawaii time
         const now = new Date();

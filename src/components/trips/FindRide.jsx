@@ -34,6 +34,7 @@ export default function FindRide({ island = "Kauai" }) {
 
   useEffect(() => {
     const init = async () => {
+      // Try to load current user (optional)
       try {
         const user = await base44.auth.me();
         setCurrentUser(user);
@@ -55,6 +56,7 @@ export default function FindRide({ island = "Kauai" }) {
           window.history.replaceState({}, '', window.location.pathname);
         }
 
+        // Set booking-specific errors for logged-in users
         if (!user.drivers_license_verified && !user.drivers_license_pending_review) {
           setBookingError("🪪 You must submit your driver's license to book a ride. Go to Account → Verification to submit.");
         } else if (user.drivers_license_pending_review && !user.drivers_license_verified) {
@@ -72,17 +74,18 @@ export default function FindRide({ island = "Kauai" }) {
         // Not logged in — view-only mode
       }
 
-      await loadRides(todayStr, nextWeekStr, island);
+      await loadRides(todayStr, nextWeekStr);
     };
     init();
-  }, [island]);
+  }, []);
 
-  const loadRides = async (start = startDate, end = endDate, islandFilter = island) => {
+  const loadRides = async (start = startDate, end = endDate) => {
     setIsLoading(true);
     try {
-      const res = await getPublicRides({ start_date: start, end_date: end, island: islandFilter });
+      const res = await getPublicRides({ start_date: start, end_date: end });
       const allRides = res.data?.rides || [];
 
+      // Filter out current user's own rides
       const filtered = allRides.filter(r => !currentUser || r.driver_id !== currentUser.id);
       setRides(filtered);
 
@@ -100,7 +103,7 @@ export default function FindRide({ island = "Kauai" }) {
     setIsLoading(false);
   };
 
-  const handleRefresh = () => loadRides(startDate, endDate, island);
+  const handleRefresh = () => loadRides(startDate, endDate);
 
   const handleViewDriver = (ride) => {
     setSelectedRide(ride);
