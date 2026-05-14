@@ -179,7 +179,7 @@ export default function WelcomePage() {
           <div className="rounded-xl bg-white border border-gray-200 overflow-hidden flex flex-col">
             <div className="bg-primary px-3 py-2 flex items-center gap-1.5">
               <Car className="w-3.5 h-3.5 text-white shrink-0" />
-              <p className="text-xs font-semibold text-white">drivers</p>
+              <p className="text-xs font-semibold text-white">looking for extra cash?</p>
             </div>
             <div className="p-3 flex flex-col gap-2 flex-1">
               <p className="text-gray-600 text-xs leading-relaxed">Make extra cash on trips you're already taking.</p>
@@ -192,7 +192,7 @@ export default function WelcomePage() {
           <div className="rounded-xl bg-white border border-gray-200 overflow-hidden flex flex-col">
             <div className="bg-secondary px-3 py-2 flex items-center gap-1.5">
               <span className="text-xs">🙋</span>
-              <p className="text-xs font-semibold text-white">riders</p>
+              <p className="text-xs font-semibold text-white">need a ride?</p>
             </div>
             <div className="p-3 flex flex-col gap-2 flex-1">
               <p className="text-gray-600 text-xs leading-relaxed">Affordable rides from locals — $5–$30/ride.</p>
