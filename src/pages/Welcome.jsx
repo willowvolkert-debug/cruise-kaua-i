@@ -145,15 +145,21 @@ export default function WelcomePage() {
           <div className="p-5 space-y-4">
             <p className="text-red-900 font-bold text-sm uppercase tracking-wider text-center">get involved</p>
             {[
-              { emoji: "🏡", title: "if you're local — register as a driver & start posting rides", desc: "Start making money on your commutes while improving transportation options on the island." },
+              { emoji: "🏡", title: "if you're local — register as a driver & start posting rides", desc: "Start making money on your commutes while improving transportation options on the island.", action: handleDriverSignup, actionLabel: "sign up as a driver 🚗" },
+              { emoji: "🙋", title: "need a ride?", desc: "Get affordable rides from local drivers already heading your way — $5–$30 per ride.", action: handleRiderSignup, actionLabel: "find a ride 🌺" },
               { emoji: "✈️", title: "if you're visiting — consider alternatives to car rentals", desc: config.visitingDesc },
               { emoji: "📣", title: "spread the word!", desc: `The more people use ${config.appName}, the more ride options there are. Share with family, friends & folks visiting!` },
-            ].map(({ emoji, title, desc }) => (
+            ].map(({ emoji, title, desc, action, actionLabel }) => (
               <div key={title} className="flex gap-3 items-start bg-white rounded-2xl p-3 shadow-sm">
                 <span className="text-2xl shrink-0">{emoji}</span>
-                <div>
+                <div className="flex-1">
                   <p className="font-bold text-gray-800 text-sm leading-snug">{title}</p>
                   <p className="text-gray-600 text-xs mt-0.5 leading-relaxed">{desc}</p>
+                  {action && (
+                    <Button onClick={action} size="sm" className="mt-2 bg-primary hover:bg-primary/90 text-white text-xs rounded-lg">
+                      {actionLabel}
+                    </Button>
+                  )}
                 </div>
               </div>
             ))}
@@ -174,34 +180,7 @@ export default function WelcomePage() {
           ))}
         </div>
 
-        {/* RECRUITMENT CARDS */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl bg-white border border-gray-200 overflow-hidden flex flex-col">
-            <div className="bg-primary px-3 py-2 flex items-center gap-1.5">
-              <Car className="w-3.5 h-3.5 text-white shrink-0" />
-              <p className="text-xs font-semibold text-white">looking for extra cash?</p>
-            </div>
-            <div className="p-3 flex flex-col gap-2 flex-1">
-              <p className="text-gray-600 text-xs leading-relaxed">Make extra cash on trips you're already taking.</p>
-              <Button onClick={handleDriverSignup} size="sm" className="w-full bg-primary hover:bg-primary/90 text-white text-xs rounded-lg mt-auto">
-                join as driver 🚗
-              </Button>
-            </div>
-          </div>
 
-          <div className="rounded-xl bg-white border border-gray-200 overflow-hidden flex flex-col">
-            <div className="bg-secondary px-3 py-2 flex items-center gap-1.5">
-              <span className="text-xs">🙋</span>
-              <p className="text-xs font-semibold text-white">need a ride?</p>
-            </div>
-            <div className="p-3 flex flex-col gap-2 flex-1">
-              <p className="text-gray-600 text-xs leading-relaxed">Affordable rides from locals — $5–$30/ride.</p>
-              <Button onClick={handleRiderSignup} size="sm" className="w-full bg-secondary hover:bg-secondary/90 text-white text-xs rounded-lg mt-auto">
-                find a ride 🌺
-              </Button>
-            </div>
-          </div>
-        </div>
 
         {/* MAHALO */}
         <p className="text-center text-sm text-gray-500 italic">🤙 mahalo for being a part of the movement</p>
