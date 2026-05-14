@@ -148,7 +148,7 @@ export default function WelcomePage() {
               { emoji: "🏡", title: "if you're local — register as a driver & start posting rides", desc: "Start making money on your commutes while improving transportation options on the island.", action: handleDriverSignup, actionLabel: "sign up as a driver 🚗" },
               { emoji: "🙋", title: "need a ride?", desc: "Get affordable rides from local drivers already heading your way — $5–$30 per ride.", action: handleRiderSignup, actionLabel: "sign up as a rider 🌺" },
               { emoji: "✈️", title: "if you're visiting — consider alternatives to car rentals", desc: config.visitingDesc },
-              { emoji: "📣", title: "spread the word!", desc: `The more people use ${config.appName}, the more ride options there are. Share with family, friends & folks visiting!` },
+              { emoji: "📣", title: "spread the word!", desc: `The more people use cruise kauaʻi, the more ride options there are and the less traffic there is. Share with family, friends & folks visiting` },
             ].map(({ emoji, title, desc, action, actionLabel }) => (
               <div key={title} className="flex gap-3 items-start bg-white rounded-2xl p-3 shadow-sm">
                 <span className="text-2xl shrink-0">{emoji}</span>
