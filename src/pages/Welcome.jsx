@@ -146,7 +146,7 @@ export default function WelcomePage() {
             <p className="text-red-900 font-bold text-sm uppercase tracking-wider text-center">get involved</p>
             {[
               { emoji: "🏡", title: "if you're local — register as a driver & start posting rides", desc: "Start making money on your commutes while improving transportation options on the island.", action: handleDriverSignup, actionLabel: "sign up as a driver 🚗" },
-              { emoji: "🙋", title: "need a ride?", desc: "Get affordable rides from local drivers already heading your way — $5–$30 per ride.", action: handleRiderSignup, actionLabel: "find a ride 🌺" },
+              { emoji: "🙋", title: "need a ride?", desc: "Get affordable rides from local drivers already heading your way — $5–$30 per ride.", action: handleRiderSignup, actionLabel: "sign up as a rider 🌺" },
               { emoji: "✈️", title: "if you're visiting — consider alternatives to car rentals", desc: config.visitingDesc },
               { emoji: "📣", title: "spread the word!", desc: `The more people use ${config.appName}, the more ride options there are. Share with family, friends & folks visiting!` },
             ].map(({ emoji, title, desc, action, actionLabel }) => (
