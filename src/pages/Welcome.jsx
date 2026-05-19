@@ -91,7 +91,7 @@ export default function WelcomePage() {
             className="w-40 h-40 md:w-52 md:h-52 object-cover rounded-3xl shadow-2xl border-4 border-white/30"
           />
           <div>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-lg text-white">Ride Together. Save More. Keep Kauaʻi Beautiful.</h1>
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-lg text-white">cruise kauaʻi</h1>
             <p className="mt-2 text-lg md:text-xl text-green-100 font-medium">Connect with neighbors, split the cost, and reduce traffic on the island we all love.</p>
           </div>
         </div>
