@@ -129,7 +129,7 @@ Deno.serve(async (req) => {
 
                     <p style="font-size: 12px; color: #666; margin-bottom: 12px;">If you'd like to stop receiving these setup reminders, <a href="${unsubscribeUrl}" style="color: #0066cc;">click here</a>.</p>
 
-                    <p style="font-size: 13px; color: #666; margin-bottom: 8px;">Not sure how to use the app? <a href="https://cruisekauai.base44.app/Welcome" style="color:#3b82f6;">Re-watch our welcome flow here</a>.</p>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 8px;">Not sure how to use the app? <a href="https://www.cruisekauai.org/Welcome" style="color:#3b82f6;">Re-watch our welcome flow here</a>.</p>
                     <p style="font-size: 12px; color: #999;">Replies to this email are not monitored. Please fill out the contact us form on the Cruise Kauaʻi website, or email willowvolkert@gmail.com, with any questions or concerns.</p>
                     </body>
                     </html>
