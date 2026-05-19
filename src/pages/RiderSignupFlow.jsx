@@ -8,11 +8,11 @@ import { ChevronRight, ChevronLeft, DollarSign, MapPin, Star, Clock } from "luci
 const STEPS = [
   {
     id: "why",
-    title: "why riders matter 🙋",
+    title: "Create your profile",
     content: (island) => (
       <div className="space-y-4">
         <p className="text-gray-700 text-base leading-relaxed">
-          Drivers on Cruise {island} are <strong>real community members</strong> heading somewhere anyway. They need <strong>riders to make it worthwhile</strong> — and you need affordable, reliable transportation.
+          Name, photo, and a little about yourself — drivers appreciate knowing who's riding.
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 space-y-2">
           <p className="font-bold text-amber-800">The problemS riders face:</p>
@@ -31,9 +31,10 @@ const STEPS = [
   },
   {
     id: "benefits",
-    title: "what you get 🌿",
+    title: "Where do you need to go?",
     content: (island) => (
       <div className="space-y-4">
+        <p className="text-gray-700 text-base leading-relaxed">Search rides by route or destination. Filter by time and availability.</p>
         <div className="grid grid-cols-1 gap-3">
           {[
             { icon: <DollarSign className="w-5 h-5 text-green-600" />, label: "affordable rides", desc: "Typical rides cost $5–$30, way cheaper than rentals or rideshare apps." },
@@ -58,9 +59,10 @@ const STEPS = [
   },
   {
     id: "how",
-    title: "how to ride 🗺️",
+    title: "Request a ride",
     content: () => (
       <div className="space-y-4">
+        <p className="text-gray-700 text-base leading-relaxed">Send a quick request to a driver. Most respond within the hour.</p>
         <div className="grid grid-cols-1 gap-3">
           {[
             { step: "1", icon: "👤", title: "Complete your profile", desc: "Add your photo, bio, and a little about yourself so drivers feel comfortable." },
@@ -86,11 +88,11 @@ const STEPS = [
   },
   {
     id: "profile",
-    title: "set up your profile 📝",
+    title: "Confirm & go",
     content: () => (
       <div className="space-y-4">
         <p className="text-gray-700 text-base leading-relaxed">
-          To book rides, you'll need a complete profile. Here's what to add in your Account page:
+          Once confirmed, you'll get driver details and pickup info.
         </p>
         <div className="space-y-2">
           {[
@@ -166,9 +168,9 @@ export default function RiderSignupFlow() {
       <div className="bg-gradient-to-b from-amber-700 to-amber-500 text-white px-6 py-8 text-center">
         <div className="flex items-center justify-center gap-3 mb-2">
           <span className="text-3xl">🙋</span>
-          <h1 className="text-2xl font-extrabold tracking-tight">become a rider</h1>
+          <h1 className="text-2xl font-extrabold tracking-tight">Get Around Kaua'i for Less</h1>
         </div>
-        <p className="text-amber-100 text-sm">cruise {islandKey.toLowerCase()}</p>
+        <p className="text-amber-100 text-sm">Skip the rental car stress. Find a local driver heading your way and ride affordably across the island.</p>
       </div>
 
       {/* Progress bar */}
@@ -211,18 +213,21 @@ export default function RiderSignupFlow() {
               onClick={handleSignUp}
               className="flex-1 bg-secondary hover:bg-secondary/90 text-white rounded-2xl font-bold py-5"
             >
-              sign up as a rider! 🌺
+              Find My First Ride 🌺
             </Button>
           )}
         </div>
 
         {isLast && (
-          <button
-            onClick={handleExplore}
-            className="w-full mt-3 text-sm text-gray-500 hover:text-gray-700 underline underline-offset-2"
-          >
-            explore the app first →
-          </button>
+          <div className="mt-3 space-y-2">
+            <p className="text-center text-xs text-gray-400">Community-verified drivers. Transparent pricing. Built for Kaua'i locals and long-term visitors.</p>
+            <button
+              onClick={handleExplore}
+              className="w-full text-sm text-gray-500 hover:text-gray-700 underline underline-offset-2"
+            >
+              explore the app first →
+            </button>
+          </div>
         )}
 
         <p className="text-center text-xs text-gray-400 mt-4">step {step + 1} of {STEPS.length}</p>
