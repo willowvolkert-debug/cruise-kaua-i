@@ -47,7 +47,7 @@ export default function RideCard({ ride, onBookRide, showBookButton = true, curr
       <CardContent className="p-6 pt-0 flex-grow flex flex-col justify-between">
         <div>
             <div className="flex flex-col gap-1 text-sm text-gray-600 mb-4">
-                <div className="flex items-center gap-2"><Clock className="w-4 h-4" /><span>{format(new Date(ride.departure_date), "MMM d, yyyy")} at {ride.departure_time}</span></div>
+                <div className="flex items-center gap-2"><Clock className="w-4 h-4" /><span>{format(new Date(ride.departure_date + 'T00:00:00'), "MMM d, yyyy")} at {ride.departure_time}</span></div>
                 {ride.is_flexible && <span className="text-amber-600 text-xs ml-6">flexible timing</span>}
             </div>
             <div className="flex flex-wrap gap-2 mb-4">
