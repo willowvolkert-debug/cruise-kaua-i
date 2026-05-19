@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
         <tr><td align="center" style="padding:32px 24px 20px;border-bottom:1px solid #f0ebe0;">
-          <div style="width:72px;height:72px;border-radius:50%;border:3px solid #e8742a;background:linear-gradient(135deg,#2d6a4f,#52b788,#e8742a);margin:0 auto 10px;line-height:72px;text-align:center;font-size:28px;">🚗</div>
+          <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kaua'i" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #e8742a;display:block;margin:0 auto 10px;" />
           <div style="font-family:Georgia,serif;font-size:1.1rem;font-weight:700;color:#1a1a1a;">Cruise Kaua'i</div>
         </td></tr>
         <tr><td style="padding:32px 32px 24px;">
