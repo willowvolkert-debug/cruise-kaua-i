@@ -281,6 +281,15 @@ export default function Layout({ children, currentPageName }) {
         );
         count += unreadAdminMessages.length;
 
+        // Count bookings with new messages from the other party
+        const bookingsWithNewMessages = bookings.filter(b => {
+          const isInvolved = String(b.driver_id) === String(user.id) || String(b.passenger_id) === String(user.id);
+          if (!isInvolved || !b.messages || b.messages.length === 0) return false;
+          const lastMsg = b.messages[b.messages.length - 1];
+          return String(lastMsg.sender_id) !== String(user.id);
+        });
+        count += bookingsWithNewMessages.length;
+
         setUnreadCount(count);
       } catch (e) {
         console.error("Error loading unread count:", e);
