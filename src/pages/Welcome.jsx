@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { getIslandFromDomain, ISLAND_CONFIG } from "@/lib/islandConfig";
+import WelcomeTutorialModal from "@/components/tutorial/WelcomeTutorialModal";
 
 export default function WelcomePage() {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ export default function WelcomePage() {
   const [rides, setRides] = useState([]);
   const [isLoadingRides, setIsLoadingRides] = useState(true);
   const [showRides, setShowRides] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
 
   const island = getIslandFromDomain();
   const config = ISLAND_CONFIG[island] || ISLAND_CONFIG.Kauai;
@@ -27,6 +29,11 @@ export default function WelcomePage() {
   useEffect(() => {
     loadRides();
     base44.entities.PageView.create({ page_name: 'Welcome' }).catch(() => {});
+    // Auto-open tutorial if URL has ?tutorial=true
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('tutorial') === 'true') {
+      setShowTutorial(true);
+    }
   }, []);
 
   const loadRides = async (start = startDate, end = endDate) => {
@@ -202,7 +209,15 @@ export default function WelcomePage() {
           >
             not ready? explore the app first →
           </Button>
+          <button
+            onClick={() => setShowTutorial(true)}
+            className="w-full text-center text-sm text-primary hover:text-primary/80 underline underline-offset-2 transition-colors py-1"
+          >
+            watch the welcome tutorial →
+          </button>
         </div>
+
+        <WelcomeTutorialModal isOpen={showTutorial} onClose={() => setShowTutorial(false)} />
 
         {/* VIEW RIDES TOGGLE */}
         <div>
