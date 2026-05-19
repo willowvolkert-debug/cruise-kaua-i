@@ -8,11 +8,11 @@ import { ChevronRight, ChevronLeft, Car, DollarSign, Users, Shield, CheckCircle,
 const STEPS = [
   {
     id: "why",
-    title: "why we need you 🙏",
+    title: "Tell us about you",
     content: (island) => (
       <div className="space-y-4">
         <p className="text-gray-700 text-base leading-relaxed">
-          Cruise {island} only works when there are <strong>consistent, reliable drivers</strong> on the platform. Without drivers, riders can't get around — and the whole mission falls apart.
+          Just the basics — name, contact, and a quick profile photo.
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 space-y-2">
           <p className="font-bold text-amber-800">The problemS we're solving:</p>
@@ -31,11 +31,11 @@ const STEPS = [
   },
   {
     id: "earn",
-    title: "what you can earn 💰",
+    title: "Add your vehicle",
     content: (island) => (
       <div className="space-y-4">
         <p className="text-gray-700 text-base leading-relaxed">
-          Drivers set their own prices. Here's what consistent drivers typically earn:
+          Year, make, model, and how many seats you can offer.
         </p>
         <div className="grid grid-cols-1 gap-3">
           {[
@@ -61,9 +61,10 @@ const STEPS = [
   },
   {
     id: "how",
-    title: "how it works 🚗",
+    title: "Set your routes",
     content: () => (
       <div className="space-y-4">
+        <p className="text-gray-700 text-base leading-relaxed">Where do you usually go? Add your regular trips so riders can find you.</p>
         <div className="grid grid-cols-1 gap-3">
           {[
             { step: "1", icon: "📋", title: "Complete your profile", desc: "Add your photo, bio, and vehicle info." },
@@ -85,11 +86,11 @@ const STEPS = [
   },
   {
     id: "commitment",
-    title: "the commitment 🤝",
+    title: "Review the agreement",
     content: (island) => (
       <div className="space-y-4">
         <p className="text-gray-700 text-base leading-relaxed">
-          We don't require a schedule — but we do ask that drivers:
+          Quick read. We keep it simple and community-first.
         </p>
         <div className="space-y-3">
           {[
@@ -168,9 +169,9 @@ export default function DriverSignupFlow() {
       <div className="bg-gradient-to-b from-green-900 to-green-700 text-white px-6 py-8 text-center">
         <div className="flex items-center justify-center gap-3 mb-2">
           <Car className="w-7 h-7 text-green-300" />
-          <h1 className="text-2xl font-extrabold tracking-tight">become a driver</h1>
+          <h1 className="text-2xl font-extrabold tracking-tight">Turn Your Commute Into Community</h1>
         </div>
-        <p className="text-green-200 text-sm">cruise {islandKey.toLowerCase()}</p>
+        <p className="text-green-200 text-sm">Already driving around the island? Share your ride, offset your costs, and meet your neighbors along the way.</p>
       </div>
 
       {/* Progress bar */}
@@ -213,18 +214,21 @@ export default function DriverSignupFlow() {
               onClick={handleSignUp}
               className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-2xl font-bold py-5"
             >
-              sign up as a driver! 🌿
+              Start Driving with Us 🌿
             </Button>
           )}
         </div>
 
         {isLast && (
-          <button
-            onClick={handleExplore}
-            className="w-full mt-3 text-sm text-gray-500 hover:text-gray-700 underline underline-offset-2"
-          >
-            explore the app first →
-          </button>
+          <div className="mt-3 space-y-2">
+            <p className="text-center text-xs text-gray-400">No app fees. No surge pricing. Just neighbors helping neighbors.</p>
+            <button
+              onClick={handleExplore}
+              className="w-full text-sm text-gray-500 hover:text-gray-700 underline underline-offset-2"
+            >
+              explore the app first →
+            </button>
+          </div>
         )}
 
         {/* Step counter */}
