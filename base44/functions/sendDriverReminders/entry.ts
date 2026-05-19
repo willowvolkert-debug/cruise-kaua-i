@@ -1,94 +1,134 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 Deno.serve(async (req) => {
     try {
         const base44 = createClientFromRequest(req);
-        
-        // Get all pending bookings
+
+        // Get all confirmed bookings
         const allBookings = await base44.asServiceRole.entities.RideBooking.filter({ 
-            booking_status: 'pending' 
+            booking_status: 'confirmed' 
         });
+        const allUsers = await base44.asServiceRole.entities.User.list();
+        const allRides = await base44.asServiceRole.entities.Ride.list();
 
         const now = new Date();
+        // Tomorrow window: between 20 and 28 hours from now
+        const tomorrowStart = new Date(now.getTime() + 20 * 60 * 60 * 1000);
+        const tomorrowEnd = new Date(now.getTime() + 28 * 60 * 60 * 1000);
+
         const notifications = [];
 
         for (const booking of allBookings) {
-            const createdAt = new Date(booking.created_date);
-            const hoursSinceCreation = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
-            
-            // Check if we should send a reminder
-            // Initial notification at 1 hour, then every 2 hours (1, 3, 5, 7...)
-            const reminderCount = booking.reminder_count || 0;
-            
-            let shouldRemind = false;
-            if (reminderCount === 0 && hoursSinceCreation >= 1) {
-                shouldRemind = true;
-            } else if (reminderCount > 0) {
-                // After first reminder at 1 hour, reminders at 3, 5, 7... hours
-                const nextReminderHour = 1 + (reminderCount * 2);
-                if (hoursSinceCreation >= nextReminderHour) {
-                    shouldRemind = true;
-                }
+            const ride = allRides.find(r => r.id === booking.ride_id);
+            if (!ride || !ride.departure_date || !ride.departure_time) continue;
+
+            // Parse ride departure datetime
+            const [year, month, day] = ride.departure_date.split('-').map(Number);
+            const timeParts = ride.departure_time.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+            if (!timeParts) continue;
+            let hours = parseInt(timeParts[1]);
+            const minutes = parseInt(timeParts[2]);
+            const ampm = timeParts[3];
+            if (ampm) {
+                if (ampm.toUpperCase() === 'PM' && hours !== 12) hours += 12;
+                if (ampm.toUpperCase() === 'AM' && hours === 12) hours = 0;
+            }
+            const rideDateTime = new Date(year, month - 1, day, hours, minutes);
+
+            // Check if ride is tomorrow
+            if (rideDateTime < tomorrowStart || rideDateTime > tomorrowEnd) continue;
+
+            const driver = allUsers.find(u => u.id === booking.driver_id);
+            const passenger = allUsers.find(u => u.id === booking.passenger_id);
+
+            const rideDate = ride.departure_date;
+            const rideTime = ride.departure_time;
+            const origin = ride.departure_location;
+            const destination = ride.destination;
+            const seats = booking.seats_booked;
+
+            const buildEmail = (recipientFirstName, otherPersonName, role, completionAction) => `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#f5f0e8;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f0e8;padding:32px 16px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+        <tr><td align="center" style="padding:32px 24px 20px;border-bottom:1px solid #f0ebe0;">
+          <div style="width:72px;height:72px;border-radius:50%;border:3px solid #e8742a;background:linear-gradient(135deg,#2d6a4f,#52b788,#e8742a);margin:0 auto 10px;line-height:72px;text-align:center;font-size:28px;">🚗</div>
+          <div style="font-family:Georgia,serif;font-size:1.1rem;font-weight:700;color:#1a1a1a;">Cruise Kaua'i</div>
+        </td></tr>
+        <tr><td style="padding:32px 32px 24px;">
+          <h1 style="font-family:Georgia,serif;font-size:1.6rem;font-weight:700;color:#1a1a1a;margin:0 0 12px;">Your ride is tomorrow! ⏰</h1>
+          <p style="font-size:0.95rem;line-height:1.7;color:#444;margin:0 0 20px;">Just a heads up, <strong>${recipientFirstName}</strong> — your confirmed trip with <strong>${otherPersonName}</strong> is coming up soon. Here are the details:</p>
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:#faf7f2;border-radius:12px;margin:0 0 20px;">
+            <tr><td style="padding:16px 20px;">
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" width="30%">
+                    <div style="width:36px;height:36px;border-radius:50%;background:#2d6a4f;color:white;line-height:36px;text-align:center;font-size:0.9rem;margin:0 auto 6px;">✓</div>
+                    <div style="font-size:0.72rem;color:#666;line-height:1.3;">Ride<br>Confirmed</div>
+                  </td>
+                  <td align="center" width="5%"><div style="height:2px;background:#ddd;width:100%;"></div></td>
+                  <td align="center" width="30%">
+                    <div style="width:36px;height:36px;border-radius:50%;background:#e8742a;color:white;line-height:36px;text-align:center;font-size:0.9rem;margin:0 auto 6px;">🚗</div>
+                    <div style="font-size:0.72rem;color:#666;line-height:1.3;">Trip<br>Tomorrow</div>
+                  </td>
+                  <td align="center" width="5%"><div style="height:2px;background:#ddd;width:100%;"></div></td>
+                  <td align="center" width="30%">
+                    <div style="width:36px;height:36px;border-radius:50%;background:#ddd;color:#999;line-height:36px;text-align:center;font-size:0.9rem;margin:0 auto 6px;">✓</div>
+                    <div style="font-size:0.72rem;color:#aaa;line-height:1.3;">Confirm<br>Complete</div>
+                  </td>
+                </tr>
+              </table>
+            </td></tr>
+          </table>
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:#faf7f2;border:1px solid #ede5d4;border-radius:12px;margin:0 0 20px;">
+            <tr><td style="padding:14px 20px;border-bottom:1px solid #ede5d4;font-size:0.9rem;color:#444;"><span style="margin-right:8px;">📍</span><strong>Route:</strong> ${origin} → ${destination}</td></tr>
+            <tr><td style="padding:14px 20px;border-bottom:1px solid #ede5d4;font-size:0.9rem;color:#444;"><span style="margin-right:8px;">📅</span><strong>When:</strong> ${rideDate} at ${rideTime}</td></tr>
+            <tr><td style="padding:14px 20px;border-bottom:1px solid #ede5d4;font-size:0.9rem;color:#444;"><span style="margin-right:8px;">🪑</span><strong>Seats:</strong> ${seats}</td></tr>
+            <tr><td style="padding:14px 20px;font-size:0.9rem;color:#444;"><span style="margin-right:8px;">🤝</span><strong>Your ${role}:</strong> ${otherPersonName}</td></tr>
+          </table>
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:#fff8f0;border-left:3px solid #e8742a;border-radius:0 8px 8px 0;margin:0 0 24px;">
+            <tr><td style="padding:12px 16px;font-size:0.88rem;color:#555;line-height:1.6;">
+              🌺 <strong>After your trip:</strong> Don't forget to mark it complete in the app so your <strong>${completionAction}</strong>. It only takes a second.
+            </td></tr>
+          </table>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr><td align="center" style="padding:8px 0;">
+              <a href="https://cruisekauai.org/" style="display:inline-block;background:#e8742a;color:#ffffff;text-decoration:none;font-weight:600;font-size:1rem;padding:14px 36px;border-radius:50px;">View Trip Details →</a>
+            </td></tr>
+          </table>
+        </td></tr>
+        <tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:20px 32px;text-align:center;">
+          <p style="font-family:Georgia,serif;font-size:0.95rem;color:#888;font-style:italic;margin:0 0 8px;">Mahalo nui loa 🌺</p>
+          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0;">— The Cruise Kaua'i Team · <a href="https://cruisekauai.org/" style="color:#e8742a;text-decoration:none;">cruisekauai.org</a></p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>`;
+
+            // Send to driver
+            if (driver?.email) {
+                const driverFirstName = driver.full_name?.split(' ')[0] || 'there';
+                const passengerName = booking.passenger_name || passenger?.full_name || 'your rider';
+                await base44.asServiceRole.integrations.Core.SendEmail({
+                    to: driver.email,
+                    subject: `Your ride is tomorrow: ${origin} → ${destination}`,
+                    body: buildEmail(driverFirstName, passengerName, 'rider', 'payout gets released')
+                });
+                notifications.push({ to: driver.email, role: 'driver', booking_id: booking.id });
             }
 
-            if (shouldRemind) {
-                // Get driver info
-                const drivers = await base44.asServiceRole.entities.User.filter({ 
-                    id: booking.driver_id 
+            // Send to passenger
+            if (passenger?.email) {
+                const passengerFirstName = passenger.full_name?.split(' ')[0] || 'there';
+                const driverName = ride.driver_name || driver?.full_name || 'your driver';
+                await base44.asServiceRole.integrations.Core.SendEmail({
+                    to: passenger.email,
+                    subject: `Your ride is tomorrow: ${origin} → ${destination}`,
+                    body: buildEmail(passengerFirstName, driverName, 'driver', 'driver gets paid')
                 });
-                const driver = drivers[0];
-
-                if (driver && driver.email) {
-                    // Send email reminder
-                    await base44.asServiceRole.integrations.Core.SendEmail({
-                        to: driver.email,
-                        subject: `🚗 Pending ride request from ${booking.passenger_name}`,
-                        body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px;">
-
-<div style="text-align:center;margin-bottom:24px;">
-  <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #f97316;" />
-  <p style="margin:8px 0 0 0;font-weight:bold;color:#3b82f6;font-size:15px;">Cruise Kauaʻi</p>
-</div>
-
-<h2 style="color:#3b82f6;margin-bottom:16px;">Hi ${driver.full_name || 'Driver'} 👋</h2>
-
-<p style="margin-bottom:16px;">You have a pending ride request waiting for your response!</p>
-
-<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-bottom:20px;">
-  <p style="margin:0 0 8px 0;"><strong>Rider:</strong> ${booking.passenger_name}</p>
-  <p style="margin:0 0 8px 0;"><strong>Seats requested:</strong> ${booking.seats_booked}</p>
-  <p style="margin:0;"><strong>Amount:</strong> $${booking.total_amount}</p>
-  ${booking.description ? `<p style="margin:8px 0 0 0;"><strong>Rider's message:</strong> "${booking.description}"</p>` : ''}
-</div>
-
-<p style="margin-bottom:20px;">Please log into Cruise Kauaʻi to accept or decline this request:</p>
-
-<p style="margin-bottom:32px;">
-  <a href="https://cruisekauai.base44.app" style="background-color:#f97316;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block;">Open Cruise Kauaʻi →</a>
-</p>
-
-<p style="margin-bottom:4px;">Mahalo,</p>
-<p style="margin:0;"><strong>Cruise Kauaʻi Team</strong></p>
-
-<hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0;">
-<p style="font-size:13px;color:#666;margin-bottom:8px;">Not sure how to use the app? <a href="https://www.cruisekauai.org/Welcome?tutorial=true" style="color:#3b82f6;">Re-watch our welcome tutorial here →</a></p>
-<p style="font-size:12px;color:#999;margin:0;">Replies to this email are not monitored. Please use the Contact Us form on the app or email willowvolkert@gmail.com with any questions.</p>
-
-</body></html>`
-                    });
-
-                    // Update reminder count
-                    await base44.asServiceRole.entities.RideBooking.update(booking.id, {
-                        reminder_count: reminderCount + 1,
-                        last_reminder_date: now.toISOString()
-                    });
-
-                    notifications.push({
-                        booking_id: booking.id,
-                        driver_email: driver.email,
-                        reminder_number: reminderCount + 1
-                    });
-                }
+                notifications.push({ to: passenger.email, role: 'passenger', booking_id: booking.id });
             }
         }
 

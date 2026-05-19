@@ -15,37 +15,69 @@ Deno.serve(async (req) => {
   const allUsers = await base44.asServiceRole.entities.User.list();
   const recipients = allUsers.filter(u => u.user_type === 'rider' || u.user_type === 'driver');
 
+  // Get live stats for this week
+  const cutoff = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+  const allRides = await base44.asServiceRole.entities.Ride.filter({ status: 'active' });
+  const allRequests = await base44.asServiceRole.entities.RideRequest.filter({ status: 'active' });
+  const activeRides = allRides.filter(r => r.created_date >= cutoff).length;
+  const activeRiders = allRequests.filter(r => r.created_date >= cutoff).length;
+
+  const routeHints = ['Līhuʻe to Hanalei', 'Kōloa to Kapa\'a', 'Hanapēpē to Līhuʻe', 'Princeville to Kōloa', 'Waimea to Līhuʻe'];
+
   let sent = 0;
   for (const recipient of recipients) {
     const firstName = recipient.full_name?.split(' ')[0] || 'there';
+    const unsubscribeUrl = `https://www.cruisekauai.org/Unsubscribe?user_id=${recipient.id}`;
+    const routeHint = routeHints[Math.floor(Math.random() * routeHints.length)];
+
     await base44.asServiceRole.integrations.Core.SendEmail({
       to: recipient.email,
-      subject: "Plan your next ride on Cruise Kauaʻi",
-      body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px;">
-
-<div style="text-align:center;margin-bottom:24px;">
-  <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #f97316;" />
-  <p style="margin:8px 0 0 0;font-weight:bold;color:#3b82f6;font-size:15px;">Cruise Kauaʻi</p>
-</div>
-
-<h2 style="color:#3b82f6;margin-bottom:16px;">Aloha ${firstName}! 🌺</h2>
-
-<p style="margin-bottom:16px;">Just a friendly reminder that Cruise Kauaʻi is here to help you get around the island.</p>
-
-<p style="margin-bottom:8px;">🚗 <strong>Driving soon?</strong> Post your ride and offer seats to fellow community members.</p>
-<p style="margin-bottom:20px;">🙋 <strong>Need a ride?</strong> Request one in advance so drivers can plan accordingly.</p>
-
-<p style="margin-bottom:32px;">
-  <a href="https://cruisekauai.org" style="background-color:#f97316;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block;">Plan Your Next Trip →</a>
-</p>
-
-<p style="margin-bottom:4px;">Mahalo for being part of the Cruise Kauaʻi community!</p>
-<p style="margin:0;"><strong>– The Cruise Kauaʻi Team</strong></p>
-
-<hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0;">
-<p style="font-size:13px;color:#666;margin-bottom:8px;">Not sure how to use the app? <a href="https://cruisekauai.base44.app/Welcome" style="color:#3b82f6;">Re-watch the welcome tutorial here</a>.</p>
-<p style="font-size:12px;color:#999;margin:0;">Replies to this email are not monitored. Please use the Contact Us form on the app or email willowvolkert@gmail.com with any questions.</p>
-
+      subject: "The community is moving — here's what's happening 🌺",
+      body: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#f5f0e8;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f0e8;padding:32px 16px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+        <tr><td align="center" style="padding:32px 24px 20px;border-bottom:1px solid #f0ebe0;">
+          <div style="width:72px;height:72px;border-radius:50%;border:3px solid #e8742a;background:linear-gradient(135deg,#2d6a4f,#52b788,#e8742a);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:28px;line-height:72px;text-align:center;">🚗</div>
+          <div style="font-family:Georgia,serif;font-size:1.1rem;font-weight:700;color:#1a1a1a;letter-spacing:0.02em;">Cruise Kaua'i</div>
+        </td></tr>
+        <tr><td style="padding:32px 32px 24px;">
+          <h1 style="font-family:Georgia,serif;font-size:1.6rem;font-weight:700;color:#1a1a1a;margin:0 0 12px;">Aloha, ${firstName}! 🤙</h1>
+          <p style="font-size:0.95rem;line-height:1.7;color:#444;margin:0 0 20px;">The community is moving — and there's a seat with your name on it. Here's what's happening on Cruise Kaua'i right now:</p>
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 20px;">
+            <tr>
+              <td width="32%" style="background:#faf7f2;border:1px solid #ede5d4;border-radius:10px;padding:14px 10px;text-align:center;">
+                <div style="font-family:Georgia,serif;font-size:1.6rem;font-weight:700;color:#e8742a;line-height:1;margin-bottom:4px;">${activeRides}</div>
+                <div style="font-size:0.75rem;color:#888;line-height:1.3;">rides posted<br>this week</div>
+              </td>
+              <td width="4%"></td>
+              <td width="32%" style="background:#faf7f2;border:1px solid #ede5d4;border-radius:10px;padding:14px 10px;text-align:center;">
+                <div style="font-family:Georgia,serif;font-size:1.6rem;font-weight:700;color:#e8742a;line-height:1;margin-bottom:4px;">${activeRiders}</div>
+                <div style="font-size:0.75rem;color:#888;line-height:1.3;">neighbors<br>looking for rides</div>
+              </td>
+              <td width="4%"></td>
+              <td width="32%" style="background:#faf7f2;border:1px solid #ede5d4;border-radius:10px;padding:14px 10px;text-align:center;">
+                <div style="font-family:Georgia,serif;font-size:1.6rem;font-weight:700;color:#e8742a;line-height:1;margin-bottom:4px;">💸</div>
+                <div style="font-size:0.75rem;color:#888;line-height:1.3;">gas costs<br>being shared</div>
+              </td>
+            </tr>
+          </table>
+          <p style="font-size:0.95rem;line-height:1.7;color:#444;margin:0 0 24px;">Whether you're heading <strong>${routeHint}</strong> or anywhere in between — someone on this island is probably going your way. Post your drive, find a ride, and help us keep Kaua'i moving together.</p>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr><td align="center" style="padding:8px 0 24px;">
+              <a href="https://cruisekauai.org/" style="display:inline-block;background:#e8742a;color:#ffffff;text-decoration:none;font-weight:600;font-size:1rem;padding:14px 36px;border-radius:50px;letter-spacing:0.02em;">See What's Available →</a>
+            </td></tr>
+          </table>
+          <p style="font-size:0.82rem;color:#aaa;text-align:center;margin:0;line-height:1.6;">Every shared ride = less traffic on the bypass, more money in local pockets.<br>Mahalo for being part of this.</p>
+        </td></tr>
+        <tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:20px 32px;text-align:center;">
+          <p style="font-family:Georgia,serif;font-size:0.95rem;color:#888;font-style:italic;margin:0 0 8px;">Mahalo nui loa 🌺</p>
+          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0;">— The Cruise Kaua'i Team<br><a href="${unsubscribeUrl}" style="color:#e8742a;text-decoration:none;">Unsubscribe</a> · <a href="https://cruisekauai.org/" style="color:#e8742a;text-decoration:none;">cruisekauai.org</a></p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
 </body></html>`
     });
     sent++;
