@@ -91,8 +91,8 @@ export default function WelcomePage() {
             className="w-40 h-40 md:w-52 md:h-52 object-cover rounded-3xl shadow-2xl border-4 border-white/30"
           />
           <div>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-lg text-white">{config.appName}</h1>
-            <p className="mt-2 text-lg md:text-xl text-green-100 font-medium">a community ridesharing app to reduce traffic in hawaiʻi</p>
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-lg text-white">Ride Together. Save More. Keep Kauaʻi Beautiful.</h1>
+            <p className="mt-2 text-lg md:text-xl text-green-100 font-medium">Connect with neighbors, split the cost, and reduce traffic on the island we all love.</p>
           </div>
         </div>
       </div>
@@ -199,7 +199,7 @@ export default function WelcomePage() {
             size="lg"
             className="w-full bg-primary hover:bg-primary/90 text-white py-5 text-base font-bold rounded-2xl shadow-md"
           >
-            sign up here!
+            Join the Community
           </Button>
           <Button
             onClick={handleExplore}
@@ -207,7 +207,7 @@ export default function WelcomePage() {
             variant="outline"
             className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 py-5 text-sm rounded-2xl"
           >
-            not ready? explore the app first →
+            Find a Ride Near You →
           </Button>
           <button
             onClick={() => setShowTutorial(true)}
