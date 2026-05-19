@@ -761,7 +761,7 @@ Please process the refund manually via Stripe.
                 <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
                         <h1 className="text-xl font-bold text-secondary leading-tight">inbox</h1>
-                        <p className="text-gray-500 text-xs mt-0.5">manage trips, messages & ratings</p>
+                        <p className="text-gray-500 text-xs mt-0.5">chat with riders & drivers, see your active trips, and leave ratings</p>
                     </div>
                     <Button
                         onClick={() => setShowReportModal(true)}
