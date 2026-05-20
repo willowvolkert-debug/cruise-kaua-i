@@ -281,12 +281,15 @@ export default function Layout({ children, currentPageName }) {
         );
         count += unreadAdminMessages.length;
 
-        // Count bookings with new messages from the other party
+        // Count bookings with unread messages (messages since user last opened the chat)
         const bookingsWithNewMessages = bookings.filter(b => {
           const isInvolved = String(b.driver_id) === String(user.id) || String(b.passenger_id) === String(user.id);
           if (!isInvolved || !b.messages || b.messages.length === 0) return false;
-          const lastMsg = b.messages[b.messages.length - 1];
-          return String(lastMsg.sender_id) !== String(user.id);
+          const totalMessages = b.messages.length;
+          const readCount = (b.read_message_counts || {})[user.id] || 0;
+          // There are unread messages if total > read AND last message is from the other party
+          const lastMsg = b.messages[totalMessages - 1];
+          return totalMessages > readCount && String(lastMsg.sender_id) !== String(user.id);
         });
         count += bookingsWithNewMessages.length;
 
