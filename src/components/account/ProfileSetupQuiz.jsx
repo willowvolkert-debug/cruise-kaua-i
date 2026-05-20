@@ -448,11 +448,18 @@ export default function ProfileSetupQuiz({ user, onComplete }) {
             <p className="mt-3 text-sm text-red-500 bg-red-50 border border-red-200 rounded-2xl p-3 leading-relaxed">{error}</p>
           )}
 
-          {current.type !== "driver_choice" && (
-            <Button onClick={handleNext} disabled={saving} className="w-full mt-5 bg-primary hover:bg-primary/90 text-white rounded-full py-6 text-base font-bold">
-              {saving ? "saving..." : step === steps.length - 1 ? "finish & save ✓" : <span className="flex items-center justify-center gap-2">next <ChevronRight className="w-4 h-4" /></span>}
-            </Button>
-          )}
+          <div className={`flex gap-3 mt-5 ${current.type === "driver_choice" ? "justify-start" : ""}`}>
+            {step > 0 && (
+              <Button variant="outline" onClick={() => { setError(""); setStep(step - 1); }} className="rounded-full px-6 py-6 font-bold border-gray-300 text-gray-600">
+                ← back
+              </Button>
+            )}
+            {current.type !== "driver_choice" && (
+              <Button onClick={handleNext} disabled={saving} className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-full py-6 text-base font-bold">
+                {saving ? "saving..." : step === steps.length - 1 ? "finish & save ✓" : <span className="flex items-center justify-center gap-2">next <ChevronRight className="w-4 h-4" /></span>}
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>
