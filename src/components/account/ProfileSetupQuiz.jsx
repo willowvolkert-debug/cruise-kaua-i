@@ -204,12 +204,17 @@ export default function ProfileSetupQuiz({ user, onComplete }) {
       setIsDriverPath(true);
       setStep(step + 1);
     } else {
-      // Save profile/license first, then navigate to trips with tips
+      // Save profile/license first, then show tips card
       setSaving(true);
       await saveProfileAndLicense();
       setSaving(false);
       setShowRiderTips(true);
     }
+  };
+
+  const handleRiderTipsDone = () => {
+    navigate(createPageUrl("Trips"));
+    onComplete();
   };
 
   if (!started) {
@@ -256,7 +261,7 @@ export default function ProfileSetupQuiz({ user, onComplete }) {
             ))}
           </div>
           <div className="p-4 border-t border-gray-100">
-            <Button onClick={() => { onComplete(); navigate(createPageUrl("Trips")); }} className="w-full bg-primary hover:bg-primary/90 rounded-full py-5 font-bold text-base">
+            <Button onClick={handleRiderTipsDone} className="w-full bg-primary hover:bg-primary/90 rounded-full py-5 font-bold text-base">
               <MapPin className="w-4 h-4 mr-2" /> view all rides →
             </Button>
           </div>
