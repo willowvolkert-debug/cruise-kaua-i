@@ -74,11 +74,28 @@ export default function WelcomePage() {
     navigate(createPageUrl("RiderSignupFlow"));
   };
 
+  // Show phone prompt link until 2026-06-03 (two weeks from 2026-05-20)
+  const showPhonePromptLink = new Date() < new Date('2026-06-04');
+  const loginTarget = showPhonePromptLink
+    ? createPageUrl("Account") + "?show_phone_prompt=true"
+    : createPageUrl("Account");
+
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
       <style>{`
         [data-sidebar="trigger"] { display: none !important; }
       `}</style>
+
+      {/* LOGIN BANNER */}
+      <div className="bg-green-50 border-b border-green-200 px-4 py-2 text-center">
+        <span className="text-sm text-gray-600">Welcome! </span>
+        <button
+          onClick={() => base44.auth.redirectToLogin(loginTarget)}
+          className="text-sm font-semibold text-primary underline underline-offset-2 hover:text-primary/80 transition-colors"
+        >
+          click here to log in →
+        </button>
+      </div>
 
       {/* HERO */}
       <div className="relative bg-gradient-to-b from-green-900 via-green-800 to-green-700 text-white">

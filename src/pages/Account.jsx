@@ -100,12 +100,20 @@ export default function AccountPage() {
     const [saveError, setSaveError] = useState(null);
     const [adminMessages, setAdminMessages] = useState([]);
     const [showProfileQuiz, setShowProfileQuiz] = useState(false);
+    const [showPhonePrompt, setShowPhonePrompt] = useState(false);
+    const [phonePromptValue, setPhonePromptValue] = useState('');
+    const [isSavingPhone, setIsSavingPhone] = useState(false);
 
     useEffect(() => {
         // Check for explore mode
         const urlParams = new URLSearchParams(window.location.search);
         const exploreParam = urlParams.get('explore');
         setIsExploreMode(exploreParam === 'true');
+        
+        // If deep-linked with show_phone_prompt, force the prompt open after load
+        if (urlParams.get('show_phone_prompt') === 'true') {
+            setShowPhonePrompt(true);
+        }
         
         loadData();
         if ('Notification' in window) {
@@ -1279,6 +1287,57 @@ export default function AccountPage() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {/* Phone number prompt modal */}
+            <Dialog open={showPhonePrompt} onOpenChange={() => {}}>
+                <DialogContent className="sm:max-w-md bg-white rounded-3xl" hideCloseButton>
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-bold text-secondary">📱 New: SMS Notifications!</DialogTitle>
+                        <DialogDescription className="text-gray-600 leading-relaxed mt-2">
+                            Cruise Kauaʻi will send you a text when a rider requests a seat, when a driver accepts your ride request, and when someone sends you a message. We will NOT text you with any promotions, only to have safe, organized communication between drivers &amp; riders.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-3 py-2">
+                        <Input
+                            type="tel"
+                            value={phonePromptValue}
+                            onChange={(e) => setPhonePromptValue(e.target.value)}
+                            placeholder="e.g. (808) 555-1234"
+                            className="rounded-2xl"
+                        />
+                    </div>
+                    <DialogFooter className="flex flex-col gap-2 sm:flex-col">
+                        <Button
+                            onClick={async () => {
+                                setIsSavingPhone(true);
+                                await base44.auth.updateMe({
+                                    phone_number: phonePromptValue,
+                                    sms_notifications_enabled: !!phonePromptValue,
+                                    has_dismissed_phone_prompt: true
+                                });
+                                setIsSavingPhone(false);
+                                setShowPhonePrompt(false);
+                                loadData();
+                            }}
+                            disabled={isSavingPhone}
+                            className="w-full bg-primary hover:bg-primary/90 rounded-2xl"
+                        >
+                            {isSavingPhone ? 'saving...' : 'save phone number'}
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            onClick={async () => {
+                                await base44.auth.updateMe({ has_dismissed_phone_prompt: true });
+                                setShowPhonePrompt(false);
+                            }}
+                            className="w-full text-gray-400 rounded-2xl text-sm"
+                        >
+                            skip for now
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
             </div>
             );
             }
