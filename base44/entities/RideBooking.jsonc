@@ -112,6 +112,11 @@
       },
       "default": []
     },
+    "read_message_counts": {
+      "type": "object",
+      "description": "Map of userId -> number of messages they've read (to track unread)",
+      "default": {}
+    },
     "phone_number_detected": {
       "type": "boolean",
       "default": false

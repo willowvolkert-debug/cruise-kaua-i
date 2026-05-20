@@ -41,8 +41,16 @@ export default function ChatModal({ isOpen, onClose, booking, otherPartyName, ot
       try {
         const user = await base44.auth.me();
         setCurrentUser(user);
-        setMessages(booking.messages || []);
+        const msgs = booking.messages || [];
+        setMessages(msgs);
         if (booking.phone_number_detected) setShowPhoneWarning(true);
+
+        // Mark all current messages as read for this user
+        if (msgs.length > 0) {
+          const readCounts = booking.read_message_counts || {};
+          readCounts[user.id] = msgs.length;
+          await base44.entities.RideBooking.update(booking.id, { read_message_counts: readCounts });
+        }
       } catch (error) {
         console.error("Error loading chat data:", error);
       }

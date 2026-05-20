@@ -1,6 +1,26 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+const sendSms = async (toNumber, message) => {
+  const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
+  const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');
+  const fromNumber = Deno.env.get('TWILIO_PHONE_NUMBER');
+  if (!accountSid || !authToken || !fromNumber) return;
+
+  let normalized = toNumber.replace(/\D/g, '');
+  if (normalized.length === 10) normalized = '+1' + normalized;
+  else if (!normalized.startsWith('+')) normalized = '+' + normalized;
+
+  await fetch(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Basic ' + btoa(`${accountSid}:${authToken}`),
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({ From: fromNumber, To: normalized, Body: message }).toString(),
+  });
+};
 
 Deno.serve(async (req) => {
   try {
@@ -59,6 +79,14 @@ Deno.serve(async (req) => {
 </body></html>`
         }).then(() => { sent++; }).catch(() => null);
       }));
+
+      // SMS to drivers with phone numbers
+      await Promise.all(batch.map(u => {
+        if (!u.phone_number) return Promise.resolve();
+        const smsText = `Cruise Kaua'i: New ride request! ${request.departure_location} → ${request.destination} on ${request.departure_date} at ${request.departure_time}. Open the app to connect: https://cruisekauai.org/Trips`;
+        return sendSms(u.phone_number, smsText).catch(() => null);
+      }));
+
       if (i + BATCH_SIZE < recipients.length) await sleep(DELAY_MS);
     }
 
