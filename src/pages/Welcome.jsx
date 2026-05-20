@@ -407,26 +407,26 @@ export default function WelcomePage() {
                           {dateRides
                             .sort((a, b) => (a.departure_time || '').localeCompare(b.departure_time || ''))
                             .map(ride => (
-                              <div key={ride.id} className="border border-gray-200 rounded-xl p-3 bg-white">
-                                <div className="flex justify-between items-start mb-1">
-                                  <div className="min-w-0 flex-1 pr-2">
-                                    <p className="font-semibold text-secondary text-sm">{ride.departure_time || 'Flexible'}</p>
-                                    <p className="text-xs text-gray-600 truncate">{ride.departure_location} → {ride.destination}</p>
-                                  </div>
-                                  <div className="text-right shrink-0">
-                                    <p className="font-bold text-sm text-primary">${ride.price_per_seat_tourist || ride.price_per_seat || 0}</p>
-                                    <p className="text-xs text-gray-500">/ seat</p>
-                                  </div>
+                              <div key={ride.id} className="border border-gray-200 rounded-2xl p-4 bg-white space-y-2">
+                                {/* Route + Price */}
+                                <div className="flex items-center justify-between gap-2">
+                                  <p className="font-extrabold text-gray-900 text-base leading-tight truncate">
+                                    {ride.departure_location} → {ride.destination}
+                                  </p>
+                                  <p className="font-bold text-lg text-primary shrink-0">${ride.price_per_seat_tourist || ride.price_per_seat || 0}<span className="text-xs font-normal text-gray-400">/seat</span></p>
                                 </div>
-                                <div className="flex items-center justify-between">
+                                {/* Time */}
+                                <p className="text-sm text-secondary font-medium">{ride.departure_time || 'Flexible time'}</p>
+                                {/* Driver + Seats */}
+                                <div className="flex items-center justify-between pt-1 border-t border-gray-100">
                                   <div className="flex items-center gap-2">
                                     <Avatar className="w-6 h-6">
                                       <AvatarImage src={ride.driver_profile_picture_url} />
                                       <AvatarFallback className="bg-primary text-white text-xs">{(ride.driver_name || 'DR').split(' ').map(n => n[0]).join('').toUpperCase()}</AvatarFallback>
                                     </Avatar>
-                                    <span className="text-xs text-gray-600">@{ride.driver_username || ride.driver_name}</span>
+                                    <span className="text-xs text-gray-500">@{ride.driver_username || ride.driver_name}</span>
                                   </div>
-                                  <div className="flex items-center gap-1 text-gray-500">
+                                  <div className="flex items-center gap-1 text-gray-400">
                                     <Users className="w-3 h-3" />
                                     <span className="text-xs">{ride.seats_available} seats</span>
                                   </div>
