@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Camera, ChevronRight, CheckCircle } from "lucide-react";
+import { Camera, ChevronRight, CheckCircle, Upload, ShieldCheck, Loader2 } from "lucide-react";
 
 const STEPS = [
   {
@@ -51,6 +51,13 @@ const STEPS = [
     type: "photo",
     field: "profile_picture_url",
   },
+  {
+    id: "license",
+    title: "Verify your driver's license",
+    subtitle: "Upload both sides of your license so our team can verify your identity. Required to book or post rides.",
+    type: "license",
+    field: "license",
+  },
 ];
 
 export default function ProfileSetupQuiz({ user, onComplete }) {
@@ -65,10 +72,14 @@ export default function ProfileSetupQuiz({ user, onComplete }) {
   });
   const [photoFile, setPhotoFile] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(user?.profile_picture_url || "");
+  const [licenseFront, setLicenseFront] = useState(null);
+  const [licenseBack, setLicenseBack] = useState(null);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
   const fileInputRef = useRef();
+  const licenseFrontRef = useRef();
+  const licenseBackRef = useRef();
 
   const current = STEPS[step];
 
@@ -89,6 +100,11 @@ export default function ProfileSetupQuiz({ user, onComplete }) {
         setError("Oops! You have to complete this step before moving on. If you're having trouble, fill out the contact us form on the sidebar.");
         return false;
       }
+    } else if (current.type === "license") {
+      if (!licenseFront || !licenseBack) {
+        setError("Oops! You have to complete this step before moving on. Please upload both sides of your license. If you're having trouble, fill out the contact us form on the sidebar.");
+        return false;
+      }
     } else if (!val || String(val).trim() === "") {
       setError("Oops! You have to complete this step before moving on. If you're having trouble, fill out the contact us form on the sidebar.");
       return false;
@@ -106,7 +122,7 @@ export default function ProfileSetupQuiz({ user, onComplete }) {
     if (step < STEPS.length - 1) {
       setStep(step + 1);
     } else {
-      // Final save
+      // Final save (after license step)
       setSaving(true);
       let profilePicUrl = user?.profile_picture_url || "";
       if (photoFile) {
@@ -123,8 +139,39 @@ export default function ProfileSetupQuiz({ user, onComplete }) {
         profile_complete: !!(answers.username && answers.age && answers.gender && answers.bio && profilePicUrl),
         has_completed_profile_quiz: true,
       };
-
       await base44.auth.updateMe(saveData);
+
+      // Upload license
+      if (licenseFront && licenseBack) {
+        const [frontResult, backResult] = await Promise.all([
+          base44.integrations.Core.UploadFile({ file: licenseFront }),
+          base44.integrations.Core.UploadFile({ file: licenseBack }),
+        ]);
+        const currentUser = await base44.auth.me();
+        await base44.auth.updateMe({
+          drivers_license_front_url: frontResult.file_url,
+          drivers_license_back_url: backResult.file_url,
+          drivers_license_pending_review: true,
+          license_submitted_date: new Date().toISOString(),
+        });
+        await base44.entities.UserEdit.create({
+          user_id: currentUser.id,
+          user_name: currentUser.full_name,
+          user_email: currentUser.email,
+          change_type: "license",
+          change_description: "Uploaded driver's license via profile setup quiz",
+          old_values: {},
+          new_values: { license_front_url: frontResult.file_url, license_back_url: backResult.file_url },
+        });
+        await base44.entities.AdminMessage.create({
+          recipient_id: 'admin',
+          recipient_name: 'Admin',
+          subject: `License Pending Review: ${currentUser.full_name}`,
+          message: `A user has uploaded their driver's license for verification.\n\nUser: ${currentUser.full_name}\nEmail: ${currentUser.email}\n\nPlease review in the Admin Dashboard.`,
+          message_type: 'action_required',
+        });
+      }
+
       setSaving(false);
       setDone(true);
       setTimeout(() => onComplete(), 1800);
@@ -238,6 +285,42 @@ export default function ProfileSetupQuiz({ user, onComplete }) {
                   {opt.label}
                 </button>
               ))}
+            </div>
+          )}
+
+          {current.type === "license" && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-gray-700">Front of license *</p>
+                <div
+                  onClick={() => licenseFrontRef.current?.click()}
+                  className="border-2 border-dashed border-gray-300 rounded-2xl p-5 text-center cursor-pointer hover:border-primary/50 transition-colors"
+                >
+                  <input ref={licenseFrontRef} type="file" accept="image/*" onChange={(e) => { setLicenseFront(e.target.files[0]); setError(""); }} className="hidden" />
+                  <Upload className="w-7 h-7 text-gray-400 mx-auto mb-2" />
+                  <span className="text-sm text-gray-500">{licenseFront ? <span className="text-primary font-medium">✓ {licenseFront.name}</span> : "tap to upload front"}</span>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-gray-700">Back of license *</p>
+                <div
+                  onClick={() => licenseBackRef.current?.click()}
+                  className="border-2 border-dashed border-gray-300 rounded-2xl p-5 text-center cursor-pointer hover:border-primary/50 transition-colors"
+                >
+                  <input ref={licenseBackRef} type="file" accept="image/*" onChange={(e) => { setLicenseBack(e.target.files[0]); setError(""); }} className="hidden" />
+                  <Upload className="w-7 h-7 text-gray-400 mx-auto mb-2" />
+                  <span className="text-sm text-gray-500">{licenseBack ? <span className="text-primary font-medium">✓ {licenseBack.name}</span> : "tap to upload back"}</span>
+                </div>
+              </div>
+              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 text-sm text-blue-800">
+                <p className="font-semibold mb-1">What you'll need:</p>
+                <ul className="space-y-0.5">
+                  <li>• A valid driver's license</li>
+                  <li>• Clear, well-lit photos of both sides</li>
+                  <li>• All text must be readable</li>
+                </ul>
+              </div>
+              <p className="text-xs text-gray-400 text-center">🔒 Your information is encrypted and secure.</p>
             </div>
           )}
 
