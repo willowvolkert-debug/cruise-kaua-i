@@ -21,6 +21,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import EnableNotificationsModal from "../components/notifications/EnableNotificationsModal";
 import { requestNotificationPermission } from "../components/utils/notifications";
 import AdminMessageCard from "../components/inbox/AdminMessageCard";
+import ProfileSetupQuiz from "../components/account/ProfileSetupQuiz";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -98,6 +99,7 @@ export default function AccountPage() {
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState(null);
     const [adminMessages, setAdminMessages] = useState([]);
+    const [showProfileQuiz, setShowProfileQuiz] = useState(false);
 
     useEffect(() => {
         // Check for explore mode
@@ -122,6 +124,10 @@ export default function AccountPage() {
             
             const currentUser = await base44.auth.me();
             setUser(currentUser);
+            // Show quiz if profile not complete and quiz hasn't been done
+            if (!currentUser.has_completed_profile_quiz || currentUser.role === 'admin') {
+                setShowProfileQuiz(true);
+            }
             setEditData({
                 username: currentUser.username || '',
                 bio: currentUser.bio || '',
@@ -1197,6 +1203,13 @@ export default function AccountPage() {
                     © {new Date().getFullYear()} Cruise Hawaiʻi. Specializing in carpooling and ridesharing across Hawaiʻi.
                 </footer>
             </div>
+
+            {showProfileQuiz && user && (
+                <ProfileSetupQuiz
+                    user={user}
+                    onComplete={() => { setShowProfileQuiz(false); loadData(); }}
+                />
+            )}
 
             <LicenseVerificationModal
                 isOpen={showLicenseModal}

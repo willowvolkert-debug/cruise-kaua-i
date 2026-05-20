@@ -71,27 +71,64 @@ Deno.serve(async (req) => {
                     const needsAgreements = !u.terms_accepted || !u.privacy_policy_accepted || !u.community_agreement_accepted;
                     const needsVehicle = !u.vehicle_verified;
 
-                    const appUrl = 'https://ride-connect-b7a57d59.base44.app';
-                    const unsubscribeUrl = `${appUrl}/unsubscribe?user_id=${u.id}`;
+                    const unsubscribeUrl = `https://cruisekauai.org/Unsubscribe?user_id=${u.id}`;
 
+                    const appUrl = 'https://cruisekauai.org';
                     let setupSteps = '';
-                    if (needsProfile || needsLicense || needsAgreements) {
-                        setupSteps += `<div style="margin: 32px 0;">
-                          <p style="font-size: 16px; font-weight: bold; margin-bottom: 16px;">🚗 1. BECOME A RIDER</p>
-                          <p style="margin-bottom: 16px; padding-left: 20px;">
-                            In order to be a rider, input your profile details such as name, age, and bio. Then, securely verify your license and identity using Stripe. Finally, sign our legal agreements such as Terms of Service and our Community Agreement. 
-                          </p>
-                          <p style="padding-left: 20px;">Now you are able to get rides around the island! 🏝️</p>
+
+                    if (needsProfile) {
+                        setupSteps += `<div style="margin: 24px 0; padding: 20px; background: #faf7f2; border-left: 4px solid #e8742a; border-radius: 8px;">
+                          <p style="font-size: 15px; font-weight: bold; margin: 0 0 12px; color: #1a1a1a;">👤 Step 1: Build Your Profile</p>
+                          <p style="margin: 0 0 10px; color: #555;">Your profile helps drivers and riders know who they're sharing a ride with. Here's exactly what you need to fill in:</p>
+                          <ul style="margin: 0 0 10px; padding-left: 20px; color: #555; line-height: 2;">
+                            <li><strong>Username</strong> — a short handle others will see (e.g., @kaleo_808)</li>
+                            <li><strong>Age</strong> — tap the age field and type your age as a number (e.g., 28). <em>Tip: if the field doesn't seem to respond, tap directly on the number box and type your age.</em></li>
+                            <li><strong>Gender</strong> — tap the dropdown and select your option (Male, Female, or Non-binary)</li>
+                            <li><strong>Bio</strong> — a sentence or two about yourself and why you use Cruise Kauaʻi</li>
+                            <li><strong>Profile Photo</strong> — tap the camera icon on your avatar, choose a photo from your library, then tap "save changes." <em>Tip: make sure you tap "save changes" after selecting your photo or it won't upload.</em></li>
+                          </ul>
+                          <p style="margin: 0; color: #888; font-size: 13px;">→ <a href="${appUrl}/Account" style="color: #e8742a;">Go to your account to fill this out</a></p>
+                        </div>`;
+                    }
+
+                    if (needsLicense) {
+                        setupSteps += `<div style="margin: 24px 0; padding: 20px; background: #faf7f2; border-left: 4px solid #3b82f6; border-radius: 8px;">
+                          <p style="font-size: 15px; font-weight: bold; margin: 0 0 12px; color: #1a1a1a;">🪪 Step 2: Verify Your Driver's License</p>
+                          <p style="margin: 0 0 10px; color: #555;">This is required to book or post rides. It only takes about 2 minutes:</p>
+                          <ol style="margin: 0 0 10px; padding-left: 20px; color: #555; line-height: 2;">
+                            <li>Sign in to the app</li>
+                            <li>Go to your <strong>Account</strong> page</li>
+                            <li>Under "Verification," tap <strong>"Verify Now"</strong> next to Driver's License</li>
+                            <li>Follow the secure Stripe Identity prompts to upload a photo of your license</li>
+                            <li>Once submitted, Willow will review and approve it — usually within 24 hours</li>
+                          </ol>
+                          <p style="margin: 0; color: #888; font-size: 13px;">→ <a href="${appUrl}/Account" style="color: #3b82f6;">Tap here to go directly to license verification after signing in</a></p>
+                        </div>`;
+                    }
+
+                    if (needsAgreements) {
+                        setupSteps += `<div style="margin: 24px 0; padding: 20px; background: #faf7f2; border-left: 4px solid #10b981; border-radius: 8px;">
+                          <p style="font-size: 15px; font-weight: bold; margin: 0 0 12px; color: #1a1a1a;">📄 Step 3: Sign Legal Agreements</p>
+                          <p style="margin: 0 0 10px; color: #555;">You'll need to read and accept these three short agreements:</p>
+                          <ul style="margin: 0 0 10px; padding-left: 20px; color: #555; line-height: 2;">
+                            <li><a href="${appUrl}/TermsOfService" style="color: #10b981;">Terms of Service</a></li>
+                            <li><a href="${appUrl}/PrivacyPolicy" style="color: #10b981;">Privacy Policy</a></li>
+                            <li><a href="${appUrl}/CommunityAgreement" style="color: #10b981;">Community Agreement</a></li>
+                          </ul>
+                          <p style="margin: 0; color: #888; font-size: 13px;">→ Each has a green "Accept" button at the bottom. Tap it and you're done!</p>
                         </div>`;
                     }
 
                     if (needsVehicle) {
-                        setupSteps += `<div style="margin: 32px 0;">
-                          <p style="font-size: 16px; font-weight: bold; margin-bottom: 16px;">💰 2. BECOME A DRIVER</p>
-                          <p style="margin-bottom: 16px; padding-left: 20px;">
-                            If you would like to be a driver and make money, upload your vehicle information, insurance information, and sign our Driver Agreement. 
-                          </p>
-                          <p style="padding-left: 20px;">Once this is uploaded, you will be a verified driver— making money, building community, and reducing traffic at the same time! ✨</p>
+                        setupSteps += `<div style="margin: 24px 0; padding: 20px; background: #faf7f2; border-left: 4px solid #8b5cf6; border-radius: 8px;">
+                          <p style="font-size: 15px; font-weight: bold; margin: 0 0 12px; color: #1a1a1a;">🚗 Step 4 (Optional): Become a Driver & Earn Money</p>
+                          <p style="margin: 0 0 10px; color: #555;">Want to post rides and earn money? Complete these extra steps:</p>
+                          <ul style="margin: 0 0 10px; padding-left: 20px; color: #555; line-height: 2;">
+                            <li>Go to <a href="${appUrl}/VehicleDetails" style="color: #8b5cf6;"><strong>Vehicle Details</strong></a> and upload your car info + insurance</li>
+                            <li>Sign the <a href="${appUrl}/DriverAgreement" style="color: #8b5cf6;"><strong>Driver Agreement</strong></a></li>
+                            <li>Connect your bank account via Stripe for payouts</li>
+                          </ul>
+                          <p style="margin: 0; color: #888; font-size: 13px;">Once approved, you'll be able to post rides and earn money sharing your commute!</p>
                         </div>`;
                     }
 

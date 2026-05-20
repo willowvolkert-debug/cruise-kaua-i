@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
     if (!request) return Response.json({ ok: true, skipped: 'no data' });
 
     const allUsers = await base44.asServiceRole.entities.User.list();
-    const recipients = allUsers.filter(u => u.email && u.id !== request.rider_id);
+    const recipients = allUsers.filter(u => u.email && u.id !== request.rider_id && u.user_type === 'driver');
 
     let sent = 0;
     const BATCH_SIZE = 5;
