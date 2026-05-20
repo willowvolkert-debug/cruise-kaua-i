@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
           <p style="font-size:0.95rem;line-height:1.7;color:#444;margin:0 0 24px;">If you're heading that direction, open the app to connect with them. Every shared ride helps us all.</p>
           <table width="100%" cellpadding="0" cellspacing="0">
             <tr><td align="center" style="padding:8px 0;">
-              <a href="https://cruisekauai.org/" style="display:inline-block;background:#e8742a;color:#ffffff;text-decoration:none;font-weight:600;font-size:1rem;padding:14px 36px;border-radius:50px;">Open Cruise Kaua'i →</a>
+              <a href="https://cruisekauai.org/Trips" style="display:inline-block;background:#e8742a;color:#ffffff;text-decoration:none;font-weight:600;font-size:1rem;padding:14px 36px;border-radius:50px;">See Ride Requests →</a>
             </td></tr>
           </table>
         </td></tr>
