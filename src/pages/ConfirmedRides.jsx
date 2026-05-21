@@ -15,7 +15,9 @@ import { sendBookingEmail } from "../functions/sendBookingEmail";
 const formatTime12Hour = (timeStr) => {
     if (!timeStr) return '';
     if (/AM|PM/i.test(timeStr)) return timeStr;
-    const [hours, minutes] = timeStr.split(':').map(Number);
+    const parts = timeStr.split(':').map(Number);
+    const hours = parts[0] || 0;
+    const minutes = parts[1] || 0;
     const period = hours >= 12 ? 'PM' : 'AM';
     const displayHours = hours % 12 || 12;
     return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
