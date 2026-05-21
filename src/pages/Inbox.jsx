@@ -20,6 +20,7 @@ import DriverRideModal from "../components/inbox/DriverRideModal";
 import MyRideRequestsCard from "../components/inbox/MyRideRequestsCard";
 
 import { format } from "date-fns";
+import { formatHST } from "@/lib/formatHST";
 import { sendNotification } from "../components/utils/notifications";
 import { sendBookingEmail } from "../functions/sendBookingEmail";
 
@@ -875,7 +876,7 @@ Please process the refund manually via Stripe.
                                                 <div className="flex items-center justify-between gap-2 mb-0.5">
                                                     <p className="font-semibold text-secondary">@{chat.name}</p>
                                                     <p className="text-xs text-gray-400 shrink-0">
-                                                        {format(new Date(chat.timestamp), "MMM d, h:mm a")}
+                                                        {formatHST(chat.timestamp, "MMM d, h:mm a")} HST
                                                     </p>
                                                 </div>
                                                 {ride && (

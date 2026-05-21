@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { format } from "date-fns";
+import { formatHST } from "@/lib/formatHST";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -1039,7 +1040,7 @@ export default function AdminPage() {
                               {edit.change_type}
                             </Badge>
                             <span className="text-xs text-gray-500">
-                              {format(new Date(edit.created_date), "MMM d, h:mm a")}
+                              {formatHST(edit.created_date, "MMM d, h:mm a")} HST
                             </span>
                           </div>
                           <p className="text-sm text-gray-700 mt-1">{edit.change_description}</p>
@@ -1597,7 +1598,7 @@ export default function AdminPage() {
                   ) : (
                     (selectedPhoneAlert.messages || []).map((msg, idx) => (
                       <div key={idx} className={`p-3 rounded-xl border text-sm ${msg.sender_id === selectedPhoneAlert.passenger_id ? 'bg-blue-50 border-blue-200 ml-4' : 'bg-gray-50 border-gray-200 mr-4'}`}>
-                        <p className="font-semibold text-secondary text-xs mb-1">@{msg.sender_name} · {msg.timestamp ? new Date(msg.timestamp).toLocaleString() : ''}</p>
+                        <p className="font-semibold text-secondary text-xs mb-1">@{msg.sender_name} · {msg.timestamp ? formatHST(msg.timestamp, "MMM d, h:mm a") + ' HST' : ''}</p>
                         <p className="text-gray-800 whitespace-pre-wrap">{msg.message}</p>
                       </div>
                     ))

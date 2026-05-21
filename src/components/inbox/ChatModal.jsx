@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Send, X, AlertTriangle } from "lucide-react";
 import { base44 } from "@/api/base44Client";
-import { format } from "date-fns";
+import { formatHST } from "@/lib/formatHST";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
@@ -218,7 +218,7 @@ export default function ChatModal({ isOpen, onClose, booking, otherPartyName, ot
                     }`}>
                       <p className="text-sm leading-relaxed">{msg.message}</p>
                       <p className={`text-xs mt-1 ${isCurrentUser ? 'text-white/70' : 'text-gray-400'}`}>
-                        {format(new Date(msg.timestamp), "MMM d, h:mm a")}
+                        {formatHST(msg.timestamp, "MMM d, h:mm a")} HST
                       </p>
                     </div>
                   </div>
