@@ -191,10 +191,15 @@ export default function ConfirmedRidesPage() {
                 });
             setUpcomingRides(uniqueUpcoming);
 
-            // Past rides (driver or passenger, departed already)
+            // Past rides: driver (any status) OR confirmed passenger, where departure has passed
+            const passengerRideIds = new Set(
+                allBookings
+                    .filter(b => String(b.passenger_id) === String(currentUser.id) && b.booking_status === 'confirmed')
+                    .map(b => b.ride_id)
+            );
             const myPastRides = allRides.filter(r => {
                 const isDriver = String(r.driver_id) === String(currentUser.id);
-                const isPassenger = confirmedBookings.some(b => String(b.passenger_id) === String(currentUser.id) && String(b.ride_id) === String(r.id));
+                const isPassenger = passengerRideIds.has(r.id);
                 if (!isDriver && !isPassenger) return false;
                 const rideDateTime = parseRideDateTimeHST(r.departure_date, r.departure_time);
                 return rideDateTime.toComparable() <= nowComparable;
