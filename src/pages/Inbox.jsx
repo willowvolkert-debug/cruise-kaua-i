@@ -846,107 +846,55 @@ Please process the refund manually via Stripe.
                     </Card>
                 )}
 
+                {/* Combined Recent Messages card (includes active trip context) */}
                 <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2 text-secondary">
                             <MessageSquare className="w-6 h-6 text-primary"/>
-                            active trips ({activeBookings.filter(booking => {
-                                const ride = allRidesData.find(r => r.id === booking.ride_id);
-                                if (!ride) return false;
-                                const rideDateTime = parseRideDateTimeHST(ride.departure_date, ride.departure_time);
-                                const hawaiiNow = getHawaiiNow();
-                                return rideDateTime.toComparable() >= hawaiiNow.toComparable();
-                            }).length})
+                            recent messages
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {isLoading ? (
-                            <p>Loading trips...</p>
-                        ) : activeBookings.filter(booking => {
-                            const ride = allRidesData.find(r => r.id === booking.ride_id);
-                            if (!ride) return false;
-                            const rideDateTime = parseRideDateTimeHST(ride.departure_date, ride.departure_time);
-                            const hawaiiNow = getHawaiiNow();
-                            return rideDateTime.toComparable() >= hawaiiNow.toComparable();
-                        }).length > 0 ? (
-                            <div className="space-y-4">
-                                {activeBookings.filter(booking => {
-                                    const ride = allRidesData.find(r => r.id === booking.ride_id);
-                                    if (!ride) return false;
-                                    const rideDateTime = parseRideDateTimeHST(ride.departure_date, ride.departure_time);
-                                    const hawaiiNow = getHawaiiNow();
-                                    return rideDateTime.toComparable() >= hawaiiNow.toComparable();
-                                }).map(booking => {
-                                    const isDriver = String(user.id) === String(booking.driver_id);
-                                    const otherUserId = isDriver ? booking.passenger_id : booking.driver_id;
-                                    const otherUser = getUserById(otherUserId);
-                                    // Use allRidesData to find ride details (not upcomingRides which may not include all rides)
-                                    const ride = allRidesData.find(r => r.id === booking.ride_id);
-                                    const otherPartyUsername = otherUser?.username || (isDriver 
-                                        ? (booking.passenger_username || booking.passenger_name) 
-                                        : (booking.driver_username || ride?.driver_name || "Driver"));
-                                    const otherPartyPicture = otherUser?.profile_picture_url || '';
-
+                        {recentChats.length > 0 ? (
+                            <div className="space-y-3">
+                                {recentChats.map((chat) => {
+                                    const ride = allRidesData.find(r => r.id === chat.booking.ride_id);
                                     return (
-                                        <div key={booking.id} className="p-4 bg-gray-50 rounded-2xl border border-gray-200">
-                                            {ride ? (
-                                                <div className="mb-3">
-                                                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-600 mb-1">
-                                                        <span className="flex items-center gap-1"><Calendar className="w-4 h-4" />{format(parseDateString(ride.departure_date), "EEE, MMM d")}</span>
-                                                        <span className="flex items-center gap-1"><Clock className="w-4 h-4" />{formatTime12Hour(ride.departure_time)}</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-2 mb-2">
-                                                        <MapPin className="w-4 h-4 text-primary" />
-                                                        <span className="font-semibold text-secondary">
-                                                            {ride.departure_location} → {ride.destination}
-                                                        </span>
-                                                    </div>
+                                        <button
+                                            key={chat.id}
+                                            onClick={() => handleOpenChat(chat.booking, chat.name, chat.picture)}
+                                            className="w-full flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-md transition-shadow text-left"
+                                        >
+                                            <Avatar className="w-11 h-11 shrink-0">
+                                                <AvatarImage src={chat.picture} />
+                                                <AvatarFallback className="bg-gradient-to-r from-primary to-secondary text-white font-semibold">
+                                                    {getInitials(chat.name)}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center justify-between gap-2 mb-0.5">
+                                                    <p className="font-semibold text-secondary">@{chat.name}</p>
+                                                    <p className="text-xs text-gray-400 shrink-0">
+                                                        {format(new Date(chat.timestamp), "MMM d, h:mm a")}
+                                                    </p>
                                                 </div>
-                                            ) : (
-                                                <div className="mb-3 text-sm text-gray-500">
-                                                    Ride details loading...
-                                                </div>
-                                            )}
-                                            
-                                            <p className="text-sm text-gray-700 mb-2">
-                                                {isDriver 
-                                                    ? `Driving with @${otherPartyUsername}`
-                                                    : `Riding with @${otherPartyUsername}, ${booking.seats_booked} seat(s) booked`
-                                                }
-                                            </p>
-                                            
-                                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                                                <Badge variant="outline" className="mb-2 rounded-2xl border-gray-300 w-fit">
-                                                    <Clock className="w-3 h-3 mr-1" />
-                                                    {booking.booking_status}
-                                                </Badge>
-                                                
-                                                <Button
-                                                    onClick={() => handleOpenChat(booking, otherPartyUsername, otherPartyPicture)}
-                                                    className="bg-primary hover:bg-primary/90 px-6 py-2 rounded-2xl w-full sm:w-auto"
-                                                >
-                                                    <MessageSquare className="w-4 h-4 mr-2" />
-                                                    Chat Here
-                                                </Button>
+                                                {ride && (
+                                                    <p className="text-xs text-primary font-medium flex items-center gap-1 mb-1">
+                                                        <MapPin className="w-3 h-3 shrink-0" />
+                                                        {ride.departure_location} → {ride.destination}
+                                                        <span className="text-gray-400 font-normal ml-1">· {format(parseDateString(ride.departure_date), "MMM d")}</span>
+                                                    </p>
+                                                )}
+                                                <p className="text-sm text-gray-600 truncate">{chat.lastMessage}</p>
                                             </div>
-                                            
-                                            {!isDriver && (
-                                                                <Button
-                                                                    onClick={() => handleOpenRiderCancelModal(booking)}
-                                                                    variant="outline"
-                                                                    size="sm"
-                                                                    className="w-full mt-3 border-red-300 text-red-600 hover:bg-red-50 rounded-2xl"
-                                                                >
-                                                                    Cancel Booking
-                                                                </Button>
-                                                            )}
-                                        </div>
+                                            <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0 mt-1" />
+                                        </button>
                                     );
                                 })}
                             </div>
                         ) : (
                             <p className="text-center text-gray-500 py-8">
-                                No active trips. Book or post a ride to get started!
+                                None yet! Book a trip for messages to appear here.
                             </p>
                         )}
                     </CardContent>
@@ -960,47 +908,6 @@ Please process the refund manually via Stripe.
                         Keep all communication within the app.
                     </AlertDescription>
                 </Alert>
-
-                <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-secondary">
-                            <Bot className="w-6 h-6 text-primary"/>
-                            recent messages
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        {recentChats.length > 0 ? (
-                            <div className="space-y-3">
-                                {recentChats.map((chat) => (
-                                    <button
-                                        key={chat.id}
-                                        onClick={() => handleOpenChat(chat.booking, chat.name, chat.picture)}
-                                        className="w-full flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-md transition-shadow text-left"
-                                    >
-                                        <Avatar className="w-12 h-12">
-                                            <AvatarImage src={chat.picture} />
-                                            <AvatarFallback className="bg-gradient-to-r from-primary to-secondary text-white font-semibold">
-                                                {getInitials(chat.name)}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                        <div className="flex-1 min-w-0">
-                                            <p className="font-semibold text-secondary">@{chat.name}</p>
-                                            <p className="text-sm text-gray-600 truncate">{chat.lastMessage}</p>
-                                            <p className="text-xs text-gray-400">
-                                                {format(new Date(chat.timestamp), "MMM d, h:mm a")}
-                                            </p>
-                                        </div>
-                                        <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0" />
-                                    </button>
-                                ))}
-                            </div>
-                        ) : (
-                            <p className="text-center text-gray-500 py-8">
-                                None yet! Book a trip for messages to appear here.
-                            </p>
-                        )}
-                    </CardContent>
-                </Card>
 
                 <footer className="pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
                     © {new Date().getFullYear()} Cruise Hawaiʻi. Specializing in carpooling and ridesharing across Hawaiʻi.
