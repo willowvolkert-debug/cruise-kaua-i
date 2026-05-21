@@ -114,6 +114,11 @@ export default function WelcomePage() {
           <p className="text-lg md:text-xl text-white/90 font-medium leading-relaxed max-w-md mx-auto drop-shadow">
             Connect with neighbors, split the cost, and reduce traffic on the island we all love.
           </p>
+          {config.recruitingDrivers && (
+            <div className="inline-flex items-center gap-2 bg-amber-400 text-amber-900 font-bold px-5 py-2.5 rounded-full text-sm shadow-lg animate-pulse">
+              🚗 Now Recruiting Drivers on Oʻahu!
+            </div>
+          )}
           <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
             <Button
               onClick={handleSignUp}
@@ -259,10 +264,13 @@ export default function WelcomePage() {
           </div>
           <div className="grid md:grid-cols-2 gap-6">
             {/* Driver card */}
-            <div className="bg-white rounded-3xl p-8 shadow-md border border-gray-100 space-y-4">
+            <div className={`bg-white rounded-3xl p-8 shadow-md border space-y-4 ${config.recruitingDrivers ? 'border-amber-300 ring-2 ring-amber-200' : 'border-gray-100'}`}>
               <div className="text-4xl">🏡</div>
-              <h3 className="text-xl font-bold text-gray-900">Are you local?</h3>
-              <p className="text-gray-600 leading-relaxed">Register as a driver and start posting rides on your commutes. Earn money while improving life on the island.</p>
+              <h3 className="text-xl font-bold text-gray-900">{config.driverCardTitle || "Are you local?"}</h3>
+              {config.recruitingDrivers && (
+                <span className="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">🚗 Now Recruiting!</span>
+              )}
+              <p className="text-gray-600 leading-relaxed">{config.driverCardDesc || "Register as a driver and start posting rides on your commutes. Earn money while improving life on the island."}</p>
               <Button onClick={handleDriverSignup} className="bg-primary hover:bg-primary/90 text-white rounded-full px-6">
                 Sign up as a driver 🚗
               </Button>
@@ -271,7 +279,7 @@ export default function WelcomePage() {
             <div className="bg-white rounded-3xl p-8 shadow-md border border-gray-100 space-y-4">
               <div className="text-4xl">🙋</div>
               <h3 className="text-xl font-bold text-gray-900">Need a ride?</h3>
-              <p className="text-gray-600 leading-relaxed">Get affordable rides from local drivers already heading your way. $5–$30 per ride, no car rental needed.</p>
+              <p className="text-gray-600 leading-relaxed">{config.riderCardDesc || "Get affordable rides from local drivers already heading your way. $5–$30 per ride, no car rental needed."}</p>
               <Button onClick={handleRiderSignup} className="bg-secondary hover:bg-secondary/90 text-white rounded-full px-6">
                 Sign up as a rider 🌺
               </Button>
