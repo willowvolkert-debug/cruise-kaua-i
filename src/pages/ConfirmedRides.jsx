@@ -477,13 +477,19 @@ export default function ConfirmedRidesPage() {
                             ) : (
                                 pastRides.map(ride => {
                                     const isDriver = String(ride.driver_id) === String(user?.id);
-                                    const myBooking = activeBookings.find(b =>
-                                        String(b.ride_id) === String(ride.id) &&
-                                        String(b.passenger_id) === String(user?.id)
-                                    );
-                                    const otherPartyName = isDriver
-                                        ? (myBooking ? (myBooking.passenger_username || myBooking.passenger_name) : 'passengers')
-                                        : (ride.driver_username || ride.driver_name);
+                                    let withLine = '';
+                                    if (isDriver) {
+                                        const passengers = activeBookings.filter(b =>
+                                            String(b.ride_id) === String(ride.id) && b.booking_status === 'confirmed'
+                                        );
+                                        if (passengers.length > 0) {
+                                            withLine = passengers.map(b => `@${b.passenger_username || b.passenger_name}`).join(', ');
+                                        } else {
+                                            withLine = 'no passengers';
+                                        }
+                                    } else {
+                                        withLine = `@${ride.driver_username || ride.driver_name}`;
+                                    }
                                     return (
                                         <div key={ride.id} className="border border-gray-100 rounded-xl p-4 bg-gray-50 space-y-1">
                                             <div className="flex items-center justify-between gap-2">
@@ -496,7 +502,7 @@ export default function ConfirmedRidesPage() {
                                                 <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{format(parseDateString(ride.departure_date), "EEE, MMM d yyyy")}</span>
                                                 <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{formatTime12Hour(ride.departure_time)}</span>
                                             </p>
-                                            <p className="text-xs text-gray-400">with @{otherPartyName}</p>
+                                            <p className="text-xs text-gray-400">with {withLine}</p>
                                         </div>
                                     );
                                 })
