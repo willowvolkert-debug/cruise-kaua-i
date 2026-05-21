@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { MapPin, Calendar, Clock, ChevronRight, MessageSquare, Star } from "lucide-react";
+import { MapPin, Calendar, Clock, ChevronRight, ChevronDown, MessageSquare, Star } from "lucide-react";
 import { format } from "date-fns";
 import ChatModal from "../components/inbox/ChatModal";
 import RiderCancelModal from "../components/inbox/RiderCancelModal";
@@ -92,6 +92,8 @@ export default function ConfirmedRidesPage() {
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [upcomingRides, setUpcomingRides] = useState([]);
+    const [pastRides, setPastRides] = useState([]);
+    const [showPastRides, setShowPastRides] = useState(false);
     const [activeBookings, setActiveBookings] = useState([]);
     const [allRidesData, setAllRidesData] = useState([]);
     const [ridesNeedingReview, setRidesNeedingReview] = useState([]);
@@ -188,6 +190,19 @@ export default function ConfirmedRidesPage() {
                     return aComp - bComp;
                 });
             setUpcomingRides(uniqueUpcoming);
+
+            // Past rides (driver or passenger, departed already)
+            const myPastRides = allRides.filter(r => {
+                const isDriver = String(r.driver_id) === String(currentUser.id);
+                const isPassenger = confirmedBookings.some(b => String(b.passenger_id) === String(currentUser.id) && String(b.ride_id) === String(r.id));
+                if (!isDriver && !isPassenger) return false;
+                const rideDateTime = parseRideDateTimeHST(r.departure_date, r.departure_time);
+                return rideDateTime.toComparable() <= nowComparable;
+            }).sort((a, b) =>
+                parseRideDateTimeHST(b.departure_date, b.departure_time).toComparable() -
+                parseRideDateTimeHST(a.departure_date, a.departure_time).toComparable()
+            );
+            setPastRides(myPastRides);
 
         } catch (e) {
             console.error(e);
@@ -433,6 +448,55 @@ export default function ConfirmedRidesPage() {
                         </CardContent>
                     </Card>
                 )}
+
+                {/* Past Rides */}
+                <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
+                    <CardHeader
+                        className="cursor-pointer select-none"
+                        onClick={() => setShowPastRides(!showPastRides)}
+                    >
+                        <CardTitle className="flex items-center justify-between text-gray-700">
+                            <div className="flex items-center gap-2">
+                                <Clock className="w-5 h-5 text-gray-400" />
+                                past rides {pastRides.length > 0 && `(${pastRides.length})`}
+                            </div>
+                            <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${showPastRides ? 'rotate-180' : ''}`} />
+                        </CardTitle>
+                    </CardHeader>
+                    {showPastRides && (
+                        <CardContent className="space-y-3 pt-0">
+                            {pastRides.length === 0 ? (
+                                <p className="text-sm text-gray-400 text-center py-4">no past rides yet</p>
+                            ) : (
+                                pastRides.map(ride => {
+                                    const isDriver = String(ride.driver_id) === String(user?.id);
+                                    const myBooking = activeBookings.find(b =>
+                                        String(b.ride_id) === String(ride.id) &&
+                                        String(b.passenger_id) === String(user?.id)
+                                    );
+                                    const otherPartyName = isDriver
+                                        ? (myBooking ? (myBooking.passenger_username || myBooking.passenger_name) : 'passengers')
+                                        : (ride.driver_username || ride.driver_name);
+                                    return (
+                                        <div key={ride.id} className="border border-gray-100 rounded-xl p-4 bg-gray-50 space-y-1">
+                                            <div className="flex items-center justify-between gap-2">
+                                                <p className="font-semibold text-gray-800 text-sm truncate">{ride.departure_location} → {ride.destination}</p>
+                                                <Badge variant="outline" className={`text-xs shrink-0 ${isDriver ? 'text-green-700 border-green-300' : 'text-blue-700 border-blue-300'}`}>
+                                                    {isDriver ? 'drove' : 'rode'}
+                                                </Badge>
+                                            </div>
+                                            <p className="text-xs text-gray-500 flex items-center gap-3">
+                                                <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{format(parseDateString(ride.departure_date), "EEE, MMM d yyyy")}</span>
+                                                <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{formatTime12Hour(ride.departure_time)}</span>
+                                            </p>
+                                            <p className="text-xs text-gray-400">with @{otherPartyName}</p>
+                                        </div>
+                                    );
+                                })
+                            )}
+                        </CardContent>
+                    )}
+                </Card>
 
                 <ChatModal
                     isOpen={showChatModal}
