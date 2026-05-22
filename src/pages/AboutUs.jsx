@@ -27,6 +27,10 @@ const faqItems = [
     a: "Cruise Kauaʻi connects local drivers already making a trip with riders who need to get somewhere along the way. Drivers post their rides with a date, time, and route. Riders browse available rides and request a seat. Once confirmed, riders pay through the app and coordinate details via in-app chat."
   },
   {
+    q: "Is this the same as a taxi or rideshare like Uber?",
+    a: "No. Cruise Kauaʻi is a community carpooling platform — not a taxi or commercial rideshare service. Drivers are neighbors and community members sharing trips they were already planning to make. The cost riders pay is purely cost-sharing — helping cover gas and expenses for the trip, not a professional fare or a source of profit. Cruise Kauaʻi does not employ drivers; every driver is an independent community member choosing to share their ride."
+  },
+  {
     q: "Is Cruise Kauaʻi safe?",
     a: "The Cruise Kauaʻi community is made up of people who share a love for the island and a desire to help each other get around. Everyone who participates benefits from the system, so there's a strong incentive to treat others with aloha and respect. That said, users are encouraged to use their best judgment before booking with someone, review driver and rider profiles, and practice safe behavior during rides. Cruise Kauaʻi is not liable for any damages, losses, or injury arising from the use of the platform or any events related to a ride."
   },
@@ -57,10 +61,6 @@ const faqItems = [
   {
     q: "What if something goes wrong during a ride?",
     a: "If you feel unsafe or there's an emergency, call 911 first. For non-emergency concerns about a driver or passenger (rude behavior, no-show, etc.), please report it through the app or contact us directly. We take community reports seriously and will follow up."
-  },
-  {
-    q: "Is this the same as a taxi or rideshare like Uber?",
-    a: "No. Cruise Kauaʻi is a community carpooling platform — not a taxi or commercial rideshare service. Drivers are neighbors and community members making trips they were already planning. The shared cost helps cover gas, not a professional fare. This keeps prices low and keeps money in the local economy."
   },
 ];
 
