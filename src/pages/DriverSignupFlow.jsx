@@ -35,7 +35,10 @@ const STEPS = [
     content: (island) => (
       <div className="space-y-4">
         <p className="text-gray-700 text-base leading-relaxed">
-          Year, make, model, and how many seats you can offer.
+          First, tell us about yourself — add a profile photo, bio, age, and a username so riders know who they're riding with.
+        </p>
+        <p className="text-gray-700 text-base leading-relaxed">
+          Then add your vehicle: year, make, model, and how many seats you can offer.
         </p>
         <div className="grid grid-cols-1 gap-3">
           {[
