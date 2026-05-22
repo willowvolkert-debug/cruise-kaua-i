@@ -59,8 +59,8 @@ const getMiles = (loc) => {
 // IRS business mileage rate (2025) — cost-sharing above this may trigger TNC/commercial classification
 const IRS_BUSINESS_RATE = 0.725;
 
-// Base rate: $0.35/mile for wear & tear + $0.15/mile for time/gas = $0.50/mile
-const RATE_PER_MILE_LOCAL = 0.50;
+// Base rate: $0.35/mile for wear & tear + $0.03/mile for time/gas = $0.38/mile
+const RATE_PER_MILE_LOCAL = 0.38;
 const RATE_PER_MILE_VISITOR = 0.85;
 const BASE_FEE = 3; // base fee regardless of distance
 
