@@ -56,6 +56,9 @@ const getMiles = (loc) => {
   return zone ? LOCATION_MILES[zone] : null;
 };
 
+// IRS business mileage rate (2025) — cost-sharing above this may trigger TNC/commercial classification
+const IRS_BUSINESS_RATE = 0.725;
+
 // Base rate: $0.35/mile for wear & tear + $0.15/mile for time/gas = $0.50/mile
 const RATE_PER_MILE_LOCAL = 0.50;
 const RATE_PER_MILE_VISITOR = 0.85;
@@ -100,7 +103,24 @@ export function getRouteCap(from, to) {
 
 export function getPricingInfo(from, to) {
   const suggestion = suggestPrice(from, to);
-  const cap = getRouteCap(from, to);
+  const routeCap = getRouteCap(from, to);
+
+  // IRS business rate cap — always enforced as the legal ceiling
+  let irsCap = null;
+  if (suggestion) {
+    irsCap = Math.round(suggestion.distance * IRS_BUSINESS_RATE);
+  }
+
+  // Use the lower of the hardcoded route cap or the IRS cap for locals
+  // Visitors are capped at IRS rate too (they shouldn't exceed business rate either)
+  const cap = routeCap
+    ? {
+        local: irsCap !== null ? Math.min(routeCap.local, irsCap) : routeCap.local,
+        visitor: irsCap !== null ? Math.min(routeCap.visitor, irsCap) : routeCap.visitor,
+      }
+    : irsCap !== null
+    ? { local: irsCap, visitor: irsCap }
+    : null;
 
   // Ensure suggestion never exceeds the cap
   if (suggestion && cap) {

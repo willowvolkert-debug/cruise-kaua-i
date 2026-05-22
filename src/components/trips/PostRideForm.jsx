@@ -940,7 +940,7 @@ export default function PostRideForm({ island = "Kauai" }) {
                   {priceCapWarning && (
                     <div className="flex items-start gap-2 text-amber-700 text-xs mt-1">
                       <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                      <span>price cap for this route: local <strong>${priceCapWarning.local}</strong> / visitor <strong>${priceCapWarning.visitor}</strong>. pricing above this will be flagged.</span>
+                      <span>IRS business rate cap for this route: local <strong>${priceCapWarning.local}</strong> / visitor <strong>${priceCapWarning.visitor}</strong>. pricing above this may be considered a commercial transaction.</span>
                     </div>
                   )}
                   <div className="flex gap-2 mt-2">
