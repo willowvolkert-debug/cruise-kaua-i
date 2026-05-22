@@ -170,7 +170,7 @@ export default function RiderSignupFlow() {
           <span className="text-3xl">🙋</span>
           <h1 className="text-2xl font-extrabold tracking-tight">Get Around {islandKey} for Less</h1>
         </div>
-        <p className="text-amber-100 text-sm">Skip the rental car stress. Find a local driver heading your way and ride affordably across the island.</p>
+        <p className="text-amber-100 text-sm">Skip the rental car stress. Find a local driver heading your way and ride affordably across {islandKey}.</p>
       </div>
 
       {/* Progress bar */}

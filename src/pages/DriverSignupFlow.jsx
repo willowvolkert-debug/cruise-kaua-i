@@ -9,6 +9,7 @@ const STEPS = [
   {
     id: "why",
     title: "Cruise needs you!",
+    titleFn: (island) => `Cruise ${island} needs you!`,
     content: (island) => (
       <div className="space-y-4">
         <p className="text-gray-700 text-base leading-relaxed">
@@ -190,7 +191,7 @@ export default function DriverSignupFlow() {
       {/* Step content */}
       <div className="max-w-lg mx-auto px-6 pb-8">
         <div className="mb-6">
-          <h2 className="text-xl font-extrabold text-secondary mb-4">{currentStep.title}</h2>
+          <h2 className="text-xl font-extrabold text-secondary mb-4">{currentStep.titleFn ? currentStep.titleFn(islandKey) : currentStep.title}</h2>
           {currentStep.content(islandKey)}
         </div>
 
