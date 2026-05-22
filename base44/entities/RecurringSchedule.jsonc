@@ -59,6 +59,13 @@
         "type": "string"
       },
       "description": "Dates that the driver has confirmed"
+    },
+    "notification_sent_dates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Dates for which the community ride-posted notification email has already been sent (to avoid duplicates)"
     }
   },
   "required": [

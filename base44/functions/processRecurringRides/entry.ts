@@ -62,6 +62,11 @@ Deno.serve(async (req) => {
     const in48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
     // 24 hours from now (deadline: if not confirmed by this point, delete the ride)
     const in24h = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    // 3 days from now (window for sending community notification)
+    const in3days = new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000);
+    const in4days = new Date(today.getTime() + 4 * 24 * 60 * 60 * 1000);
+
+    const allUsers = await base44.asServiceRole.entities.User.list();
 
     const appUrl = 'https://cruisekauai.org';
 
@@ -125,7 +130,66 @@ Deno.serve(async (req) => {
           ridesPosted++;
         }
 
-        // ── STEP 2: Send confirmation email when ride is within 48 hours ──
+        // ── STEP 2: Send community notification email exactly 3 days before the ride ──
+        const notificationSent = (schedule.notification_sent_dates || []).includes(dateStr);
+        const rideIn3days = rideDate >= in3days && rideDate < in4days;
+        if (!notificationSent && rideIn3days && existingRide) {
+          const rideForEmail = existingRide;
+          const recipients = allUsers.filter(u => u.email && u.id !== schedule.user_id);
+          const BATCH_SIZE = 5;
+          const DELAY_MS = 1000;
+          for (let i = 0; i < recipients.length; i += BATCH_SIZE) {
+            const batch = recipients.slice(i, i + BATCH_SIZE);
+            await Promise.all(batch.map(u => {
+              const firstName = u.full_name?.split(' ')[0] || 'there';
+              return base44.asServiceRole.integrations.Core.SendEmail({
+                to: u.email,
+                subject: `New ride available: ${trip.departure_location} → ${trip.destination} on ${dateStr}`,
+                body: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#f5f0e8;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f0e8;padding:32px 16px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+        <tr><td align="center" style="padding:32px 24px 20px;border-bottom:1px solid #f0ebe0;">
+          <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kaua'i" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #e8742a;display:block;margin:0 auto 10px;" />
+          <div style="font-family:Georgia,serif;font-size:1.1rem;font-weight:700;color:#1a1a1a;">Cruise Kaua'i</div>
+        </td></tr>
+        <tr><td style="padding:32px 32px 24px;">
+          <h1 style="font-family:Georgia,serif;font-size:1.6rem;font-weight:700;color:#1a1a1a;margin:0 0 12px;">Aloha, ${firstName}! 🤙</h1>
+          <p style="font-size:0.95rem;line-height:1.7;color:#444;margin:0 0 20px;">A driver in your community just posted a ride — there may be a seat available for you!</p>
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:#faf7f2;border:1px solid #ede5d4;border-radius:12px;margin:0 0 20px;">
+            <tr><td style="padding:16px 20px;border-bottom:1px solid #ede5d4;"><span style="font-size:1.1rem;margin-right:10px;">📍</span><strong>Route:</strong> ${trip.departure_location} → ${trip.destination}</td></tr>
+            <tr><td style="padding:16px 20px;border-bottom:1px solid #ede5d4;"><span style="font-size:1.1rem;margin-right:10px;">📅</span><strong>Date:</strong> ${dateStr} at ${trip.departure_time}</td></tr>
+            <tr><td style="padding:16px 20px;border-bottom:1px solid #ede5d4;"><span style="font-size:1.1rem;margin-right:10px;">🪑</span><strong>Seats available:</strong> ${trip.seats_available}</td></tr>
+            <tr><td style="padding:16px 20px;"><span style="font-size:1.1rem;margin-right:10px;">🚗</span><strong>Driver:</strong> @${user.username || user.full_name}</td></tr>
+          </table>
+          <p style="font-size:0.95rem;line-height:1.7;color:#444;margin:0 0 24px;">Need a ride that day? Open the app to view details and request a seat.</p>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr><td align="center" style="padding:8px 0;">
+              <a href="https://cruisekauai.org/Trips" style="display:inline-block;background:#e8742a;color:#ffffff;text-decoration:none;font-weight:600;font-size:1rem;padding:14px 36px;border-radius:50px;">See Available Rides →</a>
+            </td></tr>
+          </table>
+        </td></tr>
+        <tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:20px 32px;text-align:center;">
+          <p style="font-family:Georgia,serif;font-size:0.95rem;color:#888;font-style:italic;margin:0 0 8px;">Mahalo nui loa 🌺</p>
+          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0;">— The Cruise Kaua'i Team · <a href="https://cruisekauai.org/" style="color:#e8742a;text-decoration:none;">cruisekauai.org</a></p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>`
+              }).catch(() => null);
+            }));
+            if (i + BATCH_SIZE < recipients.length) await new Promise(r => setTimeout(r, DELAY_MS));
+          }
+          await base44.asServiceRole.entities.RecurringSchedule.update(schedule.id, {
+            notification_sent_dates: [...(schedule.notification_sent_dates || []), dateStr]
+          });
+          schedule.notification_sent_dates = [...(schedule.notification_sent_dates || []), dateStr];
+          emailsSent++;
+        }
+
+        // ── STEP 4: Send confirmation email when ride is within 48 hours ──
         if (!confirmationSent && rideDate <= in48h && rideDate >= today) {
           const confirmUrl = `${appUrl}/ConfirmRide?schedule_id=${schedule.id}&date=${dateStr}&trip_name=${encodeURIComponent(schedule.trip_name)}`;
           await base44.asServiceRole.integrations.Core.SendEmail({
@@ -155,7 +219,7 @@ Deno.serve(async (req) => {
           emailsSent++;
         }
 
-        // ── STEP 3: Delete ride if 24hr window passed and not confirmed ──
+        // ── STEP 5: Delete ride if 24hr window passed and not confirmed ──
         if (confirmationSent && !isConfirmed && rideDate < in24h && rideDate >= today) {
           // Find and delete the ride
           const rideToDelete = existingRides.find(r =>
@@ -170,7 +234,7 @@ Deno.serve(async (req) => {
           }
         }
 
-        // ── STEP 4: Cleanup past specific_dates ──
+        // ── STEP 6: Cleanup past specific_dates ──
         if (schedule.schedule_type === 'specific_dates' && rideDate < today) {
           const remaining = (schedule.specific_dates || []).filter(d => d !== dateStr);
           await base44.asServiceRole.entities.RecurringSchedule.update(schedule.id, {
