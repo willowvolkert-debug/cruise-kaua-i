@@ -23,14 +23,16 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
       
       setIsLoading(true);
       try {
-        // Use passenger info from booking — no need to list all users
+        // Fetch full user profile to get pic, age, etc.
+        const allUsers = await base44.asServiceRole.entities.User.list();
+        const rider = allUsers.find(u => u.id === booking.passenger_id);
         setRiderProfile({
-          profile_picture_url: booking.passenger_profile_picture_url || null,
-          bio: booking.passenger_bio || null,
-          gender: booking.passenger_gender || null,
-          age: booking.passenger_age || null,
-          preferences_chattiness: booking.passenger_preferences_chattiness || null,
-          preferences_scents: booking.passenger_preferences_scents || null,
+          profile_picture_url: rider?.profile_picture_url || booking.passenger_profile_picture_url || null,
+          bio: rider?.bio || booking.passenger_bio || null,
+          gender: rider?.gender || booking.passenger_gender || null,
+          age: rider?.age || booking.passenger_age || null,
+          preferences_chattiness: rider?.preferences_chattiness || booking.passenger_preferences_chattiness || null,
+          preferences_scents: rider?.preferences_scents || booking.passenger_preferences_scents || null,
         });
 
         const allRatings = await base44.entities.Rating.list();

@@ -95,11 +95,11 @@ export default function DriverRideModal({ isOpen, onClose, ride, bookings = [], 
                     recipient_name: 'Admin',
                     subject: `Driver Cancelled Ride - Refunds Needed`,
                     message: `
-DRIVER CANCELLED RIDE - MANUAL REFUNDS NEEDED
+                    DRIVER CANCELLED RIDE - MANUAL REFUNDS NEEDED
 
-Driver: ${ride.driver_name}
-Ride: ${ride.departure_location} → ${ride.destination}
-Date: ${format(new Date(ride.departure_date), "EEE, MMM d, yyyy")} at ${formatTime12Hour(ride.departure_time)}
+                    Driver: ${ride.driver_name}
+                    Ride: ${ride.departure_location} → ${ride.destination}
+                    Date: ${format(new Date(ride.departure_date + 'T12:00:00'), "EEE, MMM d, yyyy")} at ${formatTime12Hour(ride.departure_time)}
 
 Affected Riders:
 ${confirmedBookings.map(b => `- ${b.passenger_name}: $${b.total_amount?.toFixed(2)}`).join('\n')}
@@ -287,7 +287,7 @@ Please process full refunds for all affected riders.
                             <div className="space-y-4">
                                 <div className="flex items-center gap-2 text-sm text-gray-600">
                                     <Calendar className="w-4 h-4" />
-                                    <span>{ride.departure_date ? format(new Date(ride.departure_date), "EEE, MMM d, yyyy") : 'TBD'}</span>
+                                    <span>{ride.departure_date ? format(new Date(ride.departure_date + 'T12:00:00'), "EEE, MMM d, yyyy") : 'TBD'}</span>
                                     <Clock className="w-4 h-4 ml-2" />
                                     <span>{formatTime12Hour(ride.departure_time)}</span>
                                 </div>
