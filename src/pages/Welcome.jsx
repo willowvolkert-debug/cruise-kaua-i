@@ -99,9 +99,12 @@ export default function WelcomePage() {
           {config.heroSubtitle || "a community-based ridesharing app to reduce traffic on kauaʻi"}
         </p>
         {config.recruitingDrivers && (
-          <div className="inline-flex items-center gap-2 bg-amber-400 text-amber-900 font-bold px-5 py-2 rounded-full text-sm shadow-lg animate-pulse mt-3">
+          <button
+            onClick={handleDriverSignup}
+            className="inline-flex items-center gap-2 bg-amber-400 text-amber-900 font-bold px-5 py-2 rounded-full text-sm shadow-lg animate-pulse mt-3 hover:bg-amber-300 transition-colors cursor-pointer"
+          >
             🚗 Now Recruiting Drivers on Oʻahu!
-          </div>
+          </button>
         )}
         <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6 w-full max-w-xs mx-auto">
           <Button
@@ -114,8 +117,7 @@ export default function WelcomePage() {
           <Button
             onClick={handleExplore}
             size="lg"
-            variant="outline"
-            className="border-white/50 text-white hover:bg-white/10 font-medium px-8 rounded-full"
+            className="bg-transparent border-2 border-white text-white hover:bg-white/10 font-medium px-8 rounded-full"
           >
             Browse Rides →
           </Button>
@@ -129,10 +131,11 @@ export default function WelcomePage() {
           style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)' }}
         >
           <p className="text-white/60 text-xs font-bold uppercase tracking-widest mb-1">WE GET IT...</p>
-          <h2 className="text-xl md:text-2xl font-extrabold text-white mb-5">
-            Transportation is tough on {config.islandName || "kauaʻi"}
+          <h2 className="text-xl md:text-2xl font-extrabold text-white mb-4">
+            Transportation is tough<br />in Hawaiʻi
           </h2>
-          <div className="grid grid-cols-2 gap-3">
+          {/* Icons first */}
+          <div className="grid grid-cols-2 gap-3 mb-4">
             {[
               { emoji: "⛽", label: "expensive gas" },
               { emoji: "🚗", label: "loads of traffic" },
@@ -145,6 +148,10 @@ export default function WelcomePage() {
               </div>
             ))}
           </div>
+          {/* Body text below */}
+          <p className="text-white/70 text-sm leading-relaxed">
+            Getting around the island is a challenge for locals and visitors.
+          </p>
         </div>
       </div>
 
@@ -193,7 +200,7 @@ export default function WelcomePage() {
           <div className="text-center space-y-2">
             <p className="text-xs font-bold tracking-[0.2em] uppercase text-accent">join the movement</p>
             <h2 className="text-3xl font-extrabold text-gray-900">Get Involved</h2>
-            <p className="text-gray-600 text-sm max-w-md mx-auto">Carpooling is a cultural shift — and we need everyone's help to make it a reality.</p>
+            <p className="text-gray-600 text-sm max-w-md mx-auto">Hawaiʻi roads should be shared, but carpooling is a cultural shift. We need everyoneʻs help to make it a reality.</p>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
             <div className={`rounded-3xl p-6 shadow-md border space-y-3 ${config.recruitingDrivers ? 'border-amber-300 ring-2 ring-amber-200 bg-white' : 'bg-white border-gray-100'}`}>
@@ -237,7 +244,7 @@ export default function WelcomePage() {
             {[
               { icon: <Shield className="w-7 h-7 text-green-700 mx-auto" />, label: "Verified Drivers", sub: "License checks required" },
               { icon: <CheckCircle className="w-7 h-7 text-blue-600 mx-auto" />, label: "Secure Payments", sub: "Powered by Stripe" },
-              { icon: <Leaf className="w-7 h-7 text-green-600 mx-auto" />, label: "Eco-Friendly", sub: "Fewer cars on the road" },
+              { icon: <Leaf className="w-7 h-7 text-green-600 mx-auto" />, label: "ʻĀina-Oriented", sub: "Fewer cars on the road" },
             ].map(({ icon, label, sub }) => (
               <div key={label} className="space-y-1">
                 {icon}
@@ -252,7 +259,7 @@ export default function WelcomePage() {
       {/* ── FINAL CTA ── */}
       <section className="px-4 py-10 text-white text-center" style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)' }}>
         <div className="max-w-sm mx-auto space-y-6">
-          <h2 className="text-3xl font-extrabold leading-tight">Ready to ride?</h2>
+          <h2 className="text-3xl font-extrabold leading-tight text-white">Ready to ride?</h2>
           <p className="text-green-100 text-base leading-relaxed">
             🤙 Mahalo for being a part of the movement. Every ride shared is a step toward a better Hawaiʻi.
           </p>
@@ -267,8 +274,7 @@ export default function WelcomePage() {
             <Button
               onClick={handleExplore}
               size="lg"
-              variant="outline"
-              className="border-white/50 text-white hover:bg-white/10 rounded-full text-sm"
+              className="bg-transparent border-2 border-white text-white hover:bg-white/10 rounded-full text-sm"
             >
               Browse Rides Without Signing Up →
             </Button>
@@ -360,7 +366,14 @@ export default function WelcomePage() {
                         </div>
                       </div>
                     ))}
-                  <p className="text-xs text-center text-gray-400 pt-2">sign up to book a ride!</p>
+                  <div className="text-center pt-2">
+                    <button
+                      onClick={handleSignUp}
+                      className="text-sm font-semibold text-primary hover:text-primary/80 underline underline-offset-2 transition-colors"
+                    >
+                      sign up to book a ride →
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
