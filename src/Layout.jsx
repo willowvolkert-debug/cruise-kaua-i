@@ -56,7 +56,7 @@ const getNavigationItems = (isExploreMode) => {
 
   baseItems.push(
     {
-      title: "about us",
+      title: "FAQ & about us",
       url: createPageUrl("AboutUs") + (isExploreMode ? "?explore=true" : ""),
       icon: Users,
     },
