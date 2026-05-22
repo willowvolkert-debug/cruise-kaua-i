@@ -157,7 +157,7 @@ export default function DriverSignupFlow() {
   const isFirst = step === 0;
 
   const handleSignUp = () => {
-    base44.auth.redirectToLogin(createPageUrl("Account") + "?driver_setup=true");
+    base44.auth.redirectToLogin(createPageUrl("Account") + "?setup=true");
   };
 
   const handleExplore = () => {
