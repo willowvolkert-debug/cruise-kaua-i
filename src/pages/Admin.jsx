@@ -11,6 +11,7 @@ import { ShieldCheck, X, CheckCircle, Clock, Users, AlertCircle, Eye, Car, Messa
 import { Textarea } from "@/components/ui/textarea";
 import AdminMessageModal from "../components/admin/AdminMessageModal";
 import UserAccountView from "../components/admin/UserAccountView";
+import TransactionLedger from "../components/admin/TransactionLedger";
 import {
   Dialog,
   DialogContent,
@@ -1066,6 +1067,9 @@ export default function AdminPage() {
         )}
 
 
+
+        {/* Transaction Ledger */}
+        <TransactionLedger />
 
         {/* All Users */}
         <Card className="shadow-md bg-white border-gray-200 rounded-3xl">
