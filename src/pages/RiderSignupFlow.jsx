@@ -168,7 +168,7 @@ export default function RiderSignupFlow() {
       <div className="bg-gradient-to-b from-amber-700 to-amber-500 text-white px-6 py-8 text-center">
         <div className="flex items-center justify-center gap-3 mb-2">
           <span className="text-3xl">🙋</span>
-          <h1 className="text-2xl font-extrabold tracking-tight">Get Around Kaua'i for Less</h1>
+          <h1 className="text-2xl font-extrabold tracking-tight">Get Around {islandKey} for Less</h1>
         </div>
         <p className="text-amber-100 text-sm">Skip the rental car stress. Find a local driver heading your way and ride affordably across the island.</p>
       </div>
@@ -220,7 +220,7 @@ export default function RiderSignupFlow() {
 
         {isLast && (
           <div className="mt-3 space-y-2">
-            <p className="text-center text-xs text-gray-400">Community-verified drivers. Transparent pricing. Built for Kaua'i locals and long-term visitors.</p>
+            <p className="text-center text-xs text-gray-400">Community-verified drivers. Transparent pricing. Built for {islandKey} locals and long-term visitors.</p>
             <button
               onClick={handleExplore}
               className="w-full text-sm text-gray-500 hover:text-gray-700 underline underline-offset-2"

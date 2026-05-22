@@ -8,7 +8,7 @@ import { ChevronRight, ChevronLeft, Car, DollarSign, Users, Shield, CheckCircle,
 const STEPS = [
   {
     id: "why",
-    title: "Cruise Kauaʻi needs you!",
+    title: "Cruise needs you!",
     content: (island) => (
       <div className="space-y-4">
         <p className="text-gray-700 text-base leading-relaxed">
