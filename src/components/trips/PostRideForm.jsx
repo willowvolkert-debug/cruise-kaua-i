@@ -940,7 +940,10 @@ export default function PostRideForm({ island = "Kauai" }) {
                   {priceCapWarning && (
                     <div className="flex items-start gap-2 text-amber-700 text-xs mt-1">
                       <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                      <span>IRS business rate cap for this route: local <strong>${priceCapWarning.local}</strong> / visitor <strong>${priceCapWarning.visitor}</strong>. pricing above this may be considered a commercial transaction.</span>
+                      <span>
+                        IRS business rate max for {pricingSuggestion.distance} miles:{" "}
+                        <strong>${priceCapWarning.local}</strong> — keeping prices at or below this helps ensure ride-sharing stays cost-sharing, not commercial.
+                      </span>
                     </div>
                   )}
                   <div className="flex gap-2 mt-2">
