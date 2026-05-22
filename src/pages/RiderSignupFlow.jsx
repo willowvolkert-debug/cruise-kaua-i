@@ -153,7 +153,7 @@ export default function RiderSignupFlow() {
   const isFirst = step === 0;
 
   const handleSignUp = () => {
-    base44.auth.redirectToLogin(createPageUrl("Account"));
+    base44.auth.redirectToLogin(createPageUrl("Account") + "?setup=true");
   };
 
   const handleExplore = () => {

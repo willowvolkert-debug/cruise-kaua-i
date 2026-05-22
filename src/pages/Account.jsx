@@ -114,6 +114,10 @@ export default function AccountPage() {
         if (urlParams.get('show_phone_prompt') === 'true') {
             setShowPhonePrompt(true);
         }
+        // If redirected from signup flow, force open the profile quiz
+        if (urlParams.get('setup') === 'true') {
+            setShowProfileQuiz(true);
+        }
         
         loadData();
         if ('Notification' in window) {
