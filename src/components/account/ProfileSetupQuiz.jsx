@@ -19,6 +19,7 @@ const BASE_STEPS = [
     { value: "prefer_not_to_say", label: "Prefer not to say" },
   ]},
   { id: "bio", title: "Tell us a little about yourself", subtitle: "A sentence or two about who you are and why you're using Cruise Kauaʻi.", type: "textarea", placeholder: "e.g. Local Kauaʻi resident, love hiking and beach days!", field: "bio" },
+  { id: "phone", title: "What's your phone number?", subtitle: "Optional. We'll text you when someone messages you or books your ride. We'll never send promotions.", type: "phone", field: "phone_number" },
   { id: "profile_picture", title: "Add a profile photo", subtitle: "A clear photo of your face helps build trust in our community.", type: "photo", field: "profile_picture_url" },
   { id: "license", title: "Verify your driver's license", subtitle: "Upload both sides of your license so our team can verify your identity. Required to book or post rides.", type: "license", field: "license" },
   { id: "driver_choice", title: "Are you interested in driving?", subtitle: "Drivers earn money by sharing rides they're already making. Riders book seats on posted trips.", type: "driver_choice", field: "driver_choice" },
@@ -68,7 +69,7 @@ export default function ProfileSetupQuiz({ user, onComplete }) {
   const [error, setError] = useState("");
 
   // Profile answers
-  const [answers, setAnswers] = useState({ username: user?.username || "", age: user?.age || "", gender: user?.gender || "", bio: user?.bio || "", profile_picture_url: user?.profile_picture_url || "" });
+  const [answers, setAnswers] = useState({ username: user?.username || "", age: user?.age || "", gender: user?.gender || "", bio: user?.bio || "", phone_number: user?.phone_number || "", profile_picture_url: user?.profile_picture_url || "" });
   const [photoFile, setPhotoFile] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(user?.profile_picture_url || "");
   const fileInputRef = useRef();
@@ -105,7 +106,9 @@ export default function ProfileSetupQuiz({ user, onComplete }) {
 
   const validate = () => {
     const val = answers[current.field];
-    if (current.type === "photo") {
+    if (current.type === "phone") {
+      return true; // optional step
+    } else if (current.type === "photo") {
       if (!photoFile && !user?.profile_picture_url) { setError("Oops! You have to complete this step before moving on."); return false; }
     } else if (current.type === "license") {
       if (!licenseFront || !licenseBack) { setError("Please upload both sides of your license."); return false; }
@@ -136,6 +139,8 @@ export default function ProfileSetupQuiz({ user, onComplete }) {
     await base44.auth.updateMe({
       username: answers.username, age: Number(answers.age), gender: answers.gender, bio: answers.bio,
       profile_picture_url: profilePicUrl,
+      phone_number: answers.phone_number || '',
+      sms_notifications_enabled: !!(answers.phone_number),
       profile_complete: !!(answers.username && answers.age && answers.gender && answers.bio && profilePicUrl),
       has_completed_profile_quiz: true,
     });
@@ -296,6 +301,21 @@ export default function ProfileSetupQuiz({ user, onComplete }) {
           <p className="text-xs text-gray-400 font-medium mb-1 uppercase tracking-widest">{step + 1} of {steps.length}</p>
           <h2 className="text-xl font-bold text-secondary mb-1">{current.title}</h2>
           <p className="text-sm text-gray-500 mb-5 leading-relaxed">{current.subtitle}</p>
+
+          {/* PHONE */}
+          {current.type === "phone" && (
+            <div className="space-y-3">
+              <Input
+                type="tel"
+                value={answers.phone_number}
+                onChange={(e) => setAnswers({ ...answers, phone_number: e.target.value })}
+                placeholder="e.g. (808) 555-1234"
+                className="rounded-2xl text-base py-5"
+                autoFocus
+              />
+              <p className="text-xs text-gray-400 text-center">optional — you can skip this</p>
+            </div>
+          )}
 
           {/* TEXT */}
           {current.type === "text" && (

@@ -132,8 +132,8 @@ export default function AccountPage() {
             
             const currentUser = await base44.auth.me();
             setUser(currentUser);
-            // Show quiz if profile not complete and quiz hasn't been done
-            if (!currentUser.has_completed_profile_quiz || currentUser.role === 'admin') {
+            // Show quiz only if user hasn't completed it
+            if (!currentUser.has_completed_profile_quiz) {
                 setShowProfileQuiz(true);
             }
             setEditData({
