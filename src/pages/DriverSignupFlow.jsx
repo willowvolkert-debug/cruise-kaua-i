@@ -15,7 +15,7 @@ const STEPS = [
           Just the basics — name, contact, and a quick profile photo.
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 space-y-2">
-          <p className="font-bold text-amber-800">The problemS we're solving:</p>
+          <p className="font-bold text-amber-800">The problems we're solving:</p>
           <ul className="text-amber-700 text-sm space-y-1">
             <li>⛽ Gas is expensive in Hawaiʻi</li>
             <li>🚗 Traffic is getting worse every year</li>
