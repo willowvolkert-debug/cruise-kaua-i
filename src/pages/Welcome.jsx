@@ -11,14 +11,14 @@ import { createPageUrl } from "@/utils";
 import { getIslandFromDomain, ISLAND_CONFIG } from "@/lib/islandConfig";
 import WelcomeTutorialModal from "@/components/tutorial/WelcomeTutorialModal";
 
-// Beautiful Hawaii highway/landscape photos from Unsplash (free to use)
+// Authentic Kauai photos from Unsplash (free to use)
 const PHOTOS = {
-  hero: "https://images.unsplash.com/photo-1542259009477-d625272157b7?w=1600&q=80", // Napali coast Kauai
-  kauaiMountains: "https://images.unsplash.com/photo-1604999333679-b86d54738315?w=1200&q=80", // Kauai green mountains & coast
-  jungleRoad: "https://images.unsplash.com/photo-1559494007-9f5847c49d94?w=1200&q=80", // Tropical jungle road
-  napaliCoast: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80", // Coastal cliffs road
-  coastalRoad: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=1200&q=80", // Hawaii aerial valley
-  hanaleiValley: "https://images.unsplash.com/photo-1527840052938-7f0c75b27b2a?w=1200&q=80", // Kauai beach aerial
+  hero: "https://images.unsplash.com/photo-1598135753163-6167c1a1ad65?w=1600&q=80", // Na Pali coast cliffs Kauai
+  kauaiMountains: "https://images.unsplash.com/photo-1598135753163-6167c1a1ad65?w=1200&q=80", // Na Pali coast aerial
+  jungleRoad: "https://images.unsplash.com/photo-1572782252655-9c5369db2479?w=1200&q=80", // Kauai jungle road winding
+  napaliCoast: "https://images.unsplash.com/photo-1570641963303-92ce4845ed4c?w=1200&q=80", // Na Pali coast cliffs ocean
+  coastalRoad: "https://images.unsplash.com/photo-1591073113125-e46713c829ed?w=1200&q=80", // Kauai green mountains road
+  hanaleiValley: "https://images.unsplash.com/photo-1542259009477-d625272157b7?w=1200&q=80", // Hanalei valley Kauai aerial
 };
 
 export default function WelcomePage() {
