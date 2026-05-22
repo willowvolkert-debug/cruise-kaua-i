@@ -15,7 +15,7 @@ const STEPS = [
           Name, photo, and a little about yourself — drivers appreciate knowing who's riding.
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 space-y-2">
-          <p className="font-bold text-amber-800">The problemS riders face:</p>
+          <p className="font-bold text-amber-800">The problems riders face:</p>
           <ul className="text-amber-700 text-sm space-y-1">
             <li>🚗 Rental cars cost $80–$200/day</li>
             <li>🚌 Bus routes are limited and slow</li>
