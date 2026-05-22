@@ -52,7 +52,7 @@ const faqItems = [
   },
   {
     q: "What if I'm having technical difficulties?",
-    a: "If you're experiencing issues with the app — like a payment not going through, a booking not showing up, or trouble uploading documents — please use the Contact Us page to reach out. Include as much detail as possible (what you were trying to do, what happened) and we'll get back to you as soon as we can."
+    a: "If you're experiencing issues with the app — like a payment not going through, a booking not showing up, or trouble uploading documents — please use the Contact Us page to reach out. Include as much detail as possible (what you were trying to do, what happened), and attach screenshots of the issue if possible. We'll get back to you as soon as we can."
   },
   {
     q: "What if something goes wrong during a ride?",

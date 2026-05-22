@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Paperclip, X } from "lucide-react";
 
 export default function ContactUsPage() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -17,6 +17,8 @@ export default function ContactUsPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [screenshots, setScreenshots] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -42,18 +44,36 @@ export default function ContactUsPage() {
 
     setIsSubmitting(true);
     try {
+      // Upload screenshots first
+      let screenshotUrls = [];
+      if (screenshots.length > 0) {
+        setIsUploading(true);
+        screenshotUrls = await Promise.all(
+          screenshots.map(async (file) => {
+            const { file_url } = await base44.integrations.Core.UploadFile({ file });
+            return file_url;
+          })
+        );
+        setIsUploading(false);
+      }
+
+      const messageWithScreenshots = screenshotUrls.length > 0
+        ? `${formData.message}\n\n[Screenshots attached: ${screenshotUrls.join(', ')}]`
+        : formData.message;
+
       await base44.entities.ContactInquiry.create({
         user_id: currentUser.id,
         user_name: currentUser.full_name,
         user_email: currentUser.email,
         subject: formData.subject,
-        message: formData.message,
+        message: messageWithScreenshots,
         priority: formData.priority,
         status: 'pending'
       });
 
       setSubmitted(true);
       setFormData({ subject: '', message: '', priority: 'medium' });
+      setScreenshots([]);
 
       setTimeout(() => {
         setSubmitted(false);
@@ -132,12 +152,43 @@ export default function ContactUsPage() {
                 />
               </div>
 
+              <div className="space-y-2">
+                <Label>screenshots (optional)</Label>
+                <p className="text-xs text-gray-500">Attach screenshots if you're reporting a technical issue.</p>
+                <label className="flex items-center gap-2 cursor-pointer border border-dashed border-gray-300 rounded-2xl px-4 py-3 hover:bg-gray-50 transition-colors">
+                  <Paperclip className="w-4 h-4 text-gray-400" />
+                  <span className="text-sm text-gray-500">attach screenshots</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="hidden"
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files);
+                      setScreenshots(prev => [...prev, ...files].slice(0, 5));
+                    }}
+                  />
+                </label>
+                {screenshots.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {screenshots.map((file, i) => (
+                      <div key={i} className="flex items-center gap-1 bg-gray-100 rounded-full px-3 py-1 text-xs text-gray-600">
+                        <span className="truncate max-w-32">{file.name}</span>
+                        <button onClick={() => setScreenshots(prev => prev.filter((_, idx) => idx !== i))}>
+                          <X className="w-3 h-3 text-gray-400 hover:text-red-500" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <Button
                 onClick={handleSubmit}
-                disabled={isSubmitting}
+                disabled={isSubmitting || isUploading}
                 className="w-full bg-primary hover:bg-primary/90 rounded-2xl"
               >
-                {isSubmitting ? 'sending...' : 'send message'}
+                {isUploading ? 'uploading screenshots...' : isSubmitting ? 'sending...' : 'send message'}
               </Button>
             </CardContent>
           </Card>
