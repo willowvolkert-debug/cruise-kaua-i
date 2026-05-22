@@ -136,8 +136,8 @@ export default function WelcomePage() {
           style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)' }}
         >
           <p className="text-white/60 text-xs font-bold uppercase tracking-widest mb-1">WE GET IT...</p>
-          <h2 className="text-xl md:text-2xl font-extrabold text-white mb-4">
-            Transportation is tough<br />in Hawaiʻi
+          <h2 className="text-xl md:text-2xl font-extrabold text-white mb-4 whitespace-nowrap">
+            Transportation is tough in Hawaiʻi
           </h2>
           {/* Icons first */}
           <div className="grid grid-cols-2 gap-3 mb-4">
