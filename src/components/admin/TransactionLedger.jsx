@@ -25,10 +25,15 @@ export default function TransactionLedger() {
   const [expanded, setExpanded] = useState(true);
 
   useEffect(() => {
-    base44.entities.Transaction.list("-created_date", 100).then(txs => {
-      setTransactions(txs);
-      setIsLoading(false);
-    });
+    base44.entities.Transaction.list("-created_date", 100)
+      .then(txs => {
+        setTransactions(txs);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error("TransactionLedger error:", err);
+        setIsLoading(false);
+      });
   }, []);
 
   const failedCount = transactions.filter(tx =>
