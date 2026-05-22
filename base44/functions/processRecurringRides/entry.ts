@@ -117,7 +117,8 @@ Deno.serve(async (req) => {
             driver_license_state: user.drivers_license_state || 'HI',
             driver_vehicle_exterior_photo_url: user.vehicle_exterior_photo_url || null,
             driver_vehicle_interior_photo_urls: user.vehicle_interior_photo_urls || [],
-            status: 'active'
+            status: 'active',
+            is_recurring: true
           });
           // Track in our local list so we don't double-post within the same run
           existingRides.push({ ...newRide, driver_id: user.id, departure_date: dateStr, departure_location: trip.departure_location, destination: trip.destination });

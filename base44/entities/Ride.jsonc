@@ -36,6 +36,11 @@
       "default": false,
       "description": "Whether this is a last minute ride (within 2 hours)"
     },
+    "is_recurring": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this ride was auto-posted from a recurring schedule"
+    },
     "seats_available": {
       "type": "integer",
       "minimum": 1,
