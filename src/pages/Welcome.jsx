@@ -155,6 +155,15 @@ export default function WelcomePage() {
         </div>
       </div>
 
+      {/* ── PHOTO BREAK 1: Nā Pali Mountains ── */}
+      <div className="w-full h-56 md:h-72 overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1505852679233-d9fd70aff56d?w=1200&q=80"
+          alt="Nā Pali coast mountains"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
       {/* ── OUR SOLUTION ── */}
       <section className="px-4 py-8 bg-white">
         <div className="max-w-2xl mx-auto space-y-4">
@@ -171,6 +180,15 @@ export default function WelcomePage() {
         </div>
       </section>
 
+      {/* ── PHOTO BREAK 2: Haʻena Beach aerial ── */}
+      <div className="w-full h-56 md:h-72 overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1542259009477-d625272157b7?w=1200&q=80"
+          alt="Aerial view of Haʻena beach"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
       {/* ── HOW IT WORKS ── */}
       <section className="px-4 py-8" style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)' }}>
         <div className="max-w-2xl mx-auto space-y-6">
@@ -178,11 +196,10 @@ export default function WelcomePage() {
             <p className="text-xs font-bold tracking-[0.2em] uppercase text-green-400 mb-1">simple by design</p>
             <h2 className="text-3xl font-extrabold text-white">How it works</h2>
           </div>
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-3 gap-4 items-start">
             {[
               { emoji: "🚗", role: "Drivers", desc: "Offer rides on trips you're already taking. Cover your gas and vehicle costs while helping your neighbors." },
               { emoji: "🙋", role: "Riders", desc: "Find affordable rides from locals already heading your way. Just $5–$30 per ride." },
-              { emoji: "🌿", role: "The Island", desc: "Less cars on the road. More money in local pockets. More aloha all around." },
             ].map(({ emoji, role, desc }) => (
               <div key={role} className="bg-white/10 backdrop-blur rounded-3xl p-6 space-y-3 text-left">
                 <div className="text-4xl">{emoji}</div>
@@ -190,6 +207,10 @@ export default function WelcomePage() {
                 <p className="text-green-100 text-sm leading-relaxed">{desc}</p>
               </div>
             ))}
+            <div className="text-left px-2">
+              <h3 className="text-2xl font-extrabold text-white mb-2">Simple!</h3>
+              <p className="text-green-100 text-sm leading-relaxed">Less cars on the road & more money in localsʻ pockets.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -235,6 +256,15 @@ export default function WelcomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── PHOTO BREAK 3: Sunset ── */}
+      <div className="w-full h-56 md:h-72 overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&q=80"
+          alt="Hawaiian sunset"
+          className="w-full h-full object-cover"
+        />
+      </div>
 
       {/* ── TRUST BADGES ── */}
       <section className="px-4 py-8 bg-stone-50">
