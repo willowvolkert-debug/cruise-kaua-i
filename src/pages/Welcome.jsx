@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Shield, Users, Leaf, CheckCircle, MapPin, Calendar, RefreshCw } from "lucide-react";
+import { Users, CheckCircle, MapPin, Calendar, RefreshCw, Shield, Leaf } from "lucide-react";
 import { format, addDays, parseISO } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -10,16 +10,6 @@ import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { getIslandFromDomain, ISLAND_CONFIG } from "@/lib/islandConfig";
 import WelcomeTutorialModal from "@/components/tutorial/WelcomeTutorialModal";
-
-// Authentic Kauai photos from Unsplash (free to use)
-const PHOTOS = {
-  hero: "https://images.unsplash.com/photo-1598135753163-6167c1a1ad65?w=1600&q=80", // Na Pali coast cliffs Kauai
-  kauaiMountains: "https://images.unsplash.com/photo-1598135753163-6167c1a1ad65?w=1200&q=80", // Na Pali coast aerial
-  jungleRoad: "https://images.unsplash.com/photo-1572782252655-9c5369db2479?w=1200&q=80", // Kauai jungle road winding
-  napaliCoast: "https://images.unsplash.com/photo-1570641963303-92ce4845ed4c?w=1200&q=80", // Na Pali coast cliffs ocean
-  coastalRoad: "https://images.unsplash.com/photo-1591073113125-e46713c829ed?w=1200&q=80", // Kauai green mountains road
-  hanaleiValley: "https://images.unsplash.com/photo-1542259009477-d625272157b7?w=1200&q=80", // Hanalei valley Kauai aerial
-};
 
 export default function WelcomePage() {
   const navigate = useNavigate();
@@ -79,8 +69,6 @@ export default function WelcomePage() {
     <div className="min-h-screen bg-white overflow-x-hidden font-sans">
       <style>{`
         [data-sidebar="trigger"] { display: none !important; }
-        .welcome-section { padding: 80px 24px; }
-        @media (max-width: 768px) { .welcome-section { padding: 56px 20px; } }
       `}</style>
 
       {/* LOGIN BANNER */}
@@ -94,235 +82,166 @@ export default function WelcomePage() {
         </button>
       </div>
 
-      {/* ── HERO ── full-bleed photo with overlay text */}
-      <div className="relative h-[90vh] min-h-[560px] flex flex-col items-center justify-center text-center overflow-hidden">
+      {/* ── HERO ── dark green background, centered logo + title */}
+      <div
+        className="relative flex flex-col items-center justify-center text-center px-6 py-16"
+        style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 50%, #1a4a2e 100%)' }}
+      >
         <img
-          src={PHOTOS.hero}
-          alt="Hawaii coastline"
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
+          alt={`${config.appName} logo`}
+          className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-3xl shadow-2xl border-2 border-white/20 mb-6"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
-        <div className="relative z-10 px-6 max-w-2xl mx-auto space-y-6">
-          <img
-            src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
-            alt={`${config.appName} logo`}
-            className="w-28 h-28 md:w-36 md:h-36 object-cover rounded-2xl shadow-2xl border-2 border-white/40 mx-auto"
-          />
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-white drop-shadow-2xl leading-none">
-            {config.appName}
-          </h1>
-          <p className="text-lg md:text-xl text-white/90 font-medium leading-relaxed max-w-md mx-auto drop-shadow">
-            Connect with neighbors, split the cost, and reduce traffic on the island we all love.
-          </p>
-          {config.recruitingDrivers && (
-            <div className="inline-flex items-center gap-2 bg-amber-400 text-amber-900 font-bold px-5 py-2.5 rounded-full text-sm shadow-lg animate-pulse">
-              🚗 Now Recruiting Drivers on Oʻahu!
-            </div>
-          )}
-          <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-            <Button
-              onClick={handleSignUp}
-              size="lg"
-              className="bg-white text-green-900 hover:bg-white/90 font-bold px-8 py-4 text-base rounded-full shadow-xl"
-            >
-              Join the Community
-            </Button>
-            <Button
-              onClick={handleExplore}
-              size="lg"
-              variant="outline"
-              className="border-white/70 text-white hover:bg-white/10 font-medium px-8 py-4 text-base rounded-full"
-            >
-              Browse Rides →
-            </Button>
+        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-3 leading-tight">
+          {config.appName}
+        </h1>
+        <p className="text-base md:text-lg text-white/80 font-medium leading-relaxed max-w-xs mx-auto mb-2">
+          {config.heroSubtitle || "a community-based ridesharing app to reduce traffic on kauaʻi"}
+        </p>
+        {config.recruitingDrivers && (
+          <div className="inline-flex items-center gap-2 bg-amber-400 text-amber-900 font-bold px-5 py-2 rounded-full text-sm shadow-lg animate-pulse mt-3">
+            🚗 Now Recruiting Drivers on Oʻahu!
           </div>
-        </div>
-        {/* scroll hint */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/60 text-xs tracking-widest uppercase animate-bounce">
-          scroll ↓
+        )}
+        <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6 w-full max-w-xs mx-auto">
+          <Button
+            onClick={handleSignUp}
+            size="lg"
+            className="bg-white text-green-900 hover:bg-white/90 font-bold px-8 rounded-full shadow-xl"
+          >
+            Join the Community
+          </Button>
+          <Button
+            onClick={handleExplore}
+            size="lg"
+            variant="outline"
+            className="border-white/50 text-white hover:bg-white/10 font-medium px-8 rounded-full"
+          >
+            Browse Rides →
+          </Button>
         </div>
       </div>
 
-      {/* ── SECTION 1: The Problem — text left, photo right ── */}
-      <section className="welcome-section bg-stone-50">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <p className="text-xs font-bold tracking-[0.2em] uppercase text-primary">the reality</p>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
-              Transportation is tough<br />in Hawaiʻi.
-            </h2>
-            <p className="text-gray-600 text-lg leading-relaxed">
-              Expensive gas, heavy traffic, pricey car rentals, and a shortage of mechanics — getting around the island is a real challenge for locals and visitors alike.
-            </p>
-            <div className="grid grid-cols-2 gap-3 pt-2">
-              {[
-                { icon: "⛽", label: "Expensive gas" },
-                { icon: "🚗", label: "Heavy traffic" },
-                { icon: "💸", label: "Pricey car rentals" },
-                { icon: "🔧", label: "Mechanic shortage" },
-              ].map(({ icon, label }) => (
-                <div key={label} className="flex items-center gap-2 text-gray-700 text-sm font-medium">
-                  <span className="text-xl">{icon}</span>
-                  <span>{label}</span>
-                </div>
-              ))}
-            </div>
+      {/* ── WE GET IT section ── dark green card */}
+      <div className="px-4 py-6 bg-white">
+        <div
+          className="max-w-2xl mx-auto rounded-3xl p-6 md:p-8"
+          style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)' }}
+        >
+          <p className="text-white/60 text-xs font-bold uppercase tracking-widest mb-1">WE GET IT...</p>
+          <h2 className="text-xl md:text-2xl font-extrabold text-white mb-5">
+            Transportation is tough on {config.islandName || "kauaʻi"}
+          </h2>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { emoji: "⛽", label: "expensive gas" },
+              { emoji: "🚗", label: "loads of traffic" },
+              { emoji: "💸", label: "pricey car rentals" },
+              { emoji: "🔧", label: "mechanic shortage" },
+            ].map(({ emoji, label }) => (
+              <div key={label} className="flex items-center gap-2 bg-white/10 rounded-2xl px-4 py-3">
+                <span className="text-xl">{emoji}</span>
+                <span className="text-white text-sm font-medium">{label}</span>
+              </div>
+            ))}
           </div>
-          <div className="rounded-3xl overflow-hidden shadow-2xl aspect-[4/3]">
-            <img
-              src={PHOTOS.jungleRoad}
-              alt="Kauai jungle road"
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ── FULL-BLEED PHOTO DIVIDER 1 ── */}
-      <div className="relative h-64 md:h-96 overflow-hidden">
-        <img
-          src={PHOTOS.kauaiMountains}
-          alt="Kauai mountains and coastline"
-          className="w-full h-full object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-          <p className="text-white text-2xl md:text-4xl font-extrabold tracking-wide drop-shadow-lg text-center px-4 italic">
-            "sharing aloha, one ride at a time"
-          </p>
         </div>
       </div>
 
-      {/* ── SECTION 2: Our Solution — photo left, text right ── */}
-      <section className="welcome-section bg-white">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <div className="rounded-3xl overflow-hidden shadow-2xl aspect-[4/3] order-2 md:order-1">
-            <img
-              src={PHOTOS.coastalRoad}
-              alt="Hawaii coastal highway"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="space-y-6 order-1 md:order-2">
-            <p className="text-xs font-bold tracking-[0.2em] uppercase text-primary">our solution</p>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
-              Thatʻs why we built<br />{config.appName}.
-            </h2>
-            <p className="text-gray-600 text-lg leading-relaxed">
-              Our mission is to provide <strong>accessible & affordable transportation</strong> across the islands, and divert more money back into our local economy.
-            </p>
-            <p className="text-gray-500 text-base leading-relaxed">
-              We started on Kauaʻi to ease traffic, and have expanded to serve all islands — but keep our name to honor our roots. 🌿
-            </p>
-          </div>
+      {/* ── OUR SOLUTION ── */}
+      <section className="px-4 py-8 bg-white">
+        <div className="max-w-2xl mx-auto space-y-4">
+          <p className="text-xs font-bold tracking-[0.2em] uppercase text-primary">our solution</p>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">
+            Thatʻs why we built<br />{config.appName}.
+          </h2>
+          <p className="text-gray-600 text-base leading-relaxed">
+            Our mission is to provide <strong>accessible & affordable transportation</strong> across the islands, and divert more money back into our local economy.
+          </p>
+          <p className="text-gray-500 text-sm leading-relaxed">
+            We started on Kauaʻi to ease traffic, and have expanded to serve all islands — but keep our name to honor our roots. 🌿
+          </p>
         </div>
       </section>
 
-      {/* ── SECTION 3: How It Works ── centered, spacious */}
-      <section className="welcome-section bg-green-900 text-white">
-        <div className="max-w-4xl mx-auto text-center space-y-12">
-          <div className="space-y-3">
-            <p className="text-xs font-bold tracking-[0.2em] uppercase text-green-400">simple by design</p>
-            <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">How it works</h2>
+      {/* ── HOW IT WORKS ── */}
+      <section className="px-4 py-8" style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)' }}>
+        <div className="max-w-2xl mx-auto space-y-6">
+          <div className="text-center">
+            <p className="text-xs font-bold tracking-[0.2em] uppercase text-green-400 mb-1">simple by design</p>
+            <h2 className="text-3xl font-extrabold text-white">How it works</h2>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-4">
             {[
               { emoji: "🚗", role: "Drivers", desc: "Offer rides on trips you're already taking. Cover your gas and vehicle costs while helping your neighbors." },
               { emoji: "🙋", role: "Riders", desc: "Find affordable rides from locals already heading your way. Just $5–$30 per ride." },
               { emoji: "🌿", role: "The Island", desc: "Less cars on the road. More money in local pockets. More aloha all around." },
             ].map(({ emoji, role, desc }) => (
-              <div key={role} className="bg-white/10 backdrop-blur rounded-3xl p-8 space-y-4 text-left">
-                <div className="text-5xl">{emoji}</div>
-                <h3 className="text-2xl font-bold">{role}</h3>
-                <p className="text-green-100 leading-relaxed">{desc}</p>
+              <div key={role} className="bg-white/10 backdrop-blur rounded-3xl p-6 space-y-3 text-left">
+                <div className="text-4xl">{emoji}</div>
+                <h3 className="text-xl font-bold text-white">{role}</h3>
+                <p className="text-green-100 text-sm leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── FULL-BLEED PHOTO DIVIDER 2 ── */}
-      <div className="relative h-64 md:h-[500px] overflow-hidden">
-        <img
-          src={PHOTOS.napaliCoast}
-          alt="Napali Coast Kauai"
-          className="w-full h-full object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent flex items-end p-8 md:p-16">
-          <p className="text-white text-xl md:text-3xl font-bold max-w-sm leading-snug drop-shadow-lg">
-            The roads of Hawaiʻi are meant to be shared.
-          </p>
-        </div>
-      </div>
-
-      {/* ── SECTION 4: Get Involved ── */}
-      <section className="welcome-section bg-stone-50">
-        <div className="max-w-4xl mx-auto space-y-10">
-          <div className="text-center space-y-3">
+      {/* ── GET INVOLVED ── */}
+      <section className="px-4 py-8 bg-white">
+        <div className="max-w-2xl mx-auto space-y-6">
+          <div className="text-center space-y-2">
             <p className="text-xs font-bold tracking-[0.2em] uppercase text-accent">join the movement</p>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">Get Involved</h2>
-            <p className="text-gray-600 text-lg max-w-xl mx-auto">Carpooling is a cultural shift — and we need everyone's help to make it a reality.</p>
+            <h2 className="text-3xl font-extrabold text-gray-900">Get Involved</h2>
+            <p className="text-gray-600 text-sm max-w-md mx-auto">Carpooling is a cultural shift — and we need everyone's help to make it a reality.</p>
           </div>
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Driver card */}
-            <div className={`bg-white rounded-3xl p-8 shadow-md border space-y-4 ${config.recruitingDrivers ? 'border-amber-300 ring-2 ring-amber-200' : 'border-gray-100'}`}>
-              <div className="text-4xl">🏡</div>
-              <h3 className="text-xl font-bold text-gray-900">{config.driverCardTitle || "Are you local?"}</h3>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className={`rounded-3xl p-6 shadow-md border space-y-3 ${config.recruitingDrivers ? 'border-amber-300 ring-2 ring-amber-200 bg-white' : 'bg-white border-gray-100'}`}>
+              <div className="text-3xl">🏡</div>
+              <h3 className="text-lg font-bold text-gray-900">{config.driverCardTitle || "Are you local?"}</h3>
               {config.recruitingDrivers && (
                 <span className="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">🚗 Now Recruiting!</span>
               )}
-              <p className="text-gray-600 leading-relaxed">{config.driverCardDesc || "Register as a driver and start posting rides on your commutes. Earn money while improving life on the island."}</p>
-              <Button onClick={handleDriverSignup} className="bg-primary hover:bg-primary/90 text-white rounded-full px-6">
+              <p className="text-gray-600 text-sm leading-relaxed">{config.driverCardDesc || "Register as a driver and start posting rides on your commutes. Earn money while improving life on the island."}</p>
+              <Button onClick={handleDriverSignup} className="bg-primary hover:bg-primary/90 text-white rounded-full px-6 text-sm">
                 Sign up as a driver 🚗
               </Button>
             </div>
-            {/* Rider card */}
-            <div className="bg-white rounded-3xl p-8 shadow-md border border-gray-100 space-y-4">
-              <div className="text-4xl">🙋</div>
-              <h3 className="text-xl font-bold text-gray-900">Need a ride?</h3>
-              <p className="text-gray-600 leading-relaxed">{config.riderCardDesc || "Get affordable rides from local drivers already heading your way. $5–$30 per ride, no car rental needed."}</p>
-              <Button onClick={handleRiderSignup} className="bg-secondary hover:bg-secondary/90 text-white rounded-full px-6">
+            <div className="bg-white rounded-3xl p-6 shadow-md border border-gray-100 space-y-3">
+              <div className="text-3xl">🙋</div>
+              <h3 className="text-lg font-bold text-gray-900">Need a ride?</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">{config.riderCardDesc || "Get affordable rides from local drivers already heading your way. $5–$30 per ride, no car rental needed."}</p>
+              <Button onClick={handleRiderSignup} className="bg-secondary hover:bg-secondary/90 text-white rounded-full px-6 text-sm">
                 Sign up as a rider 🌺
               </Button>
             </div>
-            {/* Visitor card */}
-            <div className="bg-white rounded-3xl p-8 shadow-md border border-gray-100 space-y-4">
-              <div className="text-4xl">✈️</div>
-              <h3 className="text-xl font-bold text-gray-900">Visiting the island?</h3>
-              <p className="text-gray-600 leading-relaxed">{config.visitingDesc}</p>
+            <div className="bg-white rounded-3xl p-6 shadow-md border border-gray-100 space-y-3">
+              <div className="text-3xl">✈️</div>
+              <h3 className="text-lg font-bold text-gray-900">Visiting the island?</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">{config.visitingDesc}</p>
             </div>
-            {/* Spread the word */}
-            <div className="bg-white rounded-3xl p-8 shadow-md border border-gray-100 space-y-4">
-              <div className="text-4xl">📣</div>
-              <h3 className="text-xl font-bold text-gray-900">Spread the word!</h3>
-              <p className="text-gray-600 leading-relaxed">The more people use Cruise Kauaʻi, the more rides are available and the less traffic there is. Share with friends, family, and visitors.</p>
+            <div className="bg-white rounded-3xl p-6 shadow-md border border-gray-100 space-y-3">
+              <div className="text-3xl">📣</div>
+              <h3 className="text-lg font-bold text-gray-900">Spread the word!</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">The more people use Cruise Kauaʻi, the more rides are available and the less traffic there is. Share with friends, family, and visitors.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── FULL-BLEED PHOTO DIVIDER 3 ── */}
-      <div className="relative h-48 md:h-72 overflow-hidden">
-        <img
-          src={PHOTOS.hanaleiValley}
-          alt="Hanalei Valley aerial view"
-          className="w-full h-full object-cover object-[center_40%]"
-        />
-        <div className="absolute inset-0 bg-black/30" />
-      </div>
-
       {/* ── TRUST BADGES ── */}
-      <section className="welcome-section bg-white">
-        <div className="max-w-3xl mx-auto space-y-10 text-center">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">Built on trust</h2>
-          <div className="grid grid-cols-3 gap-6">
+      <section className="px-4 py-8 bg-stone-50">
+        <div className="max-w-2xl mx-auto space-y-6 text-center">
+          <h2 className="text-2xl font-extrabold text-gray-900">Built on trust</h2>
+          <div className="grid grid-cols-3 gap-4">
             {[
-              { icon: <Shield className="w-8 h-8 text-green-700 mx-auto" />, label: "Verified Drivers", sub: "License checks required" },
-              { icon: <CheckCircle className="w-8 h-8 text-blue-600 mx-auto" />, label: "Secure Payments", sub: "Powered by Stripe" },
-              { icon: <Leaf className="w-8 h-8 text-green-600 mx-auto" />, label: "Eco-Friendly", sub: "Fewer cars on the road" },
+              { icon: <Shield className="w-7 h-7 text-green-700 mx-auto" />, label: "Verified Drivers", sub: "License checks required" },
+              { icon: <CheckCircle className="w-7 h-7 text-blue-600 mx-auto" />, label: "Secure Payments", sub: "Powered by Stripe" },
+              { icon: <Leaf className="w-7 h-7 text-green-600 mx-auto" />, label: "Eco-Friendly", sub: "Fewer cars on the road" },
             ].map(({ icon, label, sub }) => (
-              <div key={label} className="space-y-2">
+              <div key={label} className="space-y-1">
                 {icon}
-                <p className="font-bold text-gray-800 text-sm">{label}</p>
+                <p className="font-bold text-gray-800 text-xs">{label}</p>
                 <p className="text-gray-400 text-xs">{sub}</p>
               </div>
             ))}
@@ -331,17 +250,17 @@ export default function WelcomePage() {
       </section>
 
       {/* ── FINAL CTA ── */}
-      <section className="welcome-section bg-green-900 text-white text-center">
-        <div className="max-w-xl mx-auto space-y-8">
-          <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">Ready to ride?</h2>
-          <p className="text-green-100 text-lg leading-relaxed">
+      <section className="px-4 py-10 text-white text-center" style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)' }}>
+        <div className="max-w-sm mx-auto space-y-6">
+          <h2 className="text-3xl font-extrabold leading-tight">Ready to ride?</h2>
+          <p className="text-green-100 text-base leading-relaxed">
             🤙 Mahalo for being a part of the movement. Every ride shared is a step toward a better Hawaiʻi.
           </p>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
             <Button
               onClick={handleSignUp}
               size="lg"
-              className="bg-white text-green-900 hover:bg-white/90 font-bold py-5 text-base rounded-full shadow-xl"
+              className="bg-white text-green-900 hover:bg-white/90 font-bold rounded-full shadow-xl"
             >
               Join the Community
             </Button>
@@ -349,7 +268,7 @@ export default function WelcomePage() {
               onClick={handleExplore}
               size="lg"
               variant="outline"
-              className="border-white/50 text-white hover:bg-white/10 py-5 text-sm rounded-full"
+              className="border-white/50 text-white hover:bg-white/10 rounded-full text-sm"
             >
               Browse Rides Without Signing Up →
             </Button>
@@ -364,8 +283,8 @@ export default function WelcomePage() {
       </section>
 
       {/* ── VIEW RIDES ── */}
-      <section className="px-6 py-10 bg-stone-50">
-        <div className="max-w-xl mx-auto text-center space-y-4">
+      <section className="px-4 py-8 bg-stone-50">
+        <div className="max-w-lg mx-auto text-center space-y-4">
           <button
             onClick={() => setShowRides(!showRides)}
             className="text-sm text-primary hover:text-primary/80 underline underline-offset-2 transition-colors"
@@ -416,16 +335,13 @@ export default function WelcomePage() {
                             .sort((a, b) => (a.departure_time || '').localeCompare(b.departure_time || ''))
                             .map(ride => (
                               <div key={ride.id} className="border border-gray-200 rounded-2xl p-4 bg-white space-y-2">
-                                {/* Route + Price */}
                                 <div className="flex items-center justify-between gap-2">
                                   <p className="font-extrabold text-gray-900 text-base leading-tight truncate">
                                     {ride.departure_location} → {ride.destination}
                                   </p>
                                   <p className="font-bold text-lg text-primary shrink-0">${ride.price_per_seat_tourist || ride.price_per_seat || 0}<span className="text-xs font-normal text-gray-400">/seat</span></p>
                                 </div>
-                                {/* Time */}
                                 <p className="text-sm text-secondary font-medium">{ride.departure_time || 'Flexible time'}</p>
-                                {/* Driver + Seats */}
                                 <div className="flex items-center justify-between pt-1 border-t border-gray-100">
                                   <div className="flex items-center gap-2">
                                     <Avatar className="w-6 h-6">
