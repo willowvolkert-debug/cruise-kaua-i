@@ -8,11 +8,11 @@ import { ChevronRight, ChevronLeft, Car, DollarSign, Users, Shield, CheckCircle,
 const STEPS = [
   {
     id: "why",
-    title: "Tell us about you",
+    title: "Cruise Kauaʻi needs you!",
     content: (island) => (
       <div className="space-y-4">
         <p className="text-gray-700 text-base leading-relaxed">
-          Just the basics — name, contact, and a quick profile photo.
+          Carpooling is a cultural shift, and we need reliable local drivers who want to champion a new way of getting around.
         </p>
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 space-y-2">
           <p className="font-bold text-amber-800">The problems we're solving:</p>
