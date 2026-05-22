@@ -43,7 +43,8 @@ Deno.serve(async (req) => {
         const driverFirstName = u.full_name?.split(' ')[0] || 'there';
         return base44.asServiceRole.integrations.Core.SendEmail({
           to: u.email,
-          subject: `Someone nearby needs a ride: ${request.departure_location} → ${request.destination}`,
+          from_name: "Cruise Kaua'i",
+          subject: `New ride request: ${request.departure_location} → ${request.destination}`,
           body: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
 <body style="margin:0;padding:0;background-color:#f5f0e8;font-family:'Helvetica Neue',Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f0e8;padding:32px 16px;">
