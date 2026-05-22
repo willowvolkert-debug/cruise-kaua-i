@@ -82,31 +82,36 @@ export default function WelcomePage() {
         </button>
       </div>
 
-      {/* ── HERO ── dark green background, centered logo + title */}
+      {/* ── HERO ── Nā Pali photo background with dark green overlay */}
       <div
         className="relative flex flex-col items-center justify-center text-center px-6 py-16"
-        style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 50%, #1a4a2e 100%)' }}
+        style={{
+          backgroundImage: 'url(https://images.unsplash.com/photo-1505852679233-d9fd70aff56d?w=1200&q=80)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
       >
+        <div className="absolute inset-0" style={{ background: 'rgba(26, 74, 46, 0.72)' }} />
         <img
           src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
           alt={`${config.appName} logo`}
-          className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-3xl shadow-2xl border-2 border-white/20 mb-6"
+          className="relative z-10 w-32 h-32 md:w-40 md:h-40 object-cover rounded-3xl shadow-2xl border-2 border-white/20 mb-6"
         />
-        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-3 leading-tight">
+        <h1 className="relative z-10 text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-3 leading-tight">
           {config.appName}
         </h1>
-        <p className="text-base md:text-lg text-white/80 font-medium leading-relaxed max-w-xs mx-auto mb-2">
+        <p className="relative z-10 text-base md:text-lg text-white/80 font-medium leading-relaxed max-w-xs mx-auto mb-2">
           {config.heroSubtitle || "a community-based ridesharing app to reduce traffic on kauaʻi"}
         </p>
         {config.recruitingDrivers && (
           <button
             onClick={handleDriverSignup}
-            className="inline-flex items-center gap-2 bg-amber-400 text-amber-900 font-bold px-5 py-2 rounded-full text-sm shadow-lg animate-pulse mt-3 hover:bg-amber-300 transition-colors cursor-pointer"
+            className="relative z-10 inline-flex items-center gap-2 bg-amber-400 text-amber-900 font-bold px-5 py-2 rounded-full text-sm shadow-lg animate-pulse mt-3 hover:bg-amber-300 transition-colors cursor-pointer"
           >
             🚗 Now Recruiting Drivers on Oʻahu!
           </button>
         )}
-        <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6 w-full max-w-xs mx-auto">
+        <div className="relative z-10 flex flex-col sm:flex-row gap-3 justify-center mt-6 w-full max-w-xs mx-auto">
           <Button
             onClick={handleSignUp}
             size="lg"
@@ -153,15 +158,6 @@ export default function WelcomePage() {
             Getting around the island is a challenge for locals and visitors.
           </p>
         </div>
-      </div>
-
-      {/* ── PHOTO BREAK 1: Nā Pali Mountains ── */}
-      <div className="w-full h-56 md:h-72 overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1505852679233-d9fd70aff56d?w=1200&q=80"
-          alt="Nā Pali coast mountains"
-          className="w-full h-full object-cover"
-        />
       </div>
 
       {/* ── OUR SOLUTION ── */}
@@ -256,15 +252,6 @@ export default function WelcomePage() {
           </div>
         </div>
       </section>
-
-      {/* ── PHOTO BREAK 3: Sunset ── */}
-      <div className="w-full h-56 md:h-72 overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&q=80"
-          alt="Hawaiian sunset"
-          className="w-full h-full object-cover"
-        />
-      </div>
 
       {/* ── TRUST BADGES ── */}
       <section className="px-4 py-8 bg-stone-50">
