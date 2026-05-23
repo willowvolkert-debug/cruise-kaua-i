@@ -284,8 +284,8 @@ export default function ConfirmedRidesPage() {
         <div className="p-4 md:p-8 bg-white">
             <div className="max-w-4xl mx-auto space-y-6">
                 <div>
-                    <h1 className="text-2xl font-bold text-secondary">confirmed rides</h1>
-                    <p className="text-gray-500 text-sm mt-0.5">your upcoming trips & reviews</p>
+                    <h1 className="text-2xl font-bold text-secondary">confirmed rides & requests</h1>
+                    <p className="text-gray-500 text-sm mt-0.5">view + edit your rides & ride requests</p>
                 </div>
 
                 {/* Needs Review */}

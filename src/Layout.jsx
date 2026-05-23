@@ -32,11 +32,6 @@ const getNavigationItems = (isExploreMode) => {
       url: createPageUrl("Trips") + (isExploreMode ? "?explore=true" : ""),
       icon: MapPin,
     },
-    {
-      title: "account",
-      url: createPageUrl("Account") + (isExploreMode ? "?explore=true" : ""),
-      icon: User,
-    },
   ];
 
   if (!isExploreMode) {
@@ -55,6 +50,11 @@ const getNavigationItems = (isExploreMode) => {
   }
 
   baseItems.push(
+    {
+      title: "account",
+      url: createPageUrl("Account") + (isExploreMode ? "?explore=true" : ""),
+      icon: User,
+    },
     {
       title: "FAQ & about us",
 
