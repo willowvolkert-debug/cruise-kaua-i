@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import AdminMessageModal from "../components/admin/AdminMessageModal";
 import UserAccountView from "../components/admin/UserAccountView";
 import TransactionLedger from "../components/admin/TransactionLedger";
+import BookingsMonitor from "../components/admin/BookingsMonitor";
 import {
   Dialog,
   DialogContent,
@@ -1067,6 +1068,9 @@ export default function AdminPage() {
         )}
 
 
+
+        {/* Bookings & Communications */}
+        <BookingsMonitor />
 
         {/* Transaction Ledger */}
         <TransactionLedger />
