@@ -113,6 +113,7 @@ export default function RequestRide({ island = "Kauai" }) {
         rider_gender: currentUser.gender || null,
         stops: stops.filter(s => s.trim() !== ''),
         seats_needed: parseInt(requestData.seats_needed),
+        island: island,
         status: 'active'
       };
 

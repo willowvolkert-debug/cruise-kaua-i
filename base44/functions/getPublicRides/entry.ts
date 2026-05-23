@@ -25,7 +25,14 @@ Deno.serve(async (req) => {
       if (r.status !== 'active') return false;
       if (start_date && r.departure_date < start_date) return false;
       if (end_date && r.departure_date > end_date) return false;
-      if (island && !rideMatchesIsland(r, island)) return false;
+      if (island) {
+        // If ride has explicit island field, use it directly; otherwise fall back to keyword matching
+        if (r.island) {
+          if (r.island !== island) return false;
+        } else {
+          if (!rideMatchesIsland(r, island)) return false;
+        }
+      }
       return true;
     });
 

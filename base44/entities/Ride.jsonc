@@ -2,6 +2,16 @@
   "name": "Ride",
   "type": "object",
   "properties": {
+    "island": {
+      "type": "string",
+      "enum": [
+        "Kauai",
+        "Oahu",
+        "Maui",
+        "Big Island"
+      ],
+      "description": "Which island this ride is on"
+    },
     "departure_location": {
       "type": "string",
       "description": "Starting point of the ride"

@@ -68,8 +68,8 @@ export default function PostRideForm({ island = "Kauai" }) {
         const user = await base44.auth.me();
         setCurrentUser(user);
         
-        // Fetch active ride requests and filter out past ones
-        const requests = await base44.entities.RideRequest.filter({ status: 'active' });
+        // Fetch active ride requests filtered by island
+        const requests = await base44.entities.RideRequest.filter({ status: 'active', island });
         
         // Get current Hawaii time
         const now = new Date();
@@ -390,6 +390,7 @@ export default function PostRideForm({ island = "Kauai" }) {
         driver_vehicle_interior_photo_urls: currentUser.vehicle_interior_photo_urls || [],
         stops: stops.filter(s => s.trim() !== ''),
         seats_available: parseInt(rideData.seats_available),
+        island: island,
         status: 'active'
       };
 
