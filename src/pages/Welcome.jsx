@@ -204,13 +204,19 @@ export default function WelcomePage() {
             {/* Cruise Oahu highlight */}
             <div className="bg-white/15 border border-white/30 rounded-3xl p-6 space-y-3">
               <div className="flex items-center gap-3">
-                <span className="text-4xl">🌺</span>
+                <span className="text-4xl">🌿</span>
                 <div>
                   <span className="inline-block bg-amber-400 text-amber-900 text-xs font-extrabold px-3 py-1 rounded-full">NEW!</span>
                 </div>
               </div>
               <p className="text-white text-sm leading-relaxed">
-                <span className="font-bold">Cruise Oʻahu</span> is a new option to complement the services Oʻahu already has. Itʻs best for mid-long distances between sides of the island, when a local driver is already commuting. Whether itʻs to north shore for surf, or getting back to town, our service allows local drivers to cover their gas, use the carpool lane, and meet new people. Itʻs a useful option for those without a car, or a quick way to get to & from one spot without the hassle of traffic & finding parking.
+                <span className="font-bold">Cruise Oʻahu</span> is a new option to complement the services Oʻahu already has. Itʻs best for mid-long distances between sides of the island, when a local driver is already commuting.
+              </p>
+              <p className="text-white/80 text-sm leading-relaxed">
+                Whether itʻs to north shore for surf, or getting back to town, our service allows local drivers to cover their gas, use the carpool lane, and meet new people.
+              </p>
+              <p className="text-white/80 text-sm leading-relaxed">
+                Itʻs a useful option for those without a car, or a quick way to get to & from one spot without the hassle of traffic & finding parking.
               </p>
             </div>
           </div>
