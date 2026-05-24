@@ -42,7 +42,7 @@ const getNavigationItems = (isExploreMode) => {
       icon: MessageSquare,
     },
     {
-      title: "confirmed rides",
+      title: "confirmed rides & requests",
       url: createPageUrl("ConfirmedRides"),
       icon: CheckCircle,
     }
