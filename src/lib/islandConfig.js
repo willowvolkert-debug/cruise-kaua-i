@@ -33,6 +33,7 @@ export const ISLAND_CONFIG = {
     visitingDesc: "Get around with Cruise Oʻahu as an alternative to rental cars and traffic on H1.",
     trafficDesc: "traffic on oʻahu",
     sidebarLabel: "cruise oʻahu",
+    showTransportOptions: true,
     driverCardTitle: "Are you local?",
     driverCardDesc: "We're actively looking for local Oʻahu drivers to join the platform. Help your community get around — post rides on trips you're already making and earn extra income.",
     riderCardDesc: "Browse rides from local drivers heading your way across Oʻahu. Affordable, local, and community-driven.",

@@ -177,6 +177,46 @@ export default function WelcomePage() {
         </div>
       </section>
 
+      {/* ── OAHU: A NEW OPTION FOR TRANSPORTATION ── */}
+      {config.showTransportOptions && (
+        <section className="px-4 py-10" style={{ background: 'linear-gradient(135deg, #0f2a4a 0%, #1a3d6b 100%)' }}>
+          <div className="max-w-2xl mx-auto space-y-8">
+            <div className="text-center space-y-2">
+              <h2 className="text-2xl md:text-3xl font-extrabold text-white">a new option for transportation</h2>
+            </div>
+
+            {/* Existing options */}
+            <div className="grid grid-cols-1 gap-4">
+              <div className="flex items-start gap-4 bg-white/10 rounded-2xl p-4">
+                <span className="text-3xl shrink-0">🚌</span>
+                <p className="text-white/80 text-sm leading-relaxed"><span className="font-bold text-white">Bus —</span> best for short distances within a town. Takes a long time when going long distances + noisy.</p>
+              </div>
+              <div className="flex items-start gap-4 bg-white/10 rounded-2xl p-4">
+                <span className="text-3xl shrink-0">🚗</span>
+                <p className="text-white/80 text-sm leading-relaxed"><span className="font-bold text-white">Hui Car Share —</span> best for families trying to get around Honolulu and/or short rides through the city.</p>
+              </div>
+              <div className="flex items-start gap-4 bg-white/10 rounded-2xl p-4">
+                <span className="text-3xl shrink-0">🚕</span>
+                <p className="text-white/80 text-sm leading-relaxed"><span className="font-bold text-white">Uber/taxi —</span> good for short distances, but a strain on our wallets.</p>
+              </div>
+            </div>
+
+            {/* Cruise Oahu highlight */}
+            <div className="bg-white/15 border border-white/30 rounded-3xl p-6 space-y-3">
+              <div className="flex items-center gap-3">
+                <span className="text-4xl">🌺</span>
+                <div>
+                  <span className="inline-block bg-amber-400 text-amber-900 text-xs font-extrabold px-3 py-1 rounded-full">NEW!</span>
+                </div>
+              </div>
+              <p className="text-white text-sm leading-relaxed">
+                <span className="font-bold">Cruise Oʻahu</span> is a new option to complement the services Oʻahu already has. Itʻs best for mid-long distances between sides of the island, when a local driver is already commuting. Whether itʻs to north shore for surf, or getting back to town, our service allows local drivers to cover their gas, use the carpool lane, and meet new people. Itʻs a useful option for those without a car, or a quick way to get to & from one spot without the hassle of traffic & finding parking.
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ── PHOTO BREAK 2: Haʻena Beach aerial ── */}
       <div className="w-full h-56 md:h-72 overflow-hidden">
         <img
