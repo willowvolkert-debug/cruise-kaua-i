@@ -30,7 +30,7 @@ export const ISLAND_CONFIG = {
     domain: "cruiseoahu.org",
     heroImage: "https://images.unsplash.com/photo-1721357555154-789c11332b58?w=1200&q=80",
     heroSubtitle: "a community-based ridesharing app to reduce traffic on oʻahu",
-    visitingDesc: "Get around with Cruise Oʻahu as an alternative to rental cars and traffic on H1.",
+    visitingDesc: "Get around with Cruise Oʻahu as an alternative to rental cars and traffic.",
     trafficDesc: "traffic on oʻahu",
     sidebarLabel: "cruise oʻahu",
     showTransportOptions: true,
