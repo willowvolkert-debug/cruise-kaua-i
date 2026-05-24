@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { getIslandFromDomain, ISLAND_CONFIG } from "@/lib/islandConfig";
 import WelcomeTutorialModal from "@/components/tutorial/WelcomeTutorialModal";
+import { trackPageView } from "@/functions/trackPageView";
 
 export default function WelcomePage() {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ export default function WelcomePage() {
 
   useEffect(() => {
     loadRides();
-    base44.entities.PageView.create({ page_name: 'Welcome' }).catch(() => {});
+    trackPageView({ page_name: 'Welcome' }).catch(() => {});
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('tutorial') === 'true') setShowTutorial(true);
   }, []);
