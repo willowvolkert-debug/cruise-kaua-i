@@ -141,10 +141,11 @@ export default function AdminPage() {
       });
       setExpiredDocUsers(expired);
 
-      // Load landing page views (last 72 hours)
+      // Load landing page views (last 24 hours)
+      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
       const allPageViews = await base44.entities.PageView.list('-created_date', 2000);
       const recentLandingViews = allPageViews.filter(v => 
-        v.page_name === 'Welcome' && new Date(v.created_date) > threeDaysAgo
+        v.page_name === 'Welcome' && new Date(v.created_date) > oneDayAgo
       );
       setLandingPageViews(recentLandingViews.length);
 
@@ -796,7 +797,7 @@ export default function AdminPage() {
             <CardContent className="p-3 md:p-6 text-center">
               <Eye className="w-5 h-5 md:w-8 md:h-8 text-purple-500 mx-auto mb-1 md:mb-2" />
               <p className="text-xl md:text-3xl font-bold text-secondary">{landingPageViews}</p>
-              <p className="text-xs md:text-base text-gray-600">landing views (72h)</p>
+              <p className="text-xs md:text-base text-gray-600">landing views (24h)</p>
             </CardContent>
           </Card>
           <Card className="bg-white border-gray-200 rounded-2xl md:rounded-3xl">
