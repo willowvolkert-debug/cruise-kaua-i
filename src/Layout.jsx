@@ -42,7 +42,7 @@ const getNavigationItems = (isExploreMode) => {
       icon: MessageSquare,
     },
     {
-      title: "confirmed rides & requests",
+      title: "confirmed rides",
       url: createPageUrl("ConfirmedRides"),
       icon: CheckCircle,
     }
@@ -70,11 +70,6 @@ const getNavigationItems = (isExploreMode) => {
 
   if (!isExploreMode) {
     baseItems.push(
-      {
-        title: "community",
-        url: createPageUrl("Community"),
-        icon: Users,
-      },
       {
         title: "admin",
         url: createPageUrl("Admin"),
