@@ -23,51 +23,50 @@ export default function TermsOfServicePage() {
     const maxWidth = pageWidth - margin * 2;
     let y = margin;
 
-    const addText = (text, fontSize, isBold, color = [40, 40, 40]) => {
+    const checkPage = (needed) => {
+      if (y + needed > pageHeight - margin) { doc.addPage(); y = margin; }
+    };
+
+    const addText = (text, fontSize, isBold, color = [40, 40, 40], extraAfter = 0) => {
       doc.setFontSize(fontSize);
       doc.setFont('helvetica', isBold ? 'bold' : 'normal');
       doc.setTextColor(...color);
-      const lineHeight = fontSize * 1.45;
+      const lineHeight = fontSize * 1.5;
       const lines = doc.splitTextToSize(text, maxWidth);
       lines.forEach(line => {
-        if (y + lineHeight > pageHeight - margin) { doc.addPage(); y = margin; }
+        checkPage(lineHeight);
         doc.text(line, margin, y);
         y += lineHeight;
       });
+      if (extraAfter > 0) { checkPage(extraAfter); y += extraAfter; }
     };
 
-    // Header
-    addText('Cruise Kauaʻi', 22, true, [34, 85, 55]);
-    y += 4;
-    addText('Terms of Service', 18, true, [30, 80, 120]);
-    y += 4;
-    addText(`Last Updated: ${new Date().toLocaleDateString()}`, 10, false, [120, 120, 120]);
-    y += 16;
+    addText('Cruise Kauai', 22, true, [34, 85, 55], 6);
+    addText('Terms of Service', 18, true, [30, 80, 120], 4);
+    addText(`Last Updated: ${new Date().toLocaleDateString()}`, 10, false, [120, 120, 120], 18);
 
     const sections = [
-      ['1. Acceptance of Terms', 'By accessing or using Cruise Kauaʻi ("Cruise Kauaʻi," "we," "us," or "our"), you acknowledge that you have read, understood, and agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, you must not access or use the platform.'],
-      ['2. Platform Description', 'Cruise Kauaʻi is a technology platform that enables users to connect with one another to arrange voluntary, cost-sharing carpools. Cruise Kauaʻi is not a transportation provider, carrier, broker, or insurer; does not own, lease, or operate vehicles; does not employ drivers; and does not provide rides, transportation services, or commercial ride-hailing services. All transportation services are provided solely by independent users.'],
-      ['3. No Agency or Employment Relationship', 'No joint venture, partnership, employment, agency, or carrier relationship exists between Cruise Kauaʻi and any user, including drivers. Drivers are independent individuals and are solely responsible for their conduct, vehicles, insurance, and compliance with applicable laws.'],
-      ['4. Assumption of Risk', 'YOU EXPRESSLY ACKNOWLEDGE AND AGREE THAT USE OF THE PLATFORM AND PARTICIPATION IN CARPOOLING ACTIVITIES INVOLVES INHERENT RISKS, INCLUDING BUT NOT LIMITED TO: personal injury or death, vehicle accidents, property damage, and acts or omissions of other users. By using Cruise Kauaʻi, you VOLUNTARILY AND KNOWINGLY ASSUME ALL SUCH RISKS to the fullest extent permitted by Hawaii law.'],
-      ['5. Disclaimer of Liability', 'To the maximum extent permitted by Hawaii law, Cruise Kauaʻi DISCLAIMS ALL LIABILITY for any claims, damages, losses, or injuries arising out of or related to any ride, carpool, or transportation activity; acts or omissions of drivers or passengers; vehicle condition or operation; insurance coverage or lack thereof; or disputes between users.'],
-      ['6. Driver Responsibilities', 'All drivers agree that they are solely responsible for: maintaining a safe, roadworthy, and legally registered vehicle; holding a valid driver\'s license; complying with all Hawaii traffic, safety, and insurance laws; maintaining active automobile insurance; confirming carpooling activity is covered with their insurer; ensuring all cost-sharing charges are limited to actual trip expenses; and not engaging in commercial or for-hire transportation.'],
+      ['1. Acceptance of Terms', 'By accessing or using Cruise Kauai ("Cruise Kauai," "we," "us," or "our"), you acknowledge that you have read, understood, and agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, you must not access or use the platform.'],
+      ['2. Platform Description', 'Cruise Kauai is a technology platform that enables users to connect with one another to arrange voluntary, cost-sharing carpools. Cruise Kauai is not a transportation provider, carrier, broker, or insurer; does not own, lease, or operate vehicles; does not employ drivers; and does not provide rides, transportation services, or commercial ride-hailing services. All transportation services are provided solely by independent users.'],
+      ['3. No Agency or Employment Relationship', 'No joint venture, partnership, employment, agency, or carrier relationship exists between Cruise Kauai and any user, including drivers. Drivers are independent individuals and are solely responsible for their conduct, vehicles, insurance, and compliance with applicable laws.'],
+      ['4. Assumption of Risk', 'YOU EXPRESSLY ACKNOWLEDGE AND AGREE THAT USE OF THE PLATFORM AND PARTICIPATION IN CARPOOLING ACTIVITIES INVOLVES INHERENT RISKS, INCLUDING BUT NOT LIMITED TO: personal injury or death, vehicle accidents, property damage, and acts or omissions of other users. By using Cruise Kauai, you VOLUNTARILY AND KNOWINGLY ASSUME ALL SUCH RISKS to the fullest extent permitted by Hawaii law.'],
+      ['5. Disclaimer of Liability', 'To the maximum extent permitted by Hawaii law, Cruise Kauai DISCLAIMS ALL LIABILITY for any claims, damages, losses, or injuries arising out of or related to any ride, carpool, or transportation activity; acts or omissions of drivers or passengers; vehicle condition or operation; insurance coverage or lack thereof; or disputes between users.'],
+      ['6. Driver Responsibilities', "All drivers agree that they are solely responsible for: maintaining a safe, roadworthy, and legally registered vehicle; holding a valid driver's license; complying with all Hawaii traffic, safety, and insurance laws; maintaining active automobile insurance; confirming carpooling activity is covered with their insurer; ensuring all cost-sharing charges are limited to actual trip expenses; and not engaging in commercial or for-hire transportation."],
       ['7. Passenger Responsibilities', 'Passengers agree to: act lawfully, responsibly, and respectfully; follow reasonable safety instructions from drivers; refrain from illegal, disruptive, or unsafe conduct; and respect drivers, vehicles, and other users.'],
-      ['8. Insurance Disclosure', 'Cruise Kauaʻi DOES NOT PROVIDE AUTOMOBILE OR LIABILITY INSURANCE. Drivers are solely responsible for maintaining legally required insurance. Personal auto insurance may not cover carpooling or cost-sharing activities. Cruise Kauaʻi is not responsible for insurance gaps or denied claims.'],
-      ['9. Cost-Sharing Only (Non-Commercial Use)', 'Cruise Kauaʻi is intended solely for voluntary cost-sharing carpools. Drivers may only request reimbursement reasonably related to actual trip costs. Use of the platform for commercial ridesharing or for-hire transportation is strictly prohibited.'],
-      ['10. No Background Checks', 'Cruise Kauaʻi does not conduct criminal background checks, driving record checks, or continuous monitoring of users. Users are solely responsible for exercising their own judgment and caution.'],
-      ['11. Waiver and Release of Claims', 'To the fullest extent permitted by Hawaii law, you WAIVE, RELEASE, AND FOREVER DISCHARGE Cruise Kauaʻi and its owners, officers, employees, and affiliates from any and all claims, known or unknown, arising out of use of the platform, participation in carpooling activities, or acts or omissions of other users.'],
-      ['12. Indemnification', 'You agree to defend, indemnify, and hold harmless Cruise Kauaʻi from any claims, damages, losses, liabilities, or expenses arising from your use of the platform, violation of these Terms, violation of any law, or your acts or omissions related to carpooling activities.'],
+      ['8. Insurance Disclosure', 'Cruise Kauai DOES NOT PROVIDE AUTOMOBILE OR LIABILITY INSURANCE. Drivers are solely responsible for maintaining legally required insurance. Personal auto insurance may not cover carpooling or cost-sharing activities. Cruise Kauai is not responsible for insurance gaps or denied claims.'],
+      ['9. Cost-Sharing Only (Non-Commercial Use)', 'Cruise Kauai is intended solely for voluntary cost-sharing carpools. Drivers may only request reimbursement reasonably related to actual trip costs. Use of the platform for commercial ridesharing or for-hire transportation is strictly prohibited.'],
+      ['10. No Background Checks', 'Cruise Kauai does not conduct criminal background checks, driving record checks, or continuous monitoring of users. Users are solely responsible for exercising their own judgment and caution.'],
+      ['11. Waiver and Release of Claims', 'To the fullest extent permitted by Hawaii law, you WAIVE, RELEASE, AND FOREVER DISCHARGE Cruise Kauai and its owners, officers, employees, and affiliates from any and all claims, known or unknown, arising out of use of the platform, participation in carpooling activities, or acts or omissions of other users.'],
+      ['12. Indemnification', 'You agree to defend, indemnify, and hold harmless Cruise Kauai from any claims, damages, losses, liabilities, or expenses arising from your use of the platform, violation of these Terms, violation of any law, or your acts or omissions related to carpooling activities.'],
       ['13. User Conduct', 'Users must not engage in harassment, discrimination, or threats; use the platform for illegal purposes; misrepresent identity, insurance, or eligibility; or attempt to circumvent platform safeguards.'],
-      ['14. Arbitration & Governing Law', 'These Terms are governed by the laws of the State of Hawaii. Any dispute shall be resolved through binding arbitration conducted in Kauaʻi County, Hawaii, except where prohibited by law.'],
-      ['15. Changes to Terms', 'Cruise Kauaʻi may modify these Terms at any time. Continued use of the platform after changes constitutes acceptance.'],
-      ['16. Contact Information', 'For questions regarding these Terms, please contact us through the Cruise Kauaʻi website at cruisekauai.org.'],
+      ['14. Arbitration & Governing Law', "These Terms are governed by the laws of the State of Hawaii. Any dispute shall be resolved through binding arbitration conducted in Kaua'i County, Hawaii, except where prohibited by law."],
+      ['15. Changes to Terms', 'Cruise Kauai may modify these Terms at any time. Continued use of the platform after changes constitutes acceptance.'],
+      ['16. Contact Information', 'For questions regarding these Terms, please contact us through the Cruise Kauai website at cruisekauai.org.'],
     ];
 
     sections.forEach(([title, body]) => {
-      addText(title, 12, true, [30, 80, 120]);
-      y += 2;
-      addText(body, 10, false);
-      y += 10;
+      addText(title, 12, true, [30, 80, 120], 3);
+      addText(body, 10, false, [40, 40, 40], 12);
     });
 
     doc.save('CruiseKauai-TermsOfService.pdf');
