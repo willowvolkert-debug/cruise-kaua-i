@@ -51,6 +51,7 @@ export default function DriverAgreementPage() {
     const doc = new jsPDF({ unit: 'pt', format: 'letter' });
     const margin = 50;
     const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
     const maxWidth = pageWidth - margin * 2;
     let y = margin;
 
@@ -58,11 +59,12 @@ export default function DriverAgreementPage() {
       doc.setFontSize(fontSize);
       doc.setFont('helvetica', isBold ? 'bold' : 'normal');
       doc.setTextColor(...color);
+      const lineHeight = fontSize * 1.45;
       const lines = doc.splitTextToSize(text, maxWidth);
       lines.forEach(line => {
-        if (y > doc.internal.pageSize.getHeight() - margin) { doc.addPage(); y = margin; }
+        if (y + lineHeight > pageHeight - margin) { doc.addPage(); y = margin; }
         doc.text(line, margin, y);
-        y += fontSize * 1.4;
+        y += lineHeight;
       });
     };
 
