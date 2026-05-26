@@ -12,14 +12,17 @@ Deno.serve(async (req) => {
     }
   }
 
-  const allUsers = await base44.asServiceRole.entities.User.list();
-  const recipients = allUsers.filter(u => u.user_type === 'rider' || u.user_type === 'driver');
-
-  // Get live stats
-  const [allRides, allRequests] = await Promise.all([
+  const [allUsers, allRides, allRequests] = await Promise.all([
+    base44.asServiceRole.entities.User.list(),
     base44.asServiceRole.entities.Ride.filter({ status: 'active' }),
     base44.asServiceRole.entities.RideRequest.filter({ status: 'active' }),
   ]);
+
+  // Send to anyone who has ever posted or requested a ride
+  const driverIds = new Set(allRides.map(r => r.driver_id).filter(Boolean));
+  const riderIds = new Set(allRequests.map(r => r.rider_id).filter(Boolean));
+  const activeIds = new Set([...driverIds, ...riderIds]);
+  const recipients = allUsers.filter(u => u.email && activeIds.has(u.id));
   const activeRides = allRides.length;
   const activeRiders = allRequests.length;
   // Calculate potential savings: if each driver got just 1 rider, how much would be saved in gas?
