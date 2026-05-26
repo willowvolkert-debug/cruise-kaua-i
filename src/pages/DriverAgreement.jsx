@@ -86,7 +86,7 @@ export default function DriverAgreementPage() {
       ['6. Insurance Acknowledgment (CRITICAL DISCLOSURE)', 'Cruise Kauaʻi does not provide insurance. You are solely responsible for maintaining legally required auto insurance. Your personal insurance may not cover carpooling or cost-sharing. Any damages, injuries, or claims may be uninsured or underinsured. You certify that you have confirmed coverage with your insurer.'],
       ['7. Assumption of Risk', 'You knowingly and voluntarily assume all risks arising from operating a motor vehicle, transporting passengers, and interacting with platform users. You agree that Cruise Kauaʻi bears no responsibility for such risks.'],
       ['8. Indemnification', 'You agree to defend, indemnify, and hold harmless Cruise Kauaʻi from any claims, damages, losses, liabilities, or expenses arising from your driving, vehicle condition, insurance coverage or lack thereof, or violations of law or this Agreement.'],
-      ['9. No Background Checks or Monitoring', 'Cruise Kauaʻi does not conduct criminal or driving history checks, does not monitor driving behavior, and does not guarantee passenger conduct or safety.'],
+      ['9. Background Checks & User Discretion', 'I understand that while Cruise Kauaʻi requires a license verification and simple background check for all users, we do not do complex thorough background checks and decisions to ride with other drivers or riders is made at a user\'s discretion.'],
       ['10. Suspension or Termination', 'Cruise Kauaʻi may suspend or terminate your access at any time for safety, compliance, or legal concerns.'],
       ['11. Governing Law', 'This Agreement is governed by the laws of the State of Hawaii.'],
       ['12. Electronic Acceptance', 'By clicking "I Agree," you acknowledge this Agreement has the same legal effect as a written signature.'],
@@ -250,13 +250,8 @@ export default function DriverAgreementPage() {
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">9. No Background Checks or Monitoring</h3>
-                  <p className="mb-2">You acknowledge that Cruise Kauaʻi:</p>
-                  <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li>Does not conduct criminal or driving history checks</li>
-                    <li>Does not monitor driving behavior</li>
-                    <li>Does not guarantee passenger conduct or safety</li>
-                  </ul>
+                  <h3 className="font-bold text-lg text-secondary mb-2">9. Background Checks & User Discretion</h3>
+                  <p>I understand that while Cruise Kauaʻi requires a license verification and simple background check for all users, we do not do complex thorough background checks and decisions to ride with other drivers or riders is made at a user's discretion.</p>
                 </section>
 
                 <section>
@@ -300,7 +295,7 @@ export default function DriverAgreementPage() {
                     { key: 'inherentRisk', label: 'Driving involves inherent risk' },
                     { key: 'passengersIndependent', label: 'Passengers are independent individuals' },
                     { key: 'accidentsMayOccur', label: 'Accidents and injuries may occur' },
-                    { key: 'noBackgroundChecks', label: 'I understand Cruise Kauaʻi does not conduct background checks' },
+                    { key: 'noBackgroundChecks', label: 'I understand that while Cruise Kauaʻi requires a license verification and simple background check, complex thorough background checks are not conducted and riding decisions are at my own discretion' },
                     { key: 'responsibleInteractions', label: 'I am responsible for my interactions with passengers' },
                     { key: 'indemnify', label: 'I understand I may be required to indemnify Cruise Kauaʻi' },
                     { key: 'financialResponsibility', label: 'I accept financial responsibility for my actions' },
