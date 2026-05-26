@@ -10,6 +10,9 @@ Deno.serve(async (req) => {
 
     if (!ride) return Response.json({ ok: true, skipped: 'no data' });
 
+    // Recurring rides are notified weekly via processRecurringRides — skip here
+    if (ride.is_recurring) return Response.json({ ok: true, skipped: 'recurring ride' });
+
     const allUsers = await base44.asServiceRole.entities.User.list();
     const recipients = allUsers.filter(u => u.email && u.id !== ride.driver_id);
 

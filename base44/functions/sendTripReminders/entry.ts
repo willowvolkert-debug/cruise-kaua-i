@@ -15,12 +15,20 @@ Deno.serve(async (req) => {
   const allUsers = await base44.asServiceRole.entities.User.list();
   const recipients = allUsers.filter(u => u.user_type === 'rider' || u.user_type === 'driver');
 
-  // Get live stats for this week
-  const cutoff = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-  const allRides = await base44.asServiceRole.entities.Ride.filter({ status: 'active' });
-  const allRequests = await base44.asServiceRole.entities.RideRequest.filter({ status: 'active' });
-  const activeRides = allRides.filter(r => r.created_date >= cutoff).length;
-  const activeRiders = allRequests.filter(r => r.created_date >= cutoff).length;
+  // Get live stats
+  const [allRides, allRequests] = await Promise.all([
+    base44.asServiceRole.entities.Ride.filter({ status: 'active' }),
+    base44.asServiceRole.entities.RideRequest.filter({ status: 'active' }),
+  ]);
+  const activeRides = allRides.length;
+  const activeRiders = allRequests.length;
+  // Calculate potential savings: if each driver got just 1 rider, how much would be saved in gas?
+  // Use price_per_seat_local if available, otherwise price_per_seat, as a proxy for gas cost sharing
+  const moneySaved = allRides.reduce((sum, r) => {
+    const price = r.price_per_seat_local || r.price_per_seat || 0;
+    return sum + price;
+  }, 0);
+  const moneySavedStr = moneySaved > 0 ? '$' + Math.round(moneySaved).toLocaleString('en-US') : '$0';
 
   const routeHints = ['Līhuʻe to Hanalei', 'Kōloa to Kapa\'a', 'Hanapēpē to Līhuʻe', 'Princeville to Kōloa', 'Waimea to Līhuʻe'];
 
@@ -58,8 +66,8 @@ Deno.serve(async (req) => {
               </td>
               <td width="4%"></td>
               <td width="32%" style="background:#faf7f2;border:1px solid #ede5d4;border-radius:10px;padding:14px 10px;text-align:center;">
-                <div style="font-family:Georgia,serif;font-size:1.6rem;font-weight:700;color:#e8742a;line-height:1;margin-bottom:4px;">💸</div>
-                <div style="font-size:0.75rem;color:#888;line-height:1.3;">gas costs<br>being shared</div>
+                <div style="font-family:Georgia,serif;font-size:1.6rem;font-weight:700;color:#e8742a;line-height:1;margin-bottom:4px;">${moneySavedStr}</div>
+                <div style="font-size:0.75rem;color:#888;line-height:1.3;">potential gas<br>savings available</div>
               </td>
             </tr>
           </table>
