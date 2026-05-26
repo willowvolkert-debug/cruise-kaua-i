@@ -84,10 +84,10 @@ export default function DriverAgreementPage() {
       ['3. Non-Commercial, Cost-Sharing Use Only', 'All rides are voluntary and incidental to your own travel. Any amounts requested from passengers are limited to reasonable cost-sharing. You will not generate profit, wages, or compensation. You will not provide transportation for hire or commercial ride services. Violation of this section may result in immediate removal.'],
       ['4. Driver Eligibility & Legal Compliance', "You represent and warrant that you hold a valid Hawaii driver's license, are legally permitted to operate a motor vehicle, comply with all traffic and safety laws, and will not operate while impaired, fatigued, or distracted."],
       ['5. Vehicle Standards', 'Your vehicle is legally registered and in safe, roadworthy condition, meets all Hawaii safety and inspection requirements, and is not a taxicab, limousine, or for-hire vehicle. You agree to remove your vehicle from the platform if it becomes unsafe or non-compliant.'],
-      ['6. Insurance Acknowledgment (CRITICAL DISCLOSURE)', 'Cruise Kauai does not provide insurance. You are solely responsible for maintaining legally required auto insurance. Your personal insurance may not cover carpooling or cost-sharing. Any damages, injuries, or claims may be uninsured or underinsured. You certify that you have confirmed coverage with your insurer.'],
-      ['7. Assumption of Risk', 'You knowingly and voluntarily assume all risks arising from operating a motor vehicle, transporting passengers, and interacting with platform users. You agree that Cruise Kauai bears no responsibility for such risks.'],
-      ['8. Indemnification', 'You agree to defend, indemnify, and hold harmless Cruise Kauai from any claims, damages, losses, liabilities, or expenses arising from your driving, vehicle condition, insurance coverage or lack thereof, or violations of law or this Agreement.'],
-      ['9. Background Checks & User Discretion', "I understand that while Cruise Kauai requires a license verification and simple background check for all users, we do not do complex thorough background checks and decisions to ride with other drivers or riders is made at a user's discretion."],
+      ['6. Insurance Acknowledgment', 'Drivers are responsible for maintaining legally required insurance coverage, and Cruise Kauai encourages all users to confirm their coverage related to carpooling activities. Cruise Kauai does not provide insurance coverage, and we encourage you to confirm with your insurer that carpooling activities are covered.'],
+      ['7. Shared Responsibility', 'Cruise Kauai serves as a coordination platform connecting independent community members for voluntary cost-sharing carpools. As a driver, you acknowledge responsibility for safe operation of your motor vehicle, your interactions with passengers, and compliance with all applicable laws and safety standards.'],
+      ['8. Indemnification', 'You agree to defend, indemnify, and hold harmless Cruise Kauai from any claims, damages, losses, liabilities, or expenses arising from your driving, vehicle condition, insurance coverage, or violations of law or this Agreement.'],
+      ['9. Safety Standards & Community Responsibility', 'Cruise Kauai is actively evaluating operational best practices and safety standards appropriate for community-based carpool coordination. We require license verification for all drivers and are committed to continuously improving our community safety processes. Users are encouraged to exercise good judgment when connecting with other community members.'],
       ['10. Suspension or Termination', 'Cruise Kauai may suspend or terminate your access at any time for safety, compliance, or legal concerns.'],
       ['11. Governing Law', 'This Agreement is governed by the laws of the State of Hawaii.'],
       ['12. Electronic Acceptance', 'By clicking "I Agree," you acknowledge this Agreement has the same legal effect as a written signature.'],
@@ -215,26 +215,24 @@ export default function DriverAgreementPage() {
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">6. Insurance Acknowledgment (CRITICAL DISCLOSURE)</h3>
-                  <p className="mb-2 font-semibold uppercase">You acknowledge and agree that:</p>
+                  <h3 className="font-bold text-lg text-secondary mb-2">6. Insurance Acknowledgment</h3>
+                  <p className="mb-2">Drivers are responsible for maintaining legally required insurance coverage, and Cruise Kauaʻi encourages all users to confirm their coverage related to carpooling activities. You acknowledge and agree that:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li>Cruise Kauaʻi does not provide insurance</li>
-                    <li>You are solely responsible for maintaining legally required auto insurance</li>
-                    <li>Your personal insurance may not cover carpooling or cost-sharing</li>
-                    <li>Any damages, injuries, or claims may be uninsured or underinsured</li>
+                    <li>Cruise Kauaʻi does not provide insurance coverage</li>
+                    <li>You are responsible for maintaining legally required auto insurance</li>
+                    <li>We encourage you to confirm with your insurer that carpooling activities are covered</li>
                   </ul>
-                  <p className="mt-2 font-semibold">You certify that you have confirmed coverage with your insurer.</p>
+                  <p className="mt-2">You certify that you have reviewed your insurance coverage in relation to carpooling.</p>
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">7. Assumption of Risk</h3>
-                  <p className="mb-2">You knowingly and voluntarily assume all risks arising from:</p>
+                  <h3 className="font-bold text-lg text-secondary mb-2">7. Shared Responsibility</h3>
+                  <p className="mb-2">Cruise Kauaʻi serves as a coordination platform connecting independent community members for voluntary cost-sharing carpools. As a driver, you acknowledge responsibility for:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li>Operating a motor vehicle</li>
-                    <li>Transporting passengers</li>
-                    <li>Interacting with platform users</li>
+                    <li>Safe operation of your motor vehicle</li>
+                    <li>Your interactions with passengers and platform users</li>
+                    <li>Compliance with all applicable laws and safety standards</li>
                   </ul>
-                  <p className="mt-2">You agree that Cruise Kauaʻi bears no responsibility for such risks.</p>
                 </section>
 
                 <section>
@@ -249,8 +247,8 @@ export default function DriverAgreementPage() {
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">9. Background Checks & User Discretion</h3>
-                  <p>I understand that while Cruise Kauaʻi requires a license verification and simple background check for all users, we do not do complex thorough background checks and decisions to ride with other drivers or riders is made at a user's discretion.</p>
+                  <h3 className="font-bold text-lg text-secondary mb-2">9. Safety Standards & Community Responsibility</h3>
+                  <p>Cruise Kauaʻi is actively evaluating operational best practices and safety standards appropriate for community-based carpool coordination. We require license verification for all drivers and are committed to continuously improving our community safety processes. Users are encouraged to exercise good judgment when connecting with other community members.</p>
                 </section>
 
                 <section>
@@ -288,13 +286,13 @@ export default function DriverAgreementPage() {
                     { key: 'vehicleSafe', label: 'My vehicle is safe and roadworthy' },
                     { key: 'willRemoveUnsafe', label: 'I will remove my vehicle if unsafe' },
                     { key: 'hasInsurance', label: 'I maintain legally required auto insurance' },
-                    { key: 'noInsuranceProvided', label: 'I understand Cruise Kauaʻi provides NO insurance' },
-                    { key: 'insuranceDenial', label: 'I understand my insurer may deny coverage' },
-                    { key: 'confirmedCoverage', label: 'I have confirmed coverage with my insurer' },
+                    { key: 'noInsuranceProvided', label: 'I understand Cruise Kauaʻi does not provide insurance coverage' },
+                    { key: 'insuranceDenial', label: 'I understand I should confirm carpooling coverage with my insurer' },
+                    { key: 'confirmedCoverage', label: 'I have reviewed my insurance coverage in relation to carpooling' },
                     { key: 'inherentRisk', label: 'Driving involves inherent risk' },
                     { key: 'passengersIndependent', label: 'Passengers are independent individuals' },
                     { key: 'accidentsMayOccur', label: 'Accidents and injuries may occur' },
-                    { key: 'noBackgroundChecks', label: 'I understand that while Cruise Kauaʻi requires a license verification and simple background check, complex thorough background checks are not conducted and riding decisions are at my own discretion' },
+                    { key: 'noBackgroundChecks', label: 'I understand that Cruise Kauaʻi is actively evaluating safety standards for community carpool coordination and I agree to exercise good judgment in my interactions' },
                     { key: 'responsibleInteractions', label: 'I am responsible for my interactions with passengers' },
                     { key: 'indemnify', label: 'I understand I may be required to indemnify Cruise Kauaʻi' },
                     { key: 'financialResponsibility', label: 'I accept financial responsibility for my actions' },

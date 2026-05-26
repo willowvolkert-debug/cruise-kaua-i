@@ -50,12 +50,12 @@ export default function TermsOfServicePage() {
       ['2. Platform Description', 'Cruise Kauai is a technology platform that enables users to connect with one another to arrange voluntary, cost-sharing carpools. Cruise Kauai is not a transportation provider, carrier, broker, or insurer; does not own, lease, or operate vehicles; does not employ drivers; and does not provide rides, transportation services, or commercial ride-hailing services. All transportation services are provided solely by independent users.'],
       ['3. No Agency or Employment Relationship', 'No joint venture, partnership, employment, agency, or carrier relationship exists between Cruise Kauai and any user, including drivers. Drivers are independent individuals and are solely responsible for their conduct, vehicles, insurance, and compliance with applicable laws.'],
       ['4. Assumption of Risk', 'YOU EXPRESSLY ACKNOWLEDGE AND AGREE THAT USE OF THE PLATFORM AND PARTICIPATION IN CARPOOLING ACTIVITIES INVOLVES INHERENT RISKS, INCLUDING BUT NOT LIMITED TO: personal injury or death, vehicle accidents, property damage, and acts or omissions of other users. By using Cruise Kauai, you VOLUNTARILY AND KNOWINGLY ASSUME ALL SUCH RISKS to the fullest extent permitted by Hawaii law.'],
-      ['5. Disclaimer of Liability', 'To the maximum extent permitted by Hawaii law, Cruise Kauai DISCLAIMS ALL LIABILITY for any claims, damages, losses, or injuries arising out of or related to any ride, carpool, or transportation activity; acts or omissions of drivers or passengers; vehicle condition or operation; insurance coverage or lack thereof; or disputes between users.'],
+      ['5. Platform Role & Limitation of Liability', 'Cruise Kauai serves as a coordination platform connecting independent community members for voluntary cost-sharing carpools. Cruise Kauai is not responsible for the acts or omissions of independent users, vehicle condition, or the outcome of individual arrangements made between community members. To the extent permitted by Hawaii law, Cruise Kauai is not liable for claims arising out of transportation activities arranged through the platform.'],
       ['6. Driver Responsibilities', "All drivers agree that they are solely responsible for: maintaining a safe, roadworthy, and legally registered vehicle; holding a valid driver's license; complying with all Hawaii traffic, safety, and insurance laws; maintaining active automobile insurance; confirming carpooling activity is covered with their insurer; ensuring all cost-sharing charges are limited to actual trip expenses; and not engaging in commercial or for-hire transportation."],
       ['7. Passenger Responsibilities', 'Passengers agree to: act lawfully, responsibly, and respectfully; follow reasonable safety instructions from drivers; refrain from illegal, disruptive, or unsafe conduct; and respect drivers, vehicles, and other users.'],
-      ['8. Insurance Disclosure', 'Cruise Kauai DOES NOT PROVIDE AUTOMOBILE OR LIABILITY INSURANCE. Drivers are solely responsible for maintaining legally required insurance. Personal auto insurance may not cover carpooling or cost-sharing activities. Cruise Kauai is not responsible for insurance gaps or denied claims.'],
+      ['8. Insurance Guidance', 'Drivers are responsible for maintaining legally required insurance coverage, and Cruise Kauai encourages users to confirm coverage related to carpooling activities with their insurer. Cruise Kauai does not provide automobile or liability insurance, and users are encouraged to review their policies accordingly.'],
       ['9. Cost-Sharing Only (Non-Commercial Use)', 'Cruise Kauai is intended solely for voluntary cost-sharing carpools. Drivers may only request reimbursement reasonably related to actual trip costs. Use of the platform for commercial ridesharing or for-hire transportation is strictly prohibited.'],
-      ['10. No Background Checks', 'Cruise Kauai does not conduct criminal background checks, driving record checks, or continuous monitoring of users. Users are solely responsible for exercising their own judgment and caution.'],
+      ['10. Safety Standards', 'Cruise Kauai is actively evaluating operational best practices and safety standards appropriate for community-based carpool coordination. We require license verification for all drivers and are committed to continuously improving community safety processes.'],
       ['11. Waiver and Release of Claims', 'To the fullest extent permitted by Hawaii law, you WAIVE, RELEASE, AND FOREVER DISCHARGE Cruise Kauai and its owners, officers, employees, and affiliates from any and all claims, known or unknown, arising out of use of the platform, participation in carpooling activities, or acts or omissions of other users.'],
       ['12. Indemnification', 'You agree to defend, indemnify, and hold harmless Cruise Kauai from any claims, damages, losses, liabilities, or expenses arising from your use of the platform, violation of these Terms, violation of any law, or your acts or omissions related to carpooling activities.'],
       ['13. User Conduct', 'Users must not engage in harassment, discrimination, or threats; use the platform for illegal purposes; misrepresent identity, insurance, or eligibility; or attempt to circumvent platform safeguards.'],
@@ -148,16 +148,9 @@ export default function TermsOfServicePage() {
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">5. Disclaimer of Liability</h3>
-                  <p className="mb-2">To the maximum extent permitted by Hawaii law, Cruise Kauaʻi DISCLAIMS ALL LIABILITY for any claims, damages, losses, or injuries arising out of or related to:</p>
-                  <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li>Any ride, carpool, or transportation activity</li>
-                    <li>Acts or omissions of drivers or passengers</li>
-                    <li>Vehicle condition or operation</li>
-                    <li>Insurance coverage or lack thereof</li>
-                    <li>Disputes between users</li>
-                  </ul>
-                  <p className="mt-2">Cruise Kauaʻi does not guarantee the safety, legality, suitability, or insurance coverage of any user or ride.</p>
+                  <h3 className="font-bold text-lg text-secondary mb-2">5. Platform Role & Limitation of Liability</h3>
+                  <p className="mb-2">Cruise Kauaʻi serves as a coordination platform connecting independent community members for voluntary cost-sharing carpools. Cruise Kauaʻi is not responsible for the acts or omissions of independent users, vehicle condition, or the outcome of individual arrangements made between community members.</p>
+                  <p>To the extent permitted by Hawaii law, Cruise Kauaʻi is not liable for claims arising out of transportation activities arranged through the platform.</p>
                 </section>
 
                 <section>
@@ -187,15 +180,9 @@ export default function TermsOfServicePage() {
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">8. Insurance Disclosure (IMPORTANT NOTICE)</h3>
-                  <p className="font-semibold uppercase mb-2">Cruise Kauaʻi DOES NOT PROVIDE AUTOMOBILE OR LIABILITY INSURANCE.</p>
-                  <p className="mb-2">Drivers are solely responsible for maintaining legally required insurance coverage.</p>
-                  <p className="mb-2">Users acknowledge that:</p>
-                  <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li>Personal auto insurance may not cover carpooling or cost-sharing activities</li>
-                    <li>Any damages or injuries may not be fully insured</li>
-                    <li>Cruise Kauaʻi is not responsible for insurance gaps or denied claims</li>
-                  </ul>
+                  <h3 className="font-bold text-lg text-secondary mb-2">8. Insurance Guidance</h3>
+                  <p className="mb-2">Drivers are responsible for maintaining legally required insurance coverage, and Cruise Kauaʻi encourages all users to confirm their coverage related to carpooling activities with their insurer.</p>
+                  <p>Cruise Kauaʻi does not provide automobile or liability insurance, and users are encouraged to review their policies accordingly.</p>
                 </section>
 
                 <section>
@@ -207,10 +194,9 @@ export default function TermsOfServicePage() {
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">10. No Background Checks</h3>
-                  <p className="mb-2">Cruise Kauaʻi does not conduct criminal background checks, driving record checks, or continuous monitoring of users.</p>
-                  <p className="mb-2">Any license or vehicle verification is limited and does not constitute endorsement or certification.</p>
-                  <p className="font-semibold">Users are solely responsible for exercising their own judgment and caution.</p>
+                  <h3 className="font-bold text-lg text-secondary mb-2">10. Safety Standards</h3>
+                  <p className="mb-2">Cruise Kauaʻi is actively evaluating operational best practices and safety standards appropriate for community-based carpool coordination.</p>
+                  <p>We require license verification for all drivers and are committed to continuously improving our community safety processes.</p>
                 </section>
 
                 <section>
