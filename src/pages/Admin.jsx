@@ -523,6 +523,46 @@ export default function AdminPage() {
           </div>
           <div className="flex items-center gap-3">
             <Button
+              onClick={async () => {
+                const [allRides, allRequests] = await Promise.all([
+                  base44.entities.Ride.list(),
+                  base44.entities.RideRequest.list(),
+                ]);
+                const driverIds = new Set(allRides.map(r => r.driver_id).filter(Boolean));
+                const riderIds = new Set(allRequests.map(r => r.rider_id).filter(Boolean));
+                const activeIds = new Set([...driverIds, ...riderIds]);
+                const activeUsers = users.filter(u => activeIds.has(u.id));
+                const rows = [
+                  ['Name', 'Email', 'Username', 'Role', 'User Type', 'Island', 'Rides Posted', 'Rides Requested', 'Joined Date'],
+                  ...activeUsers.map(u => [
+                    u.full_name || '',
+                    u.email || '',
+                    u.username || '',
+                    u.role || '',
+                    u.user_type || '',
+                    u.preferred_island || '',
+                    allRides.filter(r => r.driver_id === u.id).length,
+                    allRequests.filter(r => r.rider_id === u.id).length,
+                    u.created_date ? new Date(u.created_date).toLocaleDateString() : '',
+                  ])
+                ];
+                const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `active-customers-${new Date().toISOString().split('T')[0]}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
+              variant="outline"
+              size="sm"
+              className="rounded-2xl border-gray-300 text-gray-700"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              export active customers
+            </Button>
+            <Button
               onClick={() => {
                 const unverified = users
                   .filter(u => u.user_type !== 'driver' && u.user_type !== 'rider' && u.role !== 'admin')
