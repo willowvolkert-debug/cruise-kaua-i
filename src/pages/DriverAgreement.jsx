@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { FileText, CheckCircle } from "lucide-react";
+import { FileText, CheckCircle, Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { jsPDF } from "jspdf";
 
 export default function DriverAgreementPage() {
   const [agreed, setAgreed] = useState(false);
@@ -46,6 +47,59 @@ export default function DriverAgreementPage() {
     setCheckboxes(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+    const margin = 50;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const maxWidth = pageWidth - margin * 2;
+    let y = margin;
+
+    const addText = (text, fontSize, isBold, color = [40, 40, 40]) => {
+      doc.setFontSize(fontSize);
+      doc.setFont('helvetica', isBold ? 'bold' : 'normal');
+      doc.setTextColor(...color);
+      const lines = doc.splitTextToSize(text, maxWidth);
+      lines.forEach(line => {
+        if (y > doc.internal.pageSize.getHeight() - margin) { doc.addPage(); y = margin; }
+        doc.text(line, margin, y);
+        y += fontSize * 1.4;
+      });
+    };
+
+    addText('Cruise Kauaʻi', 22, true, [34, 85, 55]);
+    y += 4;
+    addText('Driver Participation Agreement', 18, true, [30, 80, 120]);
+    y += 4;
+    addText(`Last Updated: ${new Date().toLocaleDateString()}`, 10, false, [120, 120, 120]);
+    y += 16;
+    addText('This Driver Participation Agreement ("Agreement") is entered into between you ("Driver") and Cruise Kauaʻi.', 10, false);
+    y += 10;
+
+    const sections = [
+      ['1. Agreement to Terms', 'By registering as a driver or offering rides through Cruise Kauaʻi, you confirm that you have read, understand, and agree to this Agreement, the Cruise Kauaʻi Terms of Service, and all applicable Hawaii laws and regulations. If you do not agree, you may not use the platform as a driver.'],
+      ['2. Independent Status', 'You are not an employee, agent, partner, or contractor of Cruise Kauaʻi. You act solely as an independent individual. Cruise Kauaʻi does not control how, when, or whether you provide rides. You are solely responsible for your conduct, vehicle, and compliance with law.'],
+      ['3. Non-Commercial, Cost-Sharing Use Only', 'All rides are voluntary and incidental to your own travel. Any amounts requested from passengers are limited to reasonable cost-sharing. You will not generate profit, wages, or compensation. You will not provide transportation for hire or commercial ride services. Violation of this section may result in immediate removal.'],
+      ['4. Driver Eligibility & Legal Compliance', 'You represent and warrant that you hold a valid Hawaii driver\'s license, are legally permitted to operate a motor vehicle, comply with all traffic and safety laws, and will not operate while impaired, fatigued, or distracted.'],
+      ['5. Vehicle Standards', 'Your vehicle is legally registered and in safe, roadworthy condition, meets all Hawaii safety and inspection requirements, and is not a taxicab, limousine, or for-hire vehicle. You agree to remove your vehicle from the platform if it becomes unsafe or non-compliant.'],
+      ['6. Insurance Acknowledgment (CRITICAL DISCLOSURE)', 'Cruise Kauaʻi does not provide insurance. You are solely responsible for maintaining legally required auto insurance. Your personal insurance may not cover carpooling or cost-sharing. Any damages, injuries, or claims may be uninsured or underinsured. You certify that you have confirmed coverage with your insurer.'],
+      ['7. Assumption of Risk', 'You knowingly and voluntarily assume all risks arising from operating a motor vehicle, transporting passengers, and interacting with platform users. You agree that Cruise Kauaʻi bears no responsibility for such risks.'],
+      ['8. Indemnification', 'You agree to defend, indemnify, and hold harmless Cruise Kauaʻi from any claims, damages, losses, liabilities, or expenses arising from your driving, vehicle condition, insurance coverage or lack thereof, or violations of law or this Agreement.'],
+      ['9. No Background Checks or Monitoring', 'Cruise Kauaʻi does not conduct criminal or driving history checks, does not monitor driving behavior, and does not guarantee passenger conduct or safety.'],
+      ['10. Suspension or Termination', 'Cruise Kauaʻi may suspend or terminate your access at any time for safety, compliance, or legal concerns.'],
+      ['11. Governing Law', 'This Agreement is governed by the laws of the State of Hawaii.'],
+      ['12. Electronic Acceptance', 'By clicking "I Agree," you acknowledge this Agreement has the same legal effect as a written signature.'],
+    ];
+
+    sections.forEach(([title, body]) => {
+      addText(title, 12, true, [30, 80, 120]);
+      y += 2;
+      addText(body, 10, false);
+      y += 10;
+    });
+
+    doc.save('CruiseKauai-DriverAgreement.pdf');
+  };
+
   const handleAccept = async () => {
     if (!agreed || !allCheckboxesChecked) {
       alert("Please read the agreement and check all boxes to continue.");
@@ -80,7 +134,10 @@ export default function DriverAgreementPage() {
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-secondary mb-2">Driver Agreement</h1>
-          <p className="text-gray-600">Required for all drivers on Cruise Kauaʻi</p>
+          <p className="text-gray-600 mb-3">Required for all drivers on Cruise Kauaʻi</p>
+          <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="rounded-2xl">
+            <Download className="w-4 h-4 mr-2" /> Download PDF
+          </Button>
         </div>
 
         <Card className="shadow-lg border-border bg-white rounded-3xl">
