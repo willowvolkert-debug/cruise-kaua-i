@@ -42,12 +42,13 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
-    const schedules = await base44.asServiceRole.entities.RecurringSchedule.list();
+    const [schedules, trips, users, existingRides] = await Promise.all([
+      base44.asServiceRole.entities.RecurringSchedule.list(),
+      base44.asServiceRole.entities.RecurringTrip.list(),
+      base44.asServiceRole.entities.User.list(),
+      base44.asServiceRole.entities.Ride.list(),
+    ]);
     const activeSchedules = schedules.filter(s => s.is_active);
-
-    const trips = await base44.asServiceRole.entities.RecurringTrip.list();
-    const users = await base44.asServiceRole.entities.User.list();
-    const existingRides = await base44.asServiceRole.entities.Ride.list();
 
     let emailsSent = 0;
     let ridesPosted = 0;
@@ -65,8 +66,6 @@ Deno.serve(async (req) => {
     // 3 days from now (window for sending community notification)
     const in3days = new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000);
     const in4days = new Date(today.getTime() + 4 * 24 * 60 * 60 * 1000);
-
-    const allUsers = await base44.asServiceRole.entities.User.list();
 
     const appUrl = 'https://cruisekauai.org';
 
@@ -134,18 +133,14 @@ Deno.serve(async (req) => {
         const notificationSent = (schedule.notification_sent_dates || []).includes(dateStr);
         const rideIn3days = rideDate >= in3days && rideDate < in4days;
         if (!notificationSent && rideIn3days && existingRide) {
-          const rideForEmail = existingRide;
-          const recipients = allUsers.filter(u => u.email && u.id !== schedule.user_id);
-          const BATCH_SIZE = 5;
-          const DELAY_MS = 1000;
-          for (let i = 0; i < recipients.length; i += BATCH_SIZE) {
-            const batch = recipients.slice(i, i + BATCH_SIZE);
-            await Promise.all(batch.map(u => {
-              const firstName = u.full_name?.split(' ')[0] || 'there';
-              return base44.asServiceRole.integrations.Core.SendEmail({
-                to: u.email,
-                subject: `New ride available: ${trip.departure_location} → ${trip.destination} on ${dateStr}`,
-                body: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+          const recipients = users.filter(u => u.email && u.id !== schedule.user_id);
+          // Fire-and-forget all emails — don't await to avoid timeout
+          recipients.forEach(u => {
+            const firstName = u.full_name?.split(' ')[0] || 'there';
+            base44.asServiceRole.integrations.Core.SendEmail({
+              to: u.email,
+              subject: `New ride available: ${trip.departure_location} → ${trip.destination} on ${dateStr}`,
+              body: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
 <body style="margin:0;padding:0;background-color:#f5f0e8;font-family:'Helvetica Neue',Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f0e8;padding:32px 16px;">
     <tr><td align="center">
@@ -178,10 +173,8 @@ Deno.serve(async (req) => {
     </td></tr>
   </table>
 </body></html>`
-              }).catch(() => null);
-            }));
-            if (i + BATCH_SIZE < recipients.length) await new Promise(r => setTimeout(r, DELAY_MS));
-          }
+            }).catch(() => null);
+          });
           await base44.asServiceRole.entities.RecurringSchedule.update(schedule.id, {
             notification_sent_dates: [...(schedule.notification_sent_dates || []), dateStr]
           });
