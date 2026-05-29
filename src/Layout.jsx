@@ -237,8 +237,11 @@ export default function Layout({ children, currentPageName }) {
         // Load unread counts
         loadUnreadCount(user);
       } catch (e) {
-        // User not authenticated - redirect to login
-        base44.auth.redirectToLogin(window.location.href);
+        // User not authenticated - redirect to login unless on a public page
+        const publicPaths = ['/', createPageUrl("AboutUs"), createPageUrl("ContactUs")];
+        if (!publicPaths.includes(location.pathname)) {
+          base44.auth.redirectToLogin(window.location.href);
+        }
       }
     };
 
