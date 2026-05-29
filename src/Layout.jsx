@@ -218,11 +218,6 @@ export default function Layout({ children, currentPageName }) {
   };
 
   React.useEffect(() => {
-    // Check for explore mode
-    const urlParams = new URLSearchParams(window.location.search);
-    const exploreParam = urlParams.get('explore');
-    setIsExploreMode(exploreParam === 'true');
-
     const loadUser = async () => {
       try {
         const user = await base44.auth.me();
@@ -242,15 +237,8 @@ export default function Layout({ children, currentPageName }) {
         // Load unread counts
         loadUnreadCount(user);
       } catch (e) {
-        // User not authenticated - redirect to Welcome page unless already there or exploring
-        if (!exploreParam && location.pathname !== createPageUrl("Welcome") && 
-            location.pathname !== createPageUrl("ContactUs") && 
-            location.pathname !== createPageUrl("Account") &&
-            location.pathname !== createPageUrl("DriverSignupFlow") &&
-            location.pathname !== createPageUrl("RiderSignupFlow")) {
-          navigate(createPageUrl("Welcome"));
-        }
-        console.error("Error loading user:", e);
+        // User not authenticated - redirect to login
+        base44.auth.redirectToLogin(window.location.href);
       }
     };
 
