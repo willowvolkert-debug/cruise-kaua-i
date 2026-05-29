@@ -76,7 +76,6 @@ export default function AccountPage() {
     const [allRidesData, setAllRidesData] = useState([]);
     const [ratings, setRatings] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [isExploreMode, setIsExploreMode] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [showLicenseModal, setShowLicenseModal] = useState(false);
     const [editData, setEditData] = useState({});
@@ -105,10 +104,7 @@ export default function AccountPage() {
     const [isSavingPhone, setIsSavingPhone] = useState(false);
 
     useEffect(() => {
-        // Check for explore mode
         const urlParams = new URLSearchParams(window.location.search);
-        const exploreParam = urlParams.get('explore');
-        setIsExploreMode(exploreParam === 'true');
         
         // If deep-linked with show_phone_prompt, force the prompt open after load
         if (urlParams.get('show_phone_prompt') === 'true') {
@@ -130,7 +126,7 @@ export default function AccountPage() {
         try {
             const isAuthenticated = await base44.auth.isAuthenticated();
             if (!isAuthenticated) {
-                setIsLoading(false);
+                base44.auth.redirectToLogin(window.location.href);
                 return;
             }
             
@@ -429,32 +425,7 @@ export default function AccountPage() {
 
     if (isLoading) return <div className="p-8 text-center">Loading account...</div>;
     
-    if (!user && isExploreMode) {
-        return (
-            <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-50 via-white to-gray-100">
-                <Card className="max-w-md w-full shadow-xl rounded-3xl border-gray-300 bg-white">
-                    <CardContent className="p-8 text-center space-y-6">
-                        <div className="flex justify-center">
-                            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center">
-                                <ShieldCheck className="w-12 h-12 text-gray-600" />
-                            </div>
-                        </div>
-                        <div>
-                            <h2 className="text-2xl font-bold text-secondary mb-2">Your account doesn't exist! Create one here</h2>
-                        </div>
-                        <Button
-                            onClick={() => base44.auth.redirectToLogin(createPageUrl("Account"))}
-                            className="w-full py-6 text-lg bg-primary hover:bg-primary/90 rounded-2xl"
-                        >
-                            sign in
-                        </Button>
-                    </CardContent>
-                </Card>
-            </div>
-        );
-    }
-    
-    if (!user) return <div className="p-8 text-center">Could not load user data. Please log in.</div>;
+    if (!user) return null;
     
     const driverRatings = ratings.filter(r => r.trip_role === 'driver');
     const passengerRatings = ratings.filter(r => r.trip_role === 'passenger');
