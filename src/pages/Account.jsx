@@ -99,6 +99,7 @@ export default function AccountPage() {
     const [saveError, setSaveError] = useState(null);
     const [adminMessages, setAdminMessages] = useState([]);
     const [showProfileQuiz, setShowProfileQuiz] = useState(false);
+    const [profileQuizSavedStep, setProfileQuizSavedStep] = useState(0);
     const [showPhonePrompt, setShowPhonePrompt] = useState(false);
     const [phonePromptValue, setPhonePromptValue] = useState('');
     const [isSavingPhone, setIsSavingPhone] = useState(false);
@@ -132,6 +133,7 @@ export default function AccountPage() {
             
             const currentUser = await base44.auth.me();
             setUser(currentUser);
+            setProfileQuizSavedStep(currentUser.profile_quiz_saved_step || 0);
             // Show quiz only if user hasn't completed it
             if (!currentUser.has_completed_profile_quiz) {
                 setShowProfileQuiz(true);
@@ -636,19 +638,28 @@ export default function AccountPage() {
                                         {profilePicFile && <p className="text-xs text-gray-500 text-center">📎 {profilePicFile.name}</p>}
                                     </div>
                                 ) : (
-                                    <div className="flex flex-col gap-2">
-                                        <Button onClick={() => setIsEditing(true)} className="bg-primary hover:bg-primary/90 rounded-2xl">
-                                            <Edit className="w-4 h-4 mr-2"/>edit profile
-                                        </Button>
+                                   <div className="flex flex-col gap-2">
+                                       {!user.has_completed_profile_quiz && profileQuizSavedStep > 0 ? (
+                                           <Button
+                                               onClick={() => setShowProfileQuiz(true)}
+                                               className="rounded-2xl animate-pulse bg-blue-600 hover:bg-blue-700 text-white"
+                                           >
+                                               ✨ finish profile
+                                           </Button>
+                                       ) : (
+                                       <Button onClick={() => setIsEditing(true)} className="bg-primary hover:bg-primary/90 rounded-2xl">
+                                           <Edit className="w-4 h-4 mr-2"/>edit profile
+                                       </Button>
+                                       )}
                                         <Button
-                                             variant="outline"
-                                             className="w-full border-blue-200 text-blue-600 hover:bg-blue-50 rounded-2xl text-sm"
-                                             onClick={() => window.dispatchEvent(new CustomEvent('openTutorial'))}
-                                         >
-                                             🌺 re-watch welcome tutorial
-                                         </Button>
-                                    </div>
-                                )}
+                                            variant="outline"
+                                            className="w-full border-blue-200 text-blue-600 hover:bg-blue-50 rounded-2xl text-sm"
+                                            onClick={() => window.dispatchEvent(new CustomEvent('openTutorial'))}
+                                        >
+                                            🌺 re-watch welcome tutorial
+                                        </Button>
+                                       </div>
+                                       )}
                             </div>
                         </div>
                         {user.drivers_license_verified && !user.license_rejection_reason && ridesTaken.length === 0 && (
@@ -1192,7 +1203,8 @@ export default function AccountPage() {
             {showProfileQuiz && user && (
                 <ProfileSetupQuiz
                     user={user}
-                    onComplete={() => { setShowProfileQuiz(false); loadData(); }}
+                    initialStep={profileQuizSavedStep}
+                    onComplete={() => { setShowProfileQuiz(false); setProfileQuizSavedStep(0); loadData(); }}
                 />
             )}
 

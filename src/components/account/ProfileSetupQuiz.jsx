@@ -58,10 +58,10 @@ const AGREEMENT_BOXES = [
   { key: 'voluntaryParticipation', label: 'I voluntarily agree to participate' },
 ];
 
-export default function ProfileSetupQuiz({ user, onComplete }) {
+export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) {
   const navigate = useNavigate();
-  const [started, setStarted] = useState(false);
-  const [step, setStep] = useState(0);
+  const [started, setStarted] = useState(initialStep > 0); // skip welcome if resuming
+  const [step, setStep] = useState(initialStep);
   const [isDriverPath, setIsDriverPath] = useState(false);
   const [showRiderTips, setShowRiderTips] = useState(false);
   const [done, setDone] = useState(false);
@@ -287,6 +287,19 @@ export default function ProfileSetupQuiz({ user, onComplete }) {
     );
   }
 
+  const handleSaveAndComeBack = async () => {
+    // Save whatever profile data has been entered so far
+    await base44.auth.updateMe({
+      username: answers.username || user?.username || '',
+      age: answers.age ? Number(answers.age) : (user?.age || undefined),
+      gender: answers.gender || user?.gender || '',
+      bio: answers.bio || user?.bio || '',
+      phone_number: answers.phone_number || user?.phone_number || '',
+      profile_quiz_saved_step: step,
+    });
+    onComplete();
+  };
+
   const progress = ((step) / steps.length) * 100;
 
   return (
@@ -298,7 +311,15 @@ export default function ProfileSetupQuiz({ user, onComplete }) {
         </div>
 
         <div className="p-6 overflow-y-auto flex-1">
-          <p className="text-xs text-gray-400 font-medium mb-1 uppercase tracking-widest">{step + 1} of {steps.length}</p>
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-xs text-gray-400 font-medium uppercase tracking-widest">{step + 1} of {steps.length}</p>
+            <button
+              onClick={handleSaveAndComeBack}
+              className="text-xs text-blue-500 hover:text-blue-700 font-medium underline underline-offset-2 transition-colors"
+            >
+              save & come back later
+            </button>
+          </div>
           <h2 className="text-xl font-bold text-secondary mb-1">{current.title}</h2>
           <p className="text-sm text-gray-500 mb-5 leading-relaxed">{current.subtitle}</p>
 
