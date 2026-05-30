@@ -174,6 +174,21 @@ export default function WelcomePage() {
           <p className="text-gray-500 text-sm leading-relaxed">
             We started on Kauaʻi with a simple mission to ease traffic, and have expanded into a holistic example of how we can support local, reduce traffic, and build community all at the same time!
           </p>
+
+          <div className="mt-6 space-y-3">
+            <div className="rounded-2xl bg-green-50 border border-green-200 px-5 py-4">
+              <p className="text-gray-800 text-sm leading-relaxed">🌿 <strong>KAUAʻI</strong> — we are fully launched! Sign up as a driver or rider & be a part of the change today!</p>
+            </div>
+            <div className="rounded-2xl bg-blue-50 border border-blue-200 px-5 py-4">
+              <p className="text-gray-800 text-sm leading-relaxed">🌺 <strong>OʻAHU</strong> — Launching mid-summer. Sign up to be a driver today!</p>
+            </div>
+            <div className="rounded-2xl bg-orange-50 border border-orange-200 px-5 py-4">
+              <p className="text-gray-800 text-sm leading-relaxed">🌊 <strong>MAUI</strong> — Launching August! Sign up as a driver today & join our founder's group to shape Cruise Maui.</p>
+            </div>
+            <div className="rounded-2xl bg-red-50 border border-red-200 px-5 py-4">
+              <p className="text-gray-800 text-sm leading-relaxed">🌋 <strong>HAWAIʻI ISLAND</strong> — Launching September! Sign up as a driver today and join our founder's group to shape Cruise Big Island.</p>
+            </div>
+          </div>
         </div>
       </section>
 
