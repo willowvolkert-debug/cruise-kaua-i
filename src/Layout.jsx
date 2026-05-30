@@ -45,11 +45,6 @@ const getNavigationItems = (isExploreMode) => {
       title: "confirmed rides",
       url: createPageUrl("ConfirmedRides"),
       icon: CheckCircle,
-    },
-    {
-      title: "community",
-      url: createPageUrl("Community"),
-      icon: Users,
     }
   );
   }
@@ -70,6 +65,11 @@ const getNavigationItems = (isExploreMode) => {
       title: "contact us",
       url: createPageUrl("ContactUs") + (isExploreMode ? "?explore=true" : ""),
       icon: MessageSquare,
+    },
+    {
+      title: "community",
+      url: createPageUrl("Community") + (isExploreMode ? "?explore=true" : ""),
+      icon: Users,
     }
   );
 
