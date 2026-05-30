@@ -172,7 +172,7 @@ export default function WelcomePage() {
             Our mission is to provide <strong>accessible & affordable transportation</strong> across the islands, and divert more money back into our local economy.
           </p>
           <p className="text-gray-500 text-sm leading-relaxed">
-            We started on Kauaʻi to ease traffic, and have expanded to serve all islands — but keep our name to honor our roots. 🌿
+            We started on Kauaʻi with a simple mission to ease traffic, and have expanded into a holistic example of how we can support local, reduce traffic, and build community all at the same time!
           </p>
         </div>
       </section>
