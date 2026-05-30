@@ -22,7 +22,7 @@ function getStatus(tx) {
 export default function TransactionLedger() {
   const [transactions, setTransactions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     base44.entities.Transaction.list("-created_date", 100)

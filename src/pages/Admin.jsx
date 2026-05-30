@@ -66,7 +66,7 @@ export default function AdminPage() {
   const [showUserAccountView, setShowUserAccountView] = useState(false);
   const [viewingUserId, setViewingUserId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showNewActivity, setShowNewActivity] = useState(true);
+  const [showNewActivity, setShowNewActivity] = useState(false);
   const [showPhoneAlertModal, setShowPhoneAlertModal] = useState(false);
   const [selectedPhoneAlert, setSelectedPhoneAlert] = useState(null);
 
