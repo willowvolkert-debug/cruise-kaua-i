@@ -347,7 +347,7 @@ export default function WelcomePage() {
       </section>
 
       {/* ── FINAL CTA ── */}
-      <section className="relative px-4 py-16 text-center overflow-hidden" style={{ backgroundImage: 'url(https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/3196b00b5_IMG_429F61572FE6-1.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <section className="relative px-4 py-16 text-center overflow-hidden" style={{ backgroundImage: 'url(https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/65702faf8_IMG_D222AF74070A-1.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="absolute inset-0 bg-black/30" />
         <div className="relative z-10 max-w-sm mx-auto">
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl px-6 py-8 space-y-6">
