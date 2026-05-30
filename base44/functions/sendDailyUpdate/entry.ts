@@ -131,7 +131,8 @@ Deno.serve(async (req) => {
         const body = buildEmailBody(firstName, newRides, newRequests, u.id);
         return base44.asServiceRole.integrations.Core.SendEmail({
           to: u.email,
-          subject: `Today on Cruise Kaua'i: ${newRides.length} new ride${newRides.length !== 1 ? 's' : ''}, ${newRequests.length} request${newRequests.length !== 1 ? 's' : ''} 🌺`,
+          from_name: "Cruise Kaua'i",
+          subject: `${newRides.length} new ride${newRides.length !== 1 ? 's' : ''} + ${newRequests.length} request${newRequests.length !== 1 ? 's' : ''} posted today`,
           body,
         }).then(() => { sent++; }).catch(() => null);
       }));
