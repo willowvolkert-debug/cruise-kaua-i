@@ -61,17 +61,23 @@ const AGREEMENT_BOXES = [
 
 export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) {
   const navigate = useNavigate();
+
+  // Read island + role from URL params (set by JoinUs signup flow)
+  const _urlParams = new URLSearchParams(window.location.search);
+  const _prefilledIsland = _urlParams.get('island') || '';
+  const _prefilledRole = _urlParams.get('role') || ''; // 'driver' or 'rider'
+
   const [started, setStarted] = useState(initialStep > 0); // skip welcome if resuming
   const [step, setStep] = useState(initialStep);
-  const [isDriverPath, setIsDriverPath] = useState(false);
+  const [isDriverPath, setIsDriverPath] = useState(_prefilledRole === 'driver');
   const [showRiderTips, setShowRiderTips] = useState(false);
   const [showFoundersScreen, setShowFoundersScreen] = useState(false);
   const [done, setDone] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  // Profile answers
-  const [answers, setAnswers] = useState({ username: user?.username || "", age: user?.age || "", gender: user?.gender || "", bio: user?.bio || "", phone_number: user?.phone_number || "", profile_picture_url: user?.profile_picture_url || "", preferred_island: user?.preferred_island || "" });
+  // Profile answers — pre-fill island from URL param if available
+  const [answers, setAnswers] = useState({ username: user?.username || "", age: user?.age || "", gender: user?.gender || "", bio: user?.bio || "", phone_number: user?.phone_number || "", profile_picture_url: user?.profile_picture_url || "", preferred_island: user?.preferred_island || _prefilledIsland || "" });
   const [photoFile, setPhotoFile] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(user?.profile_picture_url || "");
   const fileInputRef = useRef();
