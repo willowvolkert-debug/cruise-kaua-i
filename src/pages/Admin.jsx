@@ -88,7 +88,7 @@ export default function AdminPage() {
         return;
       }
 
-      const allUsers = await base44.entities.User.list('-created_date');
+      const allUsers = await base44.entities.User.list('-created_date'); // newest first
       setUsers(allUsers);
 
       const pendingLic = allUsers.filter(u => u.drivers_license_pending_review === true);
