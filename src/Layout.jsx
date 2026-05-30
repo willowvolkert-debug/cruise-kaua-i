@@ -114,14 +114,16 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
           </div>
         </div>
         {!isExploreMode && (
-          <Link
-            to="/"
-            onClick={() => setOpenMobile(false)}
+          <button
+            onClick={async () => {
+              setOpenMobile(false);
+              await base44.auth.logout('/');
+            }}
             className="flex items-center gap-2 text-sm text-gray-600 hover:text-primary transition-colors w-full py-2 px-3 rounded-xl hover:bg-gray-100"
           >
             <Home className="w-4 h-4" />
             <span>view welcome home screen</span>
-          </Link>
+          </button>
         )}
       </SidebarHeader>
       
