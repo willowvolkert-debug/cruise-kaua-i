@@ -38,10 +38,10 @@ export default function WelcomePage() {
     setIsLoadingRides(true);
     try {
       const allRides = await base44.entities.Ride.list("-departure_date");
-      const filtered = allRides.filter(r =>
-        r.status === 'active' &&
-        r.departure_date >= start &&
-        r.departure_date <= end
+      const filtered = allRides.filter((r) =>
+      r.status === 'active' &&
+      r.departure_date >= start &&
+      r.departure_date <= end
       );
       setRides(filtered);
     } catch (e) {
@@ -62,9 +62,9 @@ export default function WelcomePage() {
   const handleRiderSignup = () => navigate(createPageUrl("RiderSignupFlow"));
 
   const showPhonePromptLink = new Date() < new Date('2026-06-04');
-  const loginTarget = showPhonePromptLink
-    ? createPageUrl("Account") + "?show_phone_prompt=true"
-    : createPageUrl("Account");
+  const loginTarget = showPhonePromptLink ?
+  createPageUrl("Account") + "?show_phone_prompt=true" :
+  createPageUrl("Account");
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden font-sans">
@@ -77,8 +77,8 @@ export default function WelcomePage() {
         <span className="text-sm text-gray-600">Welcome! </span>
         <button
           onClick={() => base44.auth.redirectToLogin(loginTarget)}
-          className="text-sm font-semibold text-primary underline underline-offset-2 hover:text-primary/80 transition-colors"
-        >
+          className="text-sm font-semibold text-primary underline underline-offset-2 hover:text-primary/80 transition-colors">
+          
           click here to log in →
         </button>
       </div>
@@ -89,42 +89,42 @@ export default function WelcomePage() {
         style={{
           backgroundImage: 'url(https://images.unsplash.com/photo-1505852679233-d9fd70aff56d?w=1200&q=80)',
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
+          backgroundPosition: 'center'
+        }}>
+        
         <div className="absolute inset-0" style={{ background: 'rgba(26, 74, 46, 0.72)' }} />
         <img
           src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
           alt={`${config.appName} logo`}
-          className="relative z-10 w-32 h-32 md:w-40 md:h-40 object-cover rounded-3xl shadow-2xl border-2 border-white/20 mb-6"
-        />
+          className="relative z-10 w-32 h-32 md:w-40 md:h-40 object-cover rounded-3xl shadow-2xl border-2 border-white/20 mb-6" />
+        
         <h1 className="relative z-10 text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-3 leading-tight">
           {config.appName}
         </h1>
         <p className="relative z-10 text-base md:text-lg text-white/80 font-medium leading-relaxed max-w-xs mx-auto mb-2">
           {config.heroSubtitle || "a community carpooling service in hawaiʻi"}
         </p>
-        {config.recruitingDrivers && (
-          <button
-            onClick={handleDriverSignup}
-            className="relative z-10 inline-flex items-center gap-2 bg-amber-400 text-amber-900 font-bold px-5 py-2 rounded-full text-sm shadow-lg animate-pulse mt-3 hover:bg-amber-300 transition-colors cursor-pointer"
-          >
+        {config.recruitingDrivers &&
+        <button
+          onClick={handleDriverSignup}
+          className="relative z-10 inline-flex items-center gap-2 bg-amber-400 text-amber-900 font-bold px-5 py-2 rounded-full text-sm shadow-lg animate-pulse mt-3 hover:bg-amber-300 transition-colors cursor-pointer">
+          
             🚗 Now Recruiting Drivers on Oʻahu!
           </button>
-        )}
+        }
         <div className="relative z-10 flex flex-col sm:flex-row gap-3 justify-center mt-6 w-full max-w-xs mx-auto">
           <Button
             onClick={handleSignUp}
             size="lg"
-            className="bg-white text-green-900 hover:bg-white/90 font-bold px-8 rounded-full shadow-xl"
-          >
+            className="bg-white text-green-900 hover:bg-white/90 font-bold px-8 rounded-full shadow-xl">
+            
             Join the Community
           </Button>
           <Button
             onClick={handleExplore}
             size="lg"
-            className="bg-transparent border-2 border-white text-white hover:bg-white/10 font-medium px-8 rounded-full"
-          >
+            className="bg-transparent border-2 border-white text-white hover:bg-white/10 font-medium px-8 rounded-full">
+            
             Browse Rides →
           </Button>
         </div>
@@ -134,8 +134,8 @@ export default function WelcomePage() {
       <div className="px-4 py-6 bg-white">
         <div
           className="max-w-2xl mx-auto rounded-3xl p-6 md:p-8"
-          style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)' }}
-        >
+          style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)' }}>
+          
           <p className="text-white/60 text-xs font-bold uppercase tracking-widest mb-1">WE GET IT...</p>
           <h2 className="text-xl md:text-2xl font-extrabold text-white mb-4 whitespace-nowrap">
             Getting around in Hawaiʻi is harder than it should be
@@ -143,16 +143,16 @@ export default function WelcomePage() {
           {/* Icons first */}
           <div className="grid grid-cols-2 gap-3 mb-4">
             {[
-              { emoji: "⛽", label: "expensive gas" },
-              { emoji: "🚗", label: "loads of traffic" },
-              { emoji: "💸", label: "pricey car rentals" },
-              { emoji: "🔧", label: "mechanic shortage" },
-            ].map(({ emoji, label }) => (
-              <div key={label} className="flex items-center gap-2 bg-white/10 rounded-2xl px-4 py-3">
+            { emoji: "⛽", label: "expensive gas" },
+            { emoji: "🚗", label: "loads of traffic" },
+            { emoji: "💸", label: "pricey car rentals" },
+            { emoji: "🔧", label: "mechanic shortage" }].
+            map(({ emoji, label }) =>
+            <div key={label} className="flex items-center gap-2 bg-white/10 rounded-2xl px-4 py-3">
                 <span className="text-xl">{emoji}</span>
                 <span className="text-white text-sm font-medium">{label}</span>
               </div>
-            ))}
+            )}
           </div>
           {/* Body text below */}
           <p className="text-white/70 text-sm leading-relaxed">
@@ -192,8 +192,8 @@ export default function WelcomePage() {
           <div className="mt-6 flex justify-center">
             <Button
               onClick={() => navigate("/joinus")}
-              className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 py-5 text-base font-bold shadow-lg"
-            >
+              className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 py-5 text-base font-bold shadow-lg">
+              
               sign up here →
             </Button>
           </div>
@@ -201,8 +201,8 @@ export default function WelcomePage() {
       </section>
 
       {/* ── OAHU: A NEW OPTION FOR TRANSPORTATION ── */}
-      {config.showTransportOptions && (
-        <section className="px-4 py-10" style={{ background: 'linear-gradient(135deg, #0f2a4a 0%, #1a3d6b 100%)' }}>
+      {config.showTransportOptions &&
+      <section className="px-4 py-10" style={{ background: 'linear-gradient(135deg, #0f2a4a 0%, #1a3d6b 100%)' }}>
           <div className="max-w-2xl mx-auto space-y-8">
             <div className="text-center space-y-2">
               <h2 className="text-2xl md:text-3xl font-extrabold text-white">a new option for transportation</h2>
@@ -244,15 +244,15 @@ export default function WelcomePage() {
             </div>
           </div>
         </section>
-      )}
+      }
 
       {/* ── PHOTO BREAK 2: Haʻena Beach aerial ── */}
       <div className="w-full h-56 md:h-72 overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1542259009477-d625272157b7?w=1200&q=80"
-          alt="Aerial view of Haʻena beach"
-          className="w-full h-full object-cover"
-        />
+        <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/3196b00b5_IMG_429F61572FE6-1.jpeg"
+
+        alt="Aerial view of Haʻena beach"
+        className="w-full h-full object-cover" />
+        
       </div>
 
       {/* ── HOW IT WORKS ── */}
@@ -264,15 +264,15 @@ export default function WelcomePage() {
           </div>
           <div className="grid md:grid-cols-3 gap-4 items-start">
             {[
-              { emoji: "🚗", role: "Drivers", desc: "Offer rides on trips you're already taking. Cover your gas and vehicle costs while helping your neighbors." },
-              { emoji: "🙋", role: "Riders", desc: "Find affordable rides from locals already heading your way. Just $5–$30 per ride." },
-            ].map(({ emoji, role, desc }) => (
-              <div key={role} className="bg-white/10 backdrop-blur rounded-3xl p-6 space-y-3 text-left">
+            { emoji: "🚗", role: "Drivers", desc: "Offer rides on trips you're already taking. Cover your gas and vehicle costs while helping your neighbors." },
+            { emoji: "🙋", role: "Riders", desc: "Find affordable rides from locals already heading your way. Just $5–$30 per ride." }].
+            map(({ emoji, role, desc }) =>
+            <div key={role} className="bg-white/10 backdrop-blur rounded-3xl p-6 space-y-3 text-left">
                 <div className="text-4xl">{emoji}</div>
                 <h3 className="text-xl font-bold text-white">{role}</h3>
                 <p className="text-green-100 text-sm leading-relaxed">{desc}</p>
               </div>
-            ))}
+            )}
             <div className="text-left px-2">
               <h3 className="text-2xl font-extrabold text-white mb-2">Simple!</h3>
               <p className="text-green-100 text-sm leading-relaxed">Less cars on the road & more money in localsʻ pockets.</p>
@@ -293,9 +293,9 @@ export default function WelcomePage() {
             <div className={`rounded-3xl p-6 shadow-md border space-y-3 ${config.recruitingDrivers ? 'border-amber-300 ring-2 ring-amber-200 bg-white' : 'bg-white border-gray-100'}`}>
               <div className="text-3xl">🏡</div>
               <h3 className="text-lg font-bold text-gray-900">{config.driverCardTitle || "Are you local?"}</h3>
-              {config.recruitingDrivers && (
-                <span className="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">🚗 Now Recruiting!</span>
-              )}
+              {config.recruitingDrivers &&
+              <span className="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">🚗 Now Recruiting!</span>
+              }
               <p className="text-gray-600 text-sm leading-relaxed">{config.driverCardDesc || "Register as a driver and start posting rides on your commutes. Earn money while improving life on the island."}</p>
               <Button onClick={handleDriverSignup} className="bg-primary hover:bg-primary/90 text-white rounded-full px-6 text-sm">
                 Sign up as a driver 🚗
@@ -329,16 +329,16 @@ export default function WelcomePage() {
           <h2 className="text-2xl font-extrabold text-gray-900">Built on trust</h2>
           <div className="grid grid-cols-3 gap-4">
             {[
-              { icon: <Shield className="w-7 h-7 text-green-700 mx-auto" />, label: "Verified Drivers", sub: "License checks required" },
-              { icon: <CheckCircle className="w-7 h-7 text-blue-600 mx-auto" />, label: "Secure Payments", sub: "Powered by Stripe" },
-              { icon: <Leaf className="w-7 h-7 text-green-600 mx-auto" />, label: "ʻĀina-Oriented", sub: "Fewer cars on the road" },
-            ].map(({ icon, label, sub }) => (
-              <div key={label} className="space-y-1">
+            { icon: <Shield className="w-7 h-7 text-green-700 mx-auto" />, label: "Verified Drivers", sub: "License checks required" },
+            { icon: <CheckCircle className="w-7 h-7 text-blue-600 mx-auto" />, label: "Secure Payments", sub: "Powered by Stripe" },
+            { icon: <Leaf className="w-7 h-7 text-green-600 mx-auto" />, label: "ʻĀina-Oriented", sub: "Fewer cars on the road" }].
+            map(({ icon, label, sub }) =>
+            <div key={label} className="space-y-1">
                 {icon}
                 <p className="font-bold text-gray-800 text-xs">{label}</p>
                 <p className="text-gray-400 text-xs">{sub}</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </section>
@@ -354,21 +354,21 @@ export default function WelcomePage() {
             <Button
               onClick={handleSignUp}
               size="lg"
-              className="bg-white text-green-900 hover:bg-white/90 font-bold rounded-full shadow-xl"
-            >
+              className="bg-white text-green-900 hover:bg-white/90 font-bold rounded-full shadow-xl">
+              
               Join the Community
             </Button>
             <Button
               onClick={handleExplore}
               size="lg"
-              className="bg-transparent border-2 border-white text-white hover:bg-white/10 rounded-full text-sm"
-            >
+              className="bg-transparent border-2 border-white text-white hover:bg-white/10 rounded-full text-sm">
+              
               Browse Rides Without Signing Up →
             </Button>
             <button
               onClick={() => setShowTutorial(true)}
-              className="text-sm text-green-300 hover:text-white underline underline-offset-2 transition-colors"
-            >
+              className="text-sm text-green-300 hover:text-white underline underline-offset-2 transition-colors">
+              
               watch the welcome tutorial →
             </button>
           </div>
@@ -380,13 +380,13 @@ export default function WelcomePage() {
         <div className="max-w-lg mx-auto text-center space-y-4">
           <button
             onClick={() => setShowRides(!showRides)}
-            className="text-sm text-primary hover:text-primary/80 underline underline-offset-2 transition-colors"
-          >
+            className="text-sm text-primary hover:text-primary/80 underline underline-offset-2 transition-colors">
+            
             {showRides ? 'hide rides ↑' : 'view all available rides →'}
           </button>
 
-          {showRides && (
-            <div className="text-left space-y-4 pt-2 pb-8">
+          {showRides &&
+          <div className="text-left space-y-4 pt-2 pb-8">
               <div className="flex items-end gap-2">
                 <div className="space-y-1 flex-1">
                   <Label className="text-xs text-gray-500">from</Label>
@@ -398,36 +398,36 @@ export default function WelcomePage() {
                   <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="rounded-xl text-sm h-9" />
                 </div>
                 <button
-                  onClick={() => loadRides(startDate, endDate)}
-                  disabled={isLoadingRides}
-                  className="mb-0 h-9 px-3 bg-primary text-white rounded-xl text-sm hover:bg-primary/90 shrink-0"
-                >
+                onClick={() => loadRides(startDate, endDate)}
+                disabled={isLoadingRides}
+                className="mb-0 h-9 px-3 bg-primary text-white rounded-xl text-sm hover:bg-primary/90 shrink-0">
+                
                   <RefreshCw className={`w-4 h-4 ${isLoadingRides ? 'animate-spin' : ''}`} />
                 </button>
               </div>
 
-              {isLoadingRides ? (
-                <div className="text-center py-6 text-gray-400 text-sm">loading rides...</div>
-              ) : Object.keys(ridesByDate).length === 0 ? (
-                <div className="text-center py-6 text-gray-400 text-sm">
+              {isLoadingRides ?
+            <div className="text-center py-6 text-gray-400 text-sm">loading rides...</div> :
+            Object.keys(ridesByDate).length === 0 ?
+            <div className="text-center py-6 text-gray-400 text-sm">
                   <MapPin className="w-8 h-8 mx-auto mb-2 text-gray-300" />
                   no rides posted for this date range
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {Object.entries(ridesByDate)
-                    .sort(([a], [b]) => new Date(a) - new Date(b))
-                    .map(([date, dateRides]) => (
-                      <div key={date}>
+                </div> :
+
+            <div className="space-y-4">
+                  {Object.entries(ridesByDate).
+              sort(([a], [b]) => new Date(a) - new Date(b)).
+              map(([date, dateRides]) =>
+              <div key={date}>
                         <p className="text-xs font-semibold text-secondary flex items-center gap-1 mb-2">
                           <Calendar className="w-3 h-3" />
                           {format(parseISO(date), 'MM/dd/yyyy')}
                         </p>
                         <div className="space-y-2">
-                          {dateRides
-                            .sort((a, b) => (a.departure_time || '').localeCompare(b.departure_time || ''))
-                            .map(ride => (
-                              <div key={ride.id} className="border border-gray-200 rounded-2xl p-4 bg-white space-y-2">
+                          {dateRides.
+                  sort((a, b) => (a.departure_time || '').localeCompare(b.departure_time || '')).
+                  map((ride) =>
+                  <div key={ride.id} className="border border-gray-200 rounded-2xl p-4 bg-white space-y-2">
                                 <div className="flex items-center justify-between gap-2">
                                   <p className="font-extrabold text-gray-900 text-base leading-tight truncate">
                                     {ride.departure_location} → {ride.destination}
@@ -439,7 +439,7 @@ export default function WelcomePage() {
                                   <div className="flex items-center gap-2">
                                     <Avatar className="w-6 h-6">
                                       <AvatarImage src={ride.driver_profile_picture_url} />
-                                      <AvatarFallback className="bg-primary text-white text-xs">{(ride.driver_name || 'DR').split(' ').map(n => n[0]).join('').toUpperCase()}</AvatarFallback>
+                                      <AvatarFallback className="bg-primary text-white text-xs">{(ride.driver_name || 'DR').split(' ').map((n) => n[0]).join('').toUpperCase()}</AvatarFallback>
                                     </Avatar>
                                     <span className="text-xs text-gray-500">@{ride.driver_username || ride.driver_name}</span>
                                   </div>
@@ -449,26 +449,26 @@ export default function WelcomePage() {
                                   </div>
                                 </div>
                               </div>
-                            ))}
+                  )}
                         </div>
                       </div>
-                    ))}
+              )}
                   <div className="text-center pt-2">
                     <button
-                      onClick={handleSignUp}
-                      className="text-sm font-semibold text-primary hover:text-primary/80 underline underline-offset-2 transition-colors"
-                    >
+                  onClick={handleSignUp}
+                  className="text-sm font-semibold text-primary hover:text-primary/80 underline underline-offset-2 transition-colors">
+                  
                       sign up to book a ride →
                     </button>
                   </div>
                 </div>
-              )}
+            }
             </div>
-          )}
+          }
         </div>
       </section>
 
       <WelcomeTutorialModal isOpen={showTutorial} onClose={() => setShowTutorial(false)} />
-    </div>
-  );
+    </div>);
+
 }
