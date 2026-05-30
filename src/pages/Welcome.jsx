@@ -138,7 +138,7 @@ export default function WelcomePage() {
         >
           <p className="text-white/60 text-xs font-bold uppercase tracking-widest mb-1">WE GET IT...</p>
           <h2 className="text-xl md:text-2xl font-extrabold text-white mb-4 whitespace-nowrap">
-            Transportation is tough in Hawaiʻi
+            Getting around in Hawaiʻi is harder than it should be
           </h2>
           {/* Icons first */}
           <div className="grid grid-cols-2 gap-3 mb-4">
