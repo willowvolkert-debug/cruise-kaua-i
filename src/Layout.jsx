@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { User, MessageSquare, ShieldCheck, Share2, MapPin, Users, CheckCircle } from "lucide-react";
+import { User, MessageSquare, ShieldCheck, MapPin, Users, CheckCircle, Home } from "lucide-react";
 import { getIslandFromDomain, ISLAND_CONFIG } from "@/lib/islandConfig";
 import { base44 } from "@/api/base44Client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -109,13 +109,14 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
           </div>
         </div>
         {!isExploreMode && (
-          <button
-            onClick={() => setShowShareModal(true)}
+          <Link
+            to="/"
+            onClick={() => setOpenMobile(false)}
             className="flex items-center gap-2 text-sm text-gray-600 hover:text-primary transition-colors w-full py-2 px-3 rounded-xl hover:bg-gray-100"
           >
-            <Share2 className="w-4 h-4" />
-            <span>share app</span>
-          </button>
+            <Home className="w-4 h-4" />
+            <span>view welcome home screen</span>
+          </Link>
         )}
       </SidebarHeader>
       
