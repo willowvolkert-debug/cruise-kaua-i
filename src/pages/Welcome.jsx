@@ -176,7 +176,7 @@ export default function WelcomePage() {
           </p>
 
           {/* ── HOW IT WORKS (inline) ── */}
-          <div className="mt-6 rounded-3xl overflow-hidden opacity-60" style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)' }}>
+          <div className="mt-6 rounded-3xl overflow-hidden opacity-85" style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)' }}>
             <div className="p-6 space-y-5 opacity-100 mx-1">
               <p className="text-xs font-bold tracking-[0.2em] uppercase text-green-400 text-center hidden">simple by design</p>
               {/* Driver + Rider cards side by side */}
