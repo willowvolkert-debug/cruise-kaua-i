@@ -176,12 +176,12 @@ export default function UserAccountView({ isOpen, onClose, userId }) {
                                         <span className="text-gray-600">Email:</span>
                                         <span className="font-medium">{user.email}</span>
                                     </div>
+                                    {user.role === 'admin' && (
                                     <div className="flex justify-between">
                                         <span className="text-gray-600">Role:</span>
-                                        <Badge className={user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'}>
-                                            {user.role}
-                                        </Badge>
+                                        <Badge className="bg-purple-100 text-purple-800">admin</Badge>
                                     </div>
+                                    )}
                                     <div className="flex justify-between">
                                         <span className="text-gray-600">User Type:</span>
                                         <Badge className={

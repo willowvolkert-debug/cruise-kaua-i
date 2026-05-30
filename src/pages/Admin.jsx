@@ -1215,9 +1215,9 @@ export default function AdminPage() {
                             {(verificationStatus === 'verified driver' || verificationStatus === 'verified rider') && <CheckCircle className="w-3 h-3 mr-1" />}
                             {verificationStatus}
                           </Badge>
-                          <Badge className={`text-xs ${accountBadgeClass}`}>
-                            {accountType}
-                          </Badge>
+                          {user.role === 'admin' && (
+                            <Badge className="text-xs bg-purple-100 text-purple-800">admin</Badge>
+                          )}
                         </div>
                       </div>
                     );
