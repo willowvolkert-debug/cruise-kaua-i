@@ -166,7 +166,7 @@ export default function WelcomePage() {
         <div className="max-w-2xl mx-auto space-y-4">
           <p className="text-xs font-bold tracking-[0.2em] uppercase text-primary">our solution</p>
           <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">
-            Thatʻs why we built<br />{config.appName}.
+            That's why we built<br />{config.appName}.
           </h2>
           <p className="text-gray-600 text-base leading-relaxed">
             Our mission is to provide <strong>accessible & affordable transportation</strong> across the islands, and divert more money back into our local economy.
