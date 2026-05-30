@@ -156,7 +156,7 @@ export default function WelcomePage() {
           </div>
           {/* Body text below */}
           <p className="text-white/70 text-sm leading-relaxed">
-            Getting around the island is a challenge for locals and visitors.
+            Hawaiʻi is being loved to death, and its people are being hurt in the process — stuck in traffic for hours and paying too much in transportation costs.
           </p>
         </div>
       </div>
