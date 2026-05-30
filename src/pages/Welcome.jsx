@@ -175,15 +175,6 @@ export default function WelcomePage() {
             We started on Kauaʻi with a simple mission to ease traffic, and have expanded into a holistic example of how we can support local, reduce traffic, and build community all at the same time!
           </p>
 
-          <div className="mt-6 flex justify-center">
-            <Button
-              onClick={() => navigate("/joinus")}
-              className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 py-5 text-base font-bold shadow-lg"
-            >
-              sign up here →
-            </Button>
-          </div>
-
           <div className="mt-6 space-y-3">
             <div className="rounded-2xl bg-green-50 border border-green-200 px-5 py-4">
               <p className="text-gray-800 text-sm leading-relaxed">🌿 <strong>KAUAʻI</strong> — we are fully launched! Sign up as a driver or rider & be a part of the change today!</p>
@@ -197,6 +188,14 @@ export default function WelcomePage() {
             <div className="rounded-2xl bg-red-50 border border-red-200 px-5 py-4">
               <p className="text-gray-800 text-sm leading-relaxed">🌋 <strong>HAWAIʻI ISLAND</strong> — Launching September! Sign up as a driver and join our founder's group to shape Cruise Big Island.</p>
             </div>
+          </div>
+          <div className="mt-6 flex justify-center">
+            <Button
+              onClick={() => navigate("/joinus")}
+              className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 py-5 text-base font-bold shadow-lg"
+            >
+              sign up here →
+            </Button>
           </div>
         </div>
       </section>
