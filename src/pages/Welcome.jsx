@@ -277,7 +277,7 @@ export default function WelcomePage() {
 
       {/* ── PHOTO BREAK 2: Haʻena Beach aerial ── */}
       <div className="w-full h-56 md:h-72 overflow-hidden">
-        <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/3196b00b5_IMG_429F61572FE6-1.jpeg"
+        <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/e91321132_IMG_6433FEBB2F35-1.jpeg"
 
         alt="Aerial view of Haʻena beach"
         className="w-full h-full object-cover" />
