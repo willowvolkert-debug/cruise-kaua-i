@@ -140,7 +140,8 @@ export default function AccountPage() {
             if (!currentUser.has_completed_profile_quiz || forceQuiz) {
                 // Reset has_completed_profile_quiz so quiz can be re-completed
                 if (forceQuiz) await base44.auth.updateMe({ has_completed_profile_quiz: false });
-                setShowProfileQuiz(true);
+                // Only auto-open if not already manually closed (save & come back later)
+                setShowProfileQuiz(prev => prev === false ? false : true);
             }
             setEditData({
                 username: currentUser.username || '',
