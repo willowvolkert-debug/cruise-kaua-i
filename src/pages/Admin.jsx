@@ -965,14 +965,24 @@ export default function AdminPage() {
                   <MapPin className="w-6 h-6" />
                   new activity (last 72h)
                 </div>
-                <Button
-                  onClick={() => setShowNewActivity(!showNewActivity)}
-                  variant="ghost"
-                  size="sm"
-                  className="text-blue-700 hover:bg-blue-100"
-                >
-                  {showNewActivity ? 'hide' : 'show'}
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => setShowNewActivity(!showNewActivity)}
+                    variant="ghost"
+                    size="sm"
+                    className="text-blue-700 hover:bg-blue-100"
+                  >
+                    {showNewActivity ? 'hide' : 'show'}
+                  </Button>
+                  <Button
+                    onClick={() => { setRecentRideRequests([]); setRecentRides([]); }}
+                    variant="ghost"
+                    size="sm"
+                    className="text-blue-700 hover:bg-blue-100"
+                  >
+                    clear
+                  </Button>
+                </div>
               </CardTitle>
             </CardHeader>
             {showNewActivity && (
