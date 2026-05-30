@@ -178,7 +178,7 @@ export default function WelcomePage() {
           {/* ── HOW IT WORKS (inline) ── */}
           <div className="mt-6 rounded-3xl overflow-hidden" style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)' }}>
             <div className="p-6 space-y-5">
-              <p className="text-xs font-bold tracking-[0.2em] uppercase text-green-400 text-center">simple by design</p>
+              <p className="text-xs font-bold tracking-[0.2em] uppercase text-green-400 text-center hidden">simple by design</p>
               {/* Driver + Rider cards side by side */}
               <div className="flex items-stretch gap-3">
                 <div className="flex-1 bg-white/10 rounded-2xl p-4 space-y-2 text-center">
