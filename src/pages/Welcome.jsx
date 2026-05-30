@@ -102,7 +102,7 @@ export default function WelcomePage() {
           {config.appName}
         </h1>
         <p className="relative z-10 text-base md:text-lg text-white/80 font-medium leading-relaxed max-w-xs mx-auto mb-2">
-          {config.heroSubtitle || "a community-based ridesharing app to reduce traffic on kauaʻi"}
+          {config.heroSubtitle || "a community carpooling service in hawaiʻi"}
         </p>
         {config.recruitingDrivers && (
           <button
