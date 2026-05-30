@@ -136,7 +136,10 @@ export default function AccountPage() {
             setProfileQuizSavedStep(currentUser.profile_quiz_saved_step || 0);
             // Show quiz if user hasn't completed it, or if forced via URL param
             const urlParams2 = new URLSearchParams(window.location.search);
-            if (!currentUser.has_completed_profile_quiz || urlParams2.get('reopen_quiz') === 'true') {
+            const forceQuiz = urlParams2.get('reopen_quiz') === 'true';
+            if (!currentUser.has_completed_profile_quiz || forceQuiz) {
+                // Reset has_completed_profile_quiz so quiz can be re-completed
+                if (forceQuiz) await base44.auth.updateMe({ has_completed_profile_quiz: false });
                 setShowProfileQuiz(true);
             }
             setEditData({
