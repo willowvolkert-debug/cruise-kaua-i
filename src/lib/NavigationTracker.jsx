@@ -40,9 +40,12 @@ export default function NavigationTracker() {
         }
 
         if (isAuthenticated && pageName) {
-            base44.appLogs.logUserInApp(pageName).catch(() => {
-                // Silently fail - logging shouldn't break the app
-            });
+            base44.appLogs.logUserInApp(pageName).catch(() => {});
+        }
+
+        // Track page views for all visitors (authenticated or not)
+        if (pageName) {
+            base44.entities.PageView.create({ page_name: pageName }).catch(() => {});
         }
     }, [location, isAuthenticated, Pages, mainPageKey]);
 
