@@ -69,6 +69,7 @@ export default function AdminPage() {
   const [showNewActivity, setShowNewActivity] = useState(false);
   const [showPhoneAlertModal, setShowPhoneAlertModal] = useState(false);
   const [selectedPhoneAlert, setSelectedPhoneAlert] = useState(null);
+  const [foundersGroups, setFoundersGroups] = useState({ Oahu: [], Maui: [], "Big Island": [] });
 
   useEffect(() => {
     loadData();
@@ -140,6 +141,14 @@ export default function AdminPage() {
         return licExpired || insExpired;
       });
       setExpiredDocUsers(expired);
+
+      // Founders groups — users who selected non-Kauai island
+      const founders = {
+        Oahu: allUsers.filter(u => u.preferred_island === 'Oahu' && u.is_founders_group),
+        Maui: allUsers.filter(u => u.preferred_island === 'Maui' && u.is_founders_group),
+        "Big Island": allUsers.filter(u => u.preferred_island === 'Big Island' && u.is_founders_group),
+      };
+      setFoundersGroups(founders);
 
       // Load landing page views (last 24 hours) — main page is "Trips"
       const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
@@ -1306,6 +1315,72 @@ export default function AdminPage() {
                 </div>
               </TabsContent>
             </Tabs>
+          </CardContent>
+        </Card>
+
+        {/* Founder's Groups */}
+        <Card className="shadow-md bg-white border-gray-200 rounded-3xl">
+          <CardHeader>
+            <CardTitle className="text-xl text-secondary flex items-center gap-2">
+              <Users className="w-5 h-5 text-amber-500" />
+              founder's groups ({Object.values(foundersGroups).reduce((s, g) => s + g.length, 0)})
+            </CardTitle>
+            <p className="text-sm text-gray-500">Users who signed up from islands where Cruise hasn't launched yet.</p>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { key: "Oahu", label: "Oʻahu", emoji: "🌺", color: "blue" },
+                { key: "Maui", label: "Maui", emoji: "🌊", color: "teal" },
+                { key: "Big Island", label: "Big Island", emoji: "🌋", color: "orange" },
+              ].map(({ key, label, emoji, color }) => {
+                const group = foundersGroups[key] || [];
+                const colorMap = {
+                  blue: { bg: "bg-blue-50", border: "border-blue-200", title: "text-blue-800", badge: "bg-blue-100 text-blue-800" },
+                  teal: { bg: "bg-teal-50", border: "border-teal-200", title: "text-teal-800", badge: "bg-teal-100 text-teal-800" },
+                  orange: { bg: "bg-orange-50", border: "border-orange-200", title: "text-orange-800", badge: "bg-orange-100 text-orange-800" },
+                };
+                const c = colorMap[color];
+                return (
+                  <details key={key} className={`${c.bg} border ${c.border} rounded-2xl`}>
+                    <summary className={`cursor-pointer px-5 py-4 font-semibold ${c.title} flex items-center gap-2 list-none`}>
+                      <span>{emoji}</span>
+                      <span>{label} founders</span>
+                      <Badge className={`ml-2 ${c.badge} text-xs`}>{group.length}</Badge>
+                    </summary>
+                    <div className="px-4 pb-4">
+                      {group.length === 0 ? (
+                        <p className="text-sm text-gray-400 text-center py-4">No founders yet for {label}.</p>
+                      ) : (
+                        <div className="space-y-2 mt-2">
+                          {group.map(u => (
+                            <div key={u.id} className="bg-white rounded-xl p-3 border border-gray-100 flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <Avatar className="w-8 h-8">
+                                  <AvatarFallback className="bg-gradient-to-r from-primary to-secondary text-white text-xs font-semibold">
+                                    {getInitials(u.full_name)}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <button onClick={() => handleViewUserAccount(u.id)} className="font-medium text-secondary text-sm hover:text-primary transition-colors text-left">{u.full_name}</button>
+                                  <p className="text-xs text-gray-500">{u.email}</p>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                {u.username && <span className="text-xs text-gray-400">@{u.username}</span>}
+                                <Button onClick={() => handleMessageUser(u)} size="sm" variant="outline" className="rounded-xl border-gray-300 text-gray-600 h-7 px-2 text-xs">
+                                  <Mail className="w-3 h-3 mr-1" />message
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </details>
+                );
+              })}
+            </div>
           </CardContent>
         </Card>
 

@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Camera, ChevronRight, CheckCircle, Upload, Car, MapPin, X } from "lucide-react";
 
 const BASE_STEPS = [
+  { id: "island", title: "Which island are you on?", subtitle: "Let us know which island you're based on.", type: "island", field: "preferred_island" },
   { id: "username", title: "What should we call you?", subtitle: "Choose a username others will see on the platform (no spaces).", type: "text", placeholder: "e.g. kaleo_808", field: "username" },
   { id: "age", title: "How old are you?", subtitle: "Riders and drivers can see your age to feel comfortable sharing a ride.", type: "number", placeholder: "e.g. 28", field: "age", min: 18 },
   { id: "gender", title: "What's your gender?", subtitle: "This helps people feel safe knowing who they're riding with.", type: "select", field: "gender", options: [
@@ -64,12 +65,13 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
   const [step, setStep] = useState(initialStep);
   const [isDriverPath, setIsDriverPath] = useState(false);
   const [showRiderTips, setShowRiderTips] = useState(false);
+  const [showFoundersScreen, setShowFoundersScreen] = useState(false);
   const [done, setDone] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
   // Profile answers
-  const [answers, setAnswers] = useState({ username: user?.username || "", age: user?.age || "", gender: user?.gender || "", bio: user?.bio || "", phone_number: user?.phone_number || "", profile_picture_url: user?.profile_picture_url || "" });
+  const [answers, setAnswers] = useState({ username: user?.username || "", age: user?.age || "", gender: user?.gender || "", bio: user?.bio || "", phone_number: user?.phone_number || "", profile_picture_url: user?.profile_picture_url || "", preferred_island: user?.preferred_island || "" });
   const [photoFile, setPhotoFile] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(user?.profile_picture_url || "");
   const fileInputRef = useRef();
@@ -106,7 +108,10 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
 
   const validate = () => {
     const val = answers[current.field];
-    if (current.type === "phone") {
+    if (current.type === "island") {
+      if (!val) { setError("Please select your island."); return false; }
+      return true;
+    } else if (current.type === "phone") {
       return true; // optional step
     } else if (current.type === "photo") {
       if (!photoFile && !user?.profile_picture_url) { setError("Oops! You have to complete this step before moving on."); return false; }
@@ -140,6 +145,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
       username: answers.username, age: Number(answers.age), gender: answers.gender, bio: answers.bio,
       profile_picture_url: profilePicUrl,
       phone_number: answers.phone_number || '',
+      preferred_island: answers.preferred_island || 'Kauai',
       sms_notifications_enabled: !!(answers.phone_number),
       profile_complete: !!(answers.username && answers.age && answers.gender && answers.bio && profilePicUrl),
       has_completed_profile_quiz: true,
@@ -184,6 +190,17 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
   const handleNext = async () => {
     setError("");
     if (!validate()) return;
+
+    // Island step — show founders screen for non-Kauai
+    if (current.type === "island") {
+      const island = answers.preferred_island;
+      if (island && island !== "Kauai") {
+        // Save island + founders flag right away
+        await base44.auth.updateMe({ preferred_island: island, is_founders_group: true });
+        setShowFoundersScreen(true);
+        return;
+      }
+    }
 
     // Driver choice step
     if (current.type === "driver_choice") return; // handled by buttons
@@ -275,6 +292,35 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     );
   }
 
+  if (showFoundersScreen) {
+    const islandName = answers.preferred_island;
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+        <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden max-h-[90vh] flex flex-col">
+          <div className="bg-gradient-to-br from-secondary to-blue-400 p-8 text-white text-center">
+            <div className="text-5xl mb-3">🌺</div>
+            <h2 className="text-2xl font-bold">right on, {islandName}!</h2>
+          </div>
+          <div className="p-6 flex-1 overflow-y-auto">
+            <p className="text-gray-700 text-base leading-relaxed mb-6">
+              {islandName === "Oahu" ? "Oʻahu" : islandName} will be launching mid-summer, and Maui + Big Island shortly after. In the meantime, you can finish signing up as a driver and will be a part of our founder's group for your island. We will reach out to you shortly to build the service on your island with you!
+            </p>
+            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6">
+              <p className="text-amber-800 text-sm font-semibold mb-1">🏆 You're a founder!</p>
+              <p className="text-amber-700 text-sm">As a founding member, you'll help shape how Cruise works on {islandName === "Oahu" ? "Oʻahu" : islandName}. We'll be in touch soon.</p>
+            </div>
+            <Button
+              onClick={() => { setShowFoundersScreen(false); setStep(step + 1); }}
+              className="w-full bg-secondary hover:bg-secondary/90 text-white rounded-full py-6 text-base font-bold"
+            >
+              continue signing up →
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (done) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
@@ -351,6 +397,28 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
           {/* TEXTAREA */}
           {current.type === "textarea" && (
             <textarea value={answers[current.field]} onChange={(e) => setAnswers({ ...answers, [current.field]: e.target.value })} placeholder={current.placeholder} rows={4} className="w-full rounded-2xl border border-input px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary resize-none" autoFocus />
+          )}
+
+          {/* ISLAND */}
+          {current.type === "island" && (
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { value: "Kauai", label: "Kauaʻi", emoji: "🌿", available: true },
+                { value: "Oahu", label: "Oʻahu", emoji: "🌺", available: false },
+                { value: "Maui", label: "Maui", emoji: "🌊", available: false },
+                { value: "Big Island", label: "Big Island", emoji: "🌋", available: false },
+              ].map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => setAnswers({ ...answers, preferred_island: opt.value })}
+                  className={`py-4 px-4 rounded-2xl border-2 text-sm font-medium transition-all flex flex-col items-center gap-1 ${answers.preferred_island === opt.value ? "border-primary bg-primary/10 text-primary" : "border-gray-200 bg-gray-50 text-gray-700 hover:border-primary/50"}`}
+                >
+                  <span className="text-2xl">{opt.emoji}</span>
+                  <span>{opt.label}</span>
+                  {!opt.available && <span className="text-xs text-gray-400 font-normal">coming soon</span>}
+                </button>
+              ))}
+            </div>
           )}
 
           {/* SELECT */}
