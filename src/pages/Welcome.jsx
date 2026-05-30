@@ -347,33 +347,33 @@ export default function WelcomePage() {
       </section>
 
       {/* ── FINAL CTA ── */}
-      <section className="px-4 py-10 text-white text-center" style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)' }}>
-        <div className="max-w-sm mx-auto space-y-6">
-          <h2 className="text-3xl font-extrabold leading-tight text-white">Ready to ride?</h2>
-          <p className="text-green-100 text-base leading-relaxed">
-            🤙 Mahalo for being a part of the movement. Every ride shared is a step toward a better Hawaiʻi.
-          </p>
-          <div className="flex flex-col gap-3">
-            <Button
-              onClick={handleSignUp}
-              size="lg"
-              className="bg-white text-green-900 hover:bg-white/90 font-bold rounded-full shadow-xl">
-              
-              Join the Community
-            </Button>
-            <Button
-              onClick={handleExplore}
-              size="lg"
-              className="bg-transparent border-2 border-white text-white hover:bg-white/10 rounded-full text-sm">
-              
-              Browse Rides Without Signing Up →
-            </Button>
-            <button
-              onClick={() => setShowTutorial(true)}
-              className="text-sm text-green-300 hover:text-white underline underline-offset-2 transition-colors">
-              
-              watch the welcome tutorial →
-            </button>
+      <section className="relative px-4 py-16 text-center overflow-hidden" style={{ backgroundImage: 'url(https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/3196b00b5_IMG_429F61572FE6-1.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className="absolute inset-0 bg-black/30" />
+        <div className="relative z-10 max-w-sm mx-auto">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl px-6 py-8 space-y-6">
+            <h2 className="text-3xl font-extrabold leading-tight text-gray-900">Ready to ride?</h2>
+            <p className="text-gray-700 text-base leading-relaxed">
+              🤙 Mahalo for being a part of the movement. Every ride shared is a step toward a better Hawaiʻi.
+            </p>
+            <div className="flex flex-col gap-3">
+              <Button
+                onClick={handleSignUp}
+                size="lg"
+                className="bg-black text-white hover:bg-black/85 font-bold rounded-full shadow-xl">
+                Join the Community
+              </Button>
+              <Button
+                onClick={handleExplore}
+                size="lg"
+                className="bg-black text-white hover:bg-black/85 rounded-full text-sm">
+                Browse Rides Without Signing Up →
+              </Button>
+              <button
+                onClick={() => setShowTutorial(true)}
+                className="text-sm text-gray-500 hover:text-gray-800 underline underline-offset-2 transition-colors">
+                watch the welcome tutorial →
+              </button>
+            </div>
           </div>
         </div>
       </section>
