@@ -45,6 +45,11 @@ const getNavigationItems = (isExploreMode) => {
       title: "confirmed rides",
       url: createPageUrl("ConfirmedRides"),
       icon: CheckCircle,
+    },
+    {
+      title: "community",
+      url: createPageUrl("Community"),
+      icon: Users,
     }
   );
   }
