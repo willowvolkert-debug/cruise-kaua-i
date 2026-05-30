@@ -175,6 +175,35 @@ export default function WelcomePage() {
             We started on Kauaʻi with a simple mission to ease traffic, and have expanded into a holistic example of how we can support local, reduce traffic, and build community all at the same time!
           </p>
 
+          {/* ── HOW IT WORKS (inline) ── */}
+          <div className="mt-6 rounded-3xl overflow-hidden" style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)' }}>
+            <div className="p-6 space-y-5">
+              <p className="text-xs font-bold tracking-[0.2em] uppercase text-green-400 text-center">simple by design</p>
+              {/* Driver + Rider cards side by side */}
+              <div className="flex items-stretch gap-3">
+                <div className="flex-1 bg-white/10 rounded-2xl p-4 space-y-2 text-center">
+                  <div className="text-3xl">🚗</div>
+                  <h3 className="text-base font-bold text-white">Drivers</h3>
+                  <p className="text-green-100 text-xs leading-relaxed">Offer rides on trips you're already taking. Cover your gas while helping neighbors.</p>
+                </div>
+                <div className="flex items-center justify-center shrink-0">
+                  <span className="text-2xl font-bold text-green-300">+</span>
+                </div>
+                <div className="flex-1 bg-white/10 rounded-2xl p-4 space-y-2 text-center">
+                  <div className="text-3xl">🙋</div>
+                  <h3 className="text-base font-bold text-white">Riders</h3>
+                  <p className="text-green-100 text-xs leading-relaxed">Find affordable rides from locals heading your way. Just $5–$30 per ride.</p>
+                </div>
+              </div>
+              {/* Arrow + Simple */}
+              <div className="flex flex-col items-center gap-1">
+                <span className="text-green-400 text-2xl leading-none">↓</span>
+                <h3 className="text-2xl font-extrabold text-white">Simple!</h3>
+                <p className="text-green-100 text-sm text-center">Less cars on the road & more money in localsʻ pockets.</p>
+              </div>
+            </div>
+          </div>
+
           <div className="mt-6 space-y-3">
             <div className="rounded-2xl bg-green-50 border border-green-200 px-5 py-4">
               <p className="text-gray-800 text-sm leading-relaxed">🌿 <strong>KAUAʻI</strong> — we are fully launched! Sign up as a driver or rider & be a part of the change today!</p>
@@ -254,32 +283,6 @@ export default function WelcomePage() {
         className="w-full h-full object-cover" />
         
       </div>
-
-      {/* ── HOW IT WORKS ── */}
-      <section className="px-4 py-8" style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)' }}>
-        <div className="max-w-2xl mx-auto space-y-6">
-          <div className="text-center">
-            <p className="text-xs font-bold tracking-[0.2em] uppercase text-green-400 mb-1">simple by design</p>
-            <h2 className="text-3xl font-extrabold text-white">How it works</h2>
-          </div>
-          <div className="grid md:grid-cols-3 gap-4 items-start">
-            {[
-            { emoji: "🚗", role: "Drivers", desc: "Offer rides on trips you're already taking. Cover your gas and vehicle costs while helping your neighbors." },
-            { emoji: "🙋", role: "Riders", desc: "Find affordable rides from locals already heading your way. Just $5–$30 per ride." }].
-            map(({ emoji, role, desc }) =>
-            <div key={role} className="bg-white/10 backdrop-blur rounded-3xl p-6 space-y-3 text-left">
-                <div className="text-4xl">{emoji}</div>
-                <h3 className="text-xl font-bold text-white">{role}</h3>
-                <p className="text-green-100 text-sm leading-relaxed">{desc}</p>
-              </div>
-            )}
-            <div className="text-left px-2">
-              <h3 className="text-2xl font-extrabold text-white mb-2">Simple!</h3>
-              <p className="text-green-100 text-sm leading-relaxed">Less cars on the road & more money in localsʻ pockets.</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ── GET INVOLVED ── */}
       <section className="px-4 py-8 bg-white">
