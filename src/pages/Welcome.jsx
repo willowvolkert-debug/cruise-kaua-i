@@ -133,7 +133,7 @@ export default function WelcomePage() {
       {/* ── WE GET IT section ── dark green card */}
       <div className="px-4 py-6 bg-white">
         <div
-          className="max-w-2xl mx-auto rounded-3xl p-6 md:p-8"
+          className="max-w-2xl mx-auto rounded-3xl p-6 md:p-8 my-1"
           style={{ background: 'linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)' }}>
           
           <p className="text-white/60 text-xs font-bold uppercase tracking-widest mb-1">WE GET IT...</p>
