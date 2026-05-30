@@ -134,8 +134,9 @@ export default function AccountPage() {
             const currentUser = await base44.auth.me();
             setUser(currentUser);
             setProfileQuizSavedStep(currentUser.profile_quiz_saved_step || 0);
-            // Show quiz only if user hasn't completed it
-            if (!currentUser.has_completed_profile_quiz) {
+            // Show quiz if user hasn't completed it, or if forced via URL param
+            const urlParams2 = new URLSearchParams(window.location.search);
+            if (!currentUser.has_completed_profile_quiz || urlParams2.get('reopen_quiz') === 'true') {
                 setShowProfileQuiz(true);
             }
             setEditData({
