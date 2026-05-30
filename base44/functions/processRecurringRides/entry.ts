@@ -45,8 +45,8 @@ Deno.serve(async (req) => {
     const [schedules, trips, users, existingRides] = await Promise.all([
       base44.asServiceRole.entities.RecurringSchedule.list(),
       base44.asServiceRole.entities.RecurringTrip.list(),
-      base44.asServiceRole.entities.User.list(),
-      base44.asServiceRole.entities.Ride.list(),
+      base44.asServiceRole.entities.User.list('-created_date', 500),
+      base44.asServiceRole.entities.Ride.filter({ is_recurring: true }, '-departure_date', 500),
     ]);
     const activeSchedules = schedules.filter(s => s.is_active);
 
@@ -132,8 +132,14 @@ Deno.serve(async (req) => {
         // ── STEP 2: Send community notification email exactly 3 days before the ride ──
         const notificationSent = (schedule.notification_sent_dates || []).includes(dateStr);
         const rideIn3days = rideDate >= in3days && rideDate < in4days;
-        if (!notificationSent && rideIn3days && existingRide) {
-          const recipients = users.filter(u => u.email && u.id !== schedule.user_id);
+        const rideExists = existingRides.find(r =>
+          r.driver_id === schedule.user_id &&
+          r.departure_date === dateStr &&
+          r.departure_location === trip.departure_location &&
+          r.destination === trip.destination
+        );
+        if (!notificationSent && rideIn3days && rideExists) {
+          const recipients = users.filter(u => u.email && u.id !== schedule.user_id && (u.user_type === 'rider' || u.user_type === 'driver'));
           // Fire-and-forget all emails — don't await to avoid timeout
           recipients.forEach(u => {
             const firstName = u.full_name?.split(' ')[0] || 'there';
