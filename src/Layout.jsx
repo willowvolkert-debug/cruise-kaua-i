@@ -115,7 +115,7 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
         </div>
         {!isExploreMode && (
           <Link
-            to="/"
+            to="/welcome"
             onClick={() => setOpenMobile(false)}
             className="flex items-center gap-2 text-sm text-gray-600 hover:text-primary transition-colors w-full py-2 px-3 rounded-xl hover:bg-gray-100"
           >
