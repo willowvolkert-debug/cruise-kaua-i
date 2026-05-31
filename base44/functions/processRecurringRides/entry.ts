@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
       base44.asServiceRole.entities.RecurringSchedule.list(),
       base44.asServiceRole.entities.RecurringTrip.list(),
       base44.asServiceRole.entities.User.list('-created_date', 500),
-      base44.asServiceRole.entities.Ride.filter({ is_recurring: true }, '-departure_date', 500),
+      base44.asServiceRole.entities.Ride.list('-departure_date', 1000),
     ]);
     const activeSchedules = schedules.filter(s => s.is_active);
 
