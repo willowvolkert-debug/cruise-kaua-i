@@ -68,9 +68,6 @@ export default function WelcomePage() {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden font-sans">
-      <style>{`
-        [data-sidebar="trigger"] { display: none !important; }
-      `}</style>
 
       {/* LOGIN BANNER */}
       <div className="bg-green-50 border-b border-green-200 px-4 py-2 text-center z-10 relative">
