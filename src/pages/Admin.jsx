@@ -45,6 +45,7 @@ export default function AdminPage() {
   const [recentRides, setRecentRides] = useState([]);
   const [contactInquiries, setContactInquiries] = useState([]);
   const [phoneAlerts, setPhoneAlerts] = useState([]);
+  const [allBookingsWithMessages, setAllBookingsWithMessages] = useState([]);
   const [pendingCommunityPosts, setPendingCommunityPosts] = useState([]);
   const [landingPageViews, setLandingPageViews] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -126,6 +127,10 @@ export default function AdminPage() {
       const allBookings = await base44.entities.RideBooking.list('-updated_date');
       const phoneDetected = allBookings.filter(b => b.phone_number_detected === true);
       setPhoneAlerts(phoneDetected);
+
+      // All bookings with at least one message
+      const withMessages = allBookings.filter(b => b.messages && b.messages.length > 0);
+      setAllBookingsWithMessages(withMessages);
 
       // Load pending community posts
       const allCommunityPosts = await base44.entities.CommunityPost.list('-created_date');
@@ -1148,6 +1153,49 @@ export default function AdminPage() {
         )}
 
 
+
+        {/* All User Messages */}
+        <details className="bg-white border border-gray-200 rounded-3xl shadow-md">
+          <summary className="cursor-pointer px-6 py-5 font-semibold text-secondary text-xl flex items-center gap-2 list-none">
+            <MessageSquare className="w-5 h-5 text-gray-500" />
+            all user messages ({allBookingsWithMessages.length} conversations)
+            <ChevronRight className="w-4 h-4 text-gray-400 ml-auto" />
+          </summary>
+          <div className="px-6 pb-6 space-y-4">
+            {allBookingsWithMessages.length === 0 ? (
+              <p className="text-gray-400 text-sm text-center py-4">No messages yet.</p>
+            ) : (
+              allBookingsWithMessages.map(booking => (
+                <details key={booking.id} className="bg-gray-50 border border-gray-200 rounded-2xl">
+                  <summary className="cursor-pointer px-4 py-3 flex items-center gap-2 list-none">
+                    <div className="flex-1">
+                      <p className="font-semibold text-secondary text-sm">
+                        {booking.passenger_name} ↔ {booking.driver_username || 'Driver'}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {booking.messages.length} message{booking.messages.length !== 1 ? 's' : ''} · Booking {booking.id.substring(0, 8)}...
+                        {booking.phone_number_detected && (
+                          <Badge className="ml-2 bg-red-100 text-red-700 text-xs">⚠ phone detected</Badge>
+                        )}
+                      </p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-gray-400 shrink-0" />
+                  </summary>
+                  <div className="px-4 pb-4 space-y-2 mt-1">
+                    {booking.messages.map((msg, idx) => (
+                      <div key={idx} className={`p-3 rounded-xl border text-sm ${msg.sender_id === booking.passenger_id ? 'bg-blue-50 border-blue-200 ml-4' : 'bg-white border-gray-200 mr-4'}`}>
+                        <p className="font-semibold text-secondary text-xs mb-1">
+                          @{msg.sender_name} · {msg.timestamp ? formatHST(msg.timestamp, "MMM d, h:mm a") + ' HST' : ''}
+                        </p>
+                        <p className="text-gray-800 whitespace-pre-wrap">{msg.message}</p>
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              ))
+            )}
+          </div>
+        </details>
 
         {/* Bookings & Communications */}
         <BookingsMonitor />
