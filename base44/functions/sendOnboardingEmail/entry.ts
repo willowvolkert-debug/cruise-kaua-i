@@ -92,7 +92,7 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
   },
 
   basic: {
-    subject: 'Cruise Kauaʻi- hereʻs why it matters',
+    subject: 'You signed up for Cruise Kauaʻi — here\'s what that means',
     body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
       ${logo}
       <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName} 🤙</p>
@@ -119,19 +119,18 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
       <div style="background:#faf7f2;border-left:4px solid #e8742a;border-radius:8px;padding:20px;margin-bottom:14px;">
         <p style="font-weight:bold;margin:0 0 8px;color:#1a1a1a;">👤 Step 1: Complete your profile</p>
         <p style="margin:0 0 8px;color:#555;">Add a photo, bio, and basic info. This is how drivers and riders get to know you before sharing a car.</p>
-        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/Account" style="color:#e8742a;font-weight:bold;">Finish your profile here</a></p>
+        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/Account" style="color:#e8742a;font-weight:bold;">Go to your Account page</a></p>
       </div>
 
       <div style="background:#faf7f2;border-left:4px solid #3b82f6;border-radius:8px;padding:20px;margin-bottom:14px;">
         <p style="font-weight:bold;margin:0 0 8px;color:#1a1a1a;">🪪 Step 2: Verify your ID</p>
-        <p style="margin:0 0 8px;color:#555;">Upload both sides of your driver's license. Required to book or post rides — it keeps our community safe. Our team reviews within 24 hours.</p>
-        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/Account" style="color:#3b82f6;font-weight:bold;">Verify under the "Verification" section</a></p>
+        <p style="margin:0 0 8px;color:#555;">Upload both sides of your driver's license — required to book or post rides. Our team reviews within 24 hours.</p>
       </div>
 
       <div style="background:#faf7f2;border-left:4px solid #8b5cf6;border-radius:8px;padding:20px;margin-bottom:28px;">
-        <p style="font-weight:bold;margin:0 0 8px;color:#1a1a1a;">🚗 Step 3 (optional): Become a driver & earn money</p>
-        <p style="margin:0 0 8px;color:#555;">Already commuting? Add your vehicle and start posting rides. Drivers on Cruise Kauaʻi earn real money on trips they're already making — with zero extra effort.</p>
-        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/VehicleDetails" style="color:#8b5cf6;font-weight:bold;">Add your vehicle here</a></p>
+        <p style="font-weight:bold;margin:0 0 8px;color:#1a1a1a;">🚗 Step 3 (optional): Become a driver</p>
+        <p style="margin:0 0 8px;color:#555;">Already commuting? Add your vehicle and start posting rides. Drivers earn on trips they're already making.</p>
+        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/Account" style="color:#8b5cf6;font-weight:bold;">Add your vehicle on your Account page</a></p>
       </div>
 
       <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
