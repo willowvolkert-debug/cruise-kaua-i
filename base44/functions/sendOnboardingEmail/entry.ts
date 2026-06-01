@@ -7,7 +7,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
 
   vehicle: {
-    subject: '🚗 You\'re almost a driver on Cruise Kauaʻi!',
+    subject: 'You\'re almost a driver on Cruise Kauaʻi',
     body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
       ${logo}
       <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName}! 🌺</p>
@@ -52,7 +52,7 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
   },
 
   license: {
-    subject: 'Your Cruise Kauaʻi verification is in — here\'s what\'s next 🪪',
+    subject: 'Your Cruise Kauaʻi verification is in — here\'s what\'s next',
     body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
       ${logo}
       <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName}! 🌺</p>
@@ -92,7 +92,7 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
   },
 
   basic: {
-    subject: 'You signed up for Cruise Kauaʻi — here\'s why it actually matters 🌺',
+    subject: 'You signed up for Cruise Kauaʻi — here\'s why it actually matters',
     body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
       ${logo}
       <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName} 🤙</p>
