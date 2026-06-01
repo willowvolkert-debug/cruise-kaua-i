@@ -88,12 +88,15 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const payload = await req.json().catch(() => ({}));
 
-    // Allow admin-triggered or scheduled calls (skip auth check for scheduled/unauthenticated calls)
-    const isAuthenticated = await base44.auth.isAuthenticated();
-    if (isAuthenticated) {
-      const user = await base44.auth.me();
-      if (user?.role !== 'admin') {
-        return Response.json({ error: 'Forbidden' }, { status: 403 });
+    // Only enforce auth for non-scheduled calls that include an Authorization header
+    const authHeader = req.headers.get('authorization') || '';
+    if (authHeader && !authHeader.includes('service-role')) {
+      const isAuthenticated = await base44.auth.isAuthenticated().catch(() => false);
+      if (isAuthenticated) {
+        const user = await base44.auth.me().catch(() => null);
+        if (user && user.role !== 'admin') {
+          return Response.json({ error: 'Forbidden' }, { status: 403 });
+        }
       }
     }
 
@@ -146,8 +149,11 @@ Deno.serve(async (req) => {
     const todayDay = now.getDay(); // 0=Sun
     const todayDate = now.getDate();
 
+    // Deduplicate by email, then filter by frequency preference
+    const seenEmails = new Set();
     const recipients = allUsers.filter(u => {
-      if (!u.email) return false;
+      if (!u.email || seenEmails.has(u.email)) return false;
+      seenEmails.add(u.email);
       const freq = u.email_update_frequency || 'daily';
       if (freq === 'never') return false;
       if (freq === 'daily') return true;
@@ -158,21 +164,27 @@ Deno.serve(async (req) => {
     });
 
     let sent = 0;
-    // Larger batches, no sleep — reduces total execution time dramatically
-    const BATCH_SIZE = 20;
 
-    for (let i = 0; i < recipients.length; i += BATCH_SIZE) {
-      const batch = recipients.slice(i, i + BATCH_SIZE);
-      await Promise.all(batch.map(u => {
-        const firstName = u.full_name?.split(' ')[0] || 'there';
-        const body = buildEmailBody(firstName, newRides, newRequests, u.id);
-        return base44.asServiceRole.integrations.Core.SendEmail({
-          to: u.email,
-          from_name: "Cruise Kaua'i",
-          subject,
-          body,
-        }).then(() => { sent++; }).catch(() => null);
-      }));
+    for (const u of recipients) {
+      const firstName = u.full_name?.split(' ')[0] || 'there';
+      const body = buildEmailBody(firstName, newRides, newRequests, u.id);
+      let attempts = 0;
+      while (attempts < 3) {
+        try {
+          await base44.asServiceRole.integrations.Core.SendEmail({
+            to: u.email,
+            from_name: "Cruise Kaua'i",
+            subject,
+            body,
+          });
+          sent++;
+          break;
+        } catch (e) {
+          attempts++;
+          if (attempts < 3) await sleep(2000); // wait 2s before retry on rate limit
+        }
+      }
+      await sleep(1000); // 1 email per second
     }
 
     return Response.json({ ok: true, sent, newRides: newRides.length, newRequests: newRequests.length });
