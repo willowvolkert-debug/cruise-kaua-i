@@ -83,37 +83,41 @@ Deno.serve(async (req) => {
       }
     }
 
-    // If preview=true, send a sample email with fake data to test recipient
     const testEmail = payload.test_email;
-    if (testEmail) {
-      const fakeRides = [
-        { departure_location: "Līhuʻe", destination: "Hanalei", departure_date: "2026-06-01", departure_time: "8:00 AM", seats_available: 2, driver_username: "kealoha_drives" },
-        { departure_location: "Kōloa", destination: "Kapa'a", departure_date: "2026-06-01", departure_time: "9:30 AM", seats_available: 3, driver_username: "malia_k" },
-        { departure_location: "Waimea", destination: "Līhuʻe", departure_date: "2026-06-02", departure_time: "7:00 AM", seats_available: 1, driver_username: "surf_kai" },
-      ];
-      const fakeRequests = [
-        { departure_location: "Princeville", destination: "Kōloa", departure_date: "2026-06-01", departure_time: "10:00 AM", seats_needed: 1, rider_username: "hana_w" },
-        { departure_location: "Hanapēpē", destination: "Līhuʻe", departure_date: "2026-06-02", departure_time: "8:30 AM", seats_needed: 2, rider_username: "joe_local" },
-      ];
-      const body = buildEmailBody("Willow", fakeRides, fakeRequests, "test");
-      await base44.asServiceRole.integrations.Core.SendEmail({
-        to: testEmail,
-        subject: "[EXAMPLE] Your daily Cruise Kaua'i update 🌺",
-        body,
-      });
-      return Response.json({ ok: true, sent: 1, mode: 'test' });
-    }
 
     // Get rides and requests posted in the last 24 hours
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const todayStr = new Date().toISOString().split('T')[0];
+    const in7days = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
     const [allUsers, allRides, allRequests] = await Promise.all([
       base44.asServiceRole.entities.User.list(),
       base44.asServiceRole.entities.Ride.filter({ status: 'active' }),
       base44.asServiceRole.entities.RideRequest.filter({ status: 'active' }),
     ]);
 
-    const newRides = allRides.filter(r => r.created_date >= since);
+    // Non-recurring rides: posted in last 24 hours
+    // Recurring rides: only include ones happening within the next 7 days (this week's rides)
+    const newRides = allRides.filter(r => {
+      if (r.is_recurring) {
+        return r.departure_date >= todayStr && r.departure_date <= in7days;
+      }
+      return r.created_date >= since;
+    });
     const newRequests = allRequests.filter(r => r.created_date >= since);
+
+    if (testEmail) {
+      const testUser = allUsers.find(u => u.email === testEmail);
+      const firstName = testUser?.full_name?.split(' ')[0] || 'there';
+      const body = buildEmailBody(firstName, newRides, newRequests, testUser?.id || 'test');
+      await base44.asServiceRole.integrations.Core.SendEmail({
+        to: testEmail,
+        from_name: "Cruise Kaua'i",
+        subject: `[PREVIEW] ${newRides.length} ride${newRides.length !== 1 ? 's' : ''} + ${newRequests.length} request${newRequests.length !== 1 ? 's' : ''} this week`,
+        body,
+      });
+      return Response.json({ ok: true, sent: 1, mode: 'test', newRides: newRides.length, newRequests: newRequests.length });
+    }
 
     // Skip sending if nothing new today
     if (newRides.length === 0 && newRequests.length === 0) {
