@@ -110,7 +110,7 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
         <li>🚦 <strong>Reduces traffic</strong> — every shared ride is one fewer car on the road</li>
         <li>💸 <strong>Keeps money local</strong> — ride payments go directly to your neighbors, not corporations</li>
         <li>🌿 <strong>Cuts emissions</strong> — fewer cars = cleaner air for our ʻāina</li>
-        <li>🤝 <strong>Builds community</strong> — Connections made in a car last longer than you'd think — and so does the understanding built between a local who shares and a visitor who listens.</li>
+        <li>🤝 <strong>Builds community</strong> — Connections made in a car last longer than you'd think.</li>
         <li>🏡 <strong>Supports locals</strong> — affordable rides help working families who can't afford a second car</li>
       </ul>
 
