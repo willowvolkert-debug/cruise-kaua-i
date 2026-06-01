@@ -136,7 +136,7 @@ Deno.serve(async (req) => {
       if (r.is_recurring) {
         return r.departure_date >= todayStr && r.departure_date <= in7days;
       }
-      return r.created_date >= since;
+      return r.created_date >= since && r.departure_date >= todayStr;
     }).sort(rideSort);
     const newRequests = allRequests.filter(r => r.created_date >= since).sort(rideSort);
 
