@@ -1032,7 +1032,7 @@ export default function AdminPage() {
                               className="font-semibold text-secondary hover:text-primary transition-colors text-left"
                             >{request.rider_name}</button>
                             <p className="text-sm text-gray-600">{request.departure_location} → {request.destination}</p>
-                            <p className="text-xs text-gray-500">{format(new Date(request.departure_date + 'T00:00:00'), "MMM d")} at {request.departure_time}</p>
+                            <p className="text-xs text-gray-500">{format(new Date(request.departure_date + 'T00:00:00'), "MM/dd/yyyy")} at {request.departure_time}</p>
                           </div>
                           <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300">
                             {request.seats_needed} seat{request.seats_needed > 1 ? 's' : ''}
@@ -1083,7 +1083,7 @@ export default function AdminPage() {
                               >{ride.driver_name}</button>
                               <p className="text-sm text-gray-600">{ride.departure_location} → {ride.destination}</p>
                               <p className="text-xs text-gray-500">
-                                {isRecurring ? `recurring · ${ride.departure_time}` : `${format(new Date(ride.departure_date + 'T00:00:00'), "MMM d")} at ${ride.departure_time}`}
+                                {isRecurring ? `recurring · ${ride.departure_time}` : `${format(new Date(ride.departure_date + 'T00:00:00'), "MM/dd/yyyy")} at ${ride.departure_time}`}
                               </p>
                             </div>
                             <div className="flex flex-col items-end gap-1">

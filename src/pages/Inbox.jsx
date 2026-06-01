@@ -883,7 +883,7 @@ Please process the refund manually via Stripe.
                                                     <p className="text-xs text-primary font-medium flex items-center gap-1 mb-1">
                                                         <MapPin className="w-3 h-3 shrink-0" />
                                                         {ride.departure_location} → {ride.destination}
-                                                        <span className="text-gray-400 font-normal ml-1">· {format(parseDateString(ride.departure_date), "MMM d")}</span>
+                                                        <span className="text-gray-400 font-normal ml-1">· {format(parseDateString(ride.departure_date), "MM/dd/yyyy")}</span>
                                                     </p>
                                                 )}
                                                 <p className="text-sm text-gray-600 truncate">{chat.lastMessage}</p>

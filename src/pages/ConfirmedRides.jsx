@@ -308,7 +308,7 @@ export default function ConfirmedRidesPage() {
                                 return (
                                     <div key={booking.id} className="bg-white rounded-lg p-4 border border-orange-200">
                                         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-600 mb-1">
-                                            <span className="flex items-center gap-1"><Calendar className="w-4 h-4" />{format(parseDateString(ride.departure_date), "EEE, MMM d")}</span>
+                                            <span className="flex items-center gap-1"><Calendar className="w-4 h-4" />{format(parseDateString(ride.departure_date), "MM/dd/yyyy")}</span>
                                             <span className="flex items-center gap-1"><Clock className="w-4 h-4" />{formatTime12Hour(ride.departure_time)}</span>
                                         </div>
                                         <div className="flex items-center gap-2 mb-2">
@@ -355,7 +355,7 @@ export default function ConfirmedRidesPage() {
                                         >
                                             <div className="flex items-center justify-between gap-2 mb-2">
                                                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-600">
-                                                    <span className="flex items-center gap-1"><Calendar className="w-4 h-4" />{format(parseDateString(ride.departure_date), "EEE, MMM d")}</span>
+                                                    <span className="flex items-center gap-1"><Calendar className="w-4 h-4" />{format(parseDateString(ride.departure_date), "MM/dd/yyyy")}</span>
                                                     <span className="flex items-center gap-1"><Clock className="w-4 h-4" />{formatTime12Hour(ride.departure_time)}</span>
                                                 </div>
                                                 {isDriver && <ChevronRight className="w-5 h-5 text-gray-400 shrink-0" />}
@@ -499,7 +499,7 @@ export default function ConfirmedRidesPage() {
                                                 </Badge>
                                             </div>
                                             <p className="text-xs text-gray-500 flex items-center gap-3">
-                                                <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{format(parseDateString(ride.departure_date), "EEE, MMM d yyyy")}</span>
+                                                <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{format(parseDateString(ride.departure_date), "MM/dd/yyyy")}</span>
                                                 <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{formatTime12Hour(ride.departure_time)}</span>
                                             </p>
                                             <p className="text-xs text-gray-400">with {withLine}</p>
