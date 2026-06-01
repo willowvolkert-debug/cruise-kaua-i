@@ -52,7 +52,7 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
   },
 
   license: {
-    subject: 'Your Cruise Kauaʻi verification is in — here\'s what\'s next',
+    subject: 'Welcome to Cruise Kauaʻi- here\'s what\'s next',
     body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
       ${logo}
       <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName}! 🌺</p>
@@ -60,15 +60,15 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
 
       <div style="background:#fefce8;border-left:4px solid #ca8a04;border-radius:8px;padding:20px;margin-bottom:20px;">
         <p style="font-weight:bold;margin:0 0 8px;color:#1a1a1a;">⏳ We're reviewing your license now</p>
-        <p style="margin:0;color:#555;">Our team typically reviews within 24 hours. Once verified, you'll get an email and you'll be able to <strong>browse the trips board and book rides immediately</strong>.</p>
+        <p style="margin:0;color:#555;">Our team typically reviews within 24 hours. Once verified, you'll get an email and you'll be able to <strong>view & book rides immediately</strong>.</p>
       </div>
 
       <p style="margin-bottom:12px;font-weight:bold;color:#1a1a1a;">While you wait — here's how riding on Cruise Kauaʻi works:</p>
       <ul style="padding-left:20px;color:#444;margin-bottom:24px;line-height:2.4;">
         <li>🔍 <strong>Browse rides</strong> on the Trips board — filter by date, route, and time</li>
-        <li>💬 <strong>Message the driver</strong> directly to coordinate pickup details</li>
-        <li>💳 <strong>Pay securely in-app</strong> — no cash needed, no awkward moments</li>
-        <li>⭐ <strong>Rate your driver</strong> after — it helps the whole community</li>
+        <li>💳 <strong>Request a ride & pay securely in-app</strong> — no cash needed.</li>
+        <li>💬 <strong>Once the driver approves your ride</strong>, you will be put into a chat in your inbox. Message the driver directly to coordinate pickup details.</li>
+        <li>⭐ <strong>Rate your driver</strong> after — it helps the whole community.</li>
       </ul>
 
       <div style="background:#f0fdf4;border-radius:12px;padding:20px;margin-bottom:24px;border:1px solid #86efac;">
@@ -170,7 +170,7 @@ Deno.serve(async (req) => {
       </div>`;
       const footer = `
         <hr style="border:none;border-top:1px solid #e5e7eb;margin:40px 0 24px;" />
-        <p style="font-size:13px;color:#6b7280;line-height:1.6;">Need help? <a href="${appUrl}/ContactUs" style="color:#2f7d52;">Contact us here</a>.</p>
+        <p style="font-size:13px;color:#6b7280;line-height:1.6;">Need help? <a href="${appUrl}/contactus?explore=true" style="color:#2f7d52;font-weight:bold;">Contact us here</a></p>
         <p style="font-size:12px;color:#9ca3af;margin-top:8px;"><a href="${unsubscribeUrl}" style="color:#6b7280;">Unsubscribe</a></p>
       `;
       const emails = buildEmails(firstName, appUrl, unsubscribeUrl, logo, footer);
@@ -204,7 +204,7 @@ Deno.serve(async (req) => {
 
     const footer = `
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:40px 0 24px;" />
-      <p style="font-size:13px;color:#6b7280;line-height:1.6;">Need help? <a href="${appUrl}/ContactUs" style="color:#2f7d52;">Contact us here</a> or email willowvolkert@gmail.com.</p>
+      <p style="font-size:13px;color:#6b7280;line-height:1.6;">Need help? <a href="${appUrl}/contactus?explore=true" style="color:#2f7d52;font-weight:bold;">Contact us here</a></p>
       <p style="font-size:12px;color:#9ca3af;margin-top:8px;">To stop receiving emails like this, <a href="${unsubscribeUrl}" style="color:#6b7280;">unsubscribe here</a>.</p>
     `;
 
