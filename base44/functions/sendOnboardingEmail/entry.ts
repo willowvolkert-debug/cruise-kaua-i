@@ -43,6 +43,8 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
         </ul>
       </div>
 
+      <p style="margin-bottom:24px;font-size:14px;color:#6b7280;text-align:center;">Have feedback, or experiencing issues? Reply to this email to let us know!</p>
+
       <p style="margin-top:32px;margin-bottom:8px;">Mahalo for helping reduce traffic on our beautiful island 🙏</p>
       <p style="margin:0 0 4px;">With aloha,</p>
       <p style="margin:0;font-weight:bold;">Willow</p>
@@ -82,6 +84,8 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
           <a href="${appUrl}/Trips" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Browse Available Rides →</a>
         </td></tr>
       </table>
+
+      <p style="margin-bottom:24px;font-size:14px;color:#6b7280;text-align:center;">Have feedback, or experiencing issues? Reply to this email to let us know!</p>
 
       <p style="margin-bottom:8px;">Mahalo for being part of this — every shared ride helps our community 🙏</p>
       <p style="margin:0 0 4px;">With aloha,</p>
@@ -138,6 +142,8 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
           <a href="${appUrl}/Account" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Finish My Account →</a>
         </td></tr>
       </table>
+
+      <p style="margin-bottom:24px;font-size:14px;color:#6b7280;text-align:center;">Have feedback, or experiencing issues? Reply to this email to let us know!</p>
 
       <p style="margin-bottom:8px;">This island is small. What we do here — together — makes a real difference. I'm glad you're here.</p>
       <p style="margin:0 0 4px;">Me ke aloha,</p>
