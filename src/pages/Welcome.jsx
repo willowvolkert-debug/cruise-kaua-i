@@ -11,6 +11,7 @@ import { createPageUrl } from "@/utils";
 import { getIslandFromDomain, ISLAND_CONFIG } from "@/lib/islandConfig";
 import WelcomeTutorialModal from "@/components/tutorial/WelcomeTutorialModal";
 import { trackPageView } from "@/functions/trackPageView";
+import { getPublicRides } from "@/functions/getPublicRides";
 
 export default function WelcomePage() {
   const navigate = useNavigate();
@@ -37,15 +38,11 @@ export default function WelcomePage() {
   const loadRides = async (start = startDate, end = endDate) => {
     setIsLoadingRides(true);
     try {
-      const allRides = await base44.entities.Ride.list("-departure_date");
-      const filtered = allRides.filter((r) =>
-      r.status === 'active' &&
-      r.departure_date >= start &&
-      r.departure_date <= end
-      );
-      setRides(filtered);
+      const result = await getPublicRides({ start_date: start, end_date: end });
+      setRides(result.data?.rides || []);
     } catch (e) {
       console.error("Error loading rides:", e);
+      setRides([]);
     }
     setIsLoadingRides(false);
   };

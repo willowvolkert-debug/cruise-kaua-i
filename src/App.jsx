@@ -43,9 +43,16 @@ const AuthenticatedApp = () => {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
-      // Redirect to login automatically
-      navigateToLogin();
-      return null;
+      // Only redirect to login if not on a public page (Welcome, JoinUs, etc.)
+      const publicPaths = ['/', '/welcome', '/joinus', '/aboutus', '/about-us', '/contactus', '/contact-us'];
+      const isPublicPath = publicPaths.some(p => window.location.pathname.toLowerCase() === p);
+      if (!isPublicPath) {
+        navigateToLogin();
+        return null;
+      }
+      // For public pages, fall through and render the app normally
+    } else if (authError.type === 'unknown') {
+      // Network/load error — still render the app, pages handle their own auth
     }
   }
 

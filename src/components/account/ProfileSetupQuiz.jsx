@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
+import { sendOnboardingEmail } from "@/functions/sendOnboardingEmail";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -222,6 +223,8 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
       await saveDriverAgreement();
     }
     setSaving(false);
+    // Fire onboarding email once (non-blocking)
+    sendOnboardingEmail({}).catch(() => null);
     setDone(true);
     setTimeout(() => onComplete(), 1800);
   };
@@ -241,6 +244,8 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
   };
 
   const handleRiderTipsDone = () => {
+    // Fire onboarding email once (non-blocking)
+    sendOnboardingEmail({}).catch(() => null);
     navigate(createPageUrl("Trips"));
     onComplete();
   };
@@ -349,6 +354,8 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
       phone_number: answers.phone_number || user?.phone_number || '',
       profile_quiz_saved_step: step,
     });
+    // Fire onboarding email once (non-blocking)
+    sendOnboardingEmail({}).catch(() => null);
     onComplete();
   };
 
