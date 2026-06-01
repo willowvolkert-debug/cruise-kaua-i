@@ -96,13 +96,13 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
     body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
       ${logo}
       <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName} 🤙</p>
-      <p style="margin-bottom:16px;">This is Willow, founder of Cruise Kauaʻi. I wanted to reach out personally, because I think you joining this platform actually means something.</p>
+      <p style="margin-bottom:16px;">This is Willow, founder of Cruise Kauaʻi. I wanted to reach out personally, because I think you joining this platform genuinely means something. We're building something worth being part of, and I'm glad you're here.</p>
 
       <p style="margin-bottom:16px;">Kauaʻi is one of the most beautiful places on Earth — and it's under pressure. Traffic on the highway is getting worse every year. The cost of living keeps climbing. Locals are leaving. Tourists are frustrated. And yet, every single day, thousands of us are driving the same roads, alone in our cars, going the same direction.</p>
 
       <div style="background:#f0fdf4;border-radius:12px;padding:24px;margin-bottom:24px;border:1px solid #86efac;">
         <p style="font-weight:bold;font-size:16px;margin:0 0 12px;color:#166534;">Cruise Kauaʻi is one real, tangible way to change that — right now.</p>
-        <p style="margin:0 0 10px;color:#333;">Not someday when the infrastructure improves. Not when the government builds a bus system. <em>Right now</em>, with the people already on this island, sharing the rides we're already making.</p>
+        <p style="margin:0 0 10px;color:#333;">Not someday when the infrastructure improves. Not when the government changes. <em>Right now</em>, with the people already on this island, sharing the rides we're already making.</p>
       </div>
 
       <p style="margin-bottom:12px;font-weight:bold;color:#1a1a1a;">Here's what your participation does:</p>
@@ -110,7 +110,7 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
         <li>🚦 <strong>Reduces traffic</strong> — every shared ride is one fewer car on the road</li>
         <li>💸 <strong>Keeps money local</strong> — ride payments go directly to your neighbors, not corporations</li>
         <li>🌿 <strong>Cuts emissions</strong> — fewer cars = cleaner air for our ʻāina</li>
-        <li>🤝 <strong>Builds community</strong> — connections made in a car last longer than you'd think</li>
+        <li>🤝 <strong>Builds community</strong> — Connections made in a car last longer than you'd think — and so does the understanding built between a local who shares and a visitor who listens.</li>
         <li>🏡 <strong>Supports locals</strong> — affordable rides help working families who can't afford a second car</li>
       </ul>
 
@@ -141,7 +141,7 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
       </table>
 
       <p style="margin-bottom:8px;">This island is small. What we do here — together — makes a real difference. I'm glad you're here.</p>
-      <p style="margin:0 0 4px;">With aloha,</p>
+      <p style="margin:0 0 4px;">Me ke aloha,</p>
       <p style="margin:0;font-weight:bold;">Willow</p>
       <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
       ${footer}
