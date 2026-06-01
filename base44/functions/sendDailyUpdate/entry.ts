@@ -116,13 +116,29 @@ Deno.serve(async (req) => {
 
     // Non-recurring rides: posted in last 24 hours
     // Recurring rides: only include ones happening within the next 7 days (this week's rides)
+    const parseTime = (timeStr = '') => {
+      const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+      if (!match) return 0;
+      let h = parseInt(match[1]);
+      const m = parseInt(match[2]);
+      const period = match[3].toUpperCase();
+      if (period === 'AM' && h === 12) h = 0;
+      if (period === 'PM' && h !== 12) h += 12;
+      return h * 60 + m;
+    };
+
+    const rideSort = (a, b) => {
+      if (a.departure_date !== b.departure_date) return a.departure_date < b.departure_date ? -1 : 1;
+      return parseTime(a.departure_time) - parseTime(b.departure_time);
+    };
+
     const newRides = allRides.filter(r => {
       if (r.is_recurring) {
         return r.departure_date >= todayStr && r.departure_date <= in7days;
       }
       return r.created_date >= since;
-    });
-    const newRequests = allRequests.filter(r => r.created_date >= since);
+    }).sort(rideSort);
+    const newRequests = allRequests.filter(r => r.created_date >= since).sort(rideSort);
 
     const subject = `${newRides.length} new ride${newRides.length !== 1 ? 's' : ''} + ${newRequests.length} request${newRequests.length !== 1 ? 's' : ''} posted today`;
 
