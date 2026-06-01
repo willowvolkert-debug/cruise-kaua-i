@@ -85,8 +85,8 @@ export default function FindRide({ island = "Kauai" }) {
       const res = await getPublicRides({ start_date: start, end_date: end, island });
       const allRides = res.data?.rides || [];
 
-      // Filter out current user's own rides
-      const filtered = allRides.filter(r => !currentUser || r.driver_id !== currentUser.id);
+      // Filter out current user's own rides (unless they're admin)
+      const filtered = allRides.filter(r => !currentUser || currentUser.role === 'admin' || r.driver_id !== currentUser.id);
       setRides(filtered);
 
       const allRatings = currentUser ? await base44.entities.Rating.list().catch(() => []) : [];
@@ -198,11 +198,20 @@ export default function FindRide({ island = "Kauai" }) {
                       .sort((a, b) => {
                         const toMinutes = (t) => {
                           if (!t) return 9999;
-                          const match = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
-                          if (!match) return 9999;
-                          let h = parseInt(match[1]);
-                          const m = parseInt(match[2]);
-                          const period = (match[3] || '').toUpperCase();
+                          // Handle "9 AM", "830 PM", "9:00 AM", "8:30 PM" etc.
+                          const withColon = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+                          const noColon = t.match(/^(\d{1,4})\s*(AM|PM)?$/i);
+                          let h, m, period;
+                          if (withColon) {
+                            h = parseInt(withColon[1]);
+                            m = parseInt(withColon[2]);
+                            period = (withColon[3] || '').toUpperCase();
+                          } else if (noColon) {
+                            const num = noColon[1];
+                            period = (noColon[2] || '').toUpperCase();
+                            if (num.length <= 2) { h = parseInt(num); m = 0; }
+                            else { h = parseInt(num.slice(0, num.length - 2)); m = parseInt(num.slice(-2)); }
+                          } else return 9999;
                           if (period === 'PM' && h !== 12) h += 12;
                           if (period === 'AM' && h === 12) h = 0;
                           return h * 60 + m;
