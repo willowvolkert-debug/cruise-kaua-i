@@ -182,12 +182,12 @@ Deno.serve(async (req) => {
       const type = preview_type || 'basic';
       const { subject, body } = emails[type] || emails.basic;
       await base44.asServiceRole.integrations.Core.SendEmail({
-        to: preview_email,
+        to: user.email,
         from_name: "Cruise Kaua'i",
-        subject: `[PREVIEW] ${subject}`,
+        subject: `[PREVIEW → ${preview_email}] ${subject}`,
         body,
       });
-      return Response.json({ ok: true, mode: 'preview', type, to: preview_email });
+      return Response.json({ ok: true, mode: 'preview', type, to: user.email, intended_for: preview_email });
     }
 
     // Guard: only send once per user
