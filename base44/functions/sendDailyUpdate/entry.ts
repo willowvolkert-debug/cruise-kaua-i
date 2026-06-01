@@ -112,7 +112,7 @@ Deno.serve(async (req) => {
       base44.asServiceRole.entities.RideRequest.filter({ status: 'active' }),
     ]);
 
-    const newRides = allRides.filter(r => !r.is_recurring && r.created_date >= since);
+    const newRides = allRides.filter(r => r.created_date >= since);
     const newRequests = allRequests.filter(r => r.created_date >= since);
 
     // Skip sending if nothing new today
