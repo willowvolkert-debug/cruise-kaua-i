@@ -88,7 +88,7 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const payload = await req.json().catch(() => ({}));
 
-    // Allow admin-triggered or scheduled calls
+    // Allow admin-triggered or scheduled calls (skip auth check for scheduled/unauthenticated calls)
     const isAuthenticated = await base44.auth.isAuthenticated();
     if (isAuthenticated) {
       const user = await base44.auth.me();
@@ -104,10 +104,11 @@ Deno.serve(async (req) => {
     const todayStr = new Date().toISOString().split('T')[0];
     const in7days = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
+    // Fetch data with reasonable limits to avoid timeouts
     const [allUsers, allRides, allRequests] = await Promise.all([
-      base44.asServiceRole.entities.User.list(),
-      base44.asServiceRole.entities.Ride.filter({ status: 'active' }),
-      base44.asServiceRole.entities.RideRequest.filter({ status: 'active' }),
+      base44.asServiceRole.entities.User.list('-created_date', 500),
+      base44.asServiceRole.entities.Ride.filter({ status: 'active' }, '-created_date', 200),
+      base44.asServiceRole.entities.RideRequest.filter({ status: 'active' }, '-created_date', 100),
     ]);
 
     // Non-recurring rides: posted in last 24 hours
@@ -120,6 +121,8 @@ Deno.serve(async (req) => {
     });
     const newRequests = allRequests.filter(r => r.created_date >= since);
 
+    const subject = `${newRides.length} new ride${newRides.length !== 1 ? 's' : ''} + ${newRequests.length} request${newRequests.length !== 1 ? 's' : ''} posted today`;
+
     if (testEmail) {
       const testUser = allUsers.find(u => u.email === testEmail);
       const firstName = testUser?.full_name?.split(' ')[0] || 'there';
@@ -127,7 +130,7 @@ Deno.serve(async (req) => {
       await base44.asServiceRole.integrations.Core.SendEmail({
         to: testEmail,
         from_name: "Cruise Kaua'i",
-        subject: `[PREVIEW] ${newRides.length} ride${newRides.length !== 1 ? 's' : ''} + ${newRequests.length} request${newRequests.length !== 1 ? 's' : ''} this week`,
+        subject: `[PREVIEW] ${subject}`,
         body,
       });
       return Response.json({ ok: true, sent: 1, mode: 'test', newRides: newRides.length, newRequests: newRequests.length });
@@ -148,17 +151,15 @@ Deno.serve(async (req) => {
       const freq = u.email_update_frequency || 'daily';
       if (freq === 'never') return false;
       if (freq === 'daily') return true;
-      if (freq === 'every_3_days') {
-        // Send on days 0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30 of month
-        return todayDate % 3 === 1;
-      }
+      if (freq === 'every_3_days') return todayDate % 3 === 1;
       if (freq === 'weekly') return todayDay === 1; // Mondays
       if (freq === 'monthly') return todayDate === 1; // 1st of month
       return true;
     });
 
     let sent = 0;
-    const BATCH_SIZE = 5;
+    // Larger batches, no sleep — reduces total execution time dramatically
+    const BATCH_SIZE = 20;
 
     for (let i = 0; i < recipients.length; i += BATCH_SIZE) {
       const batch = recipients.slice(i, i + BATCH_SIZE);
@@ -168,11 +169,10 @@ Deno.serve(async (req) => {
         return base44.asServiceRole.integrations.Core.SendEmail({
           to: u.email,
           from_name: "Cruise Kaua'i",
-          subject: `${newRides.length} new ride${newRides.length !== 1 ? 's' : ''} + ${newRequests.length} request${newRequests.length !== 1 ? 's' : ''} posted today`,
+          subject,
           body,
         }).then(() => { sent++; }).catch(() => null);
       }));
-      if (i + BATCH_SIZE < recipients.length) await sleep(1000);
     }
 
     return Response.json({ ok: true, sent, newRides: newRides.length, newRequests: newRequests.length });
