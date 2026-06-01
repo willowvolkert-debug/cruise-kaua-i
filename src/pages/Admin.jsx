@@ -1043,38 +1043,66 @@ export default function AdminPage() {
                   </div>
                 </div>
               )}
-              {recentRides.length > 0 && (
-                <div>
-                  <h3 className="font-semibold text-blue-900 mb-2">posted rides ({recentRides.length})</h3>
-                  <div className="grid gap-3">
-                    {recentRides.map(ride => (
-                      <div key={ride.id} className="bg-white rounded-lg p-4 border border-blue-200">
-                        <div className="flex items-center gap-4">
-                          <Avatar className="w-10 h-10 bg-gradient-to-r from-primary to-secondary">
-                            <AvatarFallback className="text-white font-semibold text-sm">
-                              {getInitials(ride.driver_name)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1">
-                            <button
-                              onClick={() => {
-                                const u = users.find(u => u.id === ride.driver_id);
-                                if (u) handleViewUserAccount(u.id);
-                              }}
-                              className="font-semibold text-secondary hover:text-primary transition-colors text-left"
-                            >{ride.driver_name}</button>
-                            <p className="text-sm text-gray-600">{ride.departure_location} → {ride.destination}</p>
-                            <p className="text-xs text-gray-500">{format(new Date(ride.departure_date + 'T00:00:00'), "MMM d")} at {ride.departure_time}</p>
+              {recentRides.length > 0 && (() => {
+                // Group rides: recurring ones (is_recurring=true) share driver+route+time → show once with count
+                const groups = [];
+                const seen = new Map();
+                for (const ride of recentRides) {
+                  if (ride.is_recurring) {
+                    const key = `${ride.driver_id}|${ride.departure_location}|${ride.destination}|${ride.departure_time}`;
+                    if (seen.has(key)) {
+                      seen.get(key).count++;
+                    } else {
+                      const entry = { ride, count: 1, isRecurring: true };
+                      seen.set(key, entry);
+                      groups.push(entry);
+                    }
+                  } else {
+                    groups.push({ ride, count: 1, isRecurring: false });
+                  }
+                }
+                return (
+                  <div>
+                    <h3 className="font-semibold text-blue-900 mb-2">posted rides ({groups.length} unique)</h3>
+                    <div className="grid gap-3">
+                      {groups.map(({ ride, count, isRecurring }) => (
+                        <div key={ride.id} className="bg-white rounded-lg p-4 border border-blue-200">
+                          <div className="flex items-center gap-4">
+                            <Avatar className="w-10 h-10 bg-gradient-to-r from-primary to-secondary">
+                              <AvatarFallback className="text-white font-semibold text-sm">
+                                {getInitials(ride.driver_name)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1">
+                              <button
+                                onClick={() => {
+                                  const u = users.find(u => u.id === ride.driver_id);
+                                  if (u) handleViewUserAccount(u.id);
+                                }}
+                                className="font-semibold text-secondary hover:text-primary transition-colors text-left"
+                              >{ride.driver_name}</button>
+                              <p className="text-sm text-gray-600">{ride.departure_location} → {ride.destination}</p>
+                              <p className="text-xs text-gray-500">
+                                {isRecurring ? `recurring · ${ride.departure_time}` : `${format(new Date(ride.departure_date + 'T00:00:00'), "MMM d")} at ${ride.departure_time}`}
+                              </p>
+                            </div>
+                            <div className="flex flex-col items-end gap-1">
+                              {isRecurring && (
+                                <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-300 text-xs">
+                                  🔁 {count}x this week
+                                </Badge>
+                              )}
+                              <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300">
+                                {ride.seats_available} seat{ride.seats_available > 1 ? 's' : ''}
+                              </Badge>
+                            </div>
                           </div>
-                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300">
-                            {ride.seats_available} seat{ride.seats_available > 1 ? 's' : ''}
-                          </Badge>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                );
+              })()}
               </CardContent>
             )}
           </Card>
