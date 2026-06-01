@@ -1,0 +1,98 @@
+{
+  "name": "RecurringTrip",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "ID of the user who created this recurring trip"
+    },
+    "trip_name": {
+      "type": "string",
+      "description": "Name for this recurring trip"
+    },
+    "departure_location": {
+      "type": "string",
+      "description": "Starting point of the ride"
+    },
+    "destination": {
+      "type": "string",
+      "description": "End destination"
+    },
+    "stops": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Optional stops along the way"
+    },
+    "departure_time": {
+      "type": "string",
+      "description": "Time of departure"
+    },
+    "is_flexible": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the departure time is flexible"
+    },
+    "seats_available": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 8,
+      "description": "Number of available seats"
+    },
+    "price_per_seat": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Cost per seat in dollars"
+    },
+    "price_per_seat_local": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Cost per seat for locals"
+    },
+    "price_per_seat_tourist": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Cost per seat for tourists"
+    },
+    "rider_preference": {
+      "type": "string",
+      "enum": [
+        "locals_only",
+        "tourists_only",
+        "both_fine"
+      ],
+      "default": "both_fine",
+      "description": "Who can ride with the driver"
+    },
+    "description": {
+      "type": "string",
+      "description": "Why the driver is making this trip"
+    },
+    "car_model": {
+      "type": "string",
+      "description": "Car make and model"
+    },
+    "smoking_allowed": {
+      "type": "boolean",
+      "default": false
+    },
+    "pets_allowed": {
+      "type": "boolean",
+      "default": false
+    },
+    "offers_detour_service": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether driver is willing to drive riders to final destination off highway for added fee"
+    }
+  },
+  "required": [
+    "user_id",
+    "trip_name",
+    "departure_location",
+    "destination",
+    "departure_time",
+    "seats_available"
+  ]
+}

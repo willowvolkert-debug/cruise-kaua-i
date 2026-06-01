@@ -1,0 +1,52 @@
+{
+  "name": "UserEdit",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "ID of the user who made the edit"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Name of the user"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user"
+    },
+    "change_type": {
+      "type": "string",
+      "enum": [
+        "profile",
+        "vehicle",
+        "insurance",
+        "bank_account",
+        "license"
+      ],
+      "description": "Type of change made"
+    },
+    "change_description": {
+      "type": "string",
+      "description": "Description of what was changed"
+    },
+    "old_values": {
+      "type": "object",
+      "description": "Previous values that were changed"
+    },
+    "new_values": {
+      "type": "object",
+      "description": "New values after the change"
+    },
+    "is_reviewed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether admin has reviewed this change"
+    }
+  },
+  "required": [
+    "user_id",
+    "user_name",
+    "change_type",
+    "change_description"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "ContactInquiry",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "ID of user who submitted inquiry"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Name of user"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of user"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Subject of inquiry"
+    },
+    "message": {
+      "type": "string",
+      "description": "Inquiry message"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "reviewed",
+        "resolved"
+      ],
+      "default": "pending"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium"
+    }
+  },
+  "required": [
+    "user_id",
+    "user_name",
+    "user_email",
+    "subject",
+    "message"
+  ]
+}

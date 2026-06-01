@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
+import AppTutorial from "../components/tutorial/AppTutorial";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, MessageSquarePlus, Car, MapPin } from "lucide-react";
 import FindRide from "../components/trips/FindRide";
 import RequestRide from "../components/trips/RequestRide";
 import PostRideForm from "../components/trips/PostRideForm";
+import NeedHelpButton from "../components/trips/NeedHelpButton";
 import { base44 } from "@/api/base44Client";
 import { getIslandFromDomain } from "@/lib/islandConfig";
 
 const ISLANDS = ["Kauai", "Oahu", "Maui", "Big Island"];
 
 export default function TripsPage() {
+  const [showTutorial, setShowTutorial] = React.useState(false);
   const [isExploreMode, setIsExploreMode] = React.useState(false);
   const [selectedIsland, setSelectedIsland] = React.useState(getIslandFromDomain());
   const [islandLoaded, setIslandLoaded] = React.useState(false);
@@ -55,10 +58,17 @@ export default function TripsPage() {
     <div className="p-3 md:p-8 bg-white overflow-x-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="mb-4">
-          <h1 className="text-2xl md:text-4xl font-bold text-secondary mb-1">
-            plan your trip
-          </h1>
-          <p className="text-sm md:text-base text-gray-600">find a ride, request a ride, or offer seats for your next drive</p>
+          <div className="flex items-start justify-between gap-3 flex-wrap">
+            <div>
+              <h1 className="text-2xl md:text-4xl font-bold text-secondary mb-1">
+                plan your trip
+              </h1>
+              <p className="text-sm md:text-base text-gray-600">find a ride, request a ride, or offer seats for your next drive</p>
+            </div>
+            <div className="mt-1">
+              <NeedHelpButton onOpenTutorial={() => setShowTutorial(true)} />
+            </div>
+          </div>
 
           {/* Island Selector */}
           <div className="mt-4 flex items-center gap-3 flex-wrap">
@@ -133,6 +143,8 @@ export default function TripsPage() {
           © {new Date().getFullYear()} Cruise Hawaiʻi. Specializing in carpooling and ridesharing across Hawaiʻi.
         </footer>
       </div>
+
+      <AppTutorial isOpen={showTutorial} onClose={() => setShowTutorial(false)} />
     </div>
   );
 }

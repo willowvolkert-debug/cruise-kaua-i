@@ -1,0 +1,47 @@
+{
+  "name": "AdminMessage",
+  "type": "object",
+  "properties": {
+    "recipient_id": {
+      "type": "string",
+      "description": "User ID of the message recipient"
+    },
+    "recipient_name": {
+      "type": "string",
+      "description": "Name of the recipient"
+    },
+    "recipient_email": {
+      "type": "string",
+      "description": "Email of the recipient"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Subject of the message"
+    },
+    "message": {
+      "type": "string",
+      "description": "Message content"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the user has read the message"
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "warning",
+        "info",
+        "action_required"
+      ],
+      "default": "info",
+      "description": "Type of message"
+    }
+  },
+  "required": [
+    "recipient_id",
+    "recipient_name",
+    "subject",
+    "message"
+  ]
+}

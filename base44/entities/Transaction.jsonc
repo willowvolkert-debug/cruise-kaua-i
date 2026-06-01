@@ -1,0 +1,103 @@
+{
+  "name": "Transaction",
+  "type": "object",
+  "properties": {
+    "booking_id": {
+      "type": "string",
+      "description": "Associated booking ID"
+    },
+    "ride_id": {
+      "type": "string",
+      "description": "Associated ride ID"
+    },
+    "payer_id": {
+      "type": "string",
+      "description": "User ID of the person who paid"
+    },
+    "payer_name": {
+      "type": "string",
+      "description": "Name of the person who paid"
+    },
+    "recipient_id": {
+      "type": "string",
+      "description": "User ID of the person receiving payment"
+    },
+    "recipient_name": {
+      "type": "string",
+      "description": "Name of the person receiving payment"
+    },
+    "ride_amount": {
+      "type": "number",
+      "description": "Base amount for the ride"
+    },
+    "connect_fee": {
+      "type": "number",
+      "description": "Cruise Kaua\u02bbi connect fee (10%)"
+    },
+    "total_amount": {
+      "type": "number",
+      "description": "Total amount charged"
+    },
+    "payment_method_last4": {
+      "type": "string",
+      "description": "Last 4 digits of payment method used"
+    },
+    "payment_method_brand": {
+      "type": "string",
+      "description": "Brand of payment method used"
+    },
+    "transaction_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "completed",
+        "failed",
+        "refunded"
+      ],
+      "default": "pending",
+      "description": "Status of the transaction"
+    },
+    "stripe_charge_id": {
+      "type": "string",
+      "description": "Stripe charge ID"
+    },
+    "stripe_transfer_id": {
+      "type": "string",
+      "description": "Stripe transfer ID for payout to driver"
+    },
+    "payout_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "processing",
+        "completed",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "Status of payout to driver"
+    },
+    "payout_date": {
+      "type": "string",
+      "description": "Date when payout was processed"
+    },
+    "payout_failure_reason": {
+      "type": "string",
+      "description": "Reason for payout failure if failed"
+    },
+    "failure_reason": {
+      "type": "string",
+      "description": "Reason for failure if transaction failed"
+    }
+  },
+  "required": [
+    "booking_id",
+    "ride_id",
+    "payer_id",
+    "payer_name",
+    "recipient_id",
+    "recipient_name",
+    "ride_amount",
+    "connect_fee",
+    "total_amount"
+  ]
+}

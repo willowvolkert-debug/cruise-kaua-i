@@ -53,6 +53,11 @@
       "default": false,
       "description": "Whether the user has opted in to SMS notifications"
     },
+    "has_dismissed_phone_prompt": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the user has dismissed the phone number prompt"
+    },
     "drivers_license_verified": {
       "type": "boolean",
       "default": false
@@ -62,6 +67,9 @@
       "default": false
     },
     "license_rejection_reason": {
+      "type": "string"
+    },
+    "license_submitted_date": {
       "type": "string"
     },
     "vehicle_verified": {
@@ -110,6 +118,10 @@
       "type": "boolean",
       "default": false
     },
+    "has_completed_profile_quiz": {
+      "type": "boolean",
+      "default": false
+    },
     "preferences_chattiness": {
       "type": "string"
     },
@@ -151,5 +163,26 @@
       "type": "boolean",
       "default": false
     }
-  }
+  },
+  "required": [
+    "username",
+    "bio",
+    "age",
+    "gender",
+    "home_base",
+    "profile_picture_url",
+    "preferred_island",
+    "phone_number",
+    "license_rejection_reason",
+    "license_submitted_date",
+    "vehicle_rejection_reason",
+    "driver_agreement_timestamp",
+    "preferences_chattiness",
+    "preferences_scents",
+    "preferences_music",
+    "bank_account_holder_name",
+    "bank_routing_number",
+    "bank_account_number",
+    "stripe_connect_account_id"
+  ]
 }

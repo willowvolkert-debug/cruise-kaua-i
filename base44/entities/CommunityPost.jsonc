@@ -1,0 +1,52 @@
+{
+  "name": "CommunityPost",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "ID of user who created the post"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Name of user who created the post"
+    },
+    "user_username": {
+      "type": "string",
+      "description": "Username of user who created the post"
+    },
+    "user_profile_picture": {
+      "type": "string",
+      "description": "Profile picture URL of user"
+    },
+    "content": {
+      "type": "string",
+      "description": "Text content of the post"
+    },
+    "image_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URLs of attached images"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Review status of the post"
+    },
+    "rejection_reason": {
+      "type": "string",
+      "description": "Reason for rejection if rejected"
+    }
+  },
+  "required": [
+    "user_id",
+    "user_name",
+    "content"
+  ]
+}

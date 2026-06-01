@@ -1,0 +1,21 @@
+{
+  "name": "PageView",
+  "type": "object",
+  "properties": {
+    "page_name": {
+      "type": "string",
+      "description": "Name of the page viewed"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "ID of user who viewed the page (if logged in)"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Unique session identifier"
+    }
+  },
+  "required": [
+    "page_name"
+  ]
+}

@@ -88,124 +88,112 @@ export default function AppTutorial({ isOpen, onClose }) {
     return (
       <Dialog open={true} onOpenChange={handleSkip}>
         <DialogContent className="sm:max-w-lg bg-white rounded-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
+          <DialogHeader className="pb-2">
             <DialogTitle className="text-2xl font-bold text-secondary text-center">
-              welcome to cruise kauaʻi!
+              welcome to cruise kauaʻi! 🌺
             </DialogTitle>
             <DialogDescription className="text-center text-gray-600 pt-1">
               a community-based ridesharing app to reduce traffic on kauaʻi
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 pt-2">
+          <div className="space-y-6 pt-2">
             {/* How it works */}
-            <div className="bg-green-50 rounded-2xl p-4 space-y-3">
-              <p className="font-bold text-green-800 text-sm uppercase tracking-wide">how it works</p>
-              <div className="space-y-2 text-sm text-gray-700">
-                <div className="flex gap-2"><span>🚗</span><p><strong>Drivers</strong> offer rides on trips they're already taking & cover gas + vehicle maintenance costs.</p></div>
-                <div className="flex gap-2"><span>🙋</span><p><strong>Riders</strong> find affordable, reliable transportation around the island.</p></div>
-                <div className="flex gap-2"><span>🌿</span><p><strong>Simple:</strong> locals happy, visitors happy, & less cars on the road.</p></div>
+            <div className="bg-green-50 rounded-2xl p-5 space-y-4">
+              <p className="font-bold text-green-800 text-xs uppercase tracking-widest">how it works</p>
+              <div className="space-y-3 text-sm text-gray-700">
+                <div className="flex gap-3 items-start"><span className="text-xl">🚗</span><p><strong>Drivers</strong> offer rides on trips they're already taking & cover gas + vehicle maintenance costs.</p></div>
+                <div className="flex gap-3 items-start"><span className="text-xl">🙋</span><p><strong>Riders</strong> find affordable, reliable transportation around the island.</p></div>
+                <div className="flex gap-3 items-start"><span className="text-xl">🌿</span><p><strong>Simple:</strong> locals happy, visitors happy, & less cars on the road.</p></div>
               </div>
             </div>
 
-            {/* How to use */}
-            <div className="space-y-3">
-              <p className="font-bold text-secondary text-sm uppercase tracking-wide">how to use the platform</p>
-              <div className="space-y-3 text-sm text-gray-700">
-                {/* Step 1 */}
-                <div className="flex gap-3 items-start">
-                  <span className="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shrink-0 mt-0.5">1</span>
-                  <div className="flex-1">
-                    <p>On your phone, open <strong>cruisekauai.org</strong> in your browser.</p>
-                    <div className="flex gap-3 mt-2">
-                      <div className="flex items-center gap-1.5 bg-gray-100 rounded-xl px-2.5 py-1.5">
-                        <span className="text-base">🌐</span>
-                        <span className="text-xs font-medium text-gray-600">Safari / Chrome</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            {/* Add to Home Screen */}
+            <div className="space-y-4">
+              <p className="font-bold text-secondary text-xs uppercase tracking-widest">install the app</p>
 
-                {/* Step 2 - iOS */}
-                <div className="flex gap-3 items-start">
-                  <span className="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shrink-0 mt-0.5">2</span>
-                  <div className="flex-1">
-                    <p className="font-semibold text-gray-800 mb-1">Add to Home Screen</p>
-                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-2.5 mb-2">
-                      <p className="text-xs font-semibold text-blue-800 mb-1.5">🍎 iPhone (Safari)</p>
-                      <div className="flex items-center gap-2 text-xs text-blue-700">
-                        <span className="text-lg leading-none">⬆️</span>
+              <div className="flex gap-3 items-start">
+                <span className="bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</span>
+                <p className="text-sm text-gray-700 pt-0.5">On your phone, open <strong>cruisekauai.org</strong> in Safari (iPhone) or Chrome (Android).</p>
+              </div>
+
+              <div className="flex gap-3 items-start">
+                <span className="bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">2</span>
+                <div className="flex-1 space-y-3">
+                  <p className="text-sm font-semibold text-gray-800">Add to Home Screen</p>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 space-y-3">
+                    <p className="text-xs font-bold text-blue-800 uppercase tracking-wider">🍎 iPhone (Safari)</p>
+                    <div className="space-y-2.5">
+                      <div className="flex items-start gap-3 text-sm text-blue-700">
+                        <span className="text-lg leading-none mt-0.5">⬆️</span>
                         <span>Tap the <strong>Share</strong> button at the bottom of Safari</span>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-blue-700 mt-1.5">
-                        <span className="text-lg leading-none">➕</span>
-                        <span>Scroll down & tap <strong>"Add to Home Screen"</strong></span>
+                      <div className="flex items-start gap-3 text-sm text-blue-700">
+                        <span className="text-lg leading-none mt-0.5">➕</span>
+                        <span>Scroll down and tap <strong>"Add to Home Screen"</strong></span>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-blue-700 mt-1.5">
-                        <span className="text-lg leading-none">✅</span>
+                      <div className="flex items-start gap-3 text-sm text-blue-700">
+                        <span className="text-lg leading-none mt-0.5">✅</span>
                         <span>Tap <strong>"Add"</strong> in the top right corner</span>
                       </div>
                     </div>
-                    <div className="bg-green-50 border border-green-200 rounded-xl p-2.5">
-                      <p className="text-xs font-semibold text-green-800 mb-1.5">🤖 Android (Chrome)</p>
-                      <div className="flex items-center gap-2 text-xs text-green-700">
-                        <span className="text-lg leading-none">⋮</span>
-                        <span>Tap the <strong>three-dot menu</strong> (⋮) in the top right of Chrome</span>
+                  </div>
+
+                  <div className="bg-green-50 border border-green-200 rounded-2xl p-4 space-y-3">
+                    <p className="text-xs font-bold text-green-800 uppercase tracking-wider">🤖 Android (Chrome)</p>
+                    <div className="space-y-2.5">
+                      <div className="flex items-start gap-3 text-sm text-green-700">
+                        <span className="text-lg leading-none mt-0.5">⋮</span>
+                        <span>Tap the <strong>three-dot menu</strong> in the top right of Chrome</span>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-green-700 mt-1.5">
-                        <span className="text-lg leading-none">📲</span>
+                      <div className="flex items-start gap-3 text-sm text-green-700">
+                        <span className="text-lg leading-none mt-0.5">📲</span>
                         <span>Tap <strong>"Add to Home screen"</strong></span>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-green-700 mt-1.5">
-                        <span className="text-lg leading-none">✅</span>
+                      <div className="flex items-start gap-3 text-sm text-green-700">
+                        <span className="text-lg leading-none mt-0.5">✅</span>
                         <span>Tap <strong>"Add"</strong> to confirm</span>
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                {/* Step 3 */}
-                <div className="flex gap-3 items-start">
-                  <span className="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shrink-0 mt-0.5">3</span>
-                  <div className="flex-1">
-                    <p>Find the <strong>Cruise Kauaʻi icon</strong> on your home screen and open it like a regular app!</p>
-                    <div className="flex gap-3 mt-2">
-                      <div className="flex items-center gap-1.5 bg-gray-100 rounded-xl px-2.5 py-1.5">
-                        <span className="text-base">☰</span>
-                        <span className="text-xs font-medium text-gray-600">Sidebar: top left or swipe right</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div className="flex gap-3 items-start">
+                <span className="bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">3</span>
+                <p className="text-sm text-gray-700 pt-0.5">Find the <strong>Cruise Kauaʻi icon</strong> on your home screen and open it like a regular app!</p>
               </div>
             </div>
 
             {/* Get involved */}
-            <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 space-y-2 text-sm text-gray-700">
-              <p className="font-bold text-orange-800 text-sm uppercase tracking-wide">get involved</p>
-              <p>🏡 <strong>Local?</strong> Register as a driver & start posting rides to make money on your commutes.</p>
-              <p>✈️ <strong>Visiting?</strong> Consider alternatives to car rentals — get around with Cruise Kauaʻi & The Hanalei Initiative Shuttles.</p>
-              <p>📣 <strong>Spread the word!</strong> Share the app with family, friends & folks visiting!</p>
+            <div className="bg-orange-50 border border-orange-200 rounded-2xl p-5 space-y-3">
+              <p className="font-bold text-orange-800 text-xs uppercase tracking-widest">get involved</p>
+              <div className="space-y-2 text-sm text-gray-700">
+                <p>🏡 <strong>Local?</strong> Register as a driver & start posting rides to make money on your commutes.</p>
+                <p>✈️ <strong>Visiting?</strong> Consider alternatives to car rentals — get around with Cruise Kauaʻi & The Hanalei Initiative Shuttles.</p>
+                <p>📣 <strong>Spread the word!</strong> Share the app with family, friends & folks visiting!</p>
+              </div>
             </div>
 
             <p className="text-xs text-center text-gray-400 italic">🤙 mahalo for being a part of the movement</p>
 
             {/* AI Assistant intro */}
-            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 space-y-2">
-              <p className="font-bold text-blue-800 text-sm uppercase tracking-wide">🤖 meet kai, your ride assistant</p>
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 space-y-3">
+              <p className="font-bold text-blue-800 text-xs uppercase tracking-widest">🤖 meet kai, your ride assistant</p>
               <p className="text-sm text-gray-700">Need help posting a ride, setting up a recurring trip, or just figuring out how things work? <strong>Kai</strong> is an AI assistant built into the app — just ask!</p>
               <a
                 href={base44.agents.getWhatsAppConnectURL('ride_assistant')}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
+                className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
               >
                 💬 Chat with Kai on WhatsApp
               </a>
             </div>
 
             <div className="space-y-2 pt-1">
-              <Button onClick={handleStart} className="w-full bg-primary hover:bg-primary/90 rounded-2xl py-5 text-base">
+              <Button onClick={handleStart} className="w-full bg-primary hover:bg-primary/90 rounded-2xl py-5 text-base font-semibold">
                 start tutorial →
               </Button>
               <Button onClick={handleSkip} variant="outline" className="w-full rounded-2xl py-5 text-base border-gray-300">

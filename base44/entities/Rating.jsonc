@@ -1,0 +1,37 @@
+{
+  "name": "Rating",
+  "type": "object",
+  "properties": {
+    "ride_id": {
+      "type": "string"
+    },
+    "rated_by_user_id": {
+      "type": "string"
+    },
+    "rated_user_id": {
+      "type": "string"
+    },
+    "rating_value": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "comment": {
+      "type": "string"
+    },
+    "trip_role": {
+      "type": "string",
+      "enum": [
+        "driver",
+        "passenger"
+      ]
+    }
+  },
+  "required": [
+    "ride_id",
+    "rated_by_user_id",
+    "rated_user_id",
+    "rating_value",
+    "trip_role"
+  ]
+}

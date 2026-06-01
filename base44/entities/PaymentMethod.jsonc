@@ -1,0 +1,47 @@
+{
+  "name": "PaymentMethod",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "ID of the user who owns this payment method"
+    },
+    "card_last4": {
+      "type": "string",
+      "description": "Last 4 digits of the card"
+    },
+    "card_brand": {
+      "type": "string",
+      "description": "Card brand (Visa, Mastercard, etc.)"
+    },
+    "exp_month": {
+      "type": "string",
+      "description": "Expiration month (MM)"
+    },
+    "exp_year": {
+      "type": "string",
+      "description": "Expiration year (YY)"
+    },
+    "cardholder_name": {
+      "type": "string",
+      "description": "Name on the card"
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is the default payment method"
+    },
+    "stripe_payment_method_id": {
+      "type": "string",
+      "description": "Stripe payment method ID for processing"
+    }
+  },
+  "required": [
+    "user_id",
+    "card_last4",
+    "card_brand",
+    "exp_month",
+    "exp_year",
+    "cardholder_name"
+  ]
+}
