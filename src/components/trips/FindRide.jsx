@@ -89,7 +89,7 @@ export default function FindRide({ island = "Kauai" }) {
       const filtered = allRides.filter(r => !currentUser || r.driver_id !== currentUser.id);
       setRides(filtered);
 
-      const allRatings = await base44.entities.Rating.list().catch(() => []);
+      const allRatings = currentUser ? await base44.entities.Rating.list().catch(() => []) : [];
       const ratings = {};
       filtered.forEach(ride => {
         ratings[ride.driver_id] = allRatings.filter(r =>
@@ -195,7 +195,20 @@ export default function FindRide({ island = "Kauai" }) {
                 <CardContent className="px-3 pb-3">
                   <div className="flex flex-col gap-2">
                     {dateRides
-                      .sort((a, b) => (a.departure_time || '').localeCompare(b.departure_time || ''))
+                      .sort((a, b) => {
+                        const toMinutes = (t) => {
+                          if (!t) return 9999;
+                          const match = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+                          if (!match) return 9999;
+                          let h = parseInt(match[1]);
+                          const m = parseInt(match[2]);
+                          const period = (match[3] || '').toUpperCase();
+                          if (period === 'PM' && h !== 12) h += 12;
+                          if (period === 'AM' && h === 12) h = 0;
+                          return h * 60 + m;
+                        };
+                        return toMinutes(a.departure_time) - toMinutes(b.departure_time);
+                      })
                       .map((ride) => (
                         <div
                           key={ride.id}
