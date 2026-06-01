@@ -204,8 +204,10 @@ export default function FindRide({ island = "Kauai" }) {
                         >
                           <div className="flex justify-between items-start mb-2">
                             <div className="min-w-0 flex-1 pr-2">
-                              <p className="font-semibold text-secondary text-sm">{ride.departure_time || 'Flexible'}</p>
-                              <p className="text-xs text-gray-600 truncate">{ride.departure_location} → {ride.destination}</p>
+                              <p className="font-semibold text-secondary text-sm truncate">
+                                {ride.departure_location} → {ride.destination}
+                                <span className="font-normal text-gray-500 ml-2">— {ride.departure_time || 'flexible'}</span>
+                              </p>
                             </div>
                             <div className="text-right shrink-0">
                               <p className="font-bold text-base text-primary">
