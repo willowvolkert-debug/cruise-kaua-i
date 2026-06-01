@@ -3,7 +3,6 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 const formatRideDate = (dateStr, timeStr) => {
-  // dateStr is YYYY-MM-DD, timeStr is like "2:00 PM"
   const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   const [year, month, day] = dateStr.split('-').map(Number);
@@ -11,7 +10,6 @@ const formatRideDate = (dateStr, timeStr) => {
   const dayName = days[date.getDay()];
   const monthName = months[date.getMonth()];
   const suffix = day === 1 || day === 21 || day === 31 ? 'st' : day === 2 || day === 22 ? 'nd' : day === 3 || day === 23 ? 'rd' : 'th';
-  // Normalize time: remove leading zero from hour if needed, remove space before AM/PM
   const normalizedTime = (timeStr || '').replace(/^0/, '').replace(/ (AM|PM)/, '$1');
   return `${dayName} ${monthName} ${day}${suffix} at ${normalizedTime}`;
 };
@@ -102,20 +100,16 @@ Deno.serve(async (req) => {
 
     const testEmail = payload.test_email;
 
-    // Get rides and requests posted in the last 24 hours
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
     const todayStr = new Date().toISOString().split('T')[0];
     const in7days = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-    // Fetch data with reasonable limits to avoid timeouts
     const [allUsers, allRides, allRequests] = await Promise.all([
       base44.asServiceRole.entities.User.list('-created_date', 500),
       base44.asServiceRole.entities.Ride.filter({ status: 'active' }, '-created_date', 200),
       base44.asServiceRole.entities.RideRequest.filter({ status: 'active' }, '-created_date', 100),
     ]);
 
-    // Non-recurring rides: posted in last 24 hours
-    // Recurring rides: only include ones happening within the next 7 days (this week's rides)
     const parseTime = (timeStr = '') => {
       const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
       if (!match) return 0;
@@ -133,11 +127,10 @@ Deno.serve(async (req) => {
     };
 
     const newRides = allRides.filter(r => {
-      if (r.is_recurring) {
-        return r.departure_date >= todayStr && r.departure_date <= in7days;
-      }
+      if (r.is_recurring) return r.departure_date >= todayStr && r.departure_date <= in7days;
       return r.created_date >= since;
     }).sort(rideSort);
+
     const newRequests = allRequests.filter(r => r.created_date >= since).sort(rideSort);
 
     const subject = `${newRides.length} new ride${newRides.length !== 1 ? 's' : ''} + ${newRequests.length} request${newRequests.length !== 1 ? 's' : ''} posted today`;
@@ -155,17 +148,15 @@ Deno.serve(async (req) => {
       return Response.json({ ok: true, sent: 1, mode: 'test', newRides: newRides.length, newRequests: newRequests.length });
     }
 
-    // Skip sending if nothing new today
     if (newRides.length === 0 && newRequests.length === 0) {
       return Response.json({ ok: true, skipped: 'nothing new today', sent: 0 });
     }
 
-    // Filter recipients based on their email frequency preference
     const now = new Date();
-    const todayDay = now.getDay(); // 0=Sun
+    const todayDay = now.getDay();
     const todayDate = now.getDate();
 
-    // Deduplicate by email, then filter by frequency preference
+    // Deduplicate by email + filter by frequency preference
     const seenEmails = new Set();
     const recipients = allUsers.filter(u => {
       if (!u.email || seenEmails.has(u.email)) return false;
@@ -174,36 +165,33 @@ Deno.serve(async (req) => {
       if (freq === 'never') return false;
       if (freq === 'daily') return true;
       if (freq === 'every_3_days') return todayDate % 3 === 1;
-      if (freq === 'weekly') return todayDay === 1; // Mondays
-      if (freq === 'monthly') return todayDate === 1; // 1st of month
+      if (freq === 'weekly') return todayDay === 1;
+      if (freq === 'monthly') return todayDate === 1;
       return true;
     });
 
+    // Send in small parallel batches of 3 with 500ms between batches
+    // 3 concurrent × 500ms gap = ~10s per 3 users → 60 users ≈ 110s max
+    // Much safer than sequential 1s/email which was hitting 120s+ timeout
+    const BATCH = 3;
     let sent = 0;
 
-    for (const u of recipients) {
-      const firstName = u.full_name?.split(' ')[0] || 'there';
-      const body = buildEmailBody(firstName, newRides, newRequests, u.id);
-      let attempts = 0;
-      while (attempts < 3) {
-        try {
-          await base44.asServiceRole.integrations.Core.SendEmail({
-            to: u.email,
-            from_name: "Cruise Kaua'i",
-            subject,
-            body,
-          });
-          sent++;
-          break;
-        } catch (e) {
-          attempts++;
-          if (attempts < 3) await sleep(2000); // wait 2s before retry on rate limit
-        }
-      }
-      await sleep(1000); // 1 email per second
+    for (let i = 0; i < recipients.length; i += BATCH) {
+      const batch = recipients.slice(i, i + BATCH);
+      await Promise.all(batch.map(async (u) => {
+        const firstName = u.full_name?.split(' ')[0] || 'there';
+        const body = buildEmailBody(firstName, newRides, newRequests, u.id);
+        await base44.asServiceRole.integrations.Core.SendEmail({
+          to: u.email,
+          from_name: "Cruise Kaua'i",
+          subject,
+          body,
+        }).then(() => { sent++; }).catch(() => null);
+      }));
+      if (i + BATCH < recipients.length) await sleep(500);
     }
 
-    return Response.json({ ok: true, sent, newRides: newRides.length, newRequests: newRequests.length });
+    return Response.json({ ok: true, sent, total: recipients.length, newRides: newRides.length, newRequests: newRequests.length });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
