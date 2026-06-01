@@ -1184,6 +1184,36 @@ export default function AccountPage() {
                                                 </p>
                                             )}
                                         </Link>
+
+                                        {/* Email Frequency */}
+                                        <div className="p-3 rounded-2xl bg-gray-50 border border-gray-200">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-gray-500">✉️</span>
+                                                    <span className="font-medium">email frequency with updated rides</span>
+                                                </div>
+                                            </div>
+                                            <div className="mt-3">
+                                                <Select
+                                                    value={user.email_update_frequency || 'daily'}
+                                                    onValueChange={async (v) => {
+                                                        await base44.auth.updateMe({ email_update_frequency: v });
+                                                        await loadData();
+                                                    }}
+                                                >
+                                                    <SelectTrigger className="rounded-2xl border-gray-300">
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent className="rounded-2xl">
+                                                        <SelectItem value="daily">daily</SelectItem>
+                                                        <SelectItem value="every_3_days">every 3 days</SelectItem>
+                                                        <SelectItem value="weekly">weekly</SelectItem>
+                                                        <SelectItem value="monthly">monthly</SelectItem>
+                                                        <SelectItem value="never">please don't send me any emails</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        </div>
                         </CardContent>
                     </Card>
                 )}
