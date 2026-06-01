@@ -96,7 +96,7 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
   },
 
   basic: {
-    subject: 'You signed up for Cruise Kauaʻi — here\'s what that means',
+    subject: 'Welcome to Cruise Kauaʻi- why this service is worth your time',
     body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
       ${logo}
       <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName} 🤙</p>
