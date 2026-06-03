@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { X, ShieldCheck, Loader2, Upload } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import { sendOnboardingEmail } from "@/functions/sendOnboardingEmail";
 
 export default function LicenseVerificationModal({ isOpen, onClose, onSuccess }) {
   const [licenseFrontFile, setLicenseFrontFile] = useState(null);
@@ -57,6 +58,9 @@ export default function LicenseVerificationModal({ isOpen, onClose, onSuccess })
       message: `A user has uploaded their driver's license for verification.\n\nUser: ${currentUser.full_name}\nEmail: ${currentUser.email}\n\nPlease review in the Admin Dashboard.`,
       message_type: 'action_required'
     });
+
+    // Fire onboarding email (non-blocking)
+    sendOnboardingEmail({}).catch(() => null);
 
     setIsUploading(false);
     if (onSuccess) onSuccess();

@@ -11,6 +11,7 @@ import { Car, Save, ArrowLeft, ExternalLink, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { createConnectAccount } from "@/functions/createConnectAccount";
+import { sendOnboardingEmail } from "@/functions/sendOnboardingEmail";
 import { useDraftSave, loadDraft, clearDraft } from "@/hooks/useDraftSave";
 
 const VEHICLE_DRAFT_KEY = 'draft_vehicle_details';
@@ -196,6 +197,9 @@ export default function VehicleDetailsPage() {
       } catch (notifyErr) {
         console.error("Error notifying admin:", notifyErr);
       }
+
+      // Fire onboarding email (non-blocking)
+      sendOnboardingEmail({}).catch(() => null);
 
       setUploadProgress('');
       clearDraft(VEHICLE_DRAFT_KEY);
