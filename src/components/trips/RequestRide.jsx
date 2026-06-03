@@ -193,8 +193,7 @@ export default function RequestRide({ island = "Kauai" }) {
     <div className="space-y-6 max-w-4xl mx-auto relative">
       <h2 className="text-2xl font-bold text-secondary">request a ride</h2>
       <p className="text-sm text-gray-500 -mt-4">
-        need to edit a pre-existing ride request?{" "}
-        <a href="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">press here →</a>
+        <a href="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">edit a pre-existing ride request here →</a>
       </p>
 
       {error && (
@@ -477,8 +476,7 @@ export default function RequestRide({ island = "Kauai" }) {
             </div>
             <p className="text-green-800 font-medium">want to also request a return ride?</p>
             <p className="text-sm text-green-700">
-              need to edit?{" "}
-              <a href="/inbox" className="font-semibold underline underline-offset-2 hover:text-green-900">press here →</a>
+              <a href="/inbox" className="font-semibold underline underline-offset-2 hover:text-green-900">edit a pre-existing ride request here →</a>
             </p>
             <div className="flex gap-3">
               <Button
@@ -522,9 +520,8 @@ export default function RequestRide({ island = "Kauai" }) {
           {isSubmitting ? 'submitting...' : 'submit request'}
         </Button>
         <p className="text-center text-sm text-gray-500">
-          already submitted?{" "}
           <a href="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">
-            edit your ride request here →
+            edit a pre-existing ride request here →
           </a>
         </p>
       </div>

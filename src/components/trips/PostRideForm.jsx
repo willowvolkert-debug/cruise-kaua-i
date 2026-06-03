@@ -492,8 +492,7 @@ export default function PostRideForm({ island = "Kauai" }) {
         </Button>
       </div>
       <p className="text-sm text-gray-500 -mt-2 mb-2">
-        need to edit a pre-existing ride?{" "}
-        <a href="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">press here →</a>
+        <a href="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">edit a pre-existing ride here →</a>
       </p>
 
       {respondingToRequest && (
@@ -1092,9 +1091,8 @@ export default function PostRideForm({ island = "Kauai" }) {
           {isSubmitting ? 'posting...' : 'post ride'}
         </Button>
         <p className="text-center text-sm text-gray-500">
-          already posted?{" "}
           <a href="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">
-            edit your ride here →
+            edit a pre-existing ride here →
           </a>
         </p>
       </div>
