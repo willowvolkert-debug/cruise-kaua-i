@@ -22,6 +22,7 @@ import EnableNotificationsModal from "../components/notifications/EnableNotifica
 import { requestNotificationPermission } from "../components/utils/notifications";
 import AdminMessageCard from "../components/inbox/AdminMessageCard";
 import ProfileSetupQuiz from "../components/account/ProfileSetupQuiz";
+import WelcomeNewUserModal from "../components/account/WelcomeNewUserModal";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -98,6 +99,7 @@ export default function AccountPage() {
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState(null);
     const [adminMessages, setAdminMessages] = useState([]);
+    const [showWelcomeModal, setShowWelcomeModal] = useState(false);
     const [showProfileQuiz, setShowProfileQuiz] = useState(false);
     const [profileQuizSavedStep, setProfileQuizSavedStep] = useState(0);
     const [showPhonePrompt, setShowPhonePrompt] = useState(false);
@@ -138,10 +140,13 @@ export default function AccountPage() {
             const urlParams2 = new URLSearchParams(window.location.search);
             const forceQuiz = urlParams2.get('reopen_quiz') === 'true';
             if (!currentUser.has_completed_profile_quiz || forceQuiz) {
-                // Reset has_completed_profile_quiz so quiz can be re-completed
                 if (forceQuiz) await base44.auth.updateMe({ has_completed_profile_quiz: false });
-                // Only auto-open if not already manually closed (save & come back later)
-                setShowProfileQuiz(prev => prev === false ? false : true);
+                // New users who haven't dismissed the welcome modal see it first
+                if (!currentUser.has_dismissed_welcome_modal && !forceQuiz) {
+                    setShowWelcomeModal(true);
+                } else {
+                    setShowProfileQuiz(prev => prev === false ? false : true);
+                }
             }
             setEditData({
                 username: currentUser.username || '',
@@ -1249,6 +1254,14 @@ export default function AccountPage() {
                     © {new Date().getFullYear()} Cruise Hawaiʻi. Specializing in carpooling and ridesharing across Hawaiʻi.
                 </footer>
             </div>
+
+            {showWelcomeModal && user && (
+                <WelcomeNewUserModal
+                    user={user}
+                    onStartQuiz={() => { setShowWelcomeModal(false); setShowProfileQuiz(true); }}
+                    onDismiss={async () => { setShowWelcomeModal(false); await loadData(); }}
+                />
+            )}
 
             {showProfileQuiz && user && (
                 <ProfileSetupQuiz
