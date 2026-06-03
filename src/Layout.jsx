@@ -393,18 +393,18 @@ export default function Layout({ children, currentPageName }) {
                                 (path === "/trips" && location.pathname === "/");
                               return (
                                 <Link
-                                  key={path}
-                                  to={path}
-                                  className={`flex-1 text-center text-xs font-semibold py-1.5 mx-0.5 rounded-full transition-colors ${
-                                    isActive
-                                      ? "border-2 border-green-400 text-primary bg-green-50"
-                                      : "text-gray-500 hover:text-primary"
-                                  }`}
+                                 key={path}
+                                 to={path}
+                                 className={`flex-1 text-center text-xs font-semibold py-3 mx-0.5 rounded-full transition-colors ${
+                                   isActive
+                                     ? "border-2 border-green-400 text-primary bg-green-50"
+                                     : "text-gray-500 hover:text-primary"
+                                 }`}
                                 >
-                                  {label}
-                                  {label === "inbox" && unreadCount > 0 && (
-                                    <span className="ml-1 bg-red-500 text-white text-[10px] px-1 py-0.5 rounded-full">{unreadCount > 9 ? '9+' : unreadCount}</span>
-                                  )}
+                                 {label}
+                                 {label === "inbox" && unreadCount > 0 && (
+                                   <span className="ml-1 bg-red-500 text-white text-[10px] px-1 py-0.5 rounded-full">{unreadCount > 9 ? '9+' : unreadCount}</span>
+                                 )}
                                 </Link>
                               );
                             })}
