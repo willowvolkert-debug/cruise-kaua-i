@@ -53,10 +53,10 @@ export default function WelcomePage() {
     return acc;
   }, {});
 
-  const handleSignUp = () => base44.auth.redirectToLogin(createPageUrl("Trips"));
+  const handleSignUp = () => navigate("/join");
   const handleExplore = () => navigate(createPageUrl("Trips") + "?explore=true");
-  const handleDriverSignup = () => navigate(createPageUrl("DriverSignupFlow"));
-  const handleRiderSignup = () => navigate(createPageUrl("RiderSignupFlow"));
+  const handleDriverSignup = () => navigate("/join");
+  const handleRiderSignup = () => navigate("/join");
 
   const showPhonePromptLink = new Date() < new Date('2026-06-04');
   const loginTarget = showPhonePromptLink ?
@@ -70,10 +70,10 @@ export default function WelcomePage() {
       <div className="bg-green-50 border-b border-green-200 px-4 py-2 text-center z-10 relative">
         <span className="text-sm text-gray-600">Welcome! </span>
         <button
-          onClick={() => base44.auth.redirectToLogin(loginTarget)}
+          onClick={() => navigate("/join")}
           className="text-sm font-semibold text-primary underline underline-offset-2 hover:text-primary/80 transition-colors">
           
-          click here to log in →
+          sign up / log in →
         </button>
       </div>
 
@@ -214,7 +214,7 @@ export default function WelcomePage() {
           </div>
           <div className="mt-6 flex justify-center">
             <Button
-              onClick={() => navigate("/joinus")}
+              onClick={() => navigate("/join")}
               className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 py-5 text-base font-bold shadow-lg">
               
               sign up here →

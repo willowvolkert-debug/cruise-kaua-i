@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
@@ -11,7 +11,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Camera, ChevronRight, CheckCircle, Upload, Car, MapPin, X } from "lucide-react";
 
 const BASE_STEPS = [
-  { id: "island", title: "Which island are you on?", subtitle: "Let us know which island you're based on.", type: "island", field: "preferred_island" },
   { id: "username", title: "What should we call you?", subtitle: "Choose a username others will see on the platform (no spaces).", type: "text", placeholder: "e.g. kaleo_808", field: "username" },
   { id: "age", title: "How old are you?", subtitle: "Riders and drivers can see your age to feel comfortable sharing a ride.", type: "number", placeholder: "e.g. 28", field: "age", min: 18 },
   { id: "gender", title: "What's your gender?", subtitle: "This helps people feel safe knowing who they're riding with.", type: "select", field: "gender", options: [
@@ -70,6 +69,8 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
 
   const [started, setStarted] = useState(initialStep > 0); // skip welcome if resuming
   const [step, setStep] = useState(initialStep);
+  // Show founders screen for non-Kauai islands pre-filled from signup flow
+  const [foundersChecked, setFoundersChecked] = useState(false);
   const [isDriverPath, setIsDriverPath] = useState(_prefilledRole === 'driver');
   const [showRiderTips, setShowRiderTips] = useState(false);
   const [showFoundersScreen, setShowFoundersScreen] = useState(false);
@@ -194,20 +195,23 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     await base44.auth.updateMe({ driver_agreement_accepted: true, driver_agreement_timestamp: new Date().toISOString() });
   };
 
+  // When quiz starts, if island was pre-filled from signup and it's non-Kauai, show founders screen
+  useEffect(() => {
+    if (started && !foundersChecked && _prefilledIsland && _prefilledIsland !== "Kauai") {
+      setFoundersChecked(true);
+      base44.auth.updateMe({ preferred_island: _prefilledIsland, is_founders_group: true }).catch(() => null);
+      setShowFoundersScreen(true);
+    } else if (started && !foundersChecked) {
+      setFoundersChecked(true);
+      if (_prefilledIsland) {
+        base44.auth.updateMe({ preferred_island: _prefilledIsland }).catch(() => null);
+      }
+    }
+  }, [started]);
+
   const handleNext = async () => {
     setError("");
     if (!validate()) return;
-
-    // Island step — show founders screen for non-Kauai
-    if (current.type === "island") {
-      const island = answers.preferred_island;
-      if (island && island !== "Kauai") {
-        // Save island + founders flag right away
-        await base44.auth.updateMe({ preferred_island: island, is_founders_group: true });
-        setShowFoundersScreen(true);
-        return;
-      }
-    }
 
     // Driver choice step
     if (current.type === "driver_choice") return; // handled by buttons
