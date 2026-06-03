@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { User, MessageSquare, ShieldCheck, MapPin, Users, CheckCircle, Home } from "lucide-react";
+import { User, MessageSquare, ShieldCheck, MapPin, Users, CheckCircle, Home, ChevronRight, ChevronLeft } from "lucide-react";
 import { getIslandFromDomain, ISLAND_CONFIG } from "@/lib/islandConfig";
 import { base44 } from "@/api/base44Client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -354,16 +354,40 @@ export default function Layout({ children, currentPageName }) {
         <main 
                       className="flex-1 flex flex-col"
                     >
-                      <header className="bg-white border-b border-gray-200 px-4 py-2 md:hidden">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <SidebarTrigger data-sidebar="trigger" className="hover:bg-gray-100 p-2 rounded-2xl transition-colors duration-200" />
-                            <h1 className="text-base font-bold text-secondary">{(currentPageName === "AboutUs" ? "about us" : currentPageName?.toLowerCase()) || ""}{currentPageName === "Welcome" ? "!" : ""}</h1>
-                          </div>
+                      <header className="bg-white border-b border-gray-200 px-3 py-2 md:hidden">
+                        <div className="flex items-center gap-2">
+                          <SidebarTrigger data-sidebar="trigger" className="hover:bg-gray-100 p-2 rounded-2xl transition-colors duration-200 shrink-0" />
+                          <nav className="flex items-center gap-1 flex-1 overflow-x-auto no-scrollbar">
+                            {[
+                              { label: "trips", path: "/trips" },
+                              { label: "inbox", path: "/inbox" },
+                              { label: "confirmed", path: "/confirmedrides" },
+                              { label: "account", path: "/account" },
+                            ].map(({ label, path }) => {
+                              const isActive = location.pathname.toLowerCase() === path || 
+                                (path === "/trips" && location.pathname === "/");
+                              return (
+                                <Link
+                                  key={path}
+                                  to={path}
+                                  className={`shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full transition-colors whitespace-nowrap ${
+                                    isActive
+                                      ? "border-2 border-green-400 text-primary bg-green-50"
+                                      : "text-gray-500 hover:text-primary"
+                                  }`}
+                                >
+                                  {label}
+                                  {label === "inbox" && unreadCount > 0 && (
+                                    <span className="ml-1 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">{unreadCount > 9 ? '9+' : unreadCount}</span>
+                                  )}
+                                </Link>
+                              );
+                            })}
+                          </nav>
                           <img
                             src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
                             alt="Cruise Kauaʻi logo"
-                            className="w-12 h-12 object-cover rounded-xl"
+                            className="w-9 h-9 object-cover rounded-xl shrink-0"
                           />
                         </div>
                       </header>

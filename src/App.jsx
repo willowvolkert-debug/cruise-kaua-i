@@ -1,5 +1,7 @@
+import React from 'react'
 import './App.css'
 import { Toaster } from "@/components/ui/toaster"
+import SplashScreen from '@/components/SplashScreen'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import VisualEditAgent from '@/lib/VisualEditAgent'
@@ -90,12 +92,19 @@ if (window.location.hostname === 'preview--ride-connect-b7a57d59.base44.app') {
 }
 
 function App() {
+  const [showSplash, setShowSplash] = React.useState(() => {
+    // Only show splash once per session
+    if (sessionStorage.getItem('splash_shown')) return false;
+    sessionStorage.setItem('splash_shown', '1');
+    return true;
+  });
 
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
         <Router>
           <NavigationTracker />
+          {showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}
           <AuthenticatedApp />
         </Router>
         <Toaster />
