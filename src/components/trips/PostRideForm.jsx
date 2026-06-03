@@ -480,7 +480,7 @@ export default function PostRideForm({ island = "Kauai" }) {
   return (
     <div className="space-y-6 max-w-4xl mx-auto relative">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold text-secondary">share your ride</h2>
+        <h2 className="text-2xl font-bold text-secondary">post your ride</h2>
         <Button
           onClick={() => setShowTutorial(true)}
           variant="outline"
