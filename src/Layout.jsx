@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { User, MessageSquare, ShieldCheck, MapPin, Users, CheckCircle, Home, ChevronRight, ChevronLeft } from "lucide-react";
+import { User, MessageSquare, ShieldCheck, MapPin, Users, CheckCircle, Home, ChevronRight } from "lucide-react";
 import { getIslandFromDomain, ISLAND_CONFIG } from "@/lib/islandConfig";
 import { base44 } from "@/api/base44Client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -190,6 +190,34 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
   );
 }
 
+function NestedChevrons({ open }) {
+  // Three nested chevrons indicating open/close direction
+  const size = 18;
+  const color = "#4B5563";
+  const offsets = [0, 4, 8];
+  return (
+    <svg width={size + 8} height={size} viewBox={`0 0 26 18`} fill="none">
+      {offsets.map((ox, i) => {
+        const x = open ? (14 - ox) : (4 + ox);
+        const opacity = 1 - i * 0.25;
+        return (
+          <polyline
+            key={i}
+            points={open
+              ? `${x + 7},2 ${x},9 ${x + 7},16`
+              : `${x},2 ${x + 7},9 ${x},16`}
+            stroke={color}
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            opacity={opacity}
+          />
+        );
+      })}
+    </svg>
+  );
+}
+
 function CustomSidebarTrigger() {
   const { open, toggleSidebar } = useSidebar();
   return (
@@ -198,10 +226,7 @@ function CustomSidebarTrigger() {
       data-sidebar="trigger"
       className="hover:bg-gray-100 p-2 rounded-2xl transition-colors duration-200 shrink-0 flex items-center justify-center"
     >
-      {open
-        ? <ChevronLeft className="w-5 h-5 text-gray-600" />
-        : <ChevronRight className="w-5 h-5 text-gray-600" />
-      }
+      <NestedChevrons open={open} />
     </button>
   );
 }
@@ -378,10 +403,10 @@ export default function Layout({ children, currentPageName }) {
         <main 
                       className="flex-1 flex flex-col"
                     >
-                      <header className="bg-white border-b border-gray-200 px-3 py-2 md:hidden">
-                        <div className="flex items-center gap-2">
+                      <header className="bg-white border-b border-gray-200 px-2 py-2 md:hidden">
+                        <div className="flex items-center gap-1 w-full">
                           <CustomSidebarTrigger />
-                          <nav className="flex items-center gap-1 flex-1 overflow-x-auto no-scrollbar">
+                          <nav className="flex flex-1 items-center justify-between">
                             {[
                               { label: "trips", path: "/trips" },
                               { label: "inbox", path: "/inbox" },
@@ -394,7 +419,7 @@ export default function Layout({ children, currentPageName }) {
                                 <Link
                                   key={path}
                                   to={path}
-                                  className={`shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full transition-colors whitespace-nowrap ${
+                                  className={`flex-1 text-center text-xs font-semibold py-1.5 mx-0.5 rounded-full transition-colors ${
                                     isActive
                                       ? "border-2 border-green-400 text-primary bg-green-50"
                                       : "text-gray-500 hover:text-primary"
@@ -402,17 +427,12 @@ export default function Layout({ children, currentPageName }) {
                                 >
                                   {label}
                                   {label === "inbox" && unreadCount > 0 && (
-                                    <span className="ml-1 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">{unreadCount > 9 ? '9+' : unreadCount}</span>
+                                    <span className="ml-1 bg-red-500 text-white text-[10px] px-1 py-0.5 rounded-full">{unreadCount > 9 ? '9+' : unreadCount}</span>
                                   )}
                                 </Link>
                               );
                             })}
                           </nav>
-                          <img
-                            src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
-                            alt="Cruise Kauaʻi logo"
-                            className="w-9 h-9 object-cover rounded-xl shrink-0"
-                          />
                         </div>
                       </header>
 
