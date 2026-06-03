@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
       return Response.json({ ok: true, mode: 'blast', sent, errors });
     }
 
-    return Response.json({ error: 'Pass send_preview:true or send_all:true' }, { status: 400 });
+    return Response.json({ error: 'Pass send_preview:true or send_all:true' }, { status: 400 }); // v2
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
