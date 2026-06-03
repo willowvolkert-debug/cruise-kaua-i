@@ -238,6 +238,11 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
         <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/Account" style="color:#ca8a04;font-weight:bold;">Connect your bank account now</a></p>
       </div>
 
+      <div style="background:#fff7ed;border-left:4px solid #f97316;border-radius:8px;padding:20px;margin-bottom:24px;">
+        <p style="font-weight:bold;margin:0 0 8px;color:#1a1a1a;">💰 New: Price bidding feature</p>
+        <p style="margin:0 0 8px;color:#555;">Riders can now make lower price offers for your rides. You have full control — <strong>accept their bid, or request they pay your full price</strong>. It's up to you to decide what works best.</p>
+      </div>
+
       <p style="margin-bottom:24px;font-size:14px;color:#6b7280;text-align:center;">Have feedback, or experiencing issues? Reply to this email to let us know!</p>
 
       <p style="margin-top:32px;margin-bottom:8px;">Mahalo for helping reduce traffic on our beautiful island 🙏</p>
