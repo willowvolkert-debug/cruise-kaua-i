@@ -265,7 +265,7 @@ Deno.serve(async (req) => {
     }
 
     const payload = await req.json().catch(() => ({}));
-    const { send_previews, send_trips_update, send_trips_blast } = payload;
+    const { send_previews, send_trips_update, send_trips_blast } = payload; // v2
 
     const appUrl = 'https://cruisekauai.org';
     const logo = `<div style="text-align:center;margin-bottom:28px;">

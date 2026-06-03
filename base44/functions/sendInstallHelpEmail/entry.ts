@@ -60,7 +60,7 @@ Deno.serve(async (req) => {
     await base44.asServiceRole.integrations.Core.SendEmail({
       to: email,
       from_name: "Cruise Kaua'i",
-      subject: "How to add Cruise Kauaʻi to your home screen 📲",
+      subject: "How to add Cruise Kauaʻi to your home screen",
       body,
     });
 
