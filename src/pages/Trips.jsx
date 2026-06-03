@@ -10,10 +10,11 @@ import { getIslandFromDomain } from "@/lib/islandConfig";
 import { format, addDays } from "date-fns";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import RouteSearch from "../components/trips/RouteSearch";
 
 const ISLANDS = ["Kauai", "Oahu", "Maui", "Big Island"];
 
-// view: null | "menu" | "request" | "post" | "view_sub" | "view_week" | "view_date"
+// view: null | "menu" | "request" | "post" | "view_sub" | "view_week" | "view_date" | "view_route"
 
 export default function TripsPage() {
   const [showTutorial, setShowTutorial] = React.useState(false);
@@ -55,7 +56,7 @@ export default function TripsPage() {
 
   const goBack = () => {
     if (view === "view_sub" || view === "request" || view === "post") setView("menu");
-    else if (view === "view_week" || view === "view_date") setView("view_sub");
+    else if (view === "view_week" || view === "view_date" || view === "view_route") setView("view_sub");
   };
 
   const showBack = view !== "menu";
@@ -172,6 +173,18 @@ export default function TripsPage() {
               </div>
               <ChevronLeft className="w-5 h-5 text-gray-300 group-hover:text-primary rotate-180 shrink-0 transition-colors" />
             </button>
+
+            <button
+              onClick={() => setView("view_route")}
+              className="w-full flex items-center gap-5 p-5 rounded-3xl border-2 border-gray-200 bg-gray-50 hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
+            >
+              <span className="text-4xl shrink-0">📍</span>
+              <div className="flex-1">
+                <p className="font-bold text-gray-900 text-lg group-hover:text-primary transition-colors">specific route</p>
+                <p className="text-gray-500 text-sm mt-0.5">Find rides passing through your origin & destination</p>
+              </div>
+              <ChevronLeft className="w-5 h-5 text-gray-300 group-hover:text-primary rotate-180 shrink-0 transition-colors" />
+            </button>
           </div>
         )}
 
@@ -207,6 +220,9 @@ export default function TripsPage() {
             initialEndDate={format(addDays(new Date(), 7), 'yyyy-MM-dd')}
           />
         )}
+
+        {/* ── VIEW ROUTE ── */}
+        {view === "view_route" && <RouteSearch island={selectedIsland} />}
 
         {/* ── REQUEST ── */}
         {view === "request" && <RequestRide island={selectedIsland} />}
