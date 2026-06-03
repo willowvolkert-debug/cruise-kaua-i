@@ -112,18 +112,12 @@ export default function WelcomeNewUserModal({ user, onStartQuiz, onDismiss }) {
       <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden my-4">
         {/* Header */}
         <div
-          className="px-6 pt-8 pb-6 text-center text-white"
-          style={{ background: "linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)" }}
+          className="px-6 pt-14 pb-6 text-center text-white"
+          style={{ background: "linear-gradient(135deg, #3a7d5a 0%, #4e9e78 100%)" }}
         >
-          <img
-            src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
-            alt="Cruise Kauaʻi"
-            className="w-16 h-16 rounded-2xl mx-auto mb-4 object-cover shadow-lg border-2 border-white/20"
-          />
-          <h1 className="text-2xl font-extrabold tracking-tight mb-1">
-            welcome to cruise kauaʻi! 🤙
+          <h1 className="text-2xl font-extrabold tracking-tight text-white">
+            welcome to cruise kauaʻi
           </h1>
-          <p className="text-green-200 text-sm">sharing aloha one ride at a time</p>
         </div>
 
         {/* How it works */}

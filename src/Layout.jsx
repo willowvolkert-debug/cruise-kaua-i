@@ -256,8 +256,9 @@ export default function Layout({ children, currentPageName }) {
           // Mark as seen since they're authenticated — no need to redirect back to Welcome
           base44.auth.updateMe({ has_seen_welcome: true });
         }
-        if (!user.has_seen_tutorial && (location.pathname === createPageUrl("Trips") || location.pathname === "/")) {
-          setShowTutorial(true);
+        // Skip the old tutorial intro for new users — WelcomeNewUserModal handles onboarding now
+        if (!user.has_seen_tutorial) {
+          base44.auth.updateMe({ has_seen_tutorial: true });
         }
         // Load unread counts
         loadUnreadCount(user);
