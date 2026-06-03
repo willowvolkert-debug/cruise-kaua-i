@@ -45,7 +45,7 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
               {/* Driver Info */}
               <div className="flex items-center gap-4">
                 <Avatar className="w-20 h-20">
-                  <AvatarImage src={ride?.driver_profile_picture_url} />
+                  <AvatarImage src={ride?.driver_profile_picture_url} className="object-cover object-top" />
                   <AvatarFallback className="bg-gradient-to-r from-primary to-secondary text-white font-bold text-2xl">
                     {getInitials(ride?.driver_name)}
                   </AvatarFallback>
