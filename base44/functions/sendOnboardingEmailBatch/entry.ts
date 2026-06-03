@@ -2,96 +2,9 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
 // Sends onboarding emails to ALL users who haven't received one yet
 // Called by scheduled automation at 7am HST
+// 5 email types: basic, license_submitted, license_verified, driver_submitted, driver_verified
 
 const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
-  vehicle: {
-    subject: 'You\'re almost a driver on Cruise Kauaʻi',
-    body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
-      ${logo}
-      <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName}! 🌺</p>
-      <p style="margin-bottom:16px;">This is Willow, founder & CEO of Cruise Kauaʻi. <strong>Mahalo for submitting your vehicle details</strong> — you're so close to becoming a driver on our platform!</p>
-      <p style="margin-bottom:24px;">Here's what happens next:</p>
-
-      <div style="background:#f0fdf4;border-left:4px solid #2f7d52;border-radius:8px;padding:20px;margin-bottom:20px;">
-        <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">✅ What you've done</p>
-        <ul style="margin:0;padding-left:20px;color:#555;line-height:2.2;">
-          <li>Created your profile</li>
-          <li>Submitted your driver's license for review</li>
-          <li>Submitted your vehicle info & photos</li>
-          <li>Signed the driver agreement</li>
-        </ul>
-      </div>
-
-      <div style="background:#fefce8;border-left:4px solid #ca8a04;border-radius:8px;padding:20px;margin-bottom:20px;">
-        <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">⏳ What happens next</p>
-        <p style="margin:0 0 10px;color:#555;">Our team will review your license and vehicle info, typically within 24 hours. Once approved:</p>
-        <ul style="margin:0;padding-left:20px;color:#555;line-height:2.2;">
-          <li>You'll get an email confirmation</li>
-          <li>You can immediately start <strong>posting rides</strong> and earning money</li>
-          <li>Connect your bank account on your Account page to receive payouts</li>
-        </ul>
-      </div>
-
-      <div style="background:#eff6ff;border-left:4px solid #3b82f6;border-radius:8px;padding:20px;margin-bottom:24px;">
-        <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">💡 While you wait</p>
-        <ul style="margin:0;padding-left:20px;color:#555;line-height:2.2;">
-          <li><a href="${appUrl}/Account" style="color:#3b82f6;">Connect your bank account</a> (Stripe) for payouts</li>
-          <li><a href="${appUrl}/Trips" style="color:#3b82f6;">Browse the trips board</a> to see what routes are active</li>
-          <li>Think about your regular commute — that's your first ride to post!</li>
-        </ul>
-      </div>
-
-      <p style="margin-bottom:24px;font-size:14px;color:#6b7280;text-align:center;">Have feedback, or experiencing issues? Reply to this email to let us know!</p>
-
-      <p style="margin-top:32px;margin-bottom:8px;">Mahalo for helping reduce traffic on our beautiful island 🙏</p>
-      <p style="margin:0 0 4px;">With aloha,</p>
-      <p style="margin:0;font-weight:bold;">Willow</p>
-      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
-      ${footer}
-    </body></html>`,
-  },
-
-  license: {
-    subject: 'Welcome to Cruise Kauaʻi- here\'s what\'s next',
-    body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
-      ${logo}
-      <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName}! 🌺</p>
-      <p style="margin-bottom:16px;">This is Willow, founder of Cruise Kauaʻi. <strong>Mahalo for submitting your license</strong> — that's the big one. You're almost ready to start booking rides.</p>
-
-      <div style="background:#fefce8;border-left:4px solid #ca8a04;border-radius:8px;padding:20px;margin-bottom:20px;">
-        <p style="font-weight:bold;margin:0 0 8px;color:#1a1a1a;">⏳ We're reviewing your license now</p>
-        <p style="margin:0;color:#555;">Our team typically reviews within 24 hours. Once verified, you'll get an email and you'll be able to <strong>view & book rides immediately</strong>.</p>
-      </div>
-
-      <p style="margin-bottom:12px;font-weight:bold;color:#1a1a1a;">While you wait — here's how riding on Cruise Kauaʻi works:</p>
-      <ul style="padding-left:20px;color:#444;margin-bottom:24px;line-height:2.4;">
-        <li>🔍 <strong>Browse rides</strong> on the Trips board — filter by date, route, and time</li>
-        <li>💳 <strong>Request a ride & pay securely in-app</strong> — no cash needed.</li>
-        <li>💬 <strong>Once the driver approves your ride</strong>, you will be put into a chat in your inbox. Message the driver directly to coordinate pickup details.</li>
-        <li>⭐ <strong>Rate your driver</strong> after — it helps the whole community.</li>
-      </ul>
-
-      <div style="background:#f0fdf4;border-radius:12px;padding:20px;margin-bottom:24px;border:1px solid #86efac;">
-        <p style="font-weight:bold;margin:0 0 8px;color:#166534;">🚗 Also consider becoming a driver</p>
-        <p style="margin:0 0 10px;color:#333;">If you have a car and make regular trips — even just to the grocery store or work — you could be earning money on Cruise Kauaʻi. Drivers set their own prices and only take rides they want.</p>
-        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/Account" style="color:#2f7d52;font-weight:bold;">Add your vehicle on your Account page</a> whenever you're ready</p>
-      </div>
-
-      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
-        <tr><td align="center">
-          <a href="${appUrl}/Trips" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Browse Available Rides →</a>
-        </td></tr>
-      </table>
-
-      <p style="margin-bottom:24px;font-size:14px;color:#6b7280;text-align:center;">Have feedback, or experiencing issues? Reply to this email to let us know!</p>
-
-      <p style="margin-bottom:8px;">Mahalo for being part of this — every shared ride helps our community 🙏</p>
-      <p style="margin:0 0 4px;">With aloha,</p>
-      <p style="margin:0;font-weight:bold;">Willow</p>
-      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
-      ${footer}
-    </body></html>`,
-  },
 
   basic: {
     subject: 'Welcome to Cruise Kauaʻi- why this service is worth your time',
@@ -150,6 +63,190 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
       ${footer}
     </body></html>`,
   },
+
+  license_submitted: {
+    subject: 'Welcome to Cruise Kauaʻi- here\'s what\'s next',
+    body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
+      ${logo}
+      <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName}! 🌺</p>
+      <p style="margin-bottom:16px;">This is Willow, founder of Cruise Kauaʻi. <strong>Mahalo for submitting your license</strong> — that's the big one. You're almost ready to start booking rides.</p>
+
+      <div style="background:#fefce8;border-left:4px solid #ca8a04;border-radius:8px;padding:20px;margin-bottom:20px;">
+        <p style="font-weight:bold;margin:0 0 8px;color:#1a1a1a;">⏳ We're reviewing your license now</p>
+        <p style="margin:0;color:#555;">Our team typically reviews within 24 hours. Once verified, you'll get an email and you'll be able to <strong>view & book rides immediately</strong>.</p>
+      </div>
+
+      <p style="margin-bottom:12px;font-weight:bold;color:#1a1a1a;">While you wait — here's how riding on Cruise Kauaʻi works:</p>
+      <ul style="padding-left:20px;color:#444;margin-bottom:24px;line-height:2.4;">
+        <li>🔍 <strong>Browse rides</strong> on the Trips board — filter by date, route, and time</li>
+        <li>💳 <strong>Request a ride & pay securely in-app</strong> — no cash needed.</li>
+        <li>💬 <strong>Once the driver approves your ride</strong>, you will be put into a chat in your inbox. Message the driver directly to coordinate pickup details.</li>
+        <li>⭐ <strong>Rate your driver</strong> after — it helps the whole community.</li>
+      </ul>
+
+      <div style="background:#f0fdf4;border-radius:12px;padding:20px;margin-bottom:24px;border:1px solid #86efac;">
+        <p style="font-weight:bold;margin:0 0 8px;color:#166534;">🚗 Also consider becoming a driver</p>
+        <p style="margin:0 0 10px;color:#333;">If you have a car and make regular trips — even just to the grocery store or work — you could be earning money on Cruise Kauaʻi. Drivers set their own prices and only take rides they want.</p>
+        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/Account" style="color:#2f7d52;font-weight:bold;">Add your vehicle on your Account page</a> whenever you're ready</p>
+      </div>
+
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
+        <tr><td align="center">
+          <a href="${appUrl}/Trips" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Browse Available Rides →</a>
+        </td></tr>
+      </table>
+
+      <p style="margin-bottom:24px;font-size:14px;color:#6b7280;text-align:center;">Have feedback, or experiencing issues? Reply to this email to let us know!</p>
+
+      <p style="margin-bottom:8px;">Mahalo for being part of this — every shared ride helps our community 🙏</p>
+      <p style="margin:0 0 4px;">With aloha,</p>
+      <p style="margin:0;font-weight:bold;">Willow</p>
+      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
+      ${footer}
+    </body></html>`,
+  },
+
+  license_verified: {
+    subject: 'You\'re verified! Start booking rides on Cruise Kauaʻi',
+    body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
+      ${logo}
+      <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName}! 🎉</p>
+      <p style="margin-bottom:16px;">This is Willow, founder of Cruise Kauaʻi. <strong>Mahalo — your driver's license has been verified!</strong> You now have full access to book rides on our platform.</p>
+
+      <div style="background:#f0fdf4;border-left:4px solid #2f7d52;border-radius:8px;padding:20px;margin-bottom:20px;">
+        <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">✅ You're all set to ride!</p>
+        <ul style="margin:0;padding-left:20px;color:#555;line-height:2.2;">
+          <li>Browse available rides on the Trips board</li>
+          <li>Book seats with secure in-app payment</li>
+          <li>Message drivers directly once confirmed</li>
+          <li>Rate your experience after each ride</li>
+        </ul>
+      </div>
+
+      <p style="margin-bottom:12px;font-weight:bold;color:#1a1a1a;">How to book your first ride:</p>
+      <ul style="padding-left:20px;color:#444;margin-bottom:24px;line-height:2.4;">
+        <li>🔍 <strong>Go to Trips → Find a Ride</strong> — browse by date and route</li>
+        <li>💳 <strong>Tap a ride card → Book Ride</strong> — tell the driver why you need the ride</li>
+        <li>⏳ <strong>Wait for confirmation</strong> — drivers typically respond within a few hours</li>
+        <li>🗺️ <strong>Meet your driver</strong> — coordinate pickup details in your Inbox</li>
+      </ul>
+
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
+        <tr><td align="center">
+          <a href="${appUrl}/Trips" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Browse Available Rides →</a>
+        </td></tr>
+      </table>
+
+      <div style="background:#faf7f2;border-left:4px solid #8b5cf6;border-radius:8px;padding:20px;margin-bottom:24px;">
+        <p style="font-weight:bold;margin:0 0 8px;color:#1a1a1a;">🚗 Thinking about driving?</p>
+        <p style="margin:0 0 8px;color:#555;">If you have a car and make regular trips, you can earn money by posting rides. Drivers set their own prices and only take rides they want.</p>
+        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/Account" style="color:#8b5cf6;font-weight:bold;">Add your vehicle on your Account page</a></p>
+      </div>
+
+      <p style="margin-bottom:24px;font-size:14px;color:#6b7280;text-align:center;">Have feedback, or experiencing issues? Reply to this email to let us know!</p>
+
+      <p style="margin-bottom:8px;">Mahalo for being part of this — every shared ride helps our community 🙏</p>
+      <p style="margin:0 0 4px;">With aloha,</p>
+      <p style="margin:0;font-weight:bold;">Willow</p>
+      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
+      ${footer}
+    </body></html>`,
+  },
+
+  driver_submitted: {
+    subject: 'You\'re almost a driver on Cruise Kauaʻi',
+    body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
+      ${logo}
+      <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName}! 🌺</p>
+      <p style="margin-bottom:16px;">This is Willow, founder & CEO of Cruise Kauaʻi. <strong>Mahalo for submitting your vehicle details</strong> — you're so close to becoming a driver on our platform!</p>
+      <p style="margin-bottom:24px;">Here's what happens next:</p>
+
+      <div style="background:#f0fdf4;border-left:4px solid #2f7d52;border-radius:8px;padding:20px;margin-bottom:20px;">
+        <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">✅ What you've done</p>
+        <ul style="margin:0;padding-left:20px;color:#555;line-height:2.2;">
+          <li>Created your profile</li>
+          <li>Submitted your driver's license for review</li>
+          <li>Submitted your vehicle info & photos</li>
+          <li>Signed the driver agreement</li>
+        </ul>
+      </div>
+
+      <div style="background:#fefce8;border-left:4px solid #ca8a04;border-radius:8px;padding:20px;margin-bottom:20px;">
+        <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">⏳ What happens next</p>
+        <p style="margin:0 0 10px;color:#555;">Our team will review your license and vehicle info, typically within 24 hours. Once approved:</p>
+        <ul style="margin:0;padding-left:20px;color:#555;line-height:2.2;">
+          <li>You'll get an email confirmation</li>
+          <li>You can immediately start <strong>posting rides</strong> and earning money</li>
+          <li>Connect your bank account on your Account page to receive payouts</li>
+        </ul>
+      </div>
+
+      <div style="background:#eff6ff;border-left:4px solid #3b82f6;border-radius:8px;padding:20px;margin-bottom:24px;">
+        <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">💡 While you wait</p>
+        <ul style="margin:0;padding-left:20px;color:#555;line-height:2.2;">
+          <li><a href="${appUrl}/Account" style="color:#3b82f6;">Connect your bank account</a> (Stripe) for payouts</li>
+          <li><a href="${appUrl}/Trips" style="color:#3b82f6;">Browse the trips board</a> to see what routes are active</li>
+          <li>Think about your regular commute — that's your first ride to post!</li>
+        </ul>
+      </div>
+
+      <p style="margin-bottom:24px;font-size:14px;color:#6b7280;text-align:center;">Have feedback, or experiencing issues? Reply to this email to let us know!</p>
+
+      <p style="margin-top:32px;margin-bottom:8px;">Mahalo for helping reduce traffic on our beautiful island 🙏</p>
+      <p style="margin:0 0 4px;">With aloha,</p>
+      <p style="margin:0;font-weight:bold;">Willow</p>
+      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
+      ${footer}
+    </body></html>`,
+  },
+
+  driver_verified: {
+    subject: 'You\'re approved! Start earning as a driver on Cruise Kauaʻi',
+    body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
+      ${logo}
+      <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName}! 🎉</p>
+      <p style="margin-bottom:16px;">This is Willow, founder & CEO of Cruise Kauaʻi. <strong>Mahalo — your driver account is fully verified!</strong> You can now start posting rides and earning money on trips you're already making.</p>
+
+      <div style="background:#f0fdf4;border-left:4px solid #2f7d52;border-radius:8px;padding:20px;margin-bottom:20px;">
+        <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">✅ You're ready to drive!</p>
+        <ul style="margin:0;padding-left:20px;color:#555;line-height:2.2;">
+          <li>Post rides on your regular routes</li>
+          <li>Set your own prices</li>
+          <li>Accept or decline ride requests</li>
+          <li>Receive payouts directly to your bank account</li>
+        </ul>
+      </div>
+
+      <p style="margin-bottom:12px;font-weight:bold;color:#1a1a1a;">How to post your first ride:</p>
+      <ul style="padding-left:20px;color:#444;margin-bottom:24px;line-height:2.4;">
+        <li>🗺️ <strong>Go to Trips → Post a Ride</strong> — enter your route, date, time, and available seats</li>
+        <li>💰 <strong>Set your price</strong> — suggest a fair cost-sharing amount per seat</li>
+        <li>⏳ <strong>Wait for bookings</strong> — riders will request seats on your ride</li>
+        <li>✅ <strong>Accept or decline</strong> — review rider profiles and confirm bookings</li>
+        <li>💬 <strong>Coordinate pickup</strong> — message riders in your Inbox once confirmed</li>
+      </ul>
+
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
+        <tr><td align="center">
+          <a href="${appUrl}/Trips" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Post Your First Ride →</a>
+        </td></tr>
+      </table>
+
+      <div style="background:#fefce8;border-left:4px solid #ca8a04;border-radius:8px;padding:20px;margin-bottom:24px;">
+        <p style="font-weight:bold;margin:0 0 8px;color:#1a1a1a;">💳 Don't forget to connect your bank account</p>
+        <p style="margin:0 0 8px;color:#555;">To receive payouts from completed rides, you need to connect your bank account via Stripe on your Account page.</p>
+        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/Account" style="color:#ca8a04;font-weight:bold;">Connect your bank account now</a></p>
+      </div>
+
+      <p style="margin-bottom:24px;font-size:14px;color:#6b7280;text-align:center;">Have feedback, or experiencing issues? Reply to this email to let us know!</p>
+
+      <p style="margin-top:32px;margin-bottom:8px;">Mahalo for helping reduce traffic on our beautiful island 🙏</p>
+      <p style="margin:0 0 4px;">With aloha,</p>
+      <p style="margin:0;font-weight:bold;">Willow</p>
+      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
+      ${footer}
+    </body></html>`,
+  },
 });
 
 Deno.serve(async (req) => {
@@ -162,6 +259,9 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized - Admin access required' }, { status: 403 });
     }
 
+    const payload = await req.json().catch(() => ({}));
+    const { send_previews } = payload;
+
     const appUrl = 'https://cruisekauai.org';
     const logo = `<div style="text-align:center;margin-bottom:28px;">
       <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;" />
@@ -172,6 +272,29 @@ Deno.serve(async (req) => {
       <p style="font-size:13px;color:#6b7280;line-height:1.6;">Need help? <a href="${appUrl}/contactus?explore=true" style="color:#2f7d52;font-weight:bold;">Contact us here</a></p>
       <p style="font-size:12px;color:#9ca3af;margin-top:8px;"><a href="${appUrl}/Unsubscribe?user_id={{user_id}}" style="color:#6b7280;">Unsubscribe here</a>.</p>
     `;
+
+    // Send preview emails to willowvolkert@gmail.com if requested
+    if (send_previews) {
+      const firstName = 'Willow';
+      const unsubscribeUrl = `${appUrl}/Unsubscribe?user_id=preview`;
+      const previewEmails = buildEmails(firstName, appUrl, unsubscribeUrl, logo, footer);
+      
+      const previewTypes = ['license_verified', 'driver_verified'];
+      const results = [];
+      
+      for (const type of previewTypes) {
+        const { subject, body } = previewEmails[type];
+        await base44.asServiceRole.integrations.Core.SendEmail({
+          to: 'willowvolkert@gmail.com',
+          from_name: "Cruise Kaua'i",
+          subject: `[PREVIEW ${type.toUpperCase()}] ${subject}`,
+          body,
+        });
+        results.push(type);
+      }
+      
+      return Response.json({ ok: true, mode: 'preview_batch', types: results, to: 'willowvolkert@gmail.com' });
+    }
 
     const emails = buildEmails('{{first_name}}', appUrl, '{{unsubscribe_url}}', logo, footer);
 
@@ -185,9 +308,22 @@ Deno.serve(async (req) => {
 
     for (const u of usersToSend) {
       try {
-        const hasLicense = !!(u.drivers_license_pending_review || u.drivers_license_verified);
-        const hasVehicle = !!(u.vehicle_pending_review || u.vehicle_verified);
-        const emailType = hasVehicle ? 'vehicle' : hasLicense ? 'license' : 'basic';
+        const hasLicenseVerified = !!u.drivers_license_verified;
+        const hasLicensePending = !!(u.drivers_license_pending_review && !u.drivers_license_verified);
+        const hasVehicleVerified = !!u.vehicle_verified;
+        const hasVehiclePending = !!(u.vehicle_pending_review && !u.vehicle_verified);
+        
+        // Determine email type based on verification status
+        let emailType = 'basic';
+        if (hasVehicleVerified) {
+          emailType = 'driver_verified';
+        } else if (hasVehiclePending) {
+          emailType = 'driver_submitted';
+        } else if (hasLicenseVerified) {
+          emailType = 'license_verified';
+        } else if (hasLicensePending) {
+          emailType = 'license_submitted';
+        }
         
         const firstName = u.full_name?.split(' ')[0] || 'there';
         const unsubscribeUrl = `${appUrl}/Unsubscribe?user_id=${u.id}`;

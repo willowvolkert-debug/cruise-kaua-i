@@ -6,6 +6,94 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
 
+  licenseVerified: {
+    subject: 'You\'re verified and ready to ride on Cruise Kauaʻi',
+    body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
+      ${logo}
+      <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName}! 🌺</p>
+      <p style="margin-bottom:16px;">This is Willow, founder & CEO of Cruise Kauaʻi. <strong>Mahalo — your driver's license has been verified!</strong> You now have full access to book rides on our platform.</p>
+
+      <div style="background:#f0fdf4;border-left:4px solid #2f7d52;border-radius:8px;padding:20px;margin-bottom:20px;">
+        <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">✅ You\'re all set to ride</p>
+        <ul style="margin:0;padding-left:20px;color:#555;line-height:2.2;">
+          <li>Browse available rides on the Trips board</li>
+          <li>Book seats with secure in-app payment</li>
+          <li>Message drivers directly after booking</li>
+          <li>Rate your rides to help the community</li>
+        </ul>
+      </div>
+
+      <div style="background:#eff6ff;border-left:4px solid #3b82f6;border-radius:8px;padding:20px;margin-bottom:24px;">
+        <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">🚗 Thinking about driving?</p>
+        <p style="margin:0 0 10px;color:#555;">If you have a car and make regular trips, you could be earning money on Cruise Kauaʻi. Drivers set their own prices and only take rides they want.</p>
+        <p style="margin:0;font-size:13px;"><a href="${appUrl}/Account" style="color:#3b82f6;font-weight:bold;">Add your vehicle on your Account page</a> to get started</p>
+      </div>
+
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
+        <tr><td align="center">
+          <a href="${appUrl}/Trips" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Browse Available Rides →</a>
+        </td></tr>
+      </table>
+
+      <p style="margin-bottom:24px;font-size:14px;color:#6b7280;text-align:center;">Have feedback, or experiencing issues? Reply to this email to let us know!</p>
+
+      <p style="margin-top:32px;margin-bottom:8px;">Mahalo for being part of this 🙏</p>
+      <p style="margin:0 0 4px;">With aloha,</p>
+      <p style="margin:0;font-weight:bold;">Willow</p>
+      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
+      ${footer}
+    </body></html>`,
+  },
+
+  driverVerified: {
+    subject: 'You\'re approved to drive on Cruise Kauaʻi',
+    body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
+      ${logo}
+      <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName}! 🌺</p>
+      <p style="margin-bottom:16px;">This is Willow, founder & CEO of Cruise Kauaʻi. <strong>Mahalo — your vehicle information has been verified!</strong> You\'re now fully approved to post rides and start earning money.</p>
+
+      <div style="background:#f0fdf4;border-left:4px solid #2f7d52;border-radius:8px;padding:20px;margin-bottom:20px;">
+        <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">✅ You\'re ready to drive</p>
+        <ul style="margin:0;padding-left:20px;color:#555;line-height:2.2;">
+          <li>Post your regular trips on the Trips board</li>
+          <li>Set your own prices for cost-sharing</li>
+          <li>Accept or decline ride requests</li>
+          <li>Receive payouts directly to your bank account</li>
+        </ul>
+      </div>
+
+      <div style="background:#fefce8;border-left:4px solid #ca8a04;border-radius:8px;padding:20px;margin-bottom:20px;">
+        <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">💰 Before your first ride</p>
+        <p style="margin:0 0 10px;color:#555;">Make sure you\'ve connected your bank account for payouts. This is required before you can receive payments from riders.</p>
+        <p style="margin:0;font-size:13px;"><a href="${appUrl}/Account" style="color:#ca8a04;font-weight:bold;">Connect your bank account here</a></p>
+      </div>
+
+      <div style="background:#eff6ff;border-left:4px solid #3b82f6;border-radius:8px;padding:20px;margin-bottom:24px;">
+        <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">💡 Tips for your first rides</p>
+        <ul style="margin:0;padding-left:20px;color:#555;line-height:2.2;">
+          <li>Post rides you\'re already making — your regular commute, grocery runs, beach trips</li>
+          <li>Be clear about pickup locations and timing</li>
+          <li>Communicate promptly with riders who book</li>
+          <li>Show up on time and be friendly!</li>
+        </ul>
+      </div>
+
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
+        <tr><td align="center">
+          <a href="${appUrl}/Trips" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Post Your First Ride →</a>
+        </td></tr>
+      </table>
+
+      <p style="margin-bottom:24px;font-size:14px;color:#6b7280;text-align:center;">Have feedback, or experiencing issues? Reply to this email to let us know!</p>
+
+      <p style="margin-top:32px;margin-bottom:8px;">Mahalo for helping reduce traffic on our beautiful island 🙏</p>
+      <p style="margin:0 0 4px;">With aloha,</p>
+      <p style="margin:0;font-weight:bold;">Willow</p>
+      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
+      ${footer}
+    </body></html>`,
+  },
+
   vehicle: {
     subject: 'You\'re almost a driver on Cruise Kauaʻi',
     body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
@@ -195,9 +283,24 @@ Deno.serve(async (req) => {
       return Response.json({ skipped: true, reason: 'already sent' });
     }
 
-    const hasLicense = !!(user.drivers_license_pending_review || user.drivers_license_verified);
+    const hasLicenseVerified = !!user.drivers_license_verified;
+    const hasVehicleVerified = !!user.vehicle_verified;
     const hasVehicle = !!(user.vehicle_pending_review || user.vehicle_verified);
-    const emailType = hasVehicle ? 'vehicle' : hasLicense ? 'license' : 'basic';
+    const hasLicense = !!(user.drivers_license_pending_review || user.drivers_license_verified);
+    
+    // Determine email type based on progress
+    let emailType;
+    if (hasVehicleVerified) {
+      emailType = 'driverVerified';
+    } else if (hasLicenseVerified) {
+      emailType = 'licenseVerified';
+    } else if (hasVehicle) {
+      emailType = 'vehicle';
+    } else if (hasLicense) {
+      emailType = 'license';
+    } else {
+      emailType = 'basic';
+    }
 
     const firstName = user.full_name?.split(' ')[0] || 'there';
     const unsubscribeUrl = `${appUrl}/Unsubscribe?user_id=${user.id}`;
