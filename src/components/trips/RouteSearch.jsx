@@ -32,17 +32,15 @@ function rideMatchesRoute(ride, from, to) {
   ];
 
   const fromMatch = allLocations.some(loc => normalize(loc).includes(fromQ));
-  // Also match rides with midpoint pickup that pass through the area (broader match)
-  const fromMatchMidpoint = ride.offers_midpoint_pickup && fromMatch;
-
   const toMatch = allLocations.some(loc => normalize(loc).includes(toQ));
-  const toMatchMidpoint = ride.offers_midpoint_pickup && toMatch;
 
-  // Direct route match: departure → destination (or via stops)
+  // Direct route match: both from and to appear in the ride's locations/stops
   if (fromMatch && toMatch) return true;
 
-  // Midpoint pickup: driver passes through from OR to
-  if (ride.offers_midpoint_pickup && (fromMatch || toMatch) && (fromMatchMidpoint || toMatchMidpoint)) return true;
+  // Midpoint pickup: driver offers pickup/dropoff along the way, so match if
+  // either the "from" or "to" location appears anywhere in the ride's route.
+  // e.g. a Lihue→Hanalei driver with midpoint pickup matches a "Lihue→Kilauea" search.
+  if (ride.offers_midpoint_pickup && (fromMatch || toMatch)) return true;
 
   return false;
 }
