@@ -127,9 +127,9 @@ export default function TripsPage() {
           <div className="space-y-4">
             <p className="text-lg font-semibold text-gray-700 mb-2">what would you like to do?</p>
             {[
-              { id: "request", emoji: "🙋", label: "request a ride", desc: "Post a ride request so drivers know you need one" },
+              { id: "view_sub", emoji: "🔍", label: "get a ride", desc: "Browse available rides from local drivers" },
               { id: "post", emoji: "🚗", label: "post a ride", desc: "Offer seats on a trip you're already making" },
-              { id: "view_sub", emoji: "🔍", label: "view all posted rides", desc: "Browse available rides from local drivers" },
+              { id: "request", emoji: "🙋", label: "request a ride", desc: "Post a ride request so drivers know you need one" },
             ].map(({ id, emoji, label, desc }) => (
               <button
                 key={id}
