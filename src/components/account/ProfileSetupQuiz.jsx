@@ -8,9 +8,12 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Camera, ChevronRight, CheckCircle, Upload, Car, MapPin, X } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Camera, ChevronRight, CheckCircle, Upload, Car, MapPin, X, FileText, Shield } from "lucide-react";
 
 const BASE_STEPS = [
+  { id: "terms_of_service", title: "Terms of Service", subtitle: "Please read and agree to our Terms of Service before continuing.", type: "terms_of_service", field: "terms_of_service" },
+  { id: "privacy_policy", title: "Privacy Policy", subtitle: "Please read and agree to our Privacy Policy before continuing.", type: "privacy_policy", field: "privacy_policy" },
   { id: "username", title: "What should we call you?", subtitle: "Choose a username others will see on the platform (no spaces).", type: "text", placeholder: "e.g. kaleo_808", field: "username" },
   { id: "age", title: "How old are you?", subtitle: "Riders and drivers can see your age to feel comfortable sharing a ride.", type: "number", placeholder: "e.g. 28", field: "age", min: 18 },
   { id: "gender", title: "What's your gender?", subtitle: "This helps people feel safe knowing who they're riding with.", type: "select", field: "gender", options: [
@@ -101,6 +104,10 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
   const vehicleIntRef = useRef();
   const insuranceRef = useRef();
 
+  // ToS / Privacy Policy
+  const [termsAgreed, setTermsAgreed] = useState(false);
+  const [privacyAgreed, setPrivacyAgreed] = useState(false);
+
   // Driver agreement
   const [agreementBoxes, setAgreementBoxes] = useState(() => Object.fromEntries(AGREEMENT_BOXES.map(b => [b.key, false])));
   const [agreedFinal, setAgreedFinal] = useState(false);
@@ -116,7 +123,13 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
 
   const validate = () => {
     const val = answers[current.field];
-    if (current.type === "island") {
+    if (current.type === "terms_of_service") {
+      if (!termsAgreed) { setError("Please read and accept the Terms of Service to continue."); return false; }
+      return true;
+    } else if (current.type === "privacy_policy") {
+      if (!privacyAgreed) { setError("Please read and accept the Privacy Policy to continue."); return false; }
+      return true;
+    } else if (current.type === "island") {
       if (!val) { setError("Please select your island."); return false; }
       return true;
     } else if (current.type === "phone") {
@@ -157,6 +170,8 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
       sms_notifications_enabled: !!(answers.phone_number),
       profile_complete: !!(answers.username && answers.age && answers.gender && answers.bio && profilePicUrl),
       has_completed_profile_quiz: true,
+      terms_accepted: true,
+      privacy_policy_accepted: true,
     });
     if (licenseFront && licenseBack) {
       const [fr, br] = await Promise.all([
@@ -385,6 +400,77 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
           </div>
           <h2 className="text-xl font-bold text-secondary mb-1">{current.title}</h2>
           <p className="text-sm text-gray-500 mb-5 leading-relaxed">{current.subtitle}</p>
+
+          {/* TERMS OF SERVICE */}
+          {current.type === "terms_of_service" && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-secondary mb-1">
+                <FileText className="w-5 h-5 text-primary" />
+                <span className="font-semibold text-sm">Cruise Kauaʻi Terms of Service</span>
+              </div>
+              <ScrollArea className="h-56 w-full rounded-2xl border border-gray-200 bg-gray-50 p-4 text-xs text-gray-700 space-y-3">
+                <div className="space-y-3 pr-2">
+                  {[
+                    ["1. Acceptance of Terms", "By accessing or using Cruise Kauaʻi, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service. If you do not agree, you must not access or use the platform."],
+                    ["2. Platform Description", "Cruise Kauaʻi is a technology platform for voluntary, cost-sharing carpools. It is NOT a transportation provider, does not employ drivers, and does not own vehicles. All transportation is provided by independent users."],
+                    ["3. No Agency or Employment", "No employment, agency, or partnership exists between Cruise Kauaʻi and any user. Drivers are independent individuals solely responsible for their conduct, vehicles, insurance, and legal compliance."],
+                    ["4. Assumption of Risk", "USE OF THE PLATFORM INVOLVES INHERENT RISKS including personal injury, vehicle accidents, and property damage. By using Cruise Kauaʻi, you VOLUNTARILY ASSUME ALL SUCH RISKS to the fullest extent permitted by Hawaii law."],
+                    ["5. Limitation of Liability", "Cruise Kauaʻi is not responsible for acts or omissions of users, vehicle condition, or outcomes of arrangements between community members. To the extent permitted by Hawaii law, Cruise Kauaʻi is not liable for claims from transportation activities."],
+                    ["6. Driver Responsibilities", "Drivers must: maintain a safe, registered vehicle; hold a valid license; comply with all Hawaii laws; maintain required insurance; and ensure rides are cost-sharing only (not for profit or hire)."],
+                    ["7. Passenger Responsibilities", "Passengers must act lawfully, responsibly, and respectfully; follow driver safety instructions; and refrain from illegal or unsafe conduct."],
+                    ["8. Cost-Sharing Only", "Cruise Kauaʻi is for voluntary cost-sharing only. Drivers may only request reimbursement for actual trip costs. Commercial use is strictly prohibited."],
+                    ["9. Waiver & Release", "To the fullest extent permitted by Hawaii law, you WAIVE AND RELEASE Cruise Kauaʻi from all claims arising from use of the platform or carpooling activities."],
+                    ["10. Indemnification", "You agree to indemnify and hold harmless Cruise Kauaʻi from claims arising from your use of the platform, violations of these Terms, or your carpooling activities."],
+                    ["11. Governing Law", "These Terms are governed by the laws of the State of Hawaii. Disputes are resolved through binding arbitration in Kauaʻi County, Hawaii."],
+                  ].map(([title, body]) => (
+                    <div key={title}>
+                      <p className="font-semibold text-secondary">{title}</p>
+                      <p className="leading-relaxed mt-0.5">{body}</p>
+                    </div>
+                  ))}
+                  <p className="italic text-gray-400 pt-2">Last Updated: {new Date().toLocaleDateString()}</p>
+                </div>
+              </ScrollArea>
+              <div className="flex items-start gap-2 p-3 bg-green-50 border border-green-200 rounded-2xl">
+                <Checkbox id="termsAgreed" checked={termsAgreed} onCheckedChange={() => { setTermsAgreed(v => !v); setError(""); }} className="mt-0.5 shrink-0" />
+                <Label htmlFor="termsAgreed" className="cursor-pointer text-sm font-semibold text-green-800 leading-tight">I have read and agree to the Terms of Service</Label>
+              </div>
+            </div>
+          )}
+
+          {/* PRIVACY POLICY */}
+          {current.type === "privacy_policy" && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-secondary mb-1">
+                <Shield className="w-5 h-5 text-primary" />
+                <span className="font-semibold text-sm">Cruise Kauaʻi Privacy Policy</span>
+              </div>
+              <ScrollArea className="h-56 w-full rounded-2xl border border-gray-200 bg-gray-50 p-4 text-xs text-gray-700">
+                <div className="space-y-3 pr-2">
+                  {[
+                    ["1. Information We Collect", "We collect: account info (name, email, age, gender, username), verification documents (license, vehicle, insurance), payment info (via Stripe), trip details, messages, and usage data."],
+                    ["2. How We Use It", "We use your information to facilitate ride connections, process payments, verify driver credentials, improve safety, send booking notifications, provide support, and comply with legal obligations."],
+                    ["3. Information Sharing", "We share info with other users (profile/ratings), service providers (Stripe), and as required by law. We do NOT sell your personal information to third parties."],
+                    ["4. Data Security", "We use industry-standard security including encryption in transit and at rest, PCI-compliant payment processing, and access controls. No method is 100% secure."],
+                    ["5. Your Rights", "You have the right to access, correct, or request deletion of your data; opt out of marketing; and export your data. Contact us through the Contact Us page."],
+                    ["6. Children's Privacy", "Cruise Kauaʻi is only available to users 18 and older. We do not knowingly collect information from minors."],
+                    ["7. Changes", "We may update this Privacy Policy periodically and will notify users of significant changes through the app or email."],
+                    ["8. Contact", "For privacy questions, please use our Contact Us page at cruisekauai.org."],
+                  ].map(([title, body]) => (
+                    <div key={title}>
+                      <p className="font-semibold text-secondary">{title}</p>
+                      <p className="leading-relaxed mt-0.5">{body}</p>
+                    </div>
+                  ))}
+                  <p className="italic text-gray-400 pt-2">Last Updated: {new Date().toLocaleDateString()}</p>
+                </div>
+              </ScrollArea>
+              <div className="flex items-start gap-2 p-3 bg-green-50 border border-green-200 rounded-2xl">
+                <Checkbox id="privacyAgreed" checked={privacyAgreed} onCheckedChange={() => { setPrivacyAgreed(v => !v); setError(""); }} className="mt-0.5 shrink-0" />
+                <Label htmlFor="privacyAgreed" className="cursor-pointer text-sm font-semibold text-green-800 leading-tight">I have read and agree to the Privacy Policy</Label>
+              </div>
+            </div>
+          )}
 
           {/* PHONE */}
           {current.type === "phone" && (
