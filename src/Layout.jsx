@@ -268,11 +268,15 @@ export default function Layout({ children, currentPageName }) {
         // Load unread counts
         loadUnreadCount(user);
       } catch (e) {
-        // User not authenticated - redirect to login unless on a public page
-        const publicPaths = ['/', createPageUrl("AboutUs"), createPageUrl("ContactUs")];
-        if (!publicPaths.includes(location.pathname)) {
-          base44.auth.redirectToLogin(window.location.href);
+        // Only redirect to login on a definitive 401 auth error, not network/transient errors
+        const is401 = e?.status === 401 || e?.response?.status === 401;
+        if (is401) {
+          const publicPaths = ['/', createPageUrl("AboutUs"), createPageUrl("ContactUs")];
+          if (!publicPaths.includes(location.pathname)) {
+            base44.auth.redirectToLogin(window.location.href);
+          }
         }
+        // For any other error (network issues etc.), stay on the page — don't log the user out
       }
     };
 
