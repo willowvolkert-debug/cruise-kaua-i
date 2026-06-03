@@ -22,7 +22,7 @@ export default function NeedHelpButton({ onOpenTutorial }) {
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
 
           {/* Popover */}
-          <div className="absolute top-full left-0 mt-2 z-50 bg-white border border-gray-200 rounded-2xl shadow-xl w-80 p-5 space-y-4">
+          <div className="absolute top-full right-0 mt-2 z-50 bg-white border border-gray-200 rounded-2xl shadow-xl w-80 max-w-[90vw] p-5 space-y-4">
             <div className="flex items-start justify-between">
               <h3 className="font-bold text-secondary text-base">how cruise kauaʻi works</h3>
               <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-600 ml-2">
