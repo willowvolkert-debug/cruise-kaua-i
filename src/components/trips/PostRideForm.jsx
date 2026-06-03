@@ -17,6 +17,7 @@ import MessageRiderModal from "./MessageRiderModal";
 import RecurringTripModal from "./RecurringTripModal";
 import RecurringAutoPostModal from "./RecurringAutoPostModal";
 import RiderProfileModal from "./RiderProfileModal";
+import { useDraftSave, loadDraft, clearDraft } from "@/hooks/useDraftSave";
 
 export default function PostRideForm({ island = "Kauai" }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,23 +45,29 @@ export default function PostRideForm({ island = "Kauai" }) {
   const [postedRide, setPostedRide] = useState(null);
   const [pricingSuggestion, setPricingSuggestion] = useState(null);
   const [priceCapWarning, setPriceCapWarning] = useState(null);
+
+  const DRAFT_KEY = 'draft_post_ride';
+  const _savedDraft = loadDraft(DRAFT_KEY);
   const [rideData, setRideData] = useState({
-    departure_location: '',
-    destination: '',
-    departure_date: '',
-    departure_time: '',
-    is_flexible: false,
-    is_last_minute: false,
-    seats_available: 1,
-    price_per_seat: 0,
-    price_per_seat_local: 0,
-    price_per_seat_tourist: 0,
-    rider_preference: 'both_fine',
-    description: '',
-    car_model: '',
-    offers_detour_service: false,
-    offers_midpoint_pickup: false
+    departure_location: _savedDraft?.departure_location || '',
+    destination: _savedDraft?.destination || '',
+    departure_date: _savedDraft?.departure_date || '',
+    departure_time: _savedDraft?.departure_time || '',
+    is_flexible: _savedDraft?.is_flexible || false,
+    is_last_minute: _savedDraft?.is_last_minute || false,
+    seats_available: _savedDraft?.seats_available || 1,
+    price_per_seat: _savedDraft?.price_per_seat || 0,
+    price_per_seat_local: _savedDraft?.price_per_seat_local || 0,
+    price_per_seat_tourist: _savedDraft?.price_per_seat_tourist || 0,
+    rider_preference: _savedDraft?.rider_preference || 'both_fine',
+    description: _savedDraft?.description || '',
+    car_model: _savedDraft?.car_model || '',
+    offers_detour_service: _savedDraft?.offers_detour_service || false,
+    offers_midpoint_pickup: _savedDraft?.offers_midpoint_pickup || false
   });
+
+  // Auto-save draft on every change
+  useDraftSave(DRAFT_KEY, rideData);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -430,6 +437,7 @@ export default function PostRideForm({ island = "Kauai" }) {
         setRespondingToRequest(null);
       }
 
+      clearDraft(DRAFT_KEY);
       setRideData({
         departure_location: '',
         destination: '',

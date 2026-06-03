@@ -11,9 +11,14 @@ import { MapPin, DollarSign, Car, X, Plus, Lightbulb } from "lucide-react";
 import LocationAutocomplete from "../shared/LocationAutocomplete";
 import { base44 } from "@/api/base44Client";
 import { getPricingInfo } from "./pricingUtils";
+import { useDraftSave, loadDraft, clearDraft } from "@/hooks/useDraftSave";
+
+const NEW_TRIP_DRAFT_KEY = 'draft_recurring_trip_new';
 
 export default function RecurringTripModal({ isOpen, onClose, onSave, editTrip }) {
   const [loading, setLoading] = useState(false);
+  const draftKey = editTrip ? null : NEW_TRIP_DRAFT_KEY;
+  const _draft = !editTrip ? loadDraft(NEW_TRIP_DRAFT_KEY) : null;
   const [tripData, setTripData] = useState({
     trip_name: "",
     departure_location: "",
@@ -34,6 +39,9 @@ export default function RecurringTripModal({ isOpen, onClose, onSave, editTrip }
   });
   const [stopInput, setStopInput] = useState("");
   const [pricingSuggestion, setPricingSuggestion] = useState(null);
+
+  // Auto-save draft for new trips only
+  useDraftSave(draftKey, draftKey ? tripData : null);
 
   React.useEffect(() => {
     const loadAndInit = async () => {
@@ -68,23 +76,24 @@ export default function RecurringTripModal({ isOpen, onClose, onSave, editTrip }
           offers_detour_service: editTrip.offers_detour_service || false
         });
       } else {
+        const d = loadDraft(NEW_TRIP_DRAFT_KEY);
         setTripData({
-          trip_name: "",
-          departure_location: "",
-          destination: "",
-          stops: [],
-          departure_time: "",
-          is_flexible: false,
-          seats_available: userSeats,
-          price_per_seat: 0,
-          price_per_seat_local: 0,
-          price_per_seat_tourist: 0,
-          rider_preference: "both_fine",
-          description: "",
-          car_model: userCarModel,
-          smoking_allowed: false,
-          pets_allowed: false,
-          offers_detour_service: false
+          trip_name: d?.trip_name || "",
+          departure_location: d?.departure_location || "",
+          destination: d?.destination || "",
+          stops: d?.stops || [],
+          departure_time: d?.departure_time || "",
+          is_flexible: d?.is_flexible || false,
+          seats_available: d?.seats_available || userSeats,
+          price_per_seat: d?.price_per_seat || 0,
+          price_per_seat_local: d?.price_per_seat_local || 0,
+          price_per_seat_tourist: d?.price_per_seat_tourist || 0,
+          rider_preference: d?.rider_preference || "both_fine",
+          description: d?.description || "",
+          car_model: d?.car_model || userCarModel,
+          smoking_allowed: d?.smoking_allowed || false,
+          pets_allowed: d?.pets_allowed || false,
+          offers_detour_service: d?.offers_detour_service || false
         });
       }
     };
@@ -119,6 +128,7 @@ export default function RecurringTripModal({ isOpen, onClose, onSave, editTrip }
         });
       }
       
+      clearDraft(NEW_TRIP_DRAFT_KEY);
       onSave(savedTrip);
       setTripData({
         trip_name: "",

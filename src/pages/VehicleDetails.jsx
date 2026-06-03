@@ -11,20 +11,28 @@ import { Car, Save, ArrowLeft, ExternalLink, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { createConnectAccount } from "@/functions/createConnectAccount";
+import { useDraftSave, loadDraft, clearDraft } from "@/hooks/useDraftSave";
+
+const VEHICLE_DRAFT_KEY = 'draft_vehicle_details';
 
 export default function VehicleDetailsPage() {
+  const _vDraft = loadDraft(VEHICLE_DRAFT_KEY);
   const [vehicleData, setVehicleData] = useState({
-    make: '',
-    model: '',
-    year: '',
-    color: '',
-    license_plate: '',
-    seats_available: 4,
-    bags_allowed: true,
+    make: _vDraft?.make || '',
+    model: _vDraft?.model || '',
+    year: _vDraft?.year || '',
+    color: _vDraft?.color || '',
+    license_plate: _vDraft?.license_plate || '',
+    seats_available: _vDraft?.seats_available || 4,
+    bags_allowed: _vDraft?.bags_allowed !== undefined ? _vDraft.bags_allowed : true,
     vehicle_exterior_image: null,
     vehicle_interior_images: [],
     auto_policy_image: null
   });
+
+  // Auto-save text/select fields (not file objects which can't be serialized)
+  const vehicleDataForDraft = { make: vehicleData.make, model: vehicleData.model, year: vehicleData.year, color: vehicleData.color, license_plate: vehicleData.license_plate, seats_available: vehicleData.seats_available, bags_allowed: vehicleData.bags_allowed };
+  useDraftSave(VEHICLE_DRAFT_KEY, vehicleDataForDraft);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState('');
   const [user, setUser] = useState(null);
@@ -40,18 +48,19 @@ export default function VehicleDetailsPage() {
         setUser(currentUser);
         
         if (currentUser.vehicle_make) {
-          setVehicleData({
-            make: currentUser.vehicle_make || '',
-            model: currentUser.vehicle_model || '',
-            year: currentUser.vehicle_year || '',
-            color: currentUser.vehicle_color || '',
-            license_plate: currentUser.license_plate || '',
-            seats_available: currentUser.seats_available || 4,
-            bags_allowed: currentUser.bags_allowed !== undefined ? currentUser.bags_allowed : true,
+          // Only overwrite fields that aren't already in the local draft
+          setVehicleData(prev => ({
+            make: prev.make || currentUser.vehicle_make || '',
+            model: prev.model || currentUser.vehicle_model || '',
+            year: prev.year || currentUser.vehicle_year || '',
+            color: prev.color || currentUser.vehicle_color || '',
+            license_plate: prev.license_plate || currentUser.license_plate || '',
+            seats_available: prev.seats_available || currentUser.seats_available || 4,
+            bags_allowed: prev.bags_allowed !== undefined ? prev.bags_allowed : (currentUser.bags_allowed !== undefined ? currentUser.bags_allowed : true),
             vehicle_exterior_image: null,
             vehicle_interior_images: [],
             auto_policy_image: null
-          });
+          }));
         }
       } catch (e) {
         console.error("Error loading user:", e);
@@ -189,6 +198,7 @@ export default function VehicleDetailsPage() {
       }
 
       setUploadProgress('');
+      clearDraft(VEHICLE_DRAFT_KEY);
       alert("Vehicle details submitted for review! You'll be notified once verified.");
       
       // Navigate to Driver Agreement
