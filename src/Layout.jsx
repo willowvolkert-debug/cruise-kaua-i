@@ -161,24 +161,48 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-gray-200 p-4 bg-white">
+      <SidebarFooter className="border-t border-gray-200 p-3 bg-white">
         {currentUser && (
-          <div className="flex items-center gap-3">
-            <Avatar className="w-10 h-10">
+          <Link
+            to="/account"
+            onClick={handleNavClick}
+            className="flex items-center gap-3 p-3 rounded-2xl hover:bg-green-50 transition-colors group"
+          >
+            <Avatar className="w-12 h-12 shrink-0">
               <AvatarImage src={currentUser.profile_picture_url} />
-              <AvatarFallback className="bg-gradient-to-r from-primary to-green-400 text-white font-semibold">
+              <AvatarFallback className="bg-gradient-to-r from-primary to-green-400 text-white font-bold text-base">
                 {getInitials(currentUser.full_name)}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-gray-700 text-sm truncate">
+              <p className="font-bold text-gray-800 text-base truncate">
+                {currentUser.full_name || 'Your Name'}
+              </p>
+              <p className="text-sm text-gray-500 truncate">
                 @{currentUser.username || 'user'}
               </p>
             </div>
-          </div>
+            <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-primary transition-colors shrink-0" />
+          </Link>
         )}
       </SidebarFooter>
     </>
+  );
+}
+
+function CustomSidebarTrigger() {
+  const { open, toggleSidebar } = useSidebar();
+  return (
+    <button
+      onClick={toggleSidebar}
+      data-sidebar="trigger"
+      className="hover:bg-gray-100 p-2 rounded-2xl transition-colors duration-200 shrink-0 flex items-center justify-center"
+    >
+      {open
+        ? <ChevronLeft className="w-5 h-5 text-gray-600" />
+        : <ChevronRight className="w-5 h-5 text-gray-600" />
+      }
+    </button>
   );
 }
 
@@ -356,7 +380,7 @@ export default function Layout({ children, currentPageName }) {
                     >
                       <header className="bg-white border-b border-gray-200 px-3 py-2 md:hidden">
                         <div className="flex items-center gap-2">
-                          <SidebarTrigger data-sidebar="trigger" className="hover:bg-gray-100 p-2 rounded-2xl transition-colors duration-200 shrink-0" />
+                          <CustomSidebarTrigger />
                           <nav className="flex items-center gap-1 flex-1 overflow-x-auto no-scrollbar">
                             {[
                               { label: "trips", path: "/trips" },
