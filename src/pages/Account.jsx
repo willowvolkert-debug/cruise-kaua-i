@@ -445,25 +445,44 @@ export default function AccountPage() {
             <div className="max-w-4xl mx-auto space-y-8">
                 <Card className="shadow-lg border-gray-200 bg-white rounded-3xl">
                     <CardContent className="p-6 md:p-8">
+                        {isEditing && (
+                            <div className="flex justify-end mb-4 gap-2">
+                                <Button variant="outline" onClick={() => { setIsEditing(false); setProfilePicFile(null); }} className="rounded-2xl border-gray-300 text-gray-600">cancel</Button>
+                                <Button onClick={handleSave} disabled={isSaving} className="bg-primary hover:bg-primary/90 rounded-2xl">
+                                    {isSaving ? <><span className="animate-spin mr-2">⏳</span>saving...</> : <><Save className="w-4 h-4 mr-2"/>save changes</>}
+                                </Button>
+                            </div>
+                        )}
                         <div className="flex flex-col md:flex-row items-center gap-6">
-                            <div className="relative">
-                                <Avatar className="w-24 h-24 text-3xl">
-                                    <AvatarImage src={user.profile_picture_url} />
-                                    <AvatarFallback className="bg-gradient-to-br from-primary to-green-400 text-white font-bold">
-                                        {getInitials(user.full_name)}
-                                    </AvatarFallback>
-                                </Avatar>
+                            <div className="flex flex-col items-center gap-1">
+                                <div className="relative">
+                                    <Avatar className="w-24 h-24 text-3xl">
+                                        <AvatarImage src={profilePicFile ? URL.createObjectURL(profilePicFile) : user.profile_picture_url} />
+                                        <AvatarFallback className="bg-gradient-to-br from-primary to-green-400 text-white font-bold">
+                                            {getInitials(user.full_name)}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    {isEditing && (
+                                        <label htmlFor="profile-pic" className="absolute bottom-0 right-0 bg-primary text-white rounded-full p-2 cursor-pointer hover:bg-primary/90 shadow-lg">
+                                            <Camera className="w-4 h-4" />
+                                            <input
+                                                id="profile-pic"
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleProfilePicChange}
+                                                className="hidden"
+                                            />
+                                        </label>
+                                    )}
+                                </div>
                                 {isEditing && (
-                                    <label htmlFor="profile-pic" className="absolute bottom-0 right-0 bg-primary text-white rounded-full p-2 cursor-pointer hover:bg-primary/90 shadow-lg">
-                                        <Camera className="w-4 h-4" />
-                                        <input
-                                            id="profile-pic"
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={handleProfilePicChange}
-                                            className="hidden"
-                                        />
-                                    </label>
+                                    profilePicFile ? (
+                                        <p className="text-xs text-green-600 font-semibold flex items-center gap-1 mt-1">
+                                            ✓ photo ready to save
+                                        </p>
+                                    ) : (
+                                        <p className="text-xs text-gray-400 mt-1">tap to change photo</p>
+                                    )
                                 )}
                             </div>
                             <div className="flex-1 text-center md:text-left space-y-2">
@@ -636,11 +655,7 @@ export default function AccountPage() {
                             <div className="flex flex-col gap-2">
                                 {isEditing ? (
                                     <div className="flex flex-col gap-2">
-                                        <Button onClick={handleSave} disabled={isSaving} className="bg-primary hover:bg-primary/90 rounded-2xl">
-                                            {isSaving ? <><span className="animate-spin mr-2">⏳</span>saving...</> : <><Save className="w-4 h-4 mr-2"/>save changes</>}
-                                        </Button>
                                         {saveError && <p className="text-xs text-red-500 text-center">{saveError}</p>}
-                                        {profilePicFile && <p className="text-xs text-gray-500 text-center">📎 {profilePicFile.name}</p>}
                                     </div>
                                 ) : (
                                    <div className="flex flex-col gap-2">

@@ -557,10 +557,20 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
               {[{ label: "Front of license *", file: licenseFront, ref: licenseFrontRef, set: setLicenseFront }, { label: "Back of license *", file: licenseBack, ref: licenseBackRef, set: setLicenseBack }].map(({ label, file, ref, set }) => (
                 <div key={label} className="space-y-1">
                   <p className="text-sm font-medium text-gray-700">{label}</p>
-                  <div onClick={() => ref.current?.click()} className="border-2 border-dashed border-gray-300 rounded-2xl p-5 text-center cursor-pointer hover:border-primary/50 transition-colors">
+                  <div onClick={() => ref.current?.click()} className={`border-2 border-dashed rounded-2xl p-5 text-center cursor-pointer transition-colors ${file ? 'border-green-400 bg-green-50' : 'border-gray-300 hover:border-primary/50'}`}>
                     <input ref={ref} type="file" accept="image/*" onChange={(e) => { set(e.target.files[0]); setError(""); }} className="hidden" />
-                    <Upload className="w-6 h-6 text-gray-400 mx-auto mb-1" />
-                    <span className="text-sm text-gray-500">{file ? <span className="text-primary font-medium">✓ {file.name}</span> : "tap to upload"}</span>
+                    {file ? (
+                      <div className="flex flex-col items-center gap-1">
+                        <CheckCircle className="w-6 h-6 text-green-500 mx-auto" />
+                        <span className="text-sm text-green-700 font-semibold">uploaded: {file.name}</span>
+                        <span className="text-xs text-green-500">tap to change</span>
+                      </div>
+                    ) : (
+                      <>
+                        <Upload className="w-6 h-6 text-gray-400 mx-auto mb-1" />
+                        <span className="text-sm text-gray-500">tap to upload</span>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
@@ -623,10 +633,20 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
               ].map(({ label, file, ref, set, multiple }) => (
                 <div key={label} className="space-y-1">
                   <p className="text-sm font-medium text-gray-700">{label}</p>
-                  <div onClick={() => ref.current?.click()} className="border-2 border-dashed border-gray-300 rounded-2xl p-4 text-center cursor-pointer hover:border-primary/50 transition-colors">
+                  <div onClick={() => ref.current?.click()} className={`border-2 border-dashed rounded-2xl p-4 text-center cursor-pointer transition-colors ${file ? 'border-green-400 bg-green-50' : 'border-gray-300 hover:border-primary/50'}`}>
                     <input ref={ref} type="file" accept="image/*" multiple={multiple} onChange={(e) => { multiple ? set(e.target.files) : set(e.target.files[0]); setError(""); }} className="hidden" />
-                    <Upload className="w-6 h-6 text-gray-400 mx-auto mb-1" />
-                    <span className="text-sm text-gray-500">{file ? <span className="text-primary font-medium">✓ {file.name}</span> : "tap to upload"}</span>
+                    {file ? (
+                      <div className="flex flex-col items-center gap-1">
+                        <CheckCircle className="w-6 h-6 text-green-500 mx-auto" />
+                        <span className="text-sm text-green-700 font-semibold">✓ {file.name}</span>
+                        <span className="text-xs text-green-500">tap to change</span>
+                      </div>
+                    ) : (
+                      <>
+                        <Upload className="w-6 h-6 text-gray-400 mx-auto mb-1" />
+                        <span className="text-sm text-gray-500">tap to upload</span>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
