@@ -192,6 +192,10 @@ export default function RequestRide({ island = "Kauai" }) {
   return (
     <div className="space-y-6 max-w-4xl mx-auto relative">
       <h2 className="text-2xl font-bold text-secondary">request a ride</h2>
+      <p className="text-sm text-gray-500 -mt-4">
+        need to edit a pre-existing ride request?{" "}
+        <a href="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">press here →</a>
+      </p>
 
       {error && (
         <Alert variant="destructive" className="rounded-2xl border-red-200">
@@ -472,6 +476,10 @@ export default function RequestRide({ island = "Kauai" }) {
               </div>
             </div>
             <p className="text-green-800 font-medium">want to also request a return ride?</p>
+            <p className="text-sm text-green-700">
+              need to edit?{" "}
+              <a href="/inbox" className="font-semibold underline underline-offset-2 hover:text-green-900">press here →</a>
+            </p>
             <div className="flex gap-3">
               <Button
                 type="button"

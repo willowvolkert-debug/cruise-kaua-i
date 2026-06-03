@@ -491,6 +491,10 @@ export default function PostRideForm({ island = "Kauai" }) {
           how to post
         </Button>
       </div>
+      <p className="text-sm text-gray-500 -mt-2 mb-2">
+        need to edit a pre-existing ride?{" "}
+        <a href="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">press here →</a>
+      </p>
 
       {respondingToRequest && (
         <Alert className="rounded-2xl bg-blue-50 border-blue-200">
@@ -1039,6 +1043,10 @@ export default function PostRideForm({ island = "Kauai" }) {
               </div>
             </div>
             <p className="text-green-800 font-medium">want to also post your return route?</p>
+            <p className="text-sm text-green-700">
+              need to edit?{" "}
+              <a href="/inbox" className="font-semibold underline underline-offset-2 hover:text-green-900">press here →</a>
+            </p>
             <div className="flex gap-3">
               <Button
                 type="button"
