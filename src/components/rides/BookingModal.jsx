@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -7,12 +7,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
-import { CreditCard, Navigation, Star, Loader2, MessageCircle, Wind, HelpCircle, MapPin, ShieldAlert } from "lucide-react";
+import { CreditCard, Navigation, Star, Loader2, MessageCircle, Wind, MapPin, ShieldAlert } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { createRideCheckout } from "@/functions/createRideCheckout";
 import { format } from "date-fns";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { suggestPrice } from "@/components/trips/pricingUtils";
 
 export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }) {
@@ -31,9 +30,10 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
-  const [driverProfile, setDriverProfile] = useState(null);
   const [driverRatings, setDriverRatings] = useState([]);
-  const [isFirstBooking, setIsFirstBooking] = useState(true);
+  const [offerError, setOfferError] = useState('');
+
+  const scrollRef = useRef(null);
 
   useEffect(() => {
     if (isOpen && ride) {
@@ -50,6 +50,11 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
           is_price_offer: false,
           offered_price: ''
         });
+        setOfferError('');
+        // Scroll to top on re-open
+        setTimeout(() => {
+          if (scrollRef.current) scrollRef.current.scrollTop = 0;
+        }, 50);
     }
   }, [isOpen, ride]);
 
@@ -59,31 +64,15 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
       const user = await base44.auth.me();
       setCurrentUser(user);
 
-      // Load driver profile and ratings
       if (ride?.driver_id) {
-        console.log('Ride data in BookingModal:', ride);
-        console.log('Driver profile picture URL:', ride.driver_profile_picture_url);
-        
-        // Fetch ratings and check if first booking
-        const [allRatings, bookings] = await Promise.all([
-          base44.entities.Rating.list(),
-          base44.entities.RideBooking.list()
-        ]);
-
+        const allRatings = await base44.entities.Rating.list();
         const driverRatingsFiltered = allRatings.filter(r => 
           String(r.rated_user_id) === String(ride.driver_id) && r.trip_role === 'driver'
         );
         setDriverRatings(driverRatingsFiltered || []);
-
-        // Check if user has any previous PAID bookings (including completed)
-        const hasPreviousBookings = bookings.some(b => 
-          String(b.passenger_id) === String(user.id) && 
-          (b.payment_status === 'paid' || b.booking_status === 'completed')
-        );
-        setIsFirstBooking(!hasPreviousBookings);
       }
     } catch (error) {
-      console.error("Error loading data:", error);
+      // silently handle
     }
     setIsLoading(false);
   };
@@ -96,6 +85,18 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
       alert("Please tell the driver why you need a ride.");
       return;
     }
+
+    if (bookingData.is_price_offer) {
+      const offerVal = parseFloat(bookingData.offered_price);
+      if (!bookingData.offered_price || isNaN(offerVal) || offerVal < 1) {
+        setOfferError('Offer must be at least $1.');
+        return;
+      }
+      if (offerVal > 30) {
+        setOfferError('Offer cannot exceed $30 per seat.');
+        return;
+      }
+    }
     
     setIsSubmitting(true);
     
@@ -106,6 +107,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
       let submitPricePerSeat = bookingData.is_price_offer && bookingData.offered_price
         ? parseFloat(bookingData.offered_price)
         : fullPricePerSeatSubmit;
+      // Apply partial ride proration only if NOT a price offer
       if (!bookingData.is_price_offer && bookingData.is_partial_ride && bookingData.partial_from && bookingData.partial_to) {
         const fullRouteSuggestion = suggestPrice(ride.departure_location, ride.destination);
         const partialRouteSuggestion = suggestPrice(bookingData.partial_from, bookingData.partial_to);
@@ -114,7 +116,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
           submitPricePerSeat = Math.max(3, Math.round(fullPricePerSeatSubmit * ratio));
         }
       }
-      const baseAmount = (bookingData.seats_booked || 0) * submitPricePerSeat;
+      const baseAmount = (bookingData.seats_booked || 0) * submitPricePerSeat + detourFee;
 
       // Create checkout session
       const { data } = await createRideCheckout({
@@ -170,14 +172,13 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
 
   const rideAmount = (bookingData.seats_booked || 0) * pricePerSeat + detourFee;
   const connectFee = rideAmount * 0.10;
-  const licenseVerificationFee = isFirstBooking ? 1.50 : 0;
-  const subtotal = rideAmount + connectFee + licenseVerificationFee;
+  const subtotal = rideAmount + connectFee;
   const creditCardFee = subtotal * 0.03;
   const totalAmount = subtotal + creditCardFee;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto !bg-white">
+      <DialogContent ref={scrollRef} className="sm:max-w-lg max-h-[90vh] overflow-y-auto !bg-white">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-secondary">
             request to book
@@ -187,84 +188,81 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleRequestToBook} className="space-y-4 pt-4">
-            {/* Driver Profile - Scrollable */}
+        <form onSubmit={handleRequestToBook} className="space-y-4 pt-2">
+            {/* Driver Profile - Full expanded, no inner scroll */}
             {isLoading ? (
-              <div className="p-8 text-center">Loading driver information...</div>
+              <div className="p-8 text-center text-gray-500">Loading driver information...</div>
             ) : (
-              <div className="max-h-64 overflow-y-auto space-y-4 pr-2">
-                {/* Driver Profile Card - Matching Account page exactly */}
-                <div className="flex flex-col md:flex-row items-center gap-4 p-4 bg-white border border-gray-200 rounded-3xl shadow-sm">
-                  <Avatar className="w-20 h-20 text-2xl">
-                    <AvatarImage src={ride?.driver_profile_picture_url} />
-                    <AvatarFallback className="bg-gradient-to-br from-primary to-green-400 text-white font-bold">
-                      {ride?.driver_name?.split(' ').map(n => n[0]).join('').toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 text-center md:text-left space-y-2">
-                    <h2 className="text-2xl font-bold text-secondary">
-                      {ride?.driver_username ? `@${ride.driver_username}` : ride?.driver_name}
-                    </h2>
-                    {ride?.driver_age && ride?.driver_gender && (
-                      <p className="text-sm text-gray-500">{ride.driver_age} years old • {ride.driver_gender}</p>
-                    )}
-                    {ride?.driver_bio && (
-                      <p className="text-gray-600">{ride.driver_bio}</p>
-                    )}
-                    <div className="pt-2 space-y-2">
-                      <div className="flex items-center gap-2">
-                        <MessageCircle className="w-4 h-4 text-gray-500"/>
-                        <span className="text-sm text-gray-600">chattiness:</span>
-                        <Badge variant="outline" className="rounded-2xl border-gray-300">{ride?.driver_preferences_chattiness || 'Flexible'}</Badge>
+              <div className="space-y-4">
+                {/* Driver Profile Card */}
+                <div className="p-4 bg-gray-50 border border-gray-200 rounded-3xl">
+                  <div className="flex items-start gap-4">
+                    <Avatar className="w-20 h-20 shrink-0 rounded-2xl">
+                      <AvatarImage src={ride?.driver_profile_picture_url} className="object-cover object-top" />
+                      <AvatarFallback className="bg-gradient-to-br from-primary to-green-400 text-white font-bold text-xl rounded-2xl">
+                        {ride?.driver_name?.split(' ').map(n => n[0]).join('').toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 space-y-1">
+                      <h2 className="text-xl font-bold text-secondary">
+                        {ride?.driver_username ? `@${ride.driver_username}` : ride?.driver_name}
+                      </h2>
+                      {ride?.driver_age && ride?.driver_gender && (
+                        <p className="text-sm text-gray-500">{ride.driver_age} yrs old • {ride.driver_gender}</p>
+                      )}
+                      {ride?.driver_bio && (
+                        <p className="text-sm text-gray-600 leading-relaxed">{ride.driver_bio}</p>
+                      )}
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 pt-1">
+                        <div className="flex items-center gap-1">
+                          <MessageCircle className="w-3.5 h-3.5 text-gray-400"/>
+                          <span className="text-xs text-gray-500">{ride?.driver_preferences_chattiness || 'Flexible'}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Wind className="w-3.5 h-3.5 text-gray-400"/>
+                          <span className="text-xs text-gray-500">{ride?.driver_preferences_scents || 'Any'} scents</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                          <span className="text-xs font-semibold">
+                            {driverRatings.length > 0 
+                              ? (driverRatings.reduce((sum, r) => sum + r.rating_value, 0) / driverRatings.length).toFixed(1)
+                              : 'New'}
+                          </span>
+                          <span className="text-xs text-gray-400">({driverRatings.length})</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Wind className="w-4 h-4 text-gray-500"/>
-                        <span className="text-sm text-gray-600">scents:</span>
-                        <Badge variant="outline" className="rounded-2xl border-gray-300">{ride?.driver_preferences_scents || 'Any'}</Badge>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 pt-1">
-                      <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                      <span className="text-sm font-semibold">
-                        {driverRatings.length > 0 
-                          ? (driverRatings.reduce((sum, r) => sum + r.rating_value, 0) / driverRatings.length).toFixed(1)
-                          : 'New'}
-                      </span>
-                      <span className="text-sm text-gray-400">({driverRatings.length} reviews)</span>
                     </div>
                   </div>
-                </div>
-
-                {/* Vehicle Info */}
-                {ride?.car_model && (
-                  <div className="p-3 bg-gray-50 rounded-2xl border border-gray-200">
-                    <p className="text-sm text-gray-700">
-                      <span className="font-medium">Vehicle:</span> {ride.car_model}
+                  {ride?.car_model && (
+                    <p className="text-xs text-gray-500 mt-3 pt-3 border-t border-gray-200">
+                      🚗 <span className="font-medium">{ride.car_model}</span>
                     </p>
-                  </div>
-                )}
+                  )}
+                </div>
 
                 {/* Recent Reviews */}
                 {driverRatings.length > 0 && (
-                  <div>
-                    <h4 className="font-semibold text-secondary mb-2">recent reviews</h4>
-                    <div className="space-y-2">
-                      {driverRatings.slice(0, 2).map(rating => (
-                        <div key={rating.id} className="p-3 bg-gray-50 rounded-2xl border border-gray-200">
-                          <div className="flex items-center gap-2 mb-1">
-                            {Array(rating.rating_value).fill(0).map((_, i) => (
-                              <Star key={i} className="w-3 h-3 text-amber-400 fill-amber-400" />
-                            ))}
-                            <span className="text-xs text-gray-500">
-                              {format(new Date(rating.created_date), "MMM yyyy")}
-                            </span>
-                          </div>
-                          {rating.comment && (
-                            <p className="text-sm text-gray-700 italic">"{rating.comment}"</p>
-                          )}
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-secondary text-sm">recent reviews</h4>
+                    {driverRatings.slice(0, 2).map(rating => (
+                      <div key={rating.id} className="p-3 bg-gray-50 rounded-2xl border border-gray-200">
+                        <div className="flex items-center gap-2 mb-1">
+                          {Array(rating.rating_value).fill(0).map((_, i) => (
+                            <Star key={i} className="w-3 h-3 text-amber-400 fill-amber-400" />
+                          ))}
+                          {Array(5 - rating.rating_value).fill(0).map((_, i) => (
+                            <Star key={i} className="w-3 h-3 text-gray-300" />
+                          ))}
+                          <span className="text-xs text-gray-400 ml-1">
+                            {format(new Date(rating.created_date), "MMM yyyy")}
+                          </span>
                         </div>
-                      ))}
-                    </div>
+                        {rating.comment && (
+                          <p className="text-sm text-gray-600 italic">"{rating.comment}"</p>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
@@ -283,15 +281,19 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="description">why riding *</Label>
+                <Label htmlFor="description">
+                  why riding <span className="text-red-500 font-bold">*</span>
+                </Label>
                 <Textarea 
                   id="description" 
                   value={bookingData.description} 
                   onChange={(e) => setBookingData(p => ({...p, description: e.target.value}))} 
                   placeholder="e.g., heading to the north shore for surfing!" 
-                  required
-                  className="h-20"
+                  className="h-20 border-gray-300 focus:border-primary"
                 />
+                {!bookingData.description && (
+                  <p className="text-xs text-gray-400">required — helps the driver know who's joining</p>
+                )}
             </div>
 
             {ride.offers_midpoint_pickup && (
@@ -363,14 +365,14 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                   <Button
                     type="button"
                     onClick={() => setBookingData(p => ({ ...p, wants_detour_service: true }))}
-                    className={`flex-1 ${bookingData.wants_detour_service ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+                    className={`flex-1 ${bookingData.wants_detour_service ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
                   >
                     yes
                   </Button>
                   <Button
                     type="button"
                     onClick={() => setBookingData(p => ({ ...p, wants_detour_service: false, detour_destination: '' }))}
-                    className={`flex-1 ${!bookingData.wants_detour_service ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+                    className={`flex-1 ${!bookingData.wants_detour_service ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
                   >
                     no
                   </Button>
@@ -406,26 +408,32 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               </div>
               {bookingData.is_price_offer && (
                 <div className="space-y-3 pt-1">
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm text-green-800 font-medium">price request:</span>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span className="text-sm text-green-800 font-medium">driver asks:</span>
                     <span className="font-bold text-green-900">${fullPricePerSeat}/seat</span>
-                    <span className="text-sm text-green-700">→ your offer:</span>
-                    <div className="flex-1">
+                    <span className="text-sm text-green-700">→ your offer per seat:</span>
+                    <div className="flex-1 min-w-[100px]">
                       <Input
                         type="number"
                         min="1"
+                        max="30"
                         step="1"
-                        placeholder="$ offer per seat"
+                        placeholder="$ per seat"
                         value={bookingData.offered_price}
-                        onChange={(e) => setBookingData(p => ({ ...p, offered_price: e.target.value }))}
+                        onChange={(e) => { setOfferError(''); setBookingData(p => ({ ...p, offered_price: e.target.value })); }}
                         className="rounded-2xl border-green-400 focus:border-green-500"
                         onClick={(e) => e.stopPropagation()}
+                        style={{ MozAppearance: 'textfield' }}
                       />
                     </div>
                   </div>
-                  {bookingData.offered_price && parseFloat(bookingData.offered_price) > 0 && (
-                    <div className="p-3 bg-white border border-green-300 rounded-xl text-sm text-green-800">
-                      Mahalo! You will pay <strong>${((bookingData.seats_booked || 1) * parseFloat(bookingData.offered_price)).toFixed(2)}</strong> now in Stripe. The driver will receive your request and can either <strong>accept your price</strong>, <strong>request the original price</strong>, or <strong>reject your request</strong>.
+                  {offerError && (
+                    <p className="text-xs text-red-600 font-medium">{offerError}</p>
+                  )}
+                  {bookingData.offered_price && parseFloat(bookingData.offered_price) > 0 && !offerError && (
+                    <div className="p-3 bg-white border border-green-300 rounded-xl text-sm text-green-800 space-y-1">
+                      <p>Mahalo! You will pay <strong>${((bookingData.seats_booked || 1) * parseFloat(bookingData.offered_price)).toFixed(2)}</strong> now in Stripe.</p>
+                      <p className="text-green-700">The driver can <strong>accept your offer</strong>, <strong>request the full price</strong>, or <strong>reject your request</strong>. If rejected, your payment is fully refunded. 🤙</p>
                     </div>
                   )}
                 </div>
@@ -447,27 +455,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                 <span className="text-gray-700">Connect fee (10%):</span>
                 <span className="font-medium">${connectFee.toFixed(2)}</span>
               </div>
-              {isFirstBooking && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-700 flex items-center gap-1">
-                    License verification fee:
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <button type="button" className="text-gray-400 hover:text-gray-600">
-                          <HelpCircle className="w-3.5 h-3.5" />
-                        </button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-72 p-3 text-sm">
-                        <p className="font-semibold mb-1">One-Time Verification Fee</p>
-                        <p className="text-gray-600">
-                          Stripe charges $1.50 to verify your identity through their secure ID verification system. This is a one-time fee only on your first booking.
-                        </p>
-                      </PopoverContent>
-                    </Popover>
-                  </span>
-                  <span className="font-medium">${licenseVerificationFee.toFixed(2)}</span>
-                </div>
-              )}
+
               <div className="flex justify-between text-sm">
                 <span className="text-gray-700">Credit card fee (3%):</span>
                 <span className="font-medium">${creditCardFee.toFixed(2)}</span>
@@ -482,20 +470,6 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               </div>
             </div>
 
-            {currentUser && !currentUser.drivers_license_verified && (
-              <div className="flex items-start gap-3 p-4 bg-red-50 border-2 border-red-300 rounded-xl">
-                <ShieldAlert className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-bold text-red-800 mb-1">License verification required</p>
-                  <p className="text-sm text-red-700">
-                    {currentUser.drivers_license_pending_review
-                      ? "Your license is under review. You can book once it's approved (usually within 24 hours)."
-                      : "You must submit your driver's license before booking. Go to Account → Verification."}
-                  </p>
-                </div>
-              </div>
-            )}
-
             {(!currentUser || currentUser.drivers_license_verified) && (
               <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                 <CreditCard className="w-5 h-5 text-blue-600" />
@@ -505,24 +479,36 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               </div>
             )}
 
-            <DialogFooter className="pt-4">
-              <Button type="button" variant="outline" onClick={onClose}>cancel</Button>
-              <Button 
-                type="submit" 
-                disabled={isSubmitting || (currentUser && !currentUser.drivers_license_verified)} 
-                className="bg-primary hover:bg-primary/90 text-primary-foreground"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    redirecting...
-                  </>
-                ) : bookingData.is_price_offer && bookingData.offered_price ? (
-                  'got it, submit request & payment →'
-                ) : (
-                  'book this ride'
-                )}
-              </Button>
+            <DialogFooter className="pt-2 flex-col gap-2">
+              <div className="flex gap-2 w-full justify-end">
+                <Button type="button" variant="outline" onClick={onClose}>cancel</Button>
+                <Button 
+                  type="submit" 
+                  disabled={isSubmitting || (currentUser && !currentUser.drivers_license_verified)} 
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      redirecting...
+                    </>
+                  ) : bookingData.is_price_offer && bookingData.offered_price ? (
+                    'submit request & payment →'
+                  ) : (
+                    'book this ride'
+                  )}
+                </Button>
+              </div>
+              {currentUser && !currentUser.drivers_license_verified && (
+                <div className="flex items-start gap-2 w-full p-3 bg-red-50 border border-red-300 rounded-xl">
+                  <ShieldAlert className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                  <p className="text-sm text-red-700">
+                    {currentUser.drivers_license_pending_review
+                      ? "Your license is under review — you'll be able to book once it's approved (usually within 24 hrs)."
+                      : <><strong>License required before booking.</strong> Go to <a href="/account" className="underline font-medium">Account → Verification</a> to submit yours.</>}
+                  </p>
+                </div>
+              )}
             </DialogFooter>
             </form>
       </DialogContent>
