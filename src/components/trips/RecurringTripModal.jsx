@@ -7,9 +7,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, DollarSign, Car, X, Plus } from "lucide-react";
+import { MapPin, DollarSign, Car, X, Plus, Lightbulb } from "lucide-react";
 import LocationAutocomplete from "../shared/LocationAutocomplete";
 import { base44 } from "@/api/base44Client";
+import { getPricingInfo } from "./pricingUtils";
 
 export default function RecurringTripModal({ isOpen, onClose, onSave, editTrip }) {
   const [loading, setLoading] = useState(false);
@@ -32,48 +33,74 @@ export default function RecurringTripModal({ isOpen, onClose, onSave, editTrip }
     offers_detour_service: false
   });
   const [stopInput, setStopInput] = useState("");
+  const [pricingSuggestion, setPricingSuggestion] = useState(null);
 
   React.useEffect(() => {
-    if (editTrip) {
-      setTripData({
-        trip_name: editTrip.trip_name || "",
-        departure_location: editTrip.departure_location || "",
-        destination: editTrip.destination || "",
-        stops: editTrip.stops || [],
-        departure_time: editTrip.departure_time || "",
-        is_flexible: editTrip.is_flexible || false,
-        seats_available: editTrip.seats_available || 1,
-        price_per_seat: editTrip.price_per_seat || 0,
-        price_per_seat_local: editTrip.price_per_seat_local || 0,
-        price_per_seat_tourist: editTrip.price_per_seat_tourist || 0,
-        rider_preference: editTrip.rider_preference || "both_fine",
-        description: editTrip.description || "",
-        car_model: editTrip.car_model || "",
-        smoking_allowed: editTrip.smoking_allowed || false,
-        pets_allowed: editTrip.pets_allowed || false,
-        offers_detour_service: editTrip.offers_detour_service || false
-      });
-    } else {
-      setTripData({
-        trip_name: "",
-        departure_location: "",
-        destination: "",
-        stops: [],
-        departure_time: "",
-        is_flexible: false,
-        seats_available: 1,
-        price_per_seat: 0,
-        price_per_seat_local: 0,
-        price_per_seat_tourist: 0,
-        rider_preference: "both_fine",
-        description: "",
-        car_model: "",
-        smoking_allowed: false,
-        pets_allowed: false,
-        offers_detour_service: false
-      });
-    }
+    const loadAndInit = async () => {
+      // Load user vehicle info for autofill
+      let userCarModel = "";
+      let userSeats = 1;
+      try {
+        const user = await base44.auth.me();
+        if (user.vehicle_make || user.vehicle_model) {
+          userCarModel = [user.vehicle_year, user.vehicle_make, user.vehicle_model].filter(Boolean).join(" ");
+        }
+        if (user.seats_available) userSeats = user.seats_available;
+      } catch (e) {}
+
+      if (editTrip) {
+        setTripData({
+          trip_name: editTrip.trip_name || "",
+          departure_location: editTrip.departure_location || "",
+          destination: editTrip.destination || "",
+          stops: editTrip.stops || [],
+          departure_time: editTrip.departure_time || "",
+          is_flexible: editTrip.is_flexible || false,
+          seats_available: editTrip.seats_available || userSeats,
+          price_per_seat: editTrip.price_per_seat || 0,
+          price_per_seat_local: editTrip.price_per_seat_local || 0,
+          price_per_seat_tourist: editTrip.price_per_seat_tourist || 0,
+          rider_preference: editTrip.rider_preference || "both_fine",
+          description: editTrip.description || "",
+          car_model: editTrip.car_model || userCarModel,
+          smoking_allowed: editTrip.smoking_allowed || false,
+          pets_allowed: editTrip.pets_allowed || false,
+          offers_detour_service: editTrip.offers_detour_service || false
+        });
+      } else {
+        setTripData({
+          trip_name: "",
+          departure_location: "",
+          destination: "",
+          stops: [],
+          departure_time: "",
+          is_flexible: false,
+          seats_available: userSeats,
+          price_per_seat: 0,
+          price_per_seat_local: 0,
+          price_per_seat_tourist: 0,
+          rider_preference: "both_fine",
+          description: "",
+          car_model: userCarModel,
+          smoking_allowed: false,
+          pets_allowed: false,
+          offers_detour_service: false
+        });
+      }
+    };
+
+    if (isOpen) loadAndInit();
   }, [editTrip, isOpen]);
+
+  // Update pricing suggestion when route changes
+  React.useEffect(() => {
+    if (tripData.departure_location && tripData.destination) {
+      const info = getPricingInfo(tripData.departure_location, tripData.destination);
+      setPricingSuggestion(info.suggestion);
+    } else {
+      setPricingSuggestion(null);
+    }
+  }, [tripData.departure_location, tripData.destination]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -301,6 +328,23 @@ export default function RecurringTripModal({ isOpen, onClose, onSave, editTrip }
                   </SelectContent>
                 </Select>
               </div>
+
+              {pricingSuggestion && (
+                <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-2">
+                  <Lightbulb className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+                  <div className="text-xs text-amber-800 space-y-1">
+                    <p className="font-semibold">suggested prices for this route (~{pricingSuggestion.distance} mi)</p>
+                    <p>locals: <strong>${pricingSuggestion.local}</strong> &nbsp;·&nbsp; tourists: <strong>${pricingSuggestion.visitor}</strong></p>
+                    <button
+                      type="button"
+                      onClick={() => setTripData(d => ({ ...d, price_per_seat_local: pricingSuggestion.local, price_per_seat_tourist: pricingSuggestion.visitor, price_per_seat: pricingSuggestion.local }))}
+                      className="underline text-amber-700 hover:text-amber-900 font-medium"
+                    >
+                      use these prices
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {tripData.rider_preference === "both_fine" && (
                 <>
