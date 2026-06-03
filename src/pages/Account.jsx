@@ -23,6 +23,7 @@ import { requestNotificationPermission } from "../components/utils/notifications
 import AdminMessageCard from "../components/inbox/AdminMessageCard";
 import ProfileSetupQuiz from "../components/account/ProfileSetupQuiz";
 import WelcomeNewUserModal from "../components/account/WelcomeNewUserModal";
+import WelcomeTutorialModal from "../components/tutorial/WelcomeTutorialModal";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -105,6 +106,7 @@ export default function AccountPage() {
     const [showPhonePrompt, setShowPhonePrompt] = useState(false);
     const [phonePromptValue, setPhonePromptValue] = useState('');
     const [isSavingPhone, setIsSavingPhone] = useState(false);
+    const [showTutorial, setShowTutorial] = useState(false);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -122,6 +124,10 @@ export default function AccountPage() {
         if ('Notification' in window) {
             setNotificationsEnabled(Notification.permission === 'granted');
         }
+
+        const handleOpenTutorial = () => setShowTutorial(true);
+        window.addEventListener('openTutorial', handleOpenTutorial);
+        return () => window.removeEventListener('openTutorial', handleOpenTutorial);
     }, []);
 
     const loadData = async () => {
@@ -1339,6 +1345,8 @@ export default function AccountPage() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            <WelcomeTutorialModal isOpen={showTutorial} onClose={() => setShowTutorial(false)} />
 
             {/* Phone number prompt modal */}
             <Dialog open={showPhonePrompt} onOpenChange={() => {}}>
