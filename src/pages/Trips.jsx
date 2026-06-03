@@ -1,15 +1,16 @@
 import React from "react";
 import AppTutorial from "../components/tutorial/AppTutorial";
-import { MapPin, ChevronLeft } from "lucide-react";
+import { MapPin, ChevronLeft, Calendar, ChevronDown } from "lucide-react";
 import FindRide from "../components/trips/FindRide";
 import RequestRide from "../components/trips/RequestRide";
 import PostRideForm from "../components/trips/PostRideForm";
 import NeedHelpButton from "../components/trips/NeedHelpButton";
 import { base44 } from "@/api/base44Client";
 import { getIslandFromDomain } from "@/lib/islandConfig";
-import { format, addDays } from "date-fns";
-import { Input } from "@/components/ui/input";
+import { format, addDays, parseISO } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarPicker } from "@/components/ui/calendar";
 import RouteSearch from "../components/trips/RouteSearch";
 
 const ISLANDS = ["Kauai", "Oahu", "Maui", "Big Island"];
@@ -192,22 +193,31 @@ export default function TripsPage() {
         {view === "view_date" && (
           <div className="space-y-5">
             <p className="text-lg font-semibold text-gray-700">pick a date</p>
-            <div className="flex items-center gap-3">
-              <Input
-                type="date"
-                value={specificDate}
-                onChange={e => setSpecificDate(e.target.value)}
-                className="rounded-2xl h-12 text-base flex-1"
-              />
-              <Button
-                onClick={() => {}} // date is already set, FindRide renders below
-                className="bg-primary hover:bg-primary/90 rounded-2xl px-6 h-12 font-semibold"
-              >
-                search
-              </Button>
-            </div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="w-full flex items-center justify-between gap-3 px-5 py-4 rounded-2xl border-2 border-gray-200 bg-gray-50 hover:border-primary/50 hover:bg-primary/5 transition-all text-left">
+                  <div className="flex items-center gap-3">
+                    <Calendar className="w-5 h-5 text-primary shrink-0" />
+                    <span className="font-semibold text-gray-800 text-base">
+                      {specificDate ? format(parseISO(specificDate), "EEEE, MMMM do, yyyy") : "select a date"}
+                    </span>
+                  </div>
+                  <ChevronDown className="w-4 h-4 text-gray-400 shrink-0" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 rounded-2xl" align="start">
+                <CalendarPicker
+                  mode="single"
+                  selected={specificDate ? parseISO(specificDate) : undefined}
+                  onSelect={(date) => {
+                    if (date) setSpecificDate(format(date, 'yyyy-MM-dd'));
+                  }}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
             {specificDate && (
-              <FindRide island={selectedIsland} initialStartDate={specificDate} initialEndDate={specificDate} />
+              <FindRide island={selectedIsland} initialStartDate={specificDate} initialEndDate={specificDate} hideDateFilter />
             )}
           </div>
         )}

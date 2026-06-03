@@ -14,7 +14,7 @@ import BookingModal from "../rides/BookingModal";
 import FindRideTutorial from "../tutorial/FindRideTutorial";
 import { handlePaymentSuccess } from "@/functions/handlePaymentSuccess";
 
-export default function FindRide({ island = "Kauai", initialStartDate, initialEndDate }) {
+export default function FindRide({ island = "Kauai", initialStartDate, initialEndDate, hideDateFilter = false }) {
   const today = new Date();
   const todayStr = format(today, 'yyyy-MM-dd');
   const nextWeekStr = format(addDays(today, 7), 'yyyy-MM-dd');
@@ -149,7 +149,7 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
       )}
 
       {/* Date Range Filter */}
-      <Card className="shadow-md border-gray-200 bg-white rounded-2xl">
+      {!hideDateFilter && <Card className="shadow-md border-gray-200 bg-white rounded-2xl">
         <CardContent className="pt-4 pb-3 px-4">
           <div className="flex items-end gap-2">
             <div className="space-y-1 flex-1 min-w-0">
@@ -170,7 +170,7 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
             </Button>
           </div>
         </CardContent>
-      </Card>
+      </Card>}
 
       {/* Rides List */}
       {isLoading ? (
