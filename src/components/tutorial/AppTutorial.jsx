@@ -178,20 +178,6 @@ export default function AppTutorial({ isOpen, onClose }) {
 
             <p className="text-xs text-center text-gray-400 italic">🤙 mahalo for being a part of the movement</p>
 
-            {/* AI Assistant intro */}
-            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 space-y-3">
-              <p className="font-bold text-blue-800 text-xs uppercase tracking-widest">🤖 meet kai, your ride assistant</p>
-              <p className="text-sm text-gray-700">Need help posting a ride, setting up a recurring trip, or just figuring out how things work? <strong>Kai</strong> is an AI assistant built into the app — just ask!</p>
-              <a
-                href={base44.agents.getWhatsAppConnectURL('ride_assistant')}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
-              >
-                💬 Chat with Kai on WhatsApp
-              </a>
-            </div>
-
             <div className="space-y-2 pt-1">
               <Button onClick={handleStart} className="w-full bg-primary hover:bg-primary/90 rounded-2xl py-5 text-base font-semibold">
                 start tutorial →
