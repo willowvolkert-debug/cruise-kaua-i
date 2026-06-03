@@ -399,7 +399,7 @@ export default function Layout({ children, currentPageName }) {
                                 <Link
                                  key={path}
                                  to={path}
-                                 className={`flex-1 text-center text-xs font-semibold py-3 mx-0.5 rounded-full transition-colors ${
+                                 className={`flex-1 text-center text-xs font-semibold py-6 mx-0.5 rounded-full transition-colors ${
                                    isActive
                                      ? "border-2 border-green-400 text-primary bg-green-50"
                                      : "text-gray-500 hover:text-primary"
