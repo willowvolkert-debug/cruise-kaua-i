@@ -70,6 +70,26 @@
       "type": "string",
       "description": "Where rider wants to be dropped off (partial ride)"
     },
+    "is_price_offer": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the rider submitted a custom price offer instead of the requested price"
+    },
+    "offered_price": {
+      "type": "number",
+      "description": "The custom price per seat the rider offered, if is_price_offer is true"
+    },
+    "price_offer_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "driver_requesting_full",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Status of the rider's price offer negotiation"
+    },
     "payment_status": {
       "type": "string",
       "enum": [

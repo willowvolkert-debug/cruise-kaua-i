@@ -24,7 +24,9 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
     detour_destination: '',
     is_partial_ride: false,
     partial_from: '',
-    partial_to: ''
+    partial_to: '',
+    is_price_offer: false,
+    offered_price: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -44,7 +46,9 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
           detour_destination: '',
           is_partial_ride: false,
           partial_from: '',
-          partial_to: ''
+          partial_to: '',
+          is_price_offer: false,
+          offered_price: ''
         });
     }
   }, [isOpen, ride]);
@@ -99,8 +103,10 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
       const detourFee = bookingData.wants_detour_service ? 5 : 0;
       const isLocal = currentUser?.has_hawaii_id === true;
       const fullPricePerSeatSubmit = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);
-      let submitPricePerSeat = fullPricePerSeatSubmit;
-      if (bookingData.is_partial_ride && bookingData.partial_from && bookingData.partial_to) {
+      let submitPricePerSeat = bookingData.is_price_offer && bookingData.offered_price
+        ? parseFloat(bookingData.offered_price)
+        : fullPricePerSeatSubmit;
+      if (!bookingData.is_price_offer && bookingData.is_partial_ride && bookingData.partial_from && bookingData.partial_to) {
         const fullRouteSuggestion = suggestPrice(ride.departure_location, ride.destination);
         const partialRouteSuggestion = suggestPrice(bookingData.partial_from, bookingData.partial_to);
         if (fullRouteSuggestion && partialRouteSuggestion && fullRouteSuggestion.distance > 0) {
@@ -123,6 +129,8 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         is_partial_ride: bookingData.is_partial_ride,
         partial_from: bookingData.partial_from,
         partial_to: bookingData.partial_to,
+        is_price_offer: bookingData.is_price_offer || false,
+        offered_price: bookingData.is_price_offer ? parseFloat(bookingData.offered_price) : null,
         driver_id: ride.driver_id,
         driver_username: ride.driver_username || '',
         success_url: window.location.origin + '/trips',
@@ -147,9 +155,10 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   const detourFee = bookingData.wants_detour_service ? 5 : 0;
   const isLocal = currentUser?.has_hawaii_id === true;
   const fullPricePerSeat = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);
+  const effectivePricePerSeat = bookingData.is_price_offer && bookingData.offered_price ? parseFloat(bookingData.offered_price) : fullPricePerSeat;
 
   // Calculate partial ride price ratio based on distance
-  let pricePerSeat = fullPricePerSeat;
+  let pricePerSeat = effectivePricePerSeat;
   if (bookingData.is_partial_ride && bookingData.partial_from && bookingData.partial_to) {
     const fullRouteSuggestion = suggestPrice(ride.departure_location, ride.destination);
     const partialRouteSuggestion = suggestPrice(bookingData.partial_from, bookingData.partial_to);
@@ -382,9 +391,50 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               </div>
             )}
 
+            {/* Price offer section */}
+            <div className={`rounded-2xl border-2 p-4 space-y-3 transition-all ${bookingData.is_price_offer ? 'border-green-400 bg-green-50' : 'border-gray-200 bg-gray-50'}`}>
+              <div
+                className="flex items-center gap-3 cursor-pointer"
+                onClick={() => setBookingData(p => ({ ...p, is_price_offer: !p.is_price_offer, offered_price: '' }))}
+              >
+                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${bookingData.is_price_offer ? 'border-green-500 bg-green-500' : 'border-gray-400 bg-white'}`}>
+                  {bookingData.is_price_offer && <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
+                </div>
+                <span className={`text-sm font-medium ${bookingData.is_price_offer ? 'text-green-800' : 'text-gray-700'}`}>
+                  too expensive? pitch an offer you can afford
+                </span>
+              </div>
+              {bookingData.is_price_offer && (
+                <div className="space-y-3 pt-1">
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm text-green-800 font-medium">price request:</span>
+                    <span className="font-bold text-green-900">${fullPricePerSeat}/seat</span>
+                    <span className="text-sm text-green-700">→ your offer:</span>
+                    <div className="flex-1">
+                      <Input
+                        type="number"
+                        min="1"
+                        step="1"
+                        placeholder="$ offer per seat"
+                        value={bookingData.offered_price}
+                        onChange={(e) => setBookingData(p => ({ ...p, offered_price: e.target.value }))}
+                        className="rounded-2xl border-green-400 focus:border-green-500"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </div>
+                  </div>
+                  {bookingData.offered_price && parseFloat(bookingData.offered_price) > 0 && (
+                    <div className="p-3 bg-white border border-green-300 rounded-xl text-sm text-green-800">
+                      Mahalo! You will pay <strong>${((bookingData.seats_booked || 1) * parseFloat(bookingData.offered_price)).toFixed(2)}</strong> now in Stripe. The driver will receive your request and can either <strong>accept your price</strong>, <strong>request the original price</strong>, or <strong>reject your request</strong>.
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
             <div className="bg-gray-50 rounded-lg p-4 space-y-2 border border-gray-200">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-700">Ride cost:</span>
+                <span className="text-gray-700">{bookingData.is_price_offer && bookingData.offered_price ? 'Ride cost (your offer):' : 'Price request:'}</span>
                 <span className="font-medium">${((bookingData.seats_booked || 0) * pricePerSeat).toFixed(2)}</span>
               </div>
               {bookingData.wants_detour_service && (
@@ -467,6 +517,8 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     redirecting...
                   </>
+                ) : bookingData.is_price_offer && bookingData.offered_price ? (
+                  'got it, submit request & payment →'
                 ) : (
                   'book this ride'
                 )}

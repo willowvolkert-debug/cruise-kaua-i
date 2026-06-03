@@ -982,7 +982,7 @@ export default function PostRideForm({ island = "Kauai" }) {
               {rideData.rider_preference === 'both_fine' ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="priceLocal">ride price for locals ($)</Label>
+                    <Label htmlFor="priceLocal">price request for locals ($)</Label>
                     <Input
                       id="priceLocal"
                       type="number"
@@ -998,7 +998,7 @@ export default function PostRideForm({ island = "Kauai" }) {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="priceTourist">ride price for tourists ($)</Label>
+                    <Label htmlFor="priceTourist">price request for tourists ($)</Label>
                     <Input
                       id="priceTourist"
                       type="number"
@@ -1016,7 +1016,7 @@ export default function PostRideForm({ island = "Kauai" }) {
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <Label htmlFor="price">price per seat ($)</Label>
+                  <Label htmlFor="price">price request per seat ($)</Label>
                   <Input
                     id="price"
                     type="number"

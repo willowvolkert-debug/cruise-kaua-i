@@ -530,6 +530,44 @@ export default function InboxPage() {
     }
     };
 
+    const handleRequestFullPrice = async (booking) => {
+        try {
+            await base44.entities.RideBooking.update(booking.id, {
+                price_offer_status: 'driver_requesting_full'
+            });
+
+            // Notify rider via in-app message
+            await base44.entities.AdminMessage.create({
+                recipient_id: booking.passenger_id,
+                recipient_name: booking.passenger_name,
+                subject: '💰 Driver response to your price offer',
+                message: `The driver has reviewed your price offer of $${booking.offered_price}/seat and is requesting you pay the original price request instead. Please log in to the app to respond — you can either accept and pay the difference, or your current payment will be refunded.`,
+                message_type: 'action_required'
+            });
+
+            // Send email to rider
+            try {
+                await sendBookingEmail({
+                    userId: booking.passenger_id,
+                    subject: `The driver wants the full price - Cruise Kauaʻi`,
+                    body: `Aloha ${booking.passenger_name},\n\nThe driver has reviewed your price offer of $${booking.offered_price}/seat and is requesting the original price request for this ride.\n\nPlease log into Cruise Kauaʻi to review the request. If you don't respond, your payment will be refunded.\n\nhttps://www.cruisekauai.org/trips\n\nMahalo,\nCruise Kauaʻi Team`
+                });
+            } catch (emailError) {
+                console.error("Error sending full price request email:", emailError);
+            }
+
+            // Browser notification
+            sendNotification('Price Offer Response', 'The driver is requesting the original price.');
+
+            alert("Rider notified that you want the full price.");
+            setShowRiderRequestModal(false);
+            loadData();
+        } catch (error) {
+            console.error("Error requesting full price:", error);
+            alert("Error sending response. Please try again.");
+        }
+    };
+
     const handleCancelBooking = (booking) => {
         setBookingToCancel(booking);
         setShowCancelModal(true);
@@ -830,13 +868,20 @@ Please process the refund manually via Stripe.
                                                 </AvatarFallback>
                                             </Avatar>
                                             <div className="text-left">
-                                                <p className="font-semibold text-secondary">{request.passenger_name}</p>
-                                                <p className="text-sm text-gray-600">
-                                                    Requesting {request.seats_booked} seat(s)
-                                                </p>
-                                                <Badge variant="outline" className="mt-1 bg-blue-50 text-blue-700 border-blue-300 rounded-2xl">
-                                                    Pending
-                                                </Badge>
+                                               <p className="font-semibold text-secondary">{request.passenger_name}</p>
+                                               <p className="text-sm text-gray-600">
+                                                   Requesting {request.seats_booked} seat(s)
+                                               </p>
+                                               <div className="flex gap-1 mt-1 flex-wrap">
+                                                   <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 rounded-2xl">
+                                                       Pending
+                                                   </Badge>
+                                                   {request.is_price_offer && request.offered_price && (
+                                                       <Badge className="bg-amber-100 text-amber-800 border-amber-300 rounded-2xl">
+                                                           💰 price offer: ${request.offered_price}/seat
+                                                       </Badge>
+                                                   )}
+                                               </div>
                                             </div>
                                         </div>
                                         <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -928,6 +973,7 @@ Please process the refund manually via Stripe.
                     booking={selectedBooking}
                     onAccept={handleAcceptRequest}
                     onReject={handleRejectRequest}
+                    onRequestFullPrice={handleRequestFullPrice}
                 />
 
                 <CancelBookingModal

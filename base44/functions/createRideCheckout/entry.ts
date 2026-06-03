@@ -24,6 +24,8 @@ Deno.serve(async (req) => {
             is_partial_ride,
             partial_from,
             partial_to,
+            is_price_offer,
+            offered_price,
             driver_id,
             driver_username,
             success_url,
@@ -87,6 +89,9 @@ Deno.serve(async (req) => {
             is_partial_ride: is_partial_ride || false,
             partial_from: partial_from || '',
             partial_to: partial_to || '',
+            is_price_offer: is_price_offer || false,
+            offered_price: offered_price || null,
+            price_offer_status: is_price_offer ? 'pending' : null,
             messages: [],
             initial_notification_sent: false,
             // Passenger profile info for driver to review
