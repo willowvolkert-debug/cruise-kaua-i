@@ -350,12 +350,6 @@ Deno.serve(async (req) => {
         return Response.json({ ok: true, mode: 'trips_blast', sent: sc, errors: ec });
       }
     }
-
-    const appUrl = 'https://cruisekauai.org';
-    const logo = `<div style="text-align:center;margin-bottom:28px;">
-      <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;" />
-      <p style="margin:8px 0 0 0;font-weight:bold;color:#2f7d52;font-size:15px;letter-spacing:1px;">Cruise Kauaʻi</p>
-    </div>`;
     const footer = `
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:40px 0 24px;" />
       <p style="font-size:13px;color:#6b7280;line-height:1.6;">Need help? <a href="${appUrl}/contactus?explore=true" style="color:#2f7d52;font-weight:bold;">Contact us here</a></p>
