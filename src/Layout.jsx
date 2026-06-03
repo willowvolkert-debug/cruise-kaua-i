@@ -8,7 +8,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import ShareAppModal from "./components/sidebar/ShareAppModal";
 import AppTutorial from "./components/tutorial/AppTutorial";
-import FreshLookAnnouncement from "./components/announcements/FreshLookAnnouncement";
 import {
   Sidebar,
   SidebarContent,
@@ -213,7 +212,6 @@ export default function Layout({ children, currentPageName }) {
   const [currentUser, setCurrentUser] = React.useState(null);
   const [showShareModal, setShowShareModal] = React.useState(false);
   const [showTutorial, setShowTutorial] = React.useState(false);
-  const [showFreshLook, setShowFreshLook] = React.useState(false);
   const [touchStart, setTouchStart] = React.useState(null);
   const [touchEnd, setTouchEnd] = React.useState(null);
   const [unreadCount, setUnreadCount] = React.useState(0);
@@ -261,10 +259,6 @@ export default function Layout({ children, currentPageName }) {
         if (!user.has_seen_tutorial && (location.pathname === createPageUrl("Trips") || location.pathname === "/")) {
           setShowTutorial(true);
         }
-        if (!user.has_seen_fresh_look_2025) {
-          setShowFreshLook(true);
-        }
-
         // Load unread counts
         loadUnreadCount(user);
       } catch (e) {
@@ -433,10 +427,6 @@ export default function Layout({ children, currentPageName }) {
         onClose={() => setShowTutorial(false)}
       />
 
-      <FreshLookAnnouncement
-        isOpen={showFreshLook}
-        onClose={() => setShowFreshLook(false)}
-      />
     </SidebarProvider>
   );
 }
