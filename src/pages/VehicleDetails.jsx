@@ -26,6 +26,7 @@ export default function VehicleDetailsPage() {
     auto_policy_image: null
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState('');
   const [user, setUser] = useState(null);
   const [uploadError, setUploadError] = useState('');
   const [showStripeModal, setShowStripeModal] = useState(false);
@@ -88,6 +89,7 @@ export default function VehicleDetailsPage() {
     e.preventDefault();
     setIsSubmitting(true);
     setUploadError('');
+    setUploadProgress('');
 
     if (!vehicleData.vehicle_exterior_image && !user?.vehicle_exterior_photo_url) {
       setUploadError("Please upload a photo of the outside of your vehicle.");
@@ -107,24 +109,31 @@ export default function VehicleDetailsPage() {
       let policyPhotoUrl = user?.auto_policy_photo_url || '';
 
       if (vehicleData.vehicle_exterior_image) {
+        setUploadProgress('Uploading exterior photo...');
         const result = await base44.integrations.Core.UploadFile({ file: vehicleData.vehicle_exterior_image });
         vehicleExteriorPhotoUrl = result.file_url;
       }
 
       if (vehicleData.vehicle_interior_images.length > 0) {
-        const uploadPromises = vehicleData.vehicle_interior_images.map(file => 
-          base44.integrations.Core.UploadFile({ file })
-        );
-        const results = await Promise.all(uploadPromises);
-        vehicleInteriorPhotoUrls = results.map(r => r.file_url);
+        // Upload interior photos one at a time to avoid parallel failures
+        const uploadedUrls = [];
+        for (let i = 0; i < vehicleData.vehicle_interior_images.length; i++) {
+          setUploadProgress(`Uploading interior photo ${i + 1} of ${vehicleData.vehicle_interior_images.length}...`);
+          const result = await base44.integrations.Core.UploadFile({ file: vehicleData.vehicle_interior_images[i] });
+          uploadedUrls.push(result.file_url);
+        }
+        vehicleInteriorPhotoUrls = uploadedUrls;
       }
 
       let insuranceSubmittedDate = user?.insurance_submitted_date;
       if (vehicleData.auto_policy_image) {
+        setUploadProgress('Uploading insurance card...');
         const result = await base44.integrations.Core.UploadFile({ file: vehicleData.auto_policy_image });
         policyPhotoUrl = result.file_url;
         insuranceSubmittedDate = new Date().toISOString();
       }
+
+      setUploadProgress('Saving your details...');
 
       // Log the vehicle edit
       const isNewSubmission = !user?.vehicle_make;
@@ -179,6 +188,7 @@ export default function VehicleDetailsPage() {
         console.error("Error notifying admin:", notifyErr);
       }
 
+      setUploadProgress('');
       alert("Vehicle details submitted for review! You'll be notified once verified.");
       
       // Navigate to Driver Agreement
@@ -190,7 +200,8 @@ export default function VehicleDetailsPage() {
       }
     } catch (error) {
       console.error("Error saving vehicle details:", error);
-      setUploadError("Error saving vehicle details. Please try again.");
+      setUploadError(`Error saving vehicle details: ${error.message || 'Please try again.'}`);
+      setUploadProgress('');
     }
     
     setIsSubmitting(false);
@@ -245,6 +256,12 @@ export default function VehicleDetailsPage() {
                 {uploadError}
               </div>
             )}
+            {uploadProgress && (
+              <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-blue-700 text-sm flex items-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+                {uploadProgress}
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
@@ -273,10 +290,10 @@ export default function VehicleDetailsPage() {
                 <div className="space-y-2">
                   <Label htmlFor="year">year</Label>
                   <Input
-                    id="year"
-                    type="number"
-                    min="1990"
-                    max="2025"
+                   id="year"
+                   type="number"
+                   min="1990"
+                   max="2030"
                     value={vehicleData.year}
                     onChange={(e) => handleInputChange('year', e.target.value)}
                     placeholder="e.g., 2020"
