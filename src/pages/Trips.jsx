@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import AppTutorial from "../components/tutorial/AppTutorial";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, MessageSquarePlus, Car, MapPin } from "lucide-react";
+import { MapPin, ChevronLeft } from "lucide-react";
 import FindRide from "../components/trips/FindRide";
 import RequestRide from "../components/trips/RequestRide";
 import PostRideForm from "../components/trips/PostRideForm";
 import NeedHelpButton from "../components/trips/NeedHelpButton";
 import { base44 } from "@/api/base44Client";
 import { getIslandFromDomain } from "@/lib/islandConfig";
+import { format, addDays } from "date-fns";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const ISLANDS = ["Kauai", "Oahu", "Maui", "Big Island"];
+
+// view: null | "menu" | "request" | "post" | "view_sub" | "view_week" | "view_date"
 
 export default function TripsPage() {
   const [showTutorial, setShowTutorial] = React.useState(false);
@@ -17,16 +21,15 @@ export default function TripsPage() {
   const [selectedIsland, setSelectedIsland] = React.useState(getIslandFromDomain());
   const [islandLoaded, setIslandLoaded] = React.useState(false);
   const [islandSelectorVisible, setIslandSelectorVisible] = React.useState(false);
+  const [view, setView] = React.useState("menu");
+  const [specificDate, setSpecificDate] = React.useState(format(new Date(), 'yyyy-MM-dd'));
 
   React.useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const exploreParam = urlParams.get('explore');
-    setIsExploreMode(exploreParam === 'true');
+    setIsExploreMode(urlParams.get('explore') === 'true');
 
-    // Load saved island preference from user profile, but domain takes priority
     const domainIsland = getIslandFromDomain();
     base44.auth.me().then(user => {
-      // Only use saved preference if not on a domain-specific URL
       const hostname = window.location.hostname.toLowerCase();
       const isGenericDomain = !hostname.includes('cruisekauai') && !hostname.includes('cruiseoahu') && !hostname.includes('cruisemaui') && !hostname.includes('cruisebigisland');
       if (isGenericDomain && user?.preferred_island) {
@@ -41,11 +44,7 @@ export default function TripsPage() {
   const handleIslandChange = async (island) => {
     setSelectedIsland(island);
     window.dispatchEvent(new CustomEvent('islandChanged', { detail: island }));
-    try {
-      await base44.auth.updateMe({ preferred_island: island });
-    } catch (e) {
-      // non-critical
-    }
+    try { await base44.auth.updateMe({ preferred_island: island }); } catch (e) {}
   };
 
   React.useEffect(() => {
@@ -54,24 +53,33 @@ export default function TripsPage() {
     }
   }, [islandLoaded, selectedIsland]);
 
+  const goBack = () => {
+    if (view === "view_sub" || view === "request" || view === "post") setView("menu");
+    else if (view === "view_week" || view === "view_date") setView("view_sub");
+  };
+
+  const showBack = view !== "menu";
+
   return (
-    <div className="p-3 md:p-8 bg-white overflow-x-hidden">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-4">
+    <div className="p-3 md:p-8 bg-white overflow-x-hidden min-h-screen">
+      <div className="max-w-2xl mx-auto">
+
+        {/* Header */}
+        <div className="mb-5">
           <div className="flex items-start justify-between gap-3 flex-wrap">
-            <div>
-              <h1 className="text-2xl md:text-4xl font-bold text-secondary mb-1">
-                plan your trip
-              </h1>
-              <p className="text-sm md:text-base text-gray-600">find a ride, request a ride, or offer seats for your next drive</p>
+            <div className="flex items-center gap-3">
+              {showBack && (
+                <button onClick={goBack} className="flex items-center gap-1 text-primary hover:text-primary/80 transition-colors font-medium text-sm">
+                  <ChevronLeft className="w-5 h-5" /> back
+                </button>
+              )}
+              {!showBack && <h1 className="text-2xl md:text-3xl font-bold text-secondary">plan your trip</h1>}
             </div>
-            <div className="mt-1">
-              <NeedHelpButton onOpenTutorial={() => setShowTutorial(true)} />
-            </div>
+            <NeedHelpButton onOpenTutorial={() => setShowTutorial(true)} />
           </div>
 
           {/* Island Selector */}
-          <div className="mt-4 flex items-center gap-3 flex-wrap">
+          <div className="mt-3 flex items-center gap-3 flex-wrap">
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <MapPin className="w-4 h-4 text-primary" />
               <span className="font-medium">island:</span>
@@ -79,65 +87,132 @@ export default function TripsPage() {
                 onClick={() => setIslandSelectorVisible(v => !v)}
                 className="text-xs text-gray-400 hover:text-gray-600 transition-colors underline"
               >
-                {islandSelectorVisible ? "hide" : "show"}
+                {islandSelectorVisible ? "hide" : "change"}
               </button>
             </div>
-            {islandSelectorVisible && (
+            {islandSelectorVisible ? (
               <div className="flex flex-wrap gap-2">
                 {ISLANDS.map(island => (
                   <button
                     key={island}
-                    onClick={() => handleIslandChange(island)}
+                    onClick={() => { handleIslandChange(island); setIslandSelectorVisible(false); }}
                     className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-                      selectedIsland === island
-                        ? 'bg-primary text-white shadow-sm'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      selectedIsland === island ? 'bg-primary text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
                     {island}
                   </button>
                 ))}
               </div>
-            )}
-            {!islandSelectorVisible && (
+            ) : (
               <span className="text-sm font-medium text-primary">{selectedIsland}</span>
             )}
           </div>
 
           {isExploreMode && (
-            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-2xl">
+            <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-2xl">
               <p className="text-blue-800 text-sm">
-                You're in explore mode. <button onClick={() => window.location.href = '/'} className="underline font-semibold">Sign up</button> to post rides and book trips!
+                You're in explore mode.{" "}
+                <button onClick={() => window.location.href = '/'} className="underline font-semibold">Sign up</button>
+                {" "}to post rides and book trips!
               </p>
             </div>
           )}
         </div>
 
-        <Tabs defaultValue="find" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 bg-gray-100 p-1 rounded-3xl">
-            <TabsTrigger value="find" className="py-2.5 flex flex-col sm:flex-row items-center gap-1 sm:gap-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-md rounded-3xl text-xs sm:text-base">
-              <Search className="w-4 h-4 sm:w-5 sm:h-5 shrink-0"/>
-              <span className="leading-tight text-center">view rides</span>
-            </TabsTrigger>
-            <TabsTrigger value="request" className="py-2.5 flex flex-col sm:flex-row items-center gap-1 sm:gap-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-md rounded-3xl text-xs sm:text-base">
-              <MessageSquarePlus className="w-4 h-4 sm:w-5 sm:h-5 shrink-0"/>
-              <span className="leading-tight text-center">request</span>
-            </TabsTrigger>
-            <TabsTrigger value="post" className="py-2.5 flex flex-col sm:flex-row items-center gap-1 sm:gap-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-md rounded-3xl text-xs sm:text-base">
-              <Car className="w-4 h-4 sm:w-5 sm:h-5 shrink-0"/>
-              <span className="leading-tight text-center">post a ride</span>
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="find" className="mt-6">
-            <FindRide island={selectedIsland} />
-          </TabsContent>
-          <TabsContent value="request" className="mt-6">
-            <RequestRide island={selectedIsland} />
-          </TabsContent>
-          <TabsContent value="post" className="mt-6">
-            <PostRideForm island={selectedIsland} />
-          </TabsContent>
-        </Tabs>
+        {/* ── MENU ── */}
+        {view === "menu" && (
+          <div className="space-y-4">
+            <p className="text-lg font-semibold text-gray-700 mb-2">what would you like to do?</p>
+            {[
+              { id: "request", emoji: "🙋", label: "request a ride", desc: "Post a ride request so drivers know you need one" },
+              { id: "post", emoji: "🚗", label: "post a ride", desc: "Offer seats on a trip you're already making" },
+              { id: "view_sub", emoji: "🔍", label: "view all posted rides", desc: "Browse available rides from local drivers" },
+            ].map(({ id, emoji, label, desc }) => (
+              <button
+                key={id}
+                onClick={() => setView(id)}
+                className="w-full flex items-center gap-5 p-5 rounded-3xl border-2 border-gray-200 bg-gray-50 hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
+              >
+                <span className="text-4xl shrink-0">{emoji}</span>
+                <div className="flex-1">
+                  <p className="font-bold text-gray-900 text-lg group-hover:text-primary transition-colors">{label}</p>
+                  <p className="text-gray-500 text-sm mt-0.5">{desc}</p>
+                </div>
+                <ChevronLeft className="w-5 h-5 text-gray-300 group-hover:text-primary rotate-180 shrink-0 transition-colors" />
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* ── VIEW SUB-MENU ── */}
+        {view === "view_sub" && (
+          <div className="space-y-4">
+            <p className="text-lg font-semibold text-gray-700 mb-2">what would you like to view?</p>
+            <button
+              onClick={() => setView("view_week")}
+              className="w-full flex items-center gap-5 p-5 rounded-3xl border-2 border-gray-200 bg-gray-50 hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
+            >
+              <span className="text-4xl shrink-0">📅</span>
+              <div className="flex-1">
+                <p className="font-bold text-gray-900 text-lg group-hover:text-primary transition-colors">view all rides posted this week</p>
+                <p className="text-gray-500 text-sm mt-0.5">See everything available in the next 7 days</p>
+              </div>
+              <ChevronLeft className="w-5 h-5 text-gray-300 group-hover:text-primary rotate-180 shrink-0 transition-colors" />
+            </button>
+
+            <button
+              onClick={() => setView("view_date")}
+              className="w-full flex items-center gap-5 p-5 rounded-3xl border-2 border-gray-200 bg-gray-50 hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
+            >
+              <span className="text-4xl shrink-0">🗓️</span>
+              <div className="flex-1">
+                <p className="font-bold text-gray-900 text-lg group-hover:text-primary transition-colors">view rides for a specific date</p>
+                <p className="text-gray-500 text-sm mt-0.5">Pick a date and see what's available</p>
+              </div>
+              <ChevronLeft className="w-5 h-5 text-gray-300 group-hover:text-primary rotate-180 shrink-0 transition-colors" />
+            </button>
+          </div>
+        )}
+
+        {/* ── VIEW DATE PICKER ── */}
+        {view === "view_date" && (
+          <div className="space-y-5">
+            <p className="text-lg font-semibold text-gray-700">pick a date</p>
+            <div className="flex items-center gap-3">
+              <Input
+                type="date"
+                value={specificDate}
+                onChange={e => setSpecificDate(e.target.value)}
+                className="rounded-2xl h-12 text-base flex-1"
+              />
+              <Button
+                onClick={() => {}} // date is already set, FindRide renders below
+                className="bg-primary hover:bg-primary/90 rounded-2xl px-6 h-12 font-semibold"
+              >
+                search
+              </Button>
+            </div>
+            {specificDate && (
+              <FindRide island={selectedIsland} initialStartDate={specificDate} initialEndDate={specificDate} />
+            )}
+          </div>
+        )}
+
+        {/* ── VIEW THIS WEEK ── */}
+        {view === "view_week" && (
+          <FindRide
+            island={selectedIsland}
+            initialStartDate={format(new Date(), 'yyyy-MM-dd')}
+            initialEndDate={format(addDays(new Date(), 7), 'yyyy-MM-dd')}
+          />
+        )}
+
+        {/* ── REQUEST ── */}
+        {view === "request" && <RequestRide island={selectedIsland} />}
+
+        {/* ── POST ── */}
+        {view === "post" && <PostRideForm island={selectedIsland} />}
 
         <footer className="mt-12 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
           © {new Date().getFullYear()} Cruise Hawaiʻi. Specializing in carpooling and ridesharing across Hawaiʻi.

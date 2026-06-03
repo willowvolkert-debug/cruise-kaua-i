@@ -14,13 +14,13 @@ import BookingModal from "../rides/BookingModal";
 import FindRideTutorial from "../tutorial/FindRideTutorial";
 import { handlePaymentSuccess } from "@/functions/handlePaymentSuccess";
 
-export default function FindRide({ island = "Kauai" }) {
+export default function FindRide({ island = "Kauai", initialStartDate, initialEndDate }) {
   const today = new Date();
   const todayStr = format(today, 'yyyy-MM-dd');
   const nextWeekStr = format(addDays(today, 7), 'yyyy-MM-dd');
 
-  const [startDate, setStartDate] = useState(todayStr);
-  const [endDate, setEndDate] = useState(nextWeekStr);
+  const [startDate, setStartDate] = useState(initialStartDate || todayStr);
+  const [endDate, setEndDate] = useState(initialEndDate || nextWeekStr);
   const [rides, setRides] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRide, setSelectedRide] = useState(null);
@@ -74,7 +74,7 @@ export default function FindRide({ island = "Kauai" }) {
         // Not logged in — view-only mode
       }
 
-      await loadRides(todayStr, nextWeekStr);
+      await loadRides(initialStartDate || todayStr, initialEndDate || nextWeekStr);
     };
     init();
   }, []);
