@@ -1074,7 +1074,7 @@ export default function PostRideForm({ island = "Kauai" }) {
         </Card>
       )}
 
-      <div className="mt-6 pb-8">
+      <div className="mt-6 pb-8 space-y-2">
         <Button
           onClick={handleSubmit}
           disabled={isSubmitting || !canPostRide || hasUnsupportedLocation}
@@ -1083,6 +1083,12 @@ export default function PostRideForm({ island = "Kauai" }) {
         >
           {isSubmitting ? 'posting...' : 'post ride'}
         </Button>
+        <p className="text-center text-sm text-gray-500">
+          already posted?{" "}
+          <a href="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">
+            edit your ride here →
+          </a>
+        </p>
       </div>
 
       <PostRideTutorial

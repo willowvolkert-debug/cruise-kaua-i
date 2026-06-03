@@ -504,15 +504,21 @@ export default function RequestRide({ island = "Kauai" }) {
         </Card>
       )}
 
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="pb-8 space-y-2">
         <Button
           onClick={handleSubmit}
           disabled={isSubmitting || !currentUser?.profile_complete || !currentUser?.profile_picture_url || !currentUser?.terms_accepted || !currentUser?.privacy_policy_accepted || !currentUser?.community_agreement_accepted}
           size="lg"
-          className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-8 py-4 rounded-full shadow-lg"
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-8 py-4 rounded-2xl shadow-lg"
         >
           {isSubmitting ? 'submitting...' : 'submit request'}
         </Button>
+        <p className="text-center text-sm text-gray-500">
+          already submitted?{" "}
+          <a href="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">
+            edit your ride request here →
+          </a>
+        </p>
       </div>
 
       <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
