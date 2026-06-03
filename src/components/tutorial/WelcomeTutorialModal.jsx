@@ -190,8 +190,57 @@ function InstallAppPage({ onConfused }) {
   );
 }
 
+// ── Page 5: More Questions ──────────────────────────────────────────────────
+function MoreQuestionsPage() {
+  return (
+    <div className="space-y-5">
+      <div>
+        <h1 className="text-2xl font-extrabold text-gray-900 leading-tight">more questions? 🤙</h1>
+        <p className="text-gray-500 text-sm mt-1">we're here to help — reach out anytime</p>
+      </div>
+
+      <div className="space-y-3">
+        <a
+          href="/aboutus"
+          className="flex items-start gap-3 bg-blue-50 border border-blue-200 rounded-2xl px-4 py-4 hover:bg-blue-100 transition-colors"
+        >
+          <span className="text-2xl shrink-0">❓</span>
+          <div>
+            <p className="font-bold text-blue-900 text-sm">FAQ & About Us</p>
+            <p className="text-xs text-blue-700 mt-0.5">Answers to the most common questions about how Cruise Kauaʻi works.</p>
+          </div>
+        </a>
+
+        <a
+          href="/contactus"
+          className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-2xl px-4 py-4 hover:bg-green-100 transition-colors"
+        >
+          <span className="text-2xl shrink-0">✉️</span>
+          <div>
+            <p className="font-bold text-green-900 text-sm">Contact Us</p>
+            <p className="text-xs text-green-700 mt-0.5">Send us a message directly through the app and we'll get back to you.</p>
+          </div>
+        </a>
+
+        <a
+          href="mailto:cruisekauai@gmail.com"
+          className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-4 hover:bg-amber-100 transition-colors"
+        >
+          <span className="text-2xl shrink-0">📧</span>
+          <div>
+            <p className="font-bold text-amber-900 text-sm">Email Us</p>
+            <p className="text-xs text-amber-700 mt-0.5">cruisekauai@gmail.com</p>
+          </div>
+        </a>
+      </div>
+
+      <p className="text-xs text-gray-400 text-center italic">mahalo for being part of our community 🌺</p>
+    </div>
+  );
+}
+
 // ── Main Modal ──────────────────────────────────────────────────────────────
-const PAGES = ["how_it_works", "trips_page", "price_bidding", "install_app"];
+const PAGES = ["how_it_works", "trips_page", "price_bidding", "install_app", "more_questions"];
 
 export default function WelcomeTutorialModal({ isOpen, onClose }) {
   const [pageIndex, setPageIndex] = useState(0);
@@ -268,6 +317,7 @@ export default function WelcomeTutorialModal({ isOpen, onClose }) {
           {currentPage === "trips_page" && <TripsPageTutorial />}
           {currentPage === "price_bidding" && <PriceBiddingTutorial />}
           {currentPage === "install_app" && <InstallAppPage />}
+          {currentPage === "more_questions" && <MoreQuestionsPage />}
         </div>
 
         {/* Footer */}
@@ -317,8 +367,8 @@ export default function WelcomeTutorialModal({ isOpen, onClose }) {
             </Button>
           </div>
 
-          {/* Back navigation for page 2 (when not confused) */}
-          {currentPage === "install_app" && !confusedDone && (
+          {/* Back navigation */}
+          {((currentPage === "install_app" && !confusedDone) || currentPage === "more_questions") && (
             <button
               onClick={() => setPageIndex(p => p - 1)}
               className="w-full text-center text-xs text-gray-400 hover:text-gray-600 transition-colors"

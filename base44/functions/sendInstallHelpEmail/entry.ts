@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
         </ol>
       </div>
 
-      <p style="margin-bottom:20px;">Still stuck? No problem — just reply to this email and we'll walk you through it personally. We're a small, local team and we actually read these 🤙</p>
+      <p style="margin-bottom:20px;">Still stuck? No problem — email us at <a href="mailto:cruisekauai@gmail.com" style="color:#2f7d52;font-weight:bold;">cruisekauai@gmail.com</a> and we'll walk you through it personally. We're a small, local team and we actually read these 🤙</p>
 
       <p style="margin-bottom:8px;">With aloha,</p>
       <p style="margin:0;font-weight:bold;">Willow</p>

@@ -265,7 +265,91 @@ Deno.serve(async (req) => {
     }
 
     const payload = await req.json().catch(() => ({}));
-    const { send_previews } = payload;
+    const { send_previews, send_trips_update, send_trips_blast } = payload;
+
+    const appUrl = 'https://cruisekauai.org';
+    const logo = `<div style="text-align:center;margin-bottom:28px;">
+      <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;" />
+      <p style="margin:8px 0 0 0;font-weight:bold;color:#2f7d52;font-size:15px;letter-spacing:1px;">Cruise Kauaʻi</p>
+    </div>`;
+
+    if (send_trips_update || send_trips_blast) {
+      const tripsSubject = "New look + price offer feature on Cruise Kauaʻi";
+      const buildTripsBody = (firstName, unsubUrl) => `<html><body style="margin:0;padding:0;background:#f5f0e8;font-family:Arial,sans-serif;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e8;padding:32px 16px;"><tr><td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+        <tr><td align="center" style="padding:32px 24px 20px;border-bottom:1px solid #f0ebe0;">${logo}</td></tr>
+        <tr><td style="padding:36px;">
+        <p style="font-size:1.05rem;color:#333;margin:0 0 18px;">Aloha ${firstName}! 🌺</p>
+        <p style="font-size:0.95rem;line-height:1.8;color:#444;margin:0 0 22px;">This is Willow, founder of Cruise Kauaʻi. We have been listening to your feedback and today we are rolling out two big improvements to make getting around Kauaʻi <strong>easier and more accessible than ever.</strong></p>
+        <div style="background:#f0fdf4;border-left:4px solid #2f7d52;border-radius:8px;padding:20px;margin-bottom:22px;">
+        <p style="font-weight:700;font-size:1rem;color:#1a1a1a;margin:0 0 10px;">New look for the Trips page</p>
+        <p style="font-size:0.92rem;line-height:1.7;color:#555;margin:0 0 14px;">The Trips page has a fresh cleaner layout. You now choose from three clear options:</p>
+        <div style="background:#fff;border-radius:8px;padding:10px 14px;margin-bottom:8px;border:1px solid #d1fae5;font-size:0.9rem;color:#333;"><strong>Get a ride</strong> — browse by this week, a date, or route</div>
+        <div style="background:#fff;border-radius:8px;padding:10px 14px;margin-bottom:8px;border:1px solid #d1fae5;font-size:0.9rem;color:#333;"><strong>Post a ride</strong> — offer seats on a trip you are already making</div>
+        <div style="background:#fff;border-radius:8px;padding:10px 14px;border:1px solid #d1fae5;font-size:0.9rem;color:#333;"><strong>Request a ride</strong> — let drivers know you need one</div>
+        </div>
+        <div style="background:#fff7ed;border-left:4px solid #f97316;border-radius:8px;padding:20px;margin-bottom:22px;">
+        <p style="font-weight:700;font-size:1rem;color:#1a1a1a;margin:0 0 10px;">New: Price offer feature</p>
+        <p style="font-size:0.92rem;line-height:1.7;color:#555;margin:0 0 14px;">Transportation should be accessible to everyone. Now riders and drivers can find a price that works for both.</p>
+        <div style="background:#fffbf5;border-radius:8px;padding:14px;margin-bottom:10px;border:1px solid #fed7aa;">
+        <p style="font-weight:700;font-size:0.9rem;color:#c2410c;margin:0 0 6px;">For Riders:</p>
+        <p style="font-size:0.88rem;color:#555;margin:0 0 4px;">1. When booking, enter a <strong>lower price offer</strong> instead of the listed fare.</p>
+        <p style="font-size:0.88rem;color:#555;margin:0 0 4px;">2. The driver can <strong>accept your offer</strong> or <strong>request the full price</strong>.</p>
+        <p style="font-size:0.88rem;color:#555;margin:0;">3. If they request full fare, you see it in your <strong>Inbox</strong> — accept or decline.</p>
+        </div>
+        <div style="background:#fffbf5;border-radius:8px;padding:14px;border:1px solid #fed7aa;">
+        <p style="font-weight:700;font-size:0.9rem;color:#c2410c;margin:0 0 6px;">For Drivers:</p>
+        <p style="font-size:0.88rem;color:#555;margin:0 0 4px;">1. Rider offers appear in your <strong>Inbox</strong> on the booking request.</p>
+        <p style="font-size:0.88rem;color:#555;margin:0 0 4px;">2. <strong>Accept their offer</strong> or <strong>request full fare</strong> — your choice.</p>
+        <p style="font-size:0.88rem;color:#555;margin:0;">3. The rider decides — you are always in control.</p>
+        </div>
+        </div>
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;"><tr><td align="center">
+        <a href="https://cruisekauai.org/trips" style="display:inline-block;background:#2f7d52;color:#fff;text-decoration:none;font-weight:700;font-size:1rem;padding:15px 40px;border-radius:50px;">explore the new trips page</a>
+        </td></tr></table>
+        <p style="font-size:0.92rem;line-height:1.7;color:#555;margin:0 0 20px;">Every ride shared reduces traffic, keeps money in our local economy, and makes Kauaʻi a better place. Mahalo. 🙏</p>
+        <p style="margin:0 0 4px;color:#444;">Me ke aloha,</p>
+        <p style="margin:0;font-weight:bold;">Willow</p>
+        <p style="margin:0;font-size:0.82rem;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
+        </td></tr>
+        <tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:20px 32px;text-align:center;">
+        <p style="font-size:0.78rem;color:#aaa;margin:0 0 6px;">The Cruise Kauaʻi Team &middot; <a href="https://cruisekauai.org" style="color:#2f7d52;">cruisekauai.org</a></p>
+        <p style="font-size:0.75rem;color:#bbb;margin:0;"><a href="${unsubUrl}" style="color:#bbb;">unsubscribe</a></p>
+        </td></tr></table></td></tr></table></body></html>`;
+
+      if (send_trips_update) {
+        await base44.asServiceRole.integrations.Core.SendEmail({
+          to: 'willowvolkert@gmail.com',
+          from_name: "Cruise Kaua'i",
+          subject: '[PREVIEW] ' + tripsSubject,
+          body: buildTripsBody('Willow', 'https://cruisekauai.org/Unsubscribe?user_id=preview'),
+        });
+        return Response.json({ ok: true, mode: 'trips_preview', to: 'willowvolkert@gmail.com' });
+      }
+
+      if (send_trips_blast) {
+        const allU = await base44.asServiceRole.entities.User.list();
+        const eligible = allU.filter(u => u.email && u.email_update_frequency !== 'never');
+        let sc = 0, ec = 0;
+        for (const u of eligible) {
+          try {
+            const fn = u.full_name ? u.full_name.split(' ')[0] : 'there';
+            await base44.asServiceRole.integrations.Core.SendEmail({
+              to: u.email,
+              from_name: "Cruise Kaua'i",
+              subject: tripsSubject,
+              body: buildTripsBody(fn, 'https://cruisekauai.org/Unsubscribe?user_id=' + u.id),
+            });
+            sc++;
+          } catch (err) {
+            console.error('trips_blast error ' + u.email + ': ' + err.message);
+            ec++;
+          }
+        }
+        return Response.json({ ok: true, mode: 'trips_blast', sent: sc, errors: ec });
+      }
+    }
 
     const appUrl = 'https://cruisekauai.org';
     const logo = `<div style="text-align:center;margin-bottom:28px;">

@@ -4,6 +4,7 @@ import FindRide from "../components/trips/FindRide";
 import RequestRide from "../components/trips/RequestRide";
 import PostRideForm from "../components/trips/PostRideForm";
 import NeedHelpButton from "../components/trips/NeedHelpButton";
+import WelcomeTutorialModal from "../components/tutorial/WelcomeTutorialModal";
 import { base44 } from "@/api/base44Client";
 import { getIslandFromDomain } from "@/lib/islandConfig";
 import { format, addDays, parseISO } from "date-fns";
@@ -17,7 +18,7 @@ const ISLANDS = ["Kauai", "Oahu", "Maui", "Big Island"];
 // view: null | "menu" | "request" | "post" | "view_sub" | "view_week" | "view_date" | "view_route"
 
 export default function TripsPage() {
-
+  const [showTutorial, setShowTutorial] = React.useState(false);
   const [isExploreMode, setIsExploreMode] = React.useState(false);
   const [selectedIsland, setSelectedIsland] = React.useState(getIslandFromDomain());
   const [islandLoaded, setIslandLoaded] = React.useState(false);
@@ -76,7 +77,7 @@ export default function TripsPage() {
               )}
               {!showBack && <h1 className="text-2xl md:text-3xl font-bold text-secondary">plan your trip</h1>}
             </div>
-            <NeedHelpButton />
+            <NeedHelpButton onOpenTutorial={() => setShowTutorial(true)} />
           </div>
 
           {/* Island Selector */}
@@ -244,7 +245,7 @@ export default function TripsPage() {
         </footer>
       </div>
 
-
+      <WelcomeTutorialModal isOpen={showTutorial} onClose={() => setShowTutorial(false)} />
     </div>
   );
 }
