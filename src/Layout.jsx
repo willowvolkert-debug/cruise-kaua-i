@@ -7,7 +7,7 @@ import { base44 } from "@/api/base44Client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import ShareAppModal from "./components/sidebar/ShareAppModal";
-import AppTutorial from "./components/tutorial/AppTutorial";
+
 import {
   Sidebar,
   SidebarContent,
@@ -211,7 +211,7 @@ export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = React.useState(null);
   const [showShareModal, setShowShareModal] = React.useState(false);
-  const [showTutorial, setShowTutorial] = React.useState(false);
+
   const [touchStart, setTouchStart] = React.useState(null);
   const [touchEnd, setTouchEnd] = React.useState(null);
   const [unreadCount, setUnreadCount] = React.useState(0);
@@ -257,9 +257,7 @@ export default function Layout({ children, currentPageName }) {
           base44.auth.updateMe({ has_seen_welcome: true });
         }
         // Skip the old tutorial intro for new users — WelcomeNewUserModal handles onboarding now
-        if (!user.has_seen_tutorial) {
-          base44.auth.updateMe({ has_seen_tutorial: true });
-        }
+
         // Load unread counts
         loadUnreadCount(user);
       } catch (e) {
@@ -322,9 +320,7 @@ export default function Layout({ children, currentPageName }) {
     const handleIslandChanged = (e) => setCurrentIsland(e.detail);
     window.addEventListener('islandChanged', handleIslandChanged);
 
-    // Listen for tutorial trigger
-    const handleOpenTutorial = () => setShowTutorial(true);
-    window.addEventListener('openTutorial', handleOpenTutorial);
+
     
     // Refresh unread count periodically
     const interval = setInterval(() => {
@@ -333,7 +329,7 @@ export default function Layout({ children, currentPageName }) {
 
     return () => {
       window.removeEventListener('islandChanged', handleIslandChanged);
-      window.removeEventListener('openTutorial', handleOpenTutorial);
+
       clearInterval(interval);
     };
   }, [location.pathname, navigate]);
@@ -423,10 +419,7 @@ export default function Layout({ children, currentPageName }) {
         currentUser={currentUser}
       />
 
-      <AppTutorial
-        isOpen={showTutorial}
-        onClose={() => setShowTutorial(false)}
-      />
+
 
     </SidebarProvider>
   );

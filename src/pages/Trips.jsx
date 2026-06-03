@@ -1,5 +1,4 @@
 import React from "react";
-import AppTutorial from "../components/tutorial/AppTutorial";
 import { MapPin, ChevronLeft, Calendar, ChevronDown } from "lucide-react";
 import FindRide from "../components/trips/FindRide";
 import RequestRide from "../components/trips/RequestRide";
@@ -18,7 +17,7 @@ const ISLANDS = ["Kauai", "Oahu", "Maui", "Big Island"];
 // view: null | "menu" | "request" | "post" | "view_sub" | "view_week" | "view_date" | "view_route"
 
 export default function TripsPage() {
-  const [showTutorial, setShowTutorial] = React.useState(false);
+
   const [isExploreMode, setIsExploreMode] = React.useState(false);
   const [selectedIsland, setSelectedIsland] = React.useState(getIslandFromDomain());
   const [islandLoaded, setIslandLoaded] = React.useState(false);
@@ -77,7 +76,7 @@ export default function TripsPage() {
               )}
               {!showBack && <h1 className="text-2xl md:text-3xl font-bold text-secondary">plan your trip</h1>}
             </div>
-            <NeedHelpButton onOpenTutorial={() => setShowTutorial(true)} />
+            <NeedHelpButton />
           </div>
 
           {/* Island Selector */}
@@ -245,7 +244,7 @@ export default function TripsPage() {
         </footer>
       </div>
 
-      <AppTutorial isOpen={showTutorial} onClose={() => setShowTutorial(false)} />
+
     </div>
   );
 }
