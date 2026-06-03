@@ -22,32 +22,32 @@ Deno.serve(async (req) => {
       <p style="margin-bottom:16px;">No worries at all — adding a website to your home screen is a little different depending on your phone. Here's a step-by-step guide just for you!</p>
 
       <div style="background:#eff6ff;border-left:4px solid #3b82f6;border-radius:8px;padding:20px;margin-bottom:20px;">
-        <p style="font-weight:bold;margin:0 0 12px;color:#1e40af;font-size:16px;">🍎 iPhone / iPad (Safari)</p>
+        <p style="font-weight:bold;margin:0 0 12px;color:#1e40af;font-size:16px;">iPhone / iPad (Safari)</p>
         <ol style="margin:0;padding-left:20px;color:#1e3a5f;line-height:2.4;">
           <li>Open <strong>Safari</strong> browser (must be Safari, not Chrome)</li>
           <li>Go to <a href="${appUrl}" style="color:#3b82f6;">${appUrl}</a></li>
-          <li>Tap the <strong>Share button</strong> — it looks like a box with an arrow pointing up ⬆️, at the bottom center of your screen</li>
+          <li>Tap the <strong>Share button</strong> — it looks like a box with an arrow pointing up, at the bottom center of your screen</li>
           <li>If you don't see it right away, try scrolling the bottom toolbar slightly</li>
           <li>Scroll down the share menu and tap <strong>"Add to Home Screen"</strong></li>
           <li>Tap <strong>"Add"</strong> in the top right corner</li>
-          <li>Done! 🎉 Look for the Cruise Kauaʻi icon on your home screen</li>
+          <li>Done! Look for the Cruise Kauaʻi icon on your home screen</li>
         </ol>
         <p style="margin:12px 0 0;font-size:13px;color:#6b7280;font-style:italic;">Note: If you see "..." (three dots) at the top right of the share menu, tap that — "Add to Home Screen" may be hidden there.</p>
       </div>
 
       <div style="background:#f0fdf4;border-left:4px solid #22c55e;border-radius:8px;padding:20px;margin-bottom:20px;">
-        <p style="font-weight:bold;margin:0 0 12px;color:#166534;font-size:16px;">🤖 Android (Chrome)</p>
+        <p style="font-weight:bold;margin:0 0 12px;color:#166534;font-size:16px;">Android (Chrome)</p>
         <ol style="margin:0;padding-left:20px;color:#14532d;line-height:2.4;">
           <li>Open <strong>Chrome</strong> browser</li>
           <li>Go to <a href="${appUrl}" style="color:#22c55e;">${appUrl}</a></li>
-          <li>Tap the <strong>⋮ menu</strong> (three dots) in the top right corner of your browser</li>
+          <li>Tap the <strong>menu</strong> (three dots) in the top right corner of your browser</li>
           <li>Tap <strong>"Add to Home screen"</strong></li>
           <li>Tap <strong>"Add"</strong></li>
-          <li>Done! 🎉 The app will appear on your home screen</li>
+          <li>Done! The app will appear on your home screen</li>
         </ol>
       </div>
 
-      <p style="margin-bottom:20px;">Still stuck? No problem — email us at <a href="mailto:cruisekauai@gmail.com" style="color:#2f7d52;font-weight:bold;">cruisekauai@gmail.com</a> and we'll walk you through it personally. We're a small, local team and we actually read these 🤙</p>
+      <p style="margin-bottom:20px;">Still stuck? No problem — just email us at <a href="mailto:cruisekauai@gmail.com" style="color:#2f7d52;font-weight:bold;">cruisekauai@gmail.com</a> and we'll walk you through it personally. We're a small, local team and we actually read these 🤙</p>
 
       <p style="margin-bottom:8px;">With aloha,</p>
       <p style="margin:0;font-weight:bold;">Willow</p>
