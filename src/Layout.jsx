@@ -190,43 +190,19 @@ function SidebarContentWrapper({ currentUser, showShareModal, setShowShareModal,
   );
 }
 
-function NestedChevrons({ open }) {
-  // Three nested chevrons indicating open/close direction
-  const size = 18;
-  const color = "#4B5563";
-  const offsets = [0, 4, 8];
-  return (
-    <svg width={size + 8} height={size} viewBox={`0 0 26 18`} fill="none">
-      {offsets.map((ox, i) => {
-        const x = open ? (14 - ox) : (4 + ox);
-        const opacity = 1 - i * 0.25;
-        return (
-          <polyline
-            key={i}
-            points={open
-              ? `${x + 7},2 ${x},9 ${x + 7},16`
-              : `${x},2 ${x + 7},9 ${x},16`}
-            stroke={color}
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity={opacity}
-          />
-        );
-      })}
-    </svg>
-  );
-}
-
 function CustomSidebarTrigger() {
-  const { open, toggleSidebar } = useSidebar();
+  const { setOpenMobile } = useSidebar();
   return (
     <button
-      onClick={toggleSidebar}
+      onClick={() => setOpenMobile(true)}
       data-sidebar="trigger"
-      className="hover:bg-gray-100 p-2 rounded-2xl transition-colors duration-200 shrink-0 flex items-center justify-center"
+      className="hover:bg-gray-100 p-1 rounded-xl transition-colors duration-200 shrink-0 flex items-center justify-center"
     >
-      <NestedChevrons open={open} />
+      <img
+        src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
+        alt="Menu"
+        className="w-8 h-8 rounded-lg object-cover"
+      />
     </button>
   );
 }
