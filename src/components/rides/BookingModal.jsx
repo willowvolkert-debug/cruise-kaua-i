@@ -171,7 +171,8 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   }
 
   const rideAmount = (bookingData.seats_booked || 0) * pricePerSeat + detourFee;
-  const connectFee = rideAmount * 0.10;
+  const connectFeeRate = ride?.driver_license_state === 'HI' ? 0.10 : 0.30;
+  const connectFee = rideAmount * connectFeeRate;
   const subtotal = rideAmount + connectFee;
   const creditCardFee = subtotal * 0.03;
   const totalAmount = subtotal + creditCardFee;
@@ -452,7 +453,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                 </div>
               )}
               <div className="flex justify-between text-sm">
-                <span className="text-gray-700">Connect fee (10%):</span>
+                <span className="text-gray-700">Connect fee ({Math.round(connectFeeRate * 100)}%):</span>
                 <span className="font-medium">${connectFee.toFixed(2)}</span>
               </div>
 

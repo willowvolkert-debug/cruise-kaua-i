@@ -1,10 +1,9 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 import Stripe from 'npm:stripe';
 
-const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY"));
-const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
-
 Deno.serve(async (req) => {
+    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY"));
+    const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
     // Initialize base44 client first (before reading body)
     const base44 = createClientFromRequest(req);
     
