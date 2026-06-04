@@ -67,7 +67,7 @@ export default function WelcomePage() {
     <div className="min-h-screen bg-white overflow-x-hidden font-sans">
 
       {/* LOGIN BANNER */}
-      <div className="bg-green-50 border-b border-green-200 px-4 py-2 text-center z-10 relative">
+      <div className="bg-green-50 border-b border-green-200 px-4 py-2 text-center relative z-50">
         <span className="text-sm text-gray-600">Welcome! </span>
         <a
           href="/join"
@@ -87,7 +87,7 @@ export default function WelcomePage() {
           backgroundPosition: 'center'
         }}>
         
-        <div className="absolute inset-0" style={{ background: 'rgba(26, 74, 46, 0.72)' }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'rgba(26, 74, 46, 0.72)' }} />
         <img
           src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
           alt={`${config.appName} logo`}
