@@ -745,84 +745,69 @@ export default function AccountPage() {
                     />
                 )}
 
+                {/* Verification card — always shown below profile */}
+                <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
+                    <CardHeader><CardTitle className="text-xl text-secondary">verification</CardTitle></CardHeader>
+                    <CardContent className="space-y-3">
+                        {user.drivers_license_pending_review && !user.drivers_license_verified && (
+                            <div className="p-3 bg-gray-100 border border-gray-300 rounded-2xl text-gray-700 text-sm">
+                                <strong>thanks!</strong> you will be able to book rides once your identity is verified. check back soon for approval!
+                            </div>
+                        )}
+                        {/* Driver's License */}
+                        <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
+                            <span className="font-medium">driver's license</span>
+                            {user.drivers_license_verified ? (
+                                <Button size="sm" variant="default" onClick={() => setShowLicenseModal(true)} className="bg-primary rounded-2xl border-primary hover:bg-primary/90">
+                                    <ShieldCheck className="w-4 h-4 mr-1"/>verified
+                                </Button>
+                            ) : user.drivers_license_pending_review ? (
+                                <Badge variant="outline" className="bg-gray-100 text-gray-700 border-gray-300 rounded-2xl">
+                                    <Clock className="w-4 h-4 mr-1"/>pending review
+                                </Badge>
+                            ) : (
+                                <Button size="sm" variant="outline" onClick={() => setShowLicenseModal(true)} className="rounded-2xl border-gray-300">
+                                    <Upload className="w-4 h-4 mr-2"/>verify now
+                                </Button>
+                            )}
+                        </div>
+                        {/* Vehicle */}
+                        <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
+                            <span className="font-medium">vehicle</span>
+                            {user.vehicle_verified ? (
+                                <Link to={createPageUrl("VehicleDetails")}>
+                                    <Badge variant="default" className="bg-primary border-primary cursor-pointer hover:bg-primary/90 rounded-2xl">
+                                        <ShieldCheck className="w-4 h-4 mr-1"/>verified
+                                    </Badge>
+                                </Link>
+                            ) : user.vehicle_pending_review ? (
+                                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 rounded-2xl">
+                                    <Clock className="w-4 h-4 mr-1"/>pending review
+                                </Badge>
+                            ) : (
+                                <Link to={createPageUrl("VehicleDetails")}>
+                                    <Button size="sm" variant="outline" className="rounded-2xl border-gray-300">enter details</Button>
+                                </Link>
+                            )}
+                        </div>
+                        {/* Push Notifications */}
+                        <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
+                            <span className="font-medium">push notifications</span>
+                            {notificationsEnabled ? (
+                                <Badge variant="default" className="bg-primary border-primary rounded-2xl">
+                                    <ShieldCheck className="w-4 h-4 mr-1"/>enabled
+                                </Badge>
+                            ) : (
+                                <Button size="sm" variant="outline" onClick={handleEnableNotifications} className="rounded-2xl border-gray-300">
+                                    enable now
+                                </Button>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
+
                 <div className="grid md:grid-cols-3 gap-8">
                     <div className="md:col-span-2 space-y-8">
-                        {!notificationsEnabled && (
-                            <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
-                                <CardHeader><CardTitle className="text-xl text-secondary">notifications</CardTitle></CardHeader>
-                                <CardContent className="space-y-4">
-                                    <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
-                                        <span className="font-medium">push notifications</span>
-                                        <Button 
-                                            size="sm" 
-                                            variant="outline"
-                                            onClick={handleEnableNotifications}
-                                            className="rounded-2xl border-gray-300"
-                                        >
-                                            enable now
-                                        </Button>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        )}
-
-                        {!(user.drivers_license_verified && user.vehicle_verified) && (
-                            <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
-                                <CardHeader><CardTitle className="text-xl text-secondary">verification</CardTitle></CardHeader>
-                                <CardContent className="space-y-4">
-                                    {user.drivers_license_pending_review && !user.drivers_license_verified && (
-                                        <div className="p-3 bg-gray-100 border border-gray-300 rounded-2xl text-gray-700 text-sm mb-3">
-                                            <strong>thanks!</strong> you will be able to book rides once your identity is verified. check back soon for approval!
-                                        </div>
-                                    )}
-                                    <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
-                                        <span className="font-medium">driver's license</span>
-                                        {user.drivers_license_verified ? (
-                                            <Button 
-                                                size="sm"
-                                                variant="default"
-                                                onClick={() => setShowLicenseModal(true)}
-                                                className="bg-primary rounded-2xl border-primary hover:bg-primary/90"
-                                            >
-                                                <ShieldCheck className="w-4 h-4 mr-1"/>verified
-                                            </Button>
-                                        ) : user.drivers_license_pending_review ? (
-                                            <Badge variant="outline" className="bg-gray-100 text-gray-700 border-gray-300 rounded-2xl">
-                                                <Clock className="w-4 h-4 mr-1"/>pending review
-                                            </Badge>
-                                        ) : (
-                                            <Button 
-                                                size="sm" 
-                                                variant="outline"
-                                                onClick={() => setShowLicenseModal(true)}
-                                                className="rounded-2xl border-gray-300"
-                                            >
-                                                <Upload className="w-4 h-4 mr-2"/>
-                                                verify now
-                                            </Button>
-                                        )}
-                                    </div>
-                                    <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
-                                        <span className="font-medium">vehicle</span>
-                                        {user.vehicle_verified ? (
-                                            <Link to={createPageUrl("VehicleDetails")}>
-                                                <Badge variant="default" className="bg-primary border-primary cursor-pointer hover:bg-primary/90 rounded-2xl">
-                                                    <ShieldCheck className="w-4 h-4 mr-1"/>verified
-                                                </Badge>
-                                            </Link>
-                                        ) : user.vehicle_pending_review ? (
-                                            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 rounded-2xl">
-                                                <Clock className="w-4 h-4 mr-1"/>pending review
-                                            </Badge>
-                                        ) : (
-                                            <Link to={createPageUrl("VehicleDetails")}>
-                                                <Button size="sm" variant="outline" className="rounded-2xl border-gray-300">enter details</Button>
-                                            </Link>
-                                        )}
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        )}
 
                         {!agreementsComplete && (
                             <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
@@ -1140,32 +1125,7 @@ export default function AccountPage() {
                     </CardContent>
                 </Card>
 
-                {(user.drivers_license_verified && user.vehicle_verified) && (
-                    <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
-                        <CardHeader><CardTitle className="text-xl text-secondary">verification</CardTitle></CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
-                                <span className="font-medium">driver's license</span>
-                                <Button 
-                                    size="sm"
-                                    variant="default"
-                                    onClick={() => setShowLicenseModal(true)}
-                                    className="bg-primary rounded-2xl border-primary hover:bg-primary/90"
-                                >
-                                    <ShieldCheck className="w-4 h-4 mr-1"/>verified
-                                </Button>
-                            </div>
-                            <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
-                                <span className="font-medium">vehicle</span>
-                                <Link to={createPageUrl("VehicleDetails")}>
-                                    <Badge variant="default" className="bg-primary border-primary cursor-pointer hover:bg-primary/90 rounded-2xl">
-                                        <ShieldCheck className="w-4 h-4 mr-1"/>verified
-                                    </Badge>
-                                </Link>
-                            </div>
-                        </CardContent>
-                    </Card>
-                )}
+
 
                 {agreementsComplete && (
                     <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
