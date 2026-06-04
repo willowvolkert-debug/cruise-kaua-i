@@ -42,6 +42,50 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
           <div className="space-y-4">
             {/* Scrollable Driver Info Section */}
             <div className="max-h-64 overflow-y-auto space-y-6 pr-2">
+              {/* Ride Details - TOP */}
+              <div className="bg-gray-50 rounded-2xl p-4 space-y-3 border border-gray-200">
+                <h4 className="font-semibold text-secondary">Trip Details</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">From:</span>
+                    <span className="font-medium">{ride?.departure_location}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">To:</span>
+                    <span className="font-medium">{ride?.destination}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Date & Time:</span>
+                    <span className="font-medium">
+                      {format(new Date(ride?.departure_date), "MMM d, yyyy")} at {ride?.departure_time}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Price per seat:</span>
+                    <span className="font-medium">${currentUser?.has_hawaii_id ? (ride?.price_per_seat_local || 0) : (ride?.price_per_seat_tourist || 0)}</span>
+                  </div>
+                  <p className="text-red-400 text-xs italic">too expensive? you can pitch a cheaper offer after pressing "book this ride"</p>
+                  {ride?.car_model && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Vehicle:</span>
+                      <span className="font-medium">{ride.car_model}</span>
+                    </div>
+                  )}
+                  {ride?.offers_midpoint_pickup && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Pickup/Dropoff:</span>
+                      <span className="font-medium text-green-600">along route available</span>
+                    </div>
+                  )}
+                  {ride?.offers_detour_service && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Detours:</span>
+                      <span className="font-medium text-green-600">available (+$5)</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Driver Info */}
               <div className="flex items-center gap-4">
                 <Avatar className="w-20 h-20">
@@ -94,50 +138,6 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
                   )}
                 </div>
               )}
-
-              {/* Ride Details */}
-              <div className="bg-gray-50 rounded-2xl p-4 space-y-3 border border-gray-200">
-                <h4 className="font-semibold text-secondary">Trip Details</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">From:</span>
-                    <span className="font-medium">{ride?.departure_location}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">To:</span>
-                    <span className="font-medium">{ride?.destination}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Date & Time:</span>
-                    <span className="font-medium">
-                      {format(new Date(ride?.departure_date), "MMM d, yyyy")} at {ride?.departure_time}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Price per seat:</span>
-                    <span className="font-medium">${currentUser?.has_hawaii_id ? (ride?.price_per_seat_local || 0) : (ride?.price_per_seat_tourist || 0)}</span>
-                  </div>
-                  <p className="text-red-400 text-xs italic">too expensive? you can pitch a cheaper offer after pressing "book this ride"</p>
-                  {ride?.car_model && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Vehicle:</span>
-                      <span className="font-medium">{ride.car_model}</span>
-                    </div>
-                  )}
-                  {ride?.offers_midpoint_pickup && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Pickup/Dropoff:</span>
-                      <span className="font-medium text-green-600">along route available</span>
-                    </div>
-                  )}
-                  {ride?.offers_detour_service && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Detours:</span>
-                      <span className="font-medium text-green-600">available (+$5)</span>
-                    </div>
-                  )}
-                </div>
-              </div>
 
               {/* Vehicle Photos */}
               {(ride?.driver_vehicle_exterior_photo_url || ride?.driver_vehicle_interior_photo_urls?.length > 0) && (
