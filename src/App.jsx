@@ -15,6 +15,7 @@ import JoinUs from './pages/JoinUs';
 import JoinPage from './pages/Join';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
+import Welcome from './pages/Welcome';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -62,11 +63,7 @@ const AuthenticatedApp = () => {
   // Render the main app
   return (
     <Routes>
-      <Route path="/" element={
-        <LayoutWrapper currentPageName={mainPageKey}>
-          <MainPage />
-        </LayoutWrapper>
-      } />
+      <Route path="/" element={<Welcome />} />
       {Object.entries(Pages).map(([path, Page]) => (
         <Route
           key={path}
