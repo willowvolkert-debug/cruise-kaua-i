@@ -84,12 +84,31 @@ export default function JoinPage() {
           alt="Cruise logo"
           className="w-9 h-9 rounded-xl object-cover"
         />
-        <button
-          onClick={() => base44.auth.redirectToLogin(`${window.location.origin}/trips`)}
-          className="text-sm text-gray-400 hover:text-gray-700 transition-colors underline underline-offset-2"
-        >
-          already have an account? log in
-        </button>
+        <div className="flex items-center gap-3">
+          {step < 3 && canContinue() && (
+            <Button
+              onClick={handleContinue}
+              className="bg-primary hover:bg-primary/90 text-white rounded-full font-bold px-5 py-2 text-sm"
+            >
+              continue <ChevronRight className="w-4 h-4 ml-0.5" />
+            </Button>
+          )}
+          {step === 3 && (
+            <Button
+              onClick={handleSignup}
+              disabled={signupLoading}
+              className="bg-primary hover:bg-primary/90 text-white rounded-full font-bold px-5 py-2 text-sm disabled:opacity-40"
+            >
+              {signupLoading ? "..." : "create account →"}
+            </Button>
+          )}
+          <button
+            onClick={() => base44.auth.redirectToLogin(`${window.location.origin}/trips`)}
+            className="text-sm text-gray-400 hover:text-gray-700 transition-colors underline underline-offset-2"
+          >
+            already have an account? log in
+          </button>
+        </div>
       </div>
 
       {/* Progress bar */}
