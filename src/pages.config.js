@@ -83,7 +83,6 @@ export const PAGES = {
     "Trips": Trips,
     "Unsubscribe": Unsubscribe,
     "VehicleDetails": VehicleDetails,
-    "Welcome": Welcome,
     "AboutUs": AboutUs,
     "ConfirmRide": ConfirmRide,
     "ConfirmedRides": ConfirmedRides,
