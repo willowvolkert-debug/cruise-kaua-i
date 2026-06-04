@@ -232,10 +232,7 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
                               </p>
                             </div>
                             <div className="text-right shrink-0">
-                              <p className="font-bold text-base text-primary">
-                                ${currentUser?.has_hawaii_id ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0)}
-                              </p>
-                              <p className="text-xs text-gray-500">/ seat</p>
+                              <p className="text-xs text-gray-400 italic">tap to see price</p>
                             </div>
                           </div>
                           <div className="flex justify-between items-center">
