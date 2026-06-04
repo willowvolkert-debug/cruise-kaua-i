@@ -38,7 +38,7 @@ export default function JoinPage() {
       const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
       const params = new URLSearchParams({ setup: "true", role: driverRole, island });
       const nextUrl = new URL(`/account?${params.toString()}`, window.location.origin).toString();
-      window.location.href = `/login?signup=true&from_url=${encodeURIComponent(nextUrl)}`;
+      base44.auth.redirectToLogin(nextUrl);
     }
   };
 
