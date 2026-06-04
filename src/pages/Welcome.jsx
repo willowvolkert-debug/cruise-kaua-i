@@ -66,18 +66,6 @@ export default function WelcomePage() {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden font-sans">
 
-      {/* LOGIN BANNER */}
-      <div className="bg-green-50 border-b border-green-200 px-4 py-2 text-center relative z-50">
-        <span className="text-sm text-gray-600">Welcome! </span>
-        <a
-          href="/join"
-          className="text-sm font-semibold text-primary underline underline-offset-2 hover:text-primary/80 transition-colors">sign up →</a>
-        <span className="text-sm text-gray-400 mx-2">·</span>
-        <button
-          onClick={() => base44.auth.redirectToLogin(`${window.location.origin}/trips`)}
-          className="text-sm font-semibold text-secondary underline underline-offset-2 hover:text-secondary/80 transition-colors">log in →</button>
-      </div>
-
       {/* ── HERO ── Nā Pali photo background with dark green overlay */}
       <div
         className="relative z-0 flex flex-col items-center justify-center text-center px-6 py-16"
@@ -88,6 +76,14 @@ export default function WelcomePage() {
         }}>
         
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'rgba(26, 74, 46, 0.72)' }} />
+
+        {/* Login button top-right */}
+        <button
+          onClick={() => base44.auth.redirectToLogin(`${window.location.origin}/trips`)}
+          className="absolute top-4 right-4 z-20 bg-white/20 hover:bg-white/30 text-white text-sm font-semibold px-4 py-2 rounded-full border border-white/40 backdrop-blur-sm transition-colors">
+          log in →
+        </button>
+
         <img
           src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
           alt={`${config.appName} logo`}
