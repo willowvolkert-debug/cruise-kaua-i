@@ -37,8 +37,8 @@ export default function JoinPage() {
     } else {
       const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
       const params = new URLSearchParams({ setup: "true", role: driverRole, island });
-      const nextUrl = `/account?${params.toString()}`;
-      window.location.href = `/Register?next=${encodeURIComponent(nextUrl)}`;
+      const nextUrl = new URL(`/account?${params.toString()}`, window.location.origin).toString();
+      window.location.href = `/register?from_url=${encodeURIComponent(nextUrl)}`;
     }
   };
 
