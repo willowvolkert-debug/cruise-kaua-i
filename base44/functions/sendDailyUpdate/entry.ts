@@ -140,7 +140,9 @@ Deno.serve(async (req) => {
     }).sort(rideSort);
     const newRequests = allRequests.filter(r => r.created_date >= since).sort(rideSort);
 
-    const subject = `${newRides.length} new ride${newRides.length !== 1 ? 's' : ''} + ${newRequests.length} request${newRequests.length !== 1 ? 's' : ''} posted today`;
+    const subject = newRequests.length > 0
+      ? `${newRides.length} new ride${newRides.length !== 1 ? 's' : ''} + ${newRequests.length} request${newRequests.length !== 1 ? 's' : ''} posted today`
+      : `${newRides.length} new ride${newRides.length !== 1 ? 's' : ''} posted today`;
 
     if (testEmail) {
       const testUser = allUsers.find(u => u.email === testEmail);
