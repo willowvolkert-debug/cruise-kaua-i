@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { X, ArrowRight, Check, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
@@ -246,6 +246,7 @@ export default function WelcomeTutorialModal({ isOpen, onClose, onComplete }) {
   const [pageIndex, setPageIndex] = useState(0);
   const [confusedLoading, setConfusedLoading] = useState(false);
   const [confusedDone, setConfusedDone] = useState(false);
+  const scrollRef = useRef(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -253,6 +254,11 @@ export default function WelcomeTutorialModal({ isOpen, onClose, onComplete }) {
       setConfusedDone(false);
     }
   }, [isOpen]);
+
+  // Scroll content to top on page change
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+  }, [pageIndex]);
 
   if (!isOpen) return null;
 
@@ -313,7 +319,7 @@ export default function WelcomeTutorialModal({ isOpen, onClose, onComplete }) {
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto px-6 py-2">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-2">
           {currentPage === "how_it_works" && <HowItWorksPage />}
           {currentPage === "trips_page" && <TripsPageTutorial />}
           {currentPage === "price_bidding" && <PriceBiddingTutorial />}

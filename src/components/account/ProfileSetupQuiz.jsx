@@ -114,8 +114,14 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
   const [agreedFinal, setAgreedFinal] = useState(false);
   const allAgreementChecked = Object.values(agreementBoxes).every(v => v) && agreedFinal;
 
+  const scrollRef = useRef(null);
   const steps = isDriverPath ? [...BASE_STEPS, ...DRIVER_STEPS] : BASE_STEPS;
   const current = steps[step];
+
+  // Scroll modal content to top whenever step changes
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+  }, [step]);
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
@@ -394,7 +400,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
           <div className="h-full bg-primary transition-all duration-500" style={{ width: `${progress}%` }} />
         </div>
 
-        <div className="p-6 overflow-y-auto flex-1">
+        <div ref={scrollRef} className="p-6 overflow-y-auto flex-1">
           <div className="flex items-center justify-between mb-1">
             <p className="text-xs font-bold tracking-widest uppercase text-primary">step {step + 1} of {steps.length}</p>
             <button

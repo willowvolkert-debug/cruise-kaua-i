@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 
 import { Button } from "@/components/ui/button";
@@ -39,6 +39,11 @@ export default function JoinPage() {
   const [verifyLoading, setVerifyLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [resendSent, setResendSent] = useState(false);
+
+  // Scroll to top on every step change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [step]);
 
   const canContinue = () => {
     if (step === 0) return !!role;
