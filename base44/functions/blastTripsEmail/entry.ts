@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
       '<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;"><tr><td align="center">' +
       '<a href="https://cruisekauai.org/trips" style="display:inline-block;background:#2f7d52;color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:14px 36px;border-radius:50px;">explore the new trips page</a>' +
       '</td></tr></table>' +
-      '<p style="font-size:13px;line-height:1.7;color:#555;margin:0 0 16px;">Every ride shared keeps money in our local economy and makes Kauaʻi a better place. Mahalo for being part of it. 🙏</p>' +
+      '<p style="font-size:13px;line-height:1.7;color:#555;margin:0 0 16px;">Every ride shared keeps money in our local economy and makes Kauaʻi a better place. Mahalo for being a part of the movement. 🙏</p>' +
       '<p style="margin:0 0 3px;color:#444;font-size:13px;">Me ke aloha,</p>' +
       '<p style="margin:0;font-weight:bold;font-size:13px;">Willow</p>' +
       '<p style="margin:0;font-size:12px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>' +
@@ -71,9 +71,13 @@ Deno.serve(async (req) => {
 
     if (blast) {
       const allUsers = await base44.asServiceRole.entities.User.list();
+      const skip = payload.skip || 0;
+      const batchSize = payload.batch_size || 15;
       const eligible = allUsers.filter(u => u.email && u.email_update_frequency !== 'never');
+      const batch = eligible.slice(skip, skip + batchSize);
       let sent = 0, errors = 0;
-      for (const u of eligible) {
+      const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+      for (const u of batch) {
         try {
           const firstName = u.full_name ? u.full_name.split(' ')[0] : 'there';
           await base44.asServiceRole.integrations.Core.SendEmail({
@@ -83,11 +87,14 @@ Deno.serve(async (req) => {
             body: buildHtml(firstName, 'https://cruisekauai.org/Unsubscribe?user_id=' + u.id),
           });
           sent++;
+          await sleep(3000);
         } catch (e) {
           errors++;
         }
       }
-      return Response.json({ ok: true, mode: 'blast', sent, errors });
+      const nextSkip = skip + batchSize;
+      const hasMore = nextSkip < eligible.length;
+      return Response.json({ ok: true, mode: 'blast', sent, errors, skip, next_skip: nextSkip, has_more: hasMore, total_eligible: eligible.length });
     }
 
     return Response.json({ error: 'Pass send_preview:true or send_all:true' }, { status: 400 });
