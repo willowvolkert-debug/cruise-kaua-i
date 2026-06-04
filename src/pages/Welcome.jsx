@@ -69,12 +69,9 @@ export default function WelcomePage() {
       {/* LOGIN BANNER */}
       <div className="bg-green-50 border-b border-green-200 px-4 py-2 text-center z-10 relative">
         <span className="text-sm text-gray-600">Welcome! </span>
-        <button
-          onClick={() => navigate("/join")}
-          className="text-sm font-semibold text-primary underline underline-offset-2 hover:text-primary/80 transition-colors">
-          
-          sign up / log in →
-        </button>
+        <a
+          href="/join"
+          className="text-sm font-semibold text-primary underline underline-offset-2 hover:text-primary/80 transition-colors">sign up / log in →</a>
       </div>
 
       {/* ── HERO ── Nā Pali photo background with dark green overlay */}
