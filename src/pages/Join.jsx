@@ -57,7 +57,8 @@ export default function JoinPage() {
     setSignupLoading(true);
     try {
       await base44.auth.register({ email, password });
-      // After register, redirect to account setup
+      await base44.auth.loginViaEmailPassword(email, password);
+      // Now authenticated — go straight to profile setup, no login page
       const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
       const params = new URLSearchParams({ setup: "true", role: driverRole, island });
       window.location.href = `/account?${params.toString()}`;
