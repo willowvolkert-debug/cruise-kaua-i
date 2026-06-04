@@ -22,7 +22,6 @@ import EnableNotificationsModal from "../components/notifications/EnableNotifica
 import { requestNotificationPermission } from "../components/utils/notifications";
 import AdminMessageCard from "../components/inbox/AdminMessageCard";
 import ProfileSetupQuiz from "../components/account/ProfileSetupQuiz";
-import WelcomeNewUserModal from "../components/account/WelcomeNewUserModal";
 import WelcomeTutorialModal from "../components/tutorial/WelcomeTutorialModal";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
@@ -100,7 +99,6 @@ export default function AccountPage() {
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState(null);
     const [adminMessages, setAdminMessages] = useState([]);
-    const [showWelcomeModal, setShowWelcomeModal] = useState(false);
     const [showProfileQuiz, setShowProfileQuiz] = useState(false);
     const [profileQuizSavedStep, setProfileQuizSavedStep] = useState(0);
     const [showPhonePrompt, setShowPhonePrompt] = useState(false);
@@ -147,9 +145,9 @@ export default function AccountPage() {
             const forceQuiz = urlParams2.get('reopen_quiz') === 'true';
             if (!currentUser.has_completed_profile_quiz || forceQuiz) {
                 if (forceQuiz) await base44.auth.updateMe({ has_completed_profile_quiz: false });
-                // New users who haven't dismissed the welcome modal see it first
+                // New users who haven't seen the tutorial yet see it first (which then launches quiz)
                 if (!currentUser.has_dismissed_welcome_modal && !forceQuiz) {
-                    setShowWelcomeModal(true);
+                    setShowTutorial(true);
                 } else {
                     setShowProfileQuiz(prev => prev === false ? false : true);
                 }
@@ -1221,19 +1219,20 @@ export default function AccountPage() {
                 </footer>
             </div>
 
-            {showWelcomeModal && user && (
-                <WelcomeNewUserModal
-                    user={user}
-                    onStartQuiz={() => { setShowWelcomeModal(false); setShowProfileQuiz(true); }}
-                    onDismiss={async () => { setShowWelcomeModal(false); await loadData(); }}
-                />
-            )}
-
             {showProfileQuiz && user && (
                 <ProfileSetupQuiz
                     user={user}
                     initialStep={profileQuizSavedStep}
-                    onComplete={() => { setShowProfileQuiz(false); setProfileQuizSavedStep(0); loadData(); }}
+                    onComplete={async () => {
+                        setShowProfileQuiz(false);
+                        setProfileQuizSavedStep(0);
+                        await loadData();
+                        // Show the welcome tutorial after quiz exit (save-and-come-back or finish)
+                        const freshUser = await base44.auth.me();
+                        if (!freshUser.has_dismissed_welcome_modal) {
+                            setShowTutorial(true);
+                        }
+                    }}
                 />
             )}
 
@@ -1306,7 +1305,15 @@ export default function AccountPage() {
                 </DialogContent>
             </Dialog>
 
-            <WelcomeTutorialModal isOpen={showTutorial} onClose={() => setShowTutorial(false)} />
+            <WelcomeTutorialModal
+                isOpen={showTutorial}
+                onClose={() => setShowTutorial(false)}
+                onComplete={async () => {
+                    await base44.auth.updateMe({ has_dismissed_welcome_modal: true });
+                    setShowTutorial(false);
+                    setShowProfileQuiz(true);
+                }}
+            />
 
             {/* Phone number prompt modal */}
             <Dialog open={showPhonePrompt} onOpenChange={() => {}}>

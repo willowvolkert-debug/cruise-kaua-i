@@ -242,7 +242,7 @@ function MoreQuestionsPage() {
 // ── Main Modal ──────────────────────────────────────────────────────────────
 const PAGES = ["how_it_works", "trips_page", "price_bidding", "install_app", "more_questions"];
 
-export default function WelcomeTutorialModal({ isOpen, onClose }) {
+export default function WelcomeTutorialModal({ isOpen, onClose, onComplete }) {
   const [pageIndex, setPageIndex] = useState(0);
   const [confusedLoading, setConfusedLoading] = useState(false);
   const [confusedDone, setConfusedDone] = useState(false);
@@ -261,6 +261,7 @@ export default function WelcomeTutorialModal({ isOpen, onClose }) {
 
   const handleDone = () => {
     onClose();
+    if (onComplete) onComplete();
   };
 
   const handleConfused = async () => {
@@ -360,7 +361,7 @@ export default function WelcomeTutorialModal({ isOpen, onClose }) {
               className="flex-1 bg-primary hover:bg-primary/90 rounded-full font-bold py-5"
             >
               {isLast ? (
-                <><Check className="w-4 h-4 mr-1" /> got it!</>
+                onComplete ? <>finish my profile <ArrowRight className="w-4 h-4 ml-1" /></> : <><Check className="w-4 h-4 mr-1" /> got it!</>
               ) : (
                 <>got it <ArrowRight className="w-4 h-4 ml-1" /></>
               )}
