@@ -80,7 +80,7 @@ export default function WelcomePage() {
 
       {/* ── HERO ── Nā Pali photo background with dark green overlay */}
       <div
-        className="relative flex flex-col items-center justify-center text-center px-6 py-16"
+        className="relative z-0 flex flex-col items-center justify-center text-center px-6 py-16"
         style={{
           backgroundImage: 'url(https://images.unsplash.com/photo-1505852679233-d9fd70aff56d?w=1200&q=80)',
           backgroundSize: 'cover',
@@ -342,7 +342,7 @@ export default function WelcomePage() {
       </section>
 
       {/* ── FINAL CTA ── */}
-      <section className="relative px-4 py-16 text-center overflow-hidden" style={{ backgroundImage: 'url(https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/65702faf8_IMG_D222AF74070A-1.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <section className="relative z-0 px-4 py-16 text-center overflow-hidden" style={{ backgroundImage: 'url(https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/65702faf8_IMG_D222AF74070A-1.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="absolute inset-0 bg-black/30" />
         <div className="relative z-10 max-w-sm mx-auto">
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl px-6 py-8 space-y-6 opacity-70">
