@@ -13,8 +13,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Camera, ChevronRight, CheckCircle, Upload, Car, MapPin, X, FileText, Shield } from "lucide-react";
 
 const BASE_STEPS = [
-  { id: "terms_of_service", title: "Terms of Service", subtitle: "Please read and agree to our Terms of Service before continuing.", type: "terms_of_service", field: "terms_of_service" },
-  { id: "privacy_policy", title: "Privacy Policy", subtitle: "Please read and agree to our Privacy Policy before continuing.", type: "privacy_policy", field: "privacy_policy" },
   { id: "username", title: "What should we call you?", subtitle: "Choose a username others will see on the platform (no spaces).", type: "text", placeholder: "e.g. kaleo_808", field: "username" },
   { id: "age", title: "How old are you?", subtitle: "Riders and drivers can see your age to feel comfortable sharing a ride.", type: "number", placeholder: "e.g. 28", field: "age", min: 18 },
   { id: "gender", title: "What's your gender?", subtitle: "This helps people feel safe knowing who they're riding with.", type: "select", field: "gender", options: [
@@ -27,6 +25,8 @@ const BASE_STEPS = [
   { id: "phone", title: "What's your phone number?", subtitle: "Optional. We'll text you when someone messages you or books your ride. We'll never send promotions.", type: "phone", field: "phone_number" },
   { id: "profile_picture", title: "Add a profile photo", subtitle: "A clear photo of your face helps build trust in our community.", type: "photo", field: "profile_picture_url" },
   { id: "license", title: "Verify your driver's license", subtitle: "Upload both sides of your license so our team can verify your identity. Required to book or post rides.", type: "license", field: "license" },
+  { id: "terms_of_service", title: "Terms of Service", subtitle: "Please read and agree to our Terms of Service before continuing.", type: "terms_of_service", field: "terms_of_service" },
+  { id: "privacy_policy", title: "Privacy Policy", subtitle: "Please read and agree to our Privacy Policy before continuing.", type: "privacy_policy", field: "privacy_policy" },
   { id: "driver_choice", title: "Are you interested in driving?", subtitle: "Drivers earn money by sharing rides they're already making. Riders book seats on posted trips.", type: "driver_choice", field: "driver_choice" },
 ];
 
