@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ChevronLeft, ChevronRight, Eye, EyeOff } from "lucide-react";
 
 const ISLANDS = [
   { value: "Kauai", label: "Kauaʻi", emoji: "🌿", status: "fully launched!" },
@@ -17,12 +18,20 @@ const ROLES = [
   { value: "both", emoji: "🤙", label: "both", desc: "Drive when you can, ride when you need to. Most members do both!" },
 ];
 
-const TOTAL_STEPS = 3;
+const TOTAL_STEPS = 4;
 
 export default function JoinPage() {
-  const [step, setStep] = useState(0); // 0=role, 1=info, 2=island
+  const [step, setStep] = useState(0); // 0=role, 1=info, 2=island, 3=signup
   const [role, setRole] = useState(null);
   const [island, setIsland] = useState(null);
+
+  // Signup form state
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [signupError, setSignupError] = useState("");
+  const [signupLoading, setSignupLoading] = useState(false);
 
   const canContinue = () => {
     if (step === 0) return !!role;
@@ -31,14 +40,36 @@ export default function JoinPage() {
     return false;
   };
 
+  const handleSignup = async () => {
+    setSignupError("");
+    if (!email || !password || !confirmPassword) {
+      setSignupError("please fill in all fields.");
+      return;
+    }
+    if (password.length < 8) {
+      setSignupError("password must be at least 8 characters.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setSignupError("passwords don't match.");
+      return;
+    }
+    setSignupLoading(true);
+    try {
+      await base44.auth.register({ email, password });
+      // After register, redirect to account setup
+      const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
+      const params = new URLSearchParams({ setup: "true", role: driverRole, island });
+      window.location.href = `/account?${params.toString()}`;
+    } catch (e) {
+      setSignupError(e?.response?.data?.message || e?.message || "something went wrong. please try again.");
+      setSignupLoading(false);
+    }
+  };
+
   const handleContinue = () => {
     if (step < TOTAL_STEPS - 1) {
       setStep(step + 1);
-    } else {
-      const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
-      const params = new URLSearchParams({ setup: "true", role: driverRole, island });
-      const nextUrl = new URL(`/account?${params.toString()}`, window.location.origin).toString();
-      base44.auth.redirectToLogin(nextUrl);
     }
   };
 
@@ -162,9 +193,64 @@ export default function JoinPage() {
           </div>
         )}
 
+        {/* STEP 3: Signup */}
+        {step === 3 && (
+          <div className="space-y-5 flex-1">
+            <div>
+              <h1 className="text-3xl font-extrabold text-gray-900 mb-1">create your account 🎉</h1>
+              <p className="text-gray-500 text-base">enter your email and a password to get started.</p>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <label className="text-sm font-semibold text-gray-700 mb-1 block">email</label>
+                <Input
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  className="rounded-xl h-12"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-semibold text-gray-700 mb-1 block">password</label>
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="min. 8 characters"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    className="rounded-xl h-12 pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+              <div>
+                <label className="text-sm font-semibold text-gray-700 mb-1 block">confirm password</label>
+                <Input
+                  type="password"
+                  placeholder="re-enter password"
+                  value={confirmPassword}
+                  onChange={e => setConfirmPassword(e.target.value)}
+                  className="rounded-xl h-12"
+                  onKeyDown={e => e.key === "Enter" && handleSignup()}
+                />
+              </div>
+              {signupError && (
+                <p className="text-red-500 text-sm font-medium">{signupError}</p>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Navigation */}
         <div className="flex gap-3 pt-8">
-          {step > 0 && (
+          {step > 0 && step < 3 && (
             <Button
               variant="outline"
               onClick={() => setStep(step - 1)}
@@ -173,14 +259,25 @@ export default function JoinPage() {
               <ChevronLeft className="w-4 h-4 mr-1" /> back
             </Button>
           )}
-          <Button
-            onClick={handleContinue}
-            disabled={!canContinue()}
-            className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base disabled:opacity-40"
-          >
-            {step === TOTAL_STEPS - 1 ? "create my account →" : "continue"}
-            <ChevronRight className="w-4 h-4 ml-1" />
-          </Button>
+          {step < 3 && (
+            <Button
+              onClick={handleContinue}
+              disabled={!canContinue()}
+              className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base disabled:opacity-40"
+            >
+              continue
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </Button>
+          )}
+          {step === 3 && (
+            <Button
+              onClick={handleSignup}
+              disabled={signupLoading}
+              className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base disabled:opacity-40"
+            >
+              {signupLoading ? "creating account..." : "create my account →"}
+            </Button>
+          )}
         </div>
       </div>
     </div>
