@@ -95,40 +95,6 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
                 </div>
               )}
 
-              {/* Vehicle Photos */}
-              {(ride?.driver_vehicle_exterior_photo_url || ride?.driver_vehicle_interior_photo_urls?.length > 0) && (
-                <div>
-                  <h4 className="font-semibold text-secondary mb-3">Vehicle Photos</h4>
-                  <div className="space-y-3">
-                    {ride?.driver_vehicle_exterior_photo_url && (
-                      <div>
-                        <p className="text-sm text-gray-600 mb-2">Exterior</p>
-                        <img 
-                          src={ride.driver_vehicle_exterior_photo_url} 
-                          alt="Vehicle exterior" 
-                          className="w-full rounded-2xl border border-gray-200 object-cover max-h-64"
-                        />
-                      </div>
-                    )}
-                    {ride?.driver_vehicle_interior_photo_urls?.length > 0 && (
-                      <div>
-                        <p className="text-sm text-gray-600 mb-2">Interior</p>
-                        <div className="grid grid-cols-2 gap-2">
-                          {ride.driver_vehicle_interior_photo_urls.map((url, idx) => (
-                            <img 
-                              key={idx}
-                              src={url} 
-                              alt={`Vehicle interior ${idx + 1}`} 
-                              className="w-full rounded-2xl border border-gray-200 object-cover h-32"
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
               {/* Ride Details */}
               <div className="bg-gray-50 rounded-2xl p-4 space-y-3 border border-gray-200">
                 <h4 className="font-semibold text-secondary">Trip Details</h4>
@@ -171,6 +137,40 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
                   )}
                 </div>
               </div>
+
+              {/* Vehicle Photos */}
+              {(ride?.driver_vehicle_exterior_photo_url || ride?.driver_vehicle_interior_photo_urls?.length > 0) && (
+                <div>
+                  <h4 className="font-semibold text-secondary mb-3">Vehicle Photos</h4>
+                  <div className="space-y-3">
+                    {ride?.driver_vehicle_exterior_photo_url && (
+                      <div>
+                        <p className="text-sm text-gray-600 mb-2">Exterior</p>
+                        <img 
+                          src={ride.driver_vehicle_exterior_photo_url} 
+                          alt="Vehicle exterior" 
+                          className="w-full rounded-2xl border border-gray-200 object-cover max-h-64"
+                        />
+                      </div>
+                    )}
+                    {ride?.driver_vehicle_interior_photo_urls?.length > 0 && (
+                      <div>
+                        <p className="text-sm text-gray-600 mb-2">Interior</p>
+                        <div className="grid grid-cols-2 gap-2">
+                          {ride.driver_vehicle_interior_photo_urls.map((url, idx) => (
+                            <img 
+                              key={idx}
+                              src={url} 
+                              alt={`Vehicle interior ${idx + 1}`} 
+                              className="w-full rounded-2xl border border-gray-200 object-cover h-32"
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Recent Reviews */}
               {driverRatings && driverRatings.length > 0 && (
