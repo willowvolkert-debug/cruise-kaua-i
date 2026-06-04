@@ -466,7 +466,7 @@ export default function AccountPage() {
                             <div className="flex flex-col items-center gap-1">
                                 <div className="relative">
                                     <Avatar className="w-24 h-24 text-3xl rounded-2xl">
-                                        <AvatarImage src={profilePicFile ? URL.createObjectURL(profilePicFile) : user.profile_picture_url} className="object-cover object-top" />
+                                        <AvatarImage src={profilePicFile ? URL.createObjectURL(profilePicFile) : user.profile_picture_url} />
                                         <AvatarFallback className="bg-gradient-to-br from-primary to-green-400 text-white font-bold rounded-2xl">
                                             {getInitials(user.full_name)}
                                         </AvatarFallback>

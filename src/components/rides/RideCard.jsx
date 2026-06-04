@@ -60,7 +60,7 @@ export default function RideCard({ ride, onBookRide, showBookButton = true, curr
         <div className="flex items-center justify-between mt-4">
           <div className="flex items-center gap-3">
             <Avatar className="h-12 w-12 bg-gradient-to-r from-primary to-secondary">
-              <AvatarImage src={driverProfile?.profile_picture_url} className="object-cover object-top" />
+              <AvatarImage src={driverProfile?.profile_picture_url} />
               <AvatarFallback className="text-white font-semibold">{getInitials(ride.driver_name)}</AvatarFallback>
             </Avatar>
             <div>
