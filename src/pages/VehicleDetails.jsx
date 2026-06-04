@@ -12,6 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { createConnectAccount } from "@/functions/createConnectAccount";
 import { sendOnboardingEmail } from "@/functions/sendOnboardingEmail";
+import { sendUserLifecycleEmail } from "@/functions/sendUserLifecycleEmail";
 import { useDraftSave, loadDraft, clearDraft } from "@/hooks/useDraftSave";
 
 const VEHICLE_DRAFT_KEY = 'draft_vehicle_details';
@@ -200,6 +201,8 @@ export default function VehicleDetailsPage() {
 
       // Fire onboarding email (non-blocking)
       sendOnboardingEmail({}).catch(() => null);
+      // Fire vehicle submitted lifecycle email
+      sendUserLifecycleEmail({ emailType: 'vehicle_submitted' }).catch(() => null);
 
       setUploadProgress('');
       clearDraft(VEHICLE_DRAFT_KEY);

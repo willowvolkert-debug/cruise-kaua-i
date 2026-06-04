@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { sendOnboardingEmail } from "@/functions/sendOnboardingEmail";
+import { sendUserLifecycleEmail } from "@/functions/sendUserLifecycleEmail";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -182,6 +183,8 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
       await base44.auth.updateMe({ drivers_license_front_url: fr.file_url, drivers_license_back_url: br.file_url, drivers_license_pending_review: true, license_submitted_date: new Date().toISOString() });
       await base44.entities.UserEdit.create({ user_id: u.id, user_name: u.full_name, user_email: u.email, change_type: "license", change_description: "Uploaded driver's license via profile setup quiz", old_values: {}, new_values: { license_front_url: fr.file_url, license_back_url: br.file_url } });
       await base44.entities.AdminMessage.create({ recipient_id: 'admin', recipient_name: 'Admin', subject: `License Pending Review: ${u.full_name}`, message: `${u.full_name} (${u.email}) uploaded their license via the setup quiz.`, message_type: 'action_required' });
+      // Send license submitted email
+      sendUserLifecycleEmail({ emailType: 'license_submitted' }).catch(() => null);
     }
   };
 
@@ -204,6 +207,8 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     });
     await base44.entities.UserEdit.create({ user_id: u.id, user_name: u.full_name, user_email: u.email, change_type: "vehicle", change_description: "Submitted vehicle via profile setup quiz", old_values: {}, new_values: vehicleInfo });
     await base44.entities.AdminMessage.create({ recipient_id: 'admin', recipient_name: 'Admin', subject: `Vehicle Pending Review: ${u.full_name}`, message: `${u.full_name} (${u.email}) submitted their vehicle (${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}) via the setup quiz.`, message_type: 'action_required' });
+    // Send vehicle submitted email
+    sendUserLifecycleEmail({ emailType: 'vehicle_submitted' }).catch(() => null);
   };
 
   const saveDriverAgreement = async () => {
