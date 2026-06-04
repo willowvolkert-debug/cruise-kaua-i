@@ -140,7 +140,7 @@ function AboutUsAccordion() {
             <p className="text-green-300 text-sm italic">🤙 mahalo for being a part of the movement</p>
           </div>
           <p className="text-gray-700 text-sm leading-relaxed">
-            We now have <strong>170 users on Kauaʻi</strong>, with consistent rides being posted across the island. We have started recruiting drivers on Oʻahu, and plan to launch there <strong>August 1!</strong>
+            We've gone viral online and now have <strong>250 users on Kauaʻi</strong>, with consistent rides being posted across the island. We are launching on Oʻahu <strong>August 1!</strong> 🤙
           </p>
         </div>
       )}
