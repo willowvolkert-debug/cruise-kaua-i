@@ -74,7 +74,7 @@ export default function WelcomePage() {
           className="text-sm font-semibold text-primary underline underline-offset-2 hover:text-primary/80 transition-colors">sign up →</a>
         <span className="text-sm text-gray-400 mx-2">·</span>
         <button
-          onClick={() => base44.auth.redirectToLogin('/trips')}
+          onClick={() => base44.auth.redirectToLogin(`${window.location.origin}/trips`)}
           className="text-sm font-semibold text-secondary underline underline-offset-2 hover:text-secondary/80 transition-colors">log in →</button>
       </div>
 
