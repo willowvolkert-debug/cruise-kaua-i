@@ -395,7 +395,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
 
         <div className="p-6 overflow-y-auto flex-1">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-xs text-gray-400 font-medium uppercase tracking-widest">{step + 1} of {steps.length}</p>
+            <p className="text-xs font-bold tracking-widest uppercase text-primary">step {step + 1} of {steps.length}</p>
             <button
               onClick={handleSaveAndComeBack}
               className="text-xs text-blue-500 hover:text-blue-700 font-medium underline underline-offset-2 transition-colors"

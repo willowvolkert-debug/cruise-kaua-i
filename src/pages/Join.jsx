@@ -18,10 +18,10 @@ const ROLES = [
   { value: "both", emoji: "🤙", label: "both", desc: "Drive when you can, ride when you need to. Most members do both!" },
 ];
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 5;
 
 export default function JoinPage() {
-  const [step, setStep] = useState(0); // 0=role, 1=info, 2=island, 3=signup
+  const [step, setStep] = useState(0); // 0=role, 1=info, 2=island, 3=signup, 4=verify
   const [role, setRole] = useState(null);
   const [island, setIsland] = useState(null);
 
@@ -32,6 +32,13 @@ export default function JoinPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [signupError, setSignupError] = useState("");
   const [signupLoading, setSignupLoading] = useState(false);
+
+  // Verification state
+  const [otpCode, setOtpCode] = useState("");
+  const [verifyError, setVerifyError] = useState("");
+  const [verifyLoading, setVerifyLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendSent, setResendSent] = useState(false);
 
   const canContinue = () => {
     if (step === 0) return !!role;
@@ -57,15 +64,43 @@ export default function JoinPage() {
     setSignupLoading(true);
     try {
       await base44.auth.register({ email, password });
+      // Move to email verification step
+      setStep(4);
+    } catch (e) {
+      setSignupError(e?.response?.data?.message || e?.message || "something went wrong. please try again.");
+    }
+    setSignupLoading(false);
+  };
+
+  const handleVerify = async () => {
+    setVerifyError("");
+    if (!otpCode || otpCode.length < 4) {
+      setVerifyError("please enter the code from your email.");
+      return;
+    }
+    setVerifyLoading(true);
+    try {
+      await base44.auth.verifyOtp({ email, otpCode });
       await base44.auth.loginViaEmailPassword(email, password);
-      // Now authenticated — go straight to profile setup, no login page
       const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
       const params = new URLSearchParams({ setup: "true", role: driverRole, island });
       window.location.href = `/account?${params.toString()}`;
     } catch (e) {
-      setSignupError(e?.response?.data?.message || e?.message || "something went wrong. please try again.");
-      setSignupLoading(false);
+      setVerifyError(e?.response?.data?.message || e?.message || "invalid or expired code. please try again.");
+      setVerifyLoading(false);
     }
+  };
+
+  const handleResend = async () => {
+    setResendLoading(true);
+    setResendSent(false);
+    try {
+      await base44.auth.resendOtp(email);
+      setResendSent(true);
+    } catch (e) {
+      setVerifyError("couldn't resend code. please try again.");
+    }
+    setResendLoading(false);
   };
 
   const handleContinue = () => {
@@ -122,6 +157,15 @@ export default function JoinPage() {
               className="bg-primary hover:bg-primary/90 text-white rounded-full font-bold px-4 py-1.5 text-xs h-auto disabled:opacity-40"
             >
               {signupLoading ? "..." : "create account →"}
+            </Button>
+          )}
+          {step === 4 && (
+            <Button
+              onClick={handleVerify}
+              disabled={verifyLoading || !otpCode}
+              className="bg-primary hover:bg-primary/90 text-white rounded-full font-bold px-4 py-1.5 text-xs h-auto disabled:opacity-40"
+            >
+              {verifyLoading ? "..." : "verify →"}
             </Button>
           )}
         </div>
@@ -269,6 +313,43 @@ export default function JoinPage() {
           </div>
         )}
 
+        {/* STEP 4: Verify Email */}
+        {step === 4 && (
+          <div className="space-y-5 flex-1">
+            <div>
+              <h1 className="text-3xl font-extrabold text-gray-900 mb-1">check your email 📬</h1>
+              <p className="text-gray-500 text-base">we sent a verification code to <span className="font-semibold text-gray-700">{email}</span></p>
+            </div>
+            <div className="space-y-3">
+              <label className="text-sm font-semibold text-gray-700 mb-1 block">enter your code</label>
+              <Input
+                type="text"
+                inputMode="numeric"
+                placeholder="e.g. 123456"
+                value={otpCode}
+                onChange={e => setOtpCode(e.target.value.replace(/\D/g, ""))}
+                className="rounded-xl h-14 text-2xl tracking-widest text-center font-bold"
+                maxLength={8}
+                autoFocus
+                onKeyDown={e => e.key === "Enter" && handleVerify()}
+              />
+              {verifyError && (
+                <p className="text-red-500 text-sm font-medium">{verifyError}</p>
+              )}
+              {resendSent && (
+                <p className="text-green-600 text-sm font-medium">✓ new code sent! check your email.</p>
+              )}
+            </div>
+            <button
+              onClick={handleResend}
+              disabled={resendLoading}
+              className="text-sm text-primary underline underline-offset-2 font-medium disabled:opacity-50"
+            >
+              {resendLoading ? "sending..." : "didn't get a code? resend it"}
+            </button>
+          </div>
+        )}
+
         {/* Navigation */}
         <div className="flex gap-3 pt-8">
           {step > 0 && step < 3 && (
@@ -297,6 +378,15 @@ export default function JoinPage() {
               className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base disabled:opacity-40"
             >
               {signupLoading ? "creating account..." : "create my account →"}
+            </Button>
+          )}
+          {step === 4 && (
+            <Button
+              onClick={handleVerify}
+              disabled={verifyLoading || !otpCode}
+              className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base disabled:opacity-40"
+            >
+              {verifyLoading ? "verifying..." : "verify & continue →"}
             </Button>
           )}
         </div>
