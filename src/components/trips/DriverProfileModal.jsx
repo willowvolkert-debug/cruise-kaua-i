@@ -117,6 +117,7 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
                     <span className="text-gray-600">Price per seat:</span>
                     <span className="font-medium">${currentUser?.has_hawaii_id ? (ride?.price_per_seat_local || 0) : (ride?.price_per_seat_tourist || 0)}</span>
                   </div>
+                  <p className="text-red-400 text-xs italic">too expensive? you can pitch a cheaper offer after pressing "book this ride"</p>
                   {ride?.car_model && (
                     <div className="flex justify-between">
                       <span className="text-gray-600">Vehicle:</span>
