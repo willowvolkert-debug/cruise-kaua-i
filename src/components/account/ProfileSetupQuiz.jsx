@@ -10,7 +10,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Camera, ChevronRight, CheckCircle, Upload, Car, MapPin, X, FileText, Shield } from "lucide-react";
+import { Camera, ChevronRight, CheckCircle, Upload, Car, MapPin, X, FileText, Shield, Bell } from "lucide-react";
+import { requestNotificationPermission } from "@/components/utils/notifications";
 
 const BASE_STEPS = [
   { id: "username", title: "What should we call you?", subtitle: "Choose a username others will see on the platform (no spaces).", type: "text", placeholder: "e.g. kaleo_808", field: "username" },
@@ -23,10 +24,11 @@ const BASE_STEPS = [
   ]},
   { id: "bio", title: "Tell us a little about yourself", subtitle: "A sentence or two about who you are and why you're using Cruise Kauaʻi.", type: "textarea", placeholder: "e.g. Local Kauaʻi resident, love hiking and beach days!", field: "bio" },
   { id: "phone", title: "What's your phone number?", subtitle: "Optional. We'll text you when someone messages you or books your ride. We'll never send promotions.", type: "phone", field: "phone_number" },
+  { id: "push_notifications", title: "Enable push notifications", subtitle: "Get notified when a rider books your ride, a driver accepts your request, or someone sends you a message.", type: "push_notifications", field: "push_notifications" },
   { id: "profile_picture", title: "Add a profile photo", subtitle: "A clear photo of your face helps build trust in our community.", type: "photo", field: "profile_picture_url" },
-  { id: "license", title: "Verify your driver's license", subtitle: "Upload both sides of your license so our team can verify your identity. Required to book or post rides.", type: "license", field: "license" },
   { id: "terms_of_service", title: "Terms of Service", subtitle: "Please read and agree to our Terms of Service before continuing.", type: "terms_of_service", field: "terms_of_service" },
   { id: "privacy_policy", title: "Privacy Policy", subtitle: "Please read and agree to our Privacy Policy before continuing.", type: "privacy_policy", field: "privacy_policy" },
+  { id: "license", title: "Verify your driver's license", subtitle: "Upload both sides of your license so our team can verify your identity. Required to book or post rides.", type: "license", field: "license" },
   { id: "driver_choice", title: "Are you interested in driving?", subtitle: "Drivers earn money by sharing rides they're already making. Riders book seats on posted trips.", type: "driver_choice", field: "driver_choice" },
 ];
 
@@ -105,6 +107,19 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
   const vehicleIntRef = useRef();
   const insuranceRef = useRef();
 
+  // Push notifications
+  const [notifStatus, setNotifStatus] = useState('idle'); // 'idle' | 'granted' | 'denied'
+
+  const handleEnableNotifications = async () => {
+    const granted = await requestNotificationPermission();
+    if (granted) {
+      setNotifStatus('granted');
+      await base44.auth.updateMe({ notifications_enabled: true });
+    } else {
+      setNotifStatus('denied');
+    }
+  };
+
   // ToS / Privacy Policy
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [privacyAgreed, setPrivacyAgreed] = useState(false);
@@ -140,6 +155,8 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
       if (!val) { setError("Please select your island."); return false; }
       return true;
     } else if (current.type === "phone") {
+      return true; // optional step
+    } else if (current.type === "push_notifications") {
       return true; // optional step
     } else if (current.type === "photo") {
       if (!photoFile && !user?.profile_picture_url) { setError("Oops! You have to complete this step before moving on."); return false; }
@@ -481,6 +498,47 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
                 <Checkbox id="privacyAgreed" checked={privacyAgreed} onCheckedChange={() => { setPrivacyAgreed(v => !v); setError(""); }} className="mt-0.5 shrink-0" />
                 <Label htmlFor="privacyAgreed" className="cursor-pointer text-sm font-semibold text-green-800 leading-tight">I have read and agree to the Privacy Policy</Label>
               </div>
+            </div>
+          )}
+
+          {/* PUSH NOTIFICATIONS */}
+          {current.type === "push_notifications" && (
+            <div className="space-y-4">
+              {notifStatus === 'granted' || ('Notification' in window && Notification.permission === 'granted') ? (
+                <div className="flex flex-col items-center gap-4 py-4 text-center">
+                  <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+                    <CheckCircle className="w-8 h-8 text-green-500" />
+                  </div>
+                  <p className="font-semibold text-green-700">Push notifications enabled!</p>
+                  <p className="text-sm text-gray-500">You'll be notified about bookings and messages.</p>
+                </div>
+              ) : notifStatus === 'denied' ? (
+                <div className="space-y-3">
+                  <div className="flex flex-col items-center gap-3 py-4 text-center">
+                    <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
+                      <Bell className="w-8 h-8 text-gray-400" />
+                    </div>
+                    <p className="font-semibold text-gray-700">Notifications blocked</p>
+                    <p className="text-sm text-gray-500">You can enable them later in your browser settings or from your account page.</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex flex-col items-center gap-4 py-2 text-center">
+                    <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Bell className="w-8 h-8 text-primary" />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="font-semibold text-secondary">Stay in the loop</p>
+                      <p className="text-sm text-gray-500 leading-relaxed">Enable notifications so you never miss a ride request, booking confirmation, or message from another member.</p>
+                    </div>
+                  </div>
+                  <Button onClick={handleEnableNotifications} className="w-full bg-primary hover:bg-primary/90 rounded-2xl py-5 font-bold">
+                    <Bell className="w-4 h-4 mr-2" /> enable notifications
+                  </Button>
+                  <p className="text-xs text-gray-400 text-center">optional — you can skip this</p>
+                </div>
+              )}
             </div>
           )}
 
