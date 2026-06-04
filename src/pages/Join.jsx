@@ -37,11 +37,8 @@ export default function JoinPage() {
     } else {
       const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
       const params = new URLSearchParams({ setup: "true", role: driverRole, island });
-      const nextUrl = new URL(`/account?${params.toString()}`, window.location.origin).toString();
-      // Build the Base44 login URL with signup=true to skip to the create account screen
-      const appBaseUrl = base44.getConfig().serverUrl; // e.g. https://base44.app
-      const loginUrl = `${appBaseUrl}/login?from_url=${encodeURIComponent(nextUrl)}&signup=true`;
-      window.location.href = loginUrl;
+      const nextUrl = `/account?${params.toString()}`;
+      base44.auth.redirectToLogin(nextUrl);
     }
   };
 
@@ -57,7 +54,7 @@ export default function JoinPage() {
           className="w-9 h-9 rounded-xl object-cover"
         />
         <button
-          onClick={() => base44.auth.redirectToLogin("/trips")}
+          onClick={() => base44.auth.redirectToLogin(`${window.location.origin}/trips`)}
           className="text-sm text-gray-400 hover:text-gray-700 transition-colors underline underline-offset-2"
         >
           already have an account? log in
