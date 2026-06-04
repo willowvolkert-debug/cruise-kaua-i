@@ -394,6 +394,36 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               </div>
             )}
 
+            <div className="bg-gray-50 rounded-lg p-4 space-y-2 border border-gray-200">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-700">{bookingData.is_price_offer && bookingData.offered_price ? 'Ride cost (your offer):' : 'Price request:'}</span>
+                <span className="font-medium">${((bookingData.seats_booked || 0) * pricePerSeat).toFixed(2)}</span>
+              </div>
+              {bookingData.wants_detour_service && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-700">Detour service:</span>
+                  <span className="font-medium">${detourFee.toFixed(2)}</span>
+                </div>
+              )}
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-700">Connect fee ({Math.round(connectFeeRate * 100)}%):</span>
+                <span className="font-medium">${connectFee.toFixed(2)}</span>
+              </div>
+
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-700">Credit card fee (3%):</span>
+                <span className="font-medium">${creditCardFee.toFixed(2)}</span>
+              </div>
+              <div className="border-t border-gray-200 pt-2 flex justify-between">
+                <span className="font-semibold text-secondary">Total:</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xl font-bold text-primary">
+                    ${totalAmount.toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
             {/* Price offer section */}
             <div className={`rounded-2xl border-2 p-4 space-y-3 transition-all ${bookingData.is_price_offer ? 'border-green-400 bg-green-50' : 'border-gray-200 bg-gray-50'}`}>
               <div
@@ -439,37 +469,6 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                   )}
                 </div>
               )}
-            </div>
-
-            <div className="bg-gray-50 rounded-lg p-4 space-y-2 border border-gray-200">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-700">{bookingData.is_price_offer && bookingData.offered_price ? 'Ride cost (your offer):' : 'Price request:'}</span>
-                <span className="font-medium">${((bookingData.seats_booked || 0) * pricePerSeat).toFixed(2)}</span>
-              </div>
-              {bookingData.wants_detour_service && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-700">Detour service:</span>
-                  <span className="font-medium">${detourFee.toFixed(2)}</span>
-                </div>
-              )}
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-700">Connect fee ({Math.round(connectFeeRate * 100)}%):</span>
-                <span className="font-medium">${connectFee.toFixed(2)}</span>
-              </div>
-
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-700">Credit card fee (3%):</span>
-                <span className="font-medium">${creditCardFee.toFixed(2)}</span>
-              </div>
-              <div className="border-t border-gray-200 pt-2 flex justify-between">
-                <span className="font-semibold text-secondary">Total:</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-xl font-bold text-primary">
-                    ${totalAmount.toFixed(2)}
-                  </span>
-                </div>
-              </div>
-              <p className="text-red-400 text-xs italic">too expensive? pitch a cheaper offer using the checkbox above</p>
             </div>
 
             {(!currentUser || currentUser.drivers_license_verified) && (
