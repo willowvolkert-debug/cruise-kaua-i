@@ -86,10 +86,11 @@ export default function JoinPage() {
           className="w-9 h-9 rounded-xl object-cover"
         />
         <div className="flex items-center gap-3">
-          {step < 3 && canContinue() && (
+          {step < 3 && (
             <Button
               onClick={handleContinue}
-              className="bg-primary hover:bg-primary/90 text-white rounded-full font-bold px-5 py-2 text-sm"
+              disabled={!canContinue()}
+              className="bg-primary hover:bg-primary/90 text-white rounded-full font-bold px-5 py-2 text-sm disabled:opacity-40"
             >
               continue <ChevronRight className="w-4 h-4 ml-0.5" />
             </Button>
