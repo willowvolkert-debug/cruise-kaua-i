@@ -469,6 +469,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                   </span>
                 </div>
               </div>
+              <p className="text-red-400 text-xs italic">too expensive? pitch a cheaper offer using the checkbox above</p>
             </div>
 
             {(!currentUser || currentUser.drivers_license_verified) && (
