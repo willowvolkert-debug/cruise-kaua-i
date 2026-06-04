@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
+
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -36,7 +37,11 @@ export default function JoinPage() {
     } else {
       const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
       const params = new URLSearchParams({ setup: "true", role: driverRole, island });
-      base44.auth.redirectToLogin(`/account?${params.toString()}`);
+      const nextUrl = new URL(`/account?${params.toString()}`, window.location.origin).toString();
+      // Build the Base44 login URL with signup=true to skip to the create account screen
+      const appBaseUrl = base44.getConfig().serverUrl; // e.g. https://base44.app
+      const loginUrl = `${appBaseUrl}/login?from_url=${encodeURIComponent(nextUrl)}&signup=true`;
+      window.location.href = loginUrl;
     }
   };
 

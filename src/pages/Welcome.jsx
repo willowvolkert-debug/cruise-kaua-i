@@ -71,7 +71,11 @@ export default function WelcomePage() {
         <span className="text-sm text-gray-600">Welcome! </span>
         <a
           href="/join"
-          className="text-sm font-semibold text-primary underline underline-offset-2 hover:text-primary/80 transition-colors">sign up / log in →</a>
+          className="text-sm font-semibold text-primary underline underline-offset-2 hover:text-primary/80 transition-colors">sign up →</a>
+        <span className="text-sm text-gray-400 mx-2">·</span>
+        <button
+          onClick={() => base44.auth.redirectToLogin('/trips')}
+          className="text-sm font-semibold text-secondary underline underline-offset-2 hover:text-secondary/80 transition-colors">log in →</button>
       </div>
 
       {/* ── HERO ── Nā Pali photo background with dark green overlay */}
