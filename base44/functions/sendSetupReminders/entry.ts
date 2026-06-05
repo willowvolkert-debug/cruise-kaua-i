@@ -82,45 +82,62 @@ Deno.serve(async (req) => {
                       </a>
                     </div>`;
 
-                    const emailBody = `
-                    <html>
-                    <body style="font-family: Arial, sans-serif; line-height: 1.8; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-                    
-                    <div style="text-align:center;margin-bottom:24px;">
-                      <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #f97316;" />
-                      <p style="margin:8px 0 0 0;font-weight:bold;color:#3b82f6;font-size:15px;">Cruise Kauaʻi</p>
-                    </div>
-                    <p style="font-size: 18px; margin-bottom: 24px;">🌺 Aloha!</p>
+                    const firstName = u.full_name?.split(' ')[0] || 'there';
+                    const emailBody = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#f5f0e8;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f0e8;padding:32px 16px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+        <tr><td align="center" style="padding:32px 24px 20px;border-bottom:1px solid #f0ebe0;">
+          <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kaua'i" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;display:block;margin:0 auto 10px;" />
+          <div style="font-family:Georgia,serif;font-size:1.1rem;font-weight:700;color:#1a1a1a;">Cruise Kauaʻi</div>
+        </td></tr>
+        <tr><td style="padding:32px 32px 24px;">
+          <h1 style="font-family:Georgia,serif;font-size:1.5rem;font-weight:700;color:#1a1a1a;margin:0 0 16px;">Aloha, ${firstName}! 🌺</h1>
 
-                    <p style="margin-bottom: 20px;"><strong>This is Willow, founder & CEO of Cruise Kauaʻi.</strong> Mahalo for creating an account with us and being interested in reducing traffic on our small island. Cruise Kauaʻi is a transportation alternative for those sick of sitting in traffic and paying too much money to get around. It is like a combination of the bus, Uber, and the Nextdoor community app; a community-based ride-sharing platform to get cars off the road, put money in locals' pockets, and make transportation more affordable & accessible for everyone.</p>
+          <p style="font-size:0.95rem;line-height:1.8;color:#444;margin:0 0 16px;"><strong>This is Willow, founder of Cruise Kauaʻi.</strong> Mahalo for creating an account with us! Cruise Kauaʻi is a community-based ride-sharing platform — like a combination of the bus, Uber, and the Nextdoor app — built to get cars off the road, put money in locals' pockets, and make transportation more affordable &amp; accessible for everyone on our island.</p>
 
-                    <p style="margin-bottom: 24px;">I wanted to remind you to finish setting up your account. We need more drivers posting rides as we finish beta testing, and need your help to make the culture shift toward carpooling a reality on Kauaʻi!</p>
+          <p style="font-size:0.95rem;line-height:1.8;color:#444;margin:0 0 24px;">We'd love to have you fully set up so you can start sharing rides with your community. It only takes a few minutes!</p>
 
-                    <hr style="border: none; border-top: 1px solid #ddd; margin: 32px 0;">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr><td align="center" style="padding:8px 0 28px;">
+              <a href="${setupUrl}" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:600;font-size:1rem;padding:14px 36px;border-radius:50px;">Finish Setting Up Your Account →</a>
+            </td></tr>
+          </table>
 
-                    ${setupSteps}
+          <table width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #f0ebe0;padding-top:24px;margin-top:4px;">
+            <tr><td>
+              <p style="font-size:0.95rem;font-weight:700;color:#1a1a1a;margin:0 0 16px;">✨ What's new on Cruise Kauaʻi:</p>
 
-                    <hr style="border: none; border-top: 1px solid #ddd; margin: 32px 0;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:#faf7f2;border:1px solid #ede5d4;border-radius:12px;margin:0 0 16px;">
+                <tr><td style="padding:16px 20px;border-bottom:1px solid #ede5d4;">
+                  <p style="margin:0 0 6px;font-weight:700;color:#2f7d52;font-size:0.95rem;">💸 Price Offers</p>
+                  <p style="margin:0;font-size:0.9rem;line-height:1.7;color:#555;">Riders can now make a custom price offer when booking a seat. If the driver's listed price doesn't work for you, simply name your price — the driver can accept, decline, or request the full amount. Great for making rides work for everyone's budget.</p>
+                </td></tr>
+                <tr><td style="padding:16px 20px;border-bottom:1px solid #ede5d4;">
+                  <p style="margin:0 0 6px;font-weight:700;color:#2f7d52;font-size:0.95rem;">🔁 Recurring Rides</p>
+                  <p style="margin:0;font-size:0.9rem;line-height:1.7;color:#555;">Drivers can save their regular routes and auto-post rides on a weekly or custom schedule — perfect for daily commutes or regular errands. Set it once and let the app handle the rest.</p>
+                </td></tr>
+                <tr><td style="padding:16px 20px;">
+                  <p style="margin:0 0 6px;font-weight:700;color:#2f7d52;font-size:0.95rem;">🗺️ Browse All Rides</p>
+                  <p style="margin:0;font-size:0.9rem;line-height:1.7;color:#555;">Riders no longer need to search a specific route. Just tap "view all rides" in the Trips tab to see every upcoming ride posted by drivers on the island.</p>
+                </td></tr>
+              </table>
 
-                    <p style="margin-bottom: 16px; font-weight: bold;">We also have two new features on our app:</p>
-
-                    <p style="margin-bottom: 12px;"><strong>(1) FIND A RIDE:</strong> riders can now browse all available rides in the trips tab without needing to search for a specific route. Simply open the app, tap "view all rides," and see all upcoming rides posted by drivers — making it easier than ever to find a trip that works for you.</p>
-
-                    <p style="margin-bottom: 24px;"><strong>(2) RECURRING RIDES:</strong> drivers can now set up recurring rides when posting a trip. Simply fill out the recurring ride tab under "post a ride" with your morning commute or daily grocery run. Then, press on that ride and it will populate below, and the only field you have to fill out is the date.</p>
-
-                    <p style="margin-top: 40px; margin-bottom: 8px;">Mahalo for joining cruise kauaʻi and helping our island home 🙏</p>
-                    <p style="margin: 0;">Founder & CEO,</p>
-                    <p style="margin: 0; font-weight: bold;">Willow</p>
-
-                    <hr style="border: none; border-top: 1px solid #ddd; margin: 40px 0;">
-
-                    <p style="font-size: 12px; color: #666; margin-bottom: 12px;">If you'd like to stop receiving these setup reminders, <a href="${unsubscribeUrl}" style="color: #0066cc;">click here</a>.</p>
-
-                    <p style="font-size: 13px; color: #666; margin-bottom: 8px;">Not sure how to use the app? <a href="https://www.cruisekauai.org/Welcome?tutorial=true" style="color:#3b82f6;">Re-watch our welcome tutorial here →</a></p>
-                    <p style="font-size: 12px; color: #999;">Replies to this email are not monitored. Please fill out the contact us form on the Cruise Kauaʻi website, or email willowvolkert@gmail.com, with any questions or concerns.</p>
-                    </body>
-                    </html>
-                    `.trim();
+              <p style="font-size:0.9rem;line-height:1.7;color:#666;margin:0 0 8px;">Not sure how to use the app? <a href="https://www.cruisekauai.org/Welcome?tutorial=true" style="color:#2f7d52;font-weight:600;">Re-watch the welcome tutorial →</a></p>
+            </td></tr>
+          </table>
+        </td></tr>
+        <tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:20px 32px;text-align:center;">
+          <p style="font-family:Georgia,serif;font-size:0.95rem;color:#888;font-style:italic;margin:0 0 8px;">Mahalo nui loa for helping our island home 🙏</p>
+          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0 0 4px;">— Willow, Founder of Cruise Kauaʻi · <a href="https://cruisekauai.org" style="color:#2f7d52;text-decoration:none;">cruisekauai.org</a></p>
+          <p style="font-size:0.75rem;color:#bbb;margin:4px 0 0;">Replies to this email are not monitored — contact us at <a href="mailto:willowvolkert@gmail.com" style="color:#bbb;">willowvolkert@gmail.com</a> with any questions.</p>
+          <p style="font-size:0.75rem;margin:8px 0 0;"><a href="${unsubscribeUrl}" style="color:#bbb;text-decoration:none;">unsubscribe from setup reminders</a></p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>`;
 
                     await base44.asServiceRole.integrations.Core.SendEmail({
                         from_name: 'Cruise Kauaʻi',
