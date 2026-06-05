@@ -167,14 +167,15 @@ Deno.serve(async (req) => {
       ridesPosted++;
     }, 5);
 
-    // Send confirmation emails
+    // Send confirmation emails + in-app notifications
     let emailsSent = 0;
     await runInBatches(emailsToSend, async ({ schedule, user, dateStr }) => {
       const confirmUrl = `${appUrl}/ConfirmRide?schedule_id=${schedule.id}&date=${dateStr}&trip_name=${encodeURIComponent(schedule.trip_name)}`;
-      await base44.asServiceRole.integrations.Core.SendEmail({
-        to: user.email,
-        subject: `⏰ Confirm your ride on ${dateStr} - Cruise Kauaʻi`,
-        body: `<html><body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;">
+      await Promise.all([
+        base44.asServiceRole.integrations.Core.SendEmail({
+          to: user.email,
+          subject: `⏰ Confirm your ride on ${dateStr} - Cruise Kauaʻi`,
+          body: `<html><body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;">
 <div style="text-align:center;margin-bottom:24px;">
   <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #f97316;" />
   <p style="margin:8px 0 0 0;font-weight:bold;color:#3b82f6;font-size:15px;">Cruise Kauaʻi</p>
@@ -188,7 +189,16 @@ Deno.serve(async (req) => {
 <p style="color:#6b7280;font-size:14px;">If you don't confirm within 24 hours, the ride listing will be automatically removed.</p>
 <p>Mahalo,<br/>Cruise Kauaʻi Team</p>
 </body></html>`
-      });
+        }),
+        base44.asServiceRole.entities.AdminMessage.create({
+          recipient_id: user.id,
+          recipient_name: user.full_name,
+          recipient_email: user.email,
+          subject: `⏰ Confirm your recurring ride on ${dateStr}`,
+          message: `Your recurring ride "${schedule.trip_name}" is auto-posted for ${dateStr}. Please confirm you'll be making this trip — if not confirmed within 24 hours, the listing will be automatically removed.\n\nTap here to confirm: ${confirmUrl}`,
+          message_type: 'action_required'
+        })
+      ]);
       emailsSent++;
     }, 5);
 
