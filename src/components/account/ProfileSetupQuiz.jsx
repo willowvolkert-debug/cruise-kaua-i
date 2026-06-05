@@ -272,6 +272,10 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     setSaving(false);
     // Fire onboarding email once (non-blocking)
     sendOnboardingEmail({}).catch(() => null);
+    base44.analytics.track({
+      eventName: "profile_setup_completed",
+      properties: { path: isDriverPath ? "driver" : "rider", island: answers.preferred_island || "Kauai" }
+    });
     setDone(true);
     setTimeout(() => onComplete(), 1800);
   };
@@ -293,6 +297,10 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
   const handleRiderTipsDone = () => {
     // Fire onboarding email once (non-blocking)
     sendOnboardingEmail({}).catch(() => null);
+    base44.analytics.track({
+      eventName: "profile_setup_completed",
+      properties: { path: "rider", island: answers.preferred_island || "Kauai" }
+    });
     navigate(createPageUrl("Trips"));
     onComplete();
   };
