@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Clock, MapPin, Calendar, MessageSquare, X } from "lucide-react";
+import { Clock, MapPin, Calendar, MessageSquare, X, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
+import { base44 } from "@/api/base44Client";
 
 // Helper to convert 24-hour time to 12-hour format with AM/PM
 const formatTime12Hour = (timeStr) => {
@@ -20,8 +21,21 @@ export default function PendingTripsCard({
   allRidesData = [], 
   getUserById, 
   onCancelRequest, 
-  onMessageDriver 
+  onMessageDriver,
+  onPayDifference
 }) {
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handlePayDifference = async (booking) => {
+    if (!onPayDifference) return;
+    setIsProcessing(true);
+    try {
+      await onPayDifference(booking);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   if (pendingBookings.length === 0) return null;
 
   return (
@@ -65,31 +79,64 @@ export default function PendingTripsCard({
                   Driver: @{driverUsername} • {booking.seats_booked} seat(s) • ${booking.total_amount?.toFixed(2)}
                 </p>
                 
-                <Badge variant="outline" className="bg-yellow-100 text-yellow-700 border-yellow-300 rounded-2xl">
-                  <Clock className="w-3 h-3 mr-1" />
-                  Awaiting driver approval
-                </Badge>
+                {/* Status Badge */}
+                {booking.price_offer_status === 'driver_requesting_full' ? (
+                  <Badge className="bg-orange-100 text-orange-800 border-orange-300 rounded-2xl">
+                    <AlertCircle className="w-3 h-3 mr-1" />
+                    Driver wants full price: ${ride.price_per_seat?.toFixed(2)}/seat
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="bg-yellow-100 text-yellow-700 border-yellow-300 rounded-2xl">
+                    <Clock className="w-3 h-3 mr-1" />
+                    Awaiting driver approval
+                  </Badge>
+                )}
                 
                 {/* Action Buttons */}
                 <div className="flex gap-2 pt-2">
-                  <Button
-                    onClick={() => onMessageDriver(booking, driverUsername, driverUser?.profile_picture_url)}
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 border-blue-300 text-blue-600 hover:bg-blue-50 rounded-2xl"
-                  >
-                    <MessageSquare className="w-4 h-4 mr-2" />
-                    Message Driver
-                  </Button>
-                  <Button
-                    onClick={() => onCancelRequest(booking)}
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 border-red-300 text-red-600 hover:bg-red-50 rounded-2xl"
-                  >
-                    <X className="w-4 h-4 mr-2" />
-                    Cancel Request
-                  </Button>
+                  {booking.price_offer_status === 'driver_requesting_full' ? (
+                    <>
+                      <Button
+                        onClick={() => handlePayDifference(booking)}
+                        disabled={isProcessing}
+                        className="flex-1 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl"
+                        size="sm"
+                      >
+                        <Clock className="w-4 h-4 mr-2" />
+                        {isProcessing ? 'Processing...' : `Pay Difference (${((ride.price_per_seat - (booking.offered_price || 0)) * booking.seats_booked).toFixed(2)})`}
+                      </Button>
+                      <Button
+                        onClick={() => onCancelRequest(booking)}
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 border-red-300 text-red-600 hover:bg-red-50 rounded-2xl"
+                      >
+                        <X className="w-4 h-4 mr-2" />
+                        Cancel & Refund
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        onClick={() => onMessageDriver(booking, driverUsername, driverUser?.profile_picture_url)}
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 border-blue-300 text-blue-600 hover:bg-blue-50 rounded-2xl"
+                      >
+                        <MessageSquare className="w-4 h-4 mr-2" />
+                        Message Driver
+                      </Button>
+                      <Button
+                        onClick={() => onCancelRequest(booking)}
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 border-red-300 text-red-600 hover:bg-red-50 rounded-2xl"
+                      >
+                        <X className="w-4 h-4 mr-2" />
+                        Cancel Request
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

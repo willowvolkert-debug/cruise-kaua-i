@@ -18,6 +18,7 @@ import RiderCancelModal from "../components/inbox/RiderCancelModal";
 import AdminMessageCard from "../components/inbox/AdminMessageCard";
 import DriverRideModal from "../components/inbox/DriverRideModal";
 import MyRideRequestsCard from "../components/inbox/MyRideRequestsCard";
+import { useSearchParams } from "react-router-dom";
 
 import { format } from "date-fns";
 import { formatHST } from "@/lib/formatHST";
@@ -152,6 +153,7 @@ const parseRideDateTimeHST = (dateStr, timeStr) => {
 };
 
 export default function InboxPage() {
+    const [searchParams] = useSearchParams();
     const [activeBookings, setActiveBookings] = useState([]);
     const [pendingRequests, setPendingRequests] = useState([]);
     const [myPendingBookings, setMyPendingBookings] = useState([]);
@@ -187,7 +189,48 @@ export default function InboxPage() {
     useEffect(() => {
         loadData();
         checkNotifications();
+        handlePaymentReturn();
     }, []);
+
+    const handlePaymentReturn = async () => {
+        const paymentStatus = searchParams.get('payment');
+        const bookingId = searchParams.get('booking_id');
+        const sessionId = searchParams.get('session_id');
+
+        if (paymentStatus === 'difference_paid' && bookingId && sessionId) {
+            try {
+                await base44.functions.invoke('handleDifferencePayment', {
+                    booking_id: bookingId,
+                    session_id: sessionId
+                });
+                // Clear params
+                window.history.replaceState({}, document.title, '/inbox');
+                loadData();
+                alert('✅ Payment successful! The driver has been notified. Please wait for them to accept your ride.');
+            } catch (error) {
+                console.error('Error processing difference payment:', error);
+            }
+        } else if (paymentStatus === 'difference_cancelled') {
+            window.history.replaceState({}, document.title, '/inbox');
+        }
+    };
+
+    const handlePayDifference = async (booking) => {
+        try {
+            const response = await base44.functions.invoke('createDifferenceCheckout', {
+                booking_id: booking.id,
+                success_url: window.location.origin + '/inbox',
+                cancel_url: window.location.origin + '/inbox'
+            });
+
+            if (response.data?.checkout_url) {
+                window.location.href = response.data.checkout_url;
+            }
+        } catch (error) {
+            console.error('Error creating difference checkout:', error);
+            alert('Error processing payment. Please try again.');
+        }
+    };
 
     const checkNotifications = () => {
         if ('Notification' in window) {
@@ -833,6 +876,7 @@ Please process the refund manually via Stripe.
                     getUserById={getUserById}
                     onCancelRequest={handleCancelPendingRequest}
                     onMessageDriver={handleMessageDriverFromPending}
+                    onPayDifference={handlePayDifference}
                 />
 
                 {/* Admin Messages Card */}
