@@ -283,7 +283,7 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
                           </div>
                           <div className="flex flex-col items-end gap-1.5">
                             {ride.offers_midpoint_pickup && (
-                              <span className="text-xs font-semibold text-green-700 bg-green-50 px-2.5 py-1 rounded-full border border-green-200">🛑 stops along route</span>
+                              <span className="text-xs font-semibold text-green-700 bg-green-50 px-2.5 py-1 rounded-full border border-green-200">🚗 pickup/dropoff available along route</span>
                             )}
                             <div className="flex items-center gap-1.5 text-gray-500">
                               <Users className="w-4 h-4" />
