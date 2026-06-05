@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
         <tr><td style="padding:32px 32px 24px;">
           <h1 style="font-family:Georgia,serif;font-size:1.5rem;font-weight:700;color:#1a1a1a;margin:0 0 16px;">Aloha, ${firstName}! 🌺</h1>
 
-          <p style="font-size:0.95rem;line-height:1.8;color:#444;margin:0 0 16px;"><strong>This is Willow, founder of Cruise Kauaʻi.</strong> Mahalo for creating an account with us! Cruise Kauaʻi is a community-based ride-sharing platform — like a combination of the bus, Uber, and the Nextdoor app — built to get cars off the road, put money in locals' pockets, and make transportation more affordable &amp; accessible for everyone on our island.</p>
+          <p style="font-size:0.95rem;line-height:1.8;color:#444;margin:0 0 16px;"><strong>This is Willow, founder of Cruise Kauaʻi.</strong> Mahalo for creating an account with us! Cruise Kauaʻi is a community carpooling service — like a combination of the bus, Uber, and Nextdoor. It connects drivers on the routes they're already taking with folks who need a ride. It gets cars off the road, puts money in locals' pockets, and makes transportation more affordable &amp; accessible for everyone on our island.</p>
 
           <p style="font-size:0.95rem;line-height:1.8;color:#444;margin:0 0 24px;">We'd love to have you fully set up so you can start sharing rides with your community. It only takes a few minutes!</p>
 
@@ -114,14 +114,11 @@ Deno.serve(async (req) => {
                   <p style="margin:0 0 6px;font-weight:700;color:#2f7d52;font-size:0.95rem;">💸 Price Offers</p>
                   <p style="margin:0;font-size:0.9rem;line-height:1.7;color:#555;">Riders can now make a custom price offer when booking a seat. If the driver's listed price doesn't work for you, simply name your price — the driver can accept, decline, or request the full amount. Great for making rides work for everyone's budget.</p>
                 </td></tr>
-                <tr><td style="padding:16px 20px;border-bottom:1px solid #ede5d4;">
+                <tr><td style="padding:16px 20px;">
                   <p style="margin:0 0 6px;font-weight:700;color:#2f7d52;font-size:0.95rem;">🔁 Recurring Rides</p>
                   <p style="margin:0;font-size:0.9rem;line-height:1.7;color:#555;">Drivers can save their regular routes and auto-post rides on a weekly or custom schedule — perfect for daily commutes or regular errands. Set it once and let the app handle the rest.</p>
                 </td></tr>
-                <tr><td style="padding:16px 20px;">
-                  <p style="margin:0 0 6px;font-weight:700;color:#2f7d52;font-size:0.95rem;">🗺️ Browse All Rides</p>
-                  <p style="margin:0;font-size:0.9rem;line-height:1.7;color:#555;">Riders no longer need to search a specific route. Just tap "view all rides" in the Trips tab to see every upcoming ride posted by drivers on the island.</p>
-                </td></tr>
+
               </table>
 
               <p style="font-size:0.9rem;line-height:1.7;color:#666;margin:0 0 8px;">Not sure how to use the app? <a href="https://www.cruisekauai.org/Welcome?tutorial=true" style="color:#2f7d52;font-weight:600;">Re-watch the welcome tutorial →</a></p>
