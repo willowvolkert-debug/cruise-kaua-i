@@ -133,7 +133,12 @@ export default function TripsPage() {
             ].map(({ id, emoji, label, desc }) => (
               <button
                 key={id}
-                onClick={() => setView(id)}
+                onClick={() => {
+                  if (id === "post") {
+                    base44.analytics.track({ eventName: "post_ride_button_clicked" });
+                  }
+                  setView(id);
+                }}
                 className="w-full flex items-center gap-5 p-5 rounded-3xl border-2 border-gray-200 bg-gray-50 hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
               >
                 <span className="text-4xl shrink-0">{emoji}</span>
