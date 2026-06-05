@@ -126,8 +126,6 @@ Deno.serve(async (req) => {
           </table>
         </td></tr>
         <tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:20px 32px;text-align:center;">
-          <p style="font-family:Georgia,serif;font-size:0.95rem;color:#888;font-style:italic;margin:0 0 8px;">Mahalo nui loa for helping our island home 🙏</p>
-          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0 0 4px;">— Willow, Founder of Cruise Kauaʻi · <a href="https://cruisekauai.org" style="color:#2f7d52;text-decoration:none;">cruisekauai.org</a></p>
           <p style="font-size:0.75rem;color:#bbb;margin:4px 0 0;">Replies to this email are not monitored — contact us at <a href="mailto:willowvolkert@gmail.com" style="color:#bbb;">willowvolkert@gmail.com</a> with any questions.</p>
           <p style="font-size:0.75rem;margin:8px 0 0;"><a href="${unsubscribeUrl}" style="color:#bbb;text-decoration:none;">unsubscribe from setup reminders</a></p>
         </td></tr>
