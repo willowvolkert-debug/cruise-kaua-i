@@ -14,8 +14,10 @@ import RiderSignupFlow from './pages/RiderSignupFlow';
 import JoinUs from './pages/JoinUs';
 import JoinPage from './pages/Join';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
+import { base44 } from '@/api/base44Client';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Welcome from './pages/Welcome';
+import Trips from './pages/Trips';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -27,9 +29,30 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin } = useAuth();
+  const [isCheckingAuth, setIsCheckingAuth] = React.useState(true);
+
+  // Check auth status on mount to determine landing page
+  React.useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        await base44.auth.me();
+        // User is authenticated - redirect to trips if on home
+        if (window.location.pathname === '/') {
+          window.location.replace('/trips');
+        }
+      } catch (e) {
+        // Not authenticated - stay on welcome page
+      }
+      setIsCheckingAuth(false);
+    };
+    
+    if (!isLoadingAuth && !isLoadingPublicSettings) {
+      checkAuth();
+    }
+  }, [isLoadingAuth, isLoadingPublicSettings]);
 
   // Show loading spinner while checking app public settings or auth
-  if (isLoadingPublicSettings || isLoadingAuth) {
+  if (isLoadingPublicSettings || isLoadingAuth || isCheckingAuth) {
     return (
       <div className="fixed inset-0 flex flex-col items-center justify-center bg-white gap-4">
         <img
@@ -65,6 +88,7 @@ const AuthenticatedApp = () => {
     <Routes>
       <Route path="/" element={<Welcome />} />
       <Route path="/welcome" element={<Welcome />} />
+      <Route path="/trips" element={<Trips />} />
       {Object.entries(Pages).map(([path, Page]) => (
         <Route
           key={path}
