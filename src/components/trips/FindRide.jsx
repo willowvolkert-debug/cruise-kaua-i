@@ -9,6 +9,7 @@ import { MapPin, Calendar, Users, AlertCircle, HelpCircle, Star, CheckCircle, Re
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { format, addDays, parseISO } from "date-fns";
+import DatePickerButton from "@/components/shared/DatePickerButton";
 import DriverProfileModal from "./DriverProfileModal";
 import BookingModal from "../rides/BookingModal";
 import FindRideTutorial from "../tutorial/FindRideTutorial";
@@ -155,22 +156,12 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
           <div className="flex flex-col sm:flex-row items-stretch gap-3">
             <div className="space-y-1.5 flex-1">
               <Label className="text-sm font-semibold text-gray-500 uppercase tracking-wide">from</Label>
-              <Input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="rounded-2xl text-base font-semibold h-12 border-2 border-gray-200 bg-white focus:border-primary"
-              />
+              <DatePickerButton value={startDate} onChange={setStartDate} placeholder="start date" />
             </div>
             <div className="hidden sm:flex items-end pb-3 text-gray-400 text-xl font-light">→</div>
             <div className="space-y-1.5 flex-1">
               <Label className="text-sm font-semibold text-gray-500 uppercase tracking-wide">to</Label>
-              <Input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="rounded-2xl text-base font-semibold h-12 border-2 border-gray-200 bg-white focus:border-primary"
-              />
+              <DatePickerButton value={endDate} onChange={setEndDate} placeholder="end date" />
             </div>
           </div>
           <div className="flex gap-2">

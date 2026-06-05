@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { MapPin, Users, Star, Search, Calendar } from "lucide-react";
 import { format, addDays, parseISO } from "date-fns";
+import DatePickerButton from "@/components/shared/DatePickerButton";
 import DriverProfileModal from "./DriverProfileModal";
 import BookingModal from "../rides/BookingModal";
 
@@ -119,12 +120,7 @@ export default function RouteSearch({ island }) {
         <div className="space-y-1">
           <Label className="text-sm font-semibold text-gray-700">date <span className="font-normal text-gray-400">(optional)</span></Label>
           <p className="text-xs text-gray-400 -mt-0.5">Leave empty if your schedule is flexible</p>
-          <Input
-            type="date"
-            value={date}
-            onChange={e => setDate(e.target.value)}
-            className="rounded-2xl h-11"
-          />
+          <DatePickerButton value={date} onChange={setDate} placeholder="any date" />
         </div>
         <Button
           onClick={handleSearch}
