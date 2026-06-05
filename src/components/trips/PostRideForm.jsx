@@ -1090,6 +1090,29 @@ export default function PostRideForm({ island = "Kauai" }) {
         </Card>
       )}
 
+      {(() => {
+        if (!canPostRide) return null;
+        const missing = [];
+        if (!rideData.departure_location) missing.push('coming from (starting location)');
+        if (!rideData.destination) missing.push('going to (destination)');
+        if (!rideData.departure_date) missing.push('departure date');
+        if (!rideData.departure_time.replace(/\s*(AM|PM)$/i, '').trim()) missing.push('departure time');
+        if (missing.length === 0) return null;
+        return (
+          <div className="rounded-2xl border-2 border-red-300 bg-red-50 px-4 py-3 flex items-start gap-3">
+            <span className="text-lg shrink-0">🚨</span>
+            <div>
+              <p className="font-bold text-red-700 text-sm">oops! still missing:</p>
+              <ul className="mt-1 space-y-0.5">
+                {missing.map(f => (
+                  <li key={f} className="text-red-600 text-sm">• {f}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        );
+      })()}
+
       <div className="mt-6 pb-8 space-y-2">
         <Button
           onClick={handleSubmit}
