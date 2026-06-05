@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -500,7 +501,7 @@ export default function PostRideForm({ island = "Kauai" }) {
         </Button>
       </div>
       <p className="text-sm text-gray-500 -mt-2 mb-2">
-        <a href="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">edit a pre-existing ride here →</a>
+        <Link to="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">edit a pre-existing ride here →</Link>
       </p>
 
       {respondingToRequest && (
@@ -1052,7 +1053,7 @@ export default function PostRideForm({ island = "Kauai" }) {
             <p className="text-green-800 font-medium">want to also post your return route?</p>
             <p className="text-sm text-green-700">
               need to edit?{" "}
-              <a href="/inbox" className="font-semibold underline underline-offset-2 hover:text-green-900">press here →</a>
+              <Link to="/inbox" className="font-semibold underline underline-offset-2 hover:text-green-900">press here →</Link>
             </p>
             <div className="flex gap-3">
               <Button
@@ -1099,9 +1100,9 @@ export default function PostRideForm({ island = "Kauai" }) {
           {isSubmitting ? 'posting...' : 'post ride'}
         </Button>
         <p className="text-center text-sm text-gray-500">
-          <a href="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">
-            edit a pre-existing ride here →
-          </a>
+          <Link to="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">
+          edit a pre-existing ride here →
+          </Link>
         </p>
       </div>
 
