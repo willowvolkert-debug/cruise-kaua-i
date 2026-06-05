@@ -787,7 +787,7 @@ export default function PostRideForm({ island = "Kauai" }) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">trip description (why?)</Label>
+                <Label htmlFor="description">trip description (why?) *</Label>
                 <Textarea
                   id="description"
                   value={rideData.description}
