@@ -56,19 +56,19 @@ Deno.serve(async (req) => {
                     const connectFee = rideAmount * connectFeeRate;
                     const totalPaid = session.amount_total / 100;
 
-                    // Update booking payment status
-                    await base44.entities.RideBooking.update(booking_id, {
+                    // Update booking payment status (use service role to ensure it works regardless of session state)
+                    await base44.asServiceRole.entities.RideBooking.update(booking_id, {
                         payment_status: 'paid',
                         stripe_charge_id: session.payment_intent,
                         initial_notification_sent: true
                     });
 
                     // Check if transaction already exists
-                    const existingTransactions = await base44.entities.Transaction.filter({ booking_id: booking_id });
+                    const existingTransactions = await base44.asServiceRole.entities.Transaction.filter({ booking_id: booking_id });
                     
                     if (existingTransactions.length === 0) {
                         // Create transaction record
-                        await base44.entities.Transaction.create({
+                        await base44.asServiceRole.entities.Transaction.create({
                             booking_id: booking_id,
                             ride_id: booking.ride_id,
                             payer_id: user.id,
