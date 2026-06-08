@@ -43,12 +43,9 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Ride not found' }, { status: 404 });
         }
 
-        // Format ride date/time in Hawaii Time for Stripe metadata
-        const rideDate = new Date(ride.departure_date + 'T' + ride.departure_time);
-        const hawaiiOffset = -10 * 60; // Hawaii is UTC-10
-        const hawaiiTime = new Date(rideDate.getTime() + (rideDate.getTimezoneOffset() + hawaiiOffset) * 60000);
-        const hawaiiDateStr = hawaiiTime.toLocaleDateString('en-US', { timeZone: 'Pacific/Honolulu', month: 'short', day: 'numeric', year: 'numeric' });
-        const hawaiiTimeStr = hawaiiTime.toLocaleTimeString('en-US', { timeZone: 'Pacific/Honolulu', hour: 'numeric', minute: '2-digit' });
+        // Format ride date/time for Stripe metadata (simple, no timezone math)
+        const hawaiiDateStr = ride.departure_date || '';
+        const hawaiiTimeStr = ride.departure_time || '';
 
 
 

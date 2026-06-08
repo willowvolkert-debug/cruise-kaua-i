@@ -22,6 +22,19 @@ export default function BookingSuccess() {
 
   const loadBookingDetails = async (bookingId) => {
     try {
+      const params = new URLSearchParams(window.location.search);
+      const sessionId = params.get("session_id");
+
+      // Call handlePaymentSuccess as the primary payment sync (webhook fallback)
+      if (sessionId) {
+        try {
+          const { handlePaymentSuccess } = await import("@/functions/handlePaymentSuccess");
+          await handlePaymentSuccess({ booking_id: bookingId, session_id: sessionId });
+        } catch (e) {
+          console.error("handlePaymentSuccess error:", e);
+        }
+      }
+
       // Poll up to 10 seconds for payment_status to become 'paid'
       let b = null;
       for (let i = 0; i < 10; i++) {
