@@ -495,17 +495,19 @@ export default function InboxPage() {
             // Just confirm the booking
             const ride = await base44.entities.Ride.get(booking.ride_id);
 
-            const initialMessage = {
-                sender_id: booking.passenger_id,
-                sender_name: booking.passenger_name,
-                message: booking.description,
-                timestamp: new Date().toISOString()
-            };
+            // Preserve existing messages (seeded at payment time), only add initial if none exist
+            const existingMessages = booking.messages || [];
+            const updateData = { booking_status: 'confirmed' };
+            if (existingMessages.length === 0 && booking.description) {
+                updateData.messages = [{
+                    sender_id: booking.passenger_id,
+                    sender_name: booking.passenger_name,
+                    message: booking.description,
+                    timestamp: new Date().toISOString()
+                }];
+            }
 
-            await base44.entities.RideBooking.update(booking.id, {
-                booking_status: 'confirmed',
-                messages: [initialMessage]
-            });
+            await base44.entities.RideBooking.update(booking.id, updateData);
 
             if (ride) {
                 const updatedSeats = ride.seats_available - booking.seats_booked;
@@ -803,10 +805,11 @@ Please process the refund manually via Stripe.
         }
     };
 
-    // Include pending paid bookings too so chat appears immediately after payment
+    // Include pending paid bookings too so chat appears immediately after payment (for both rider and driver)
     const allChattableBookings = [
         ...activeBookings,
-        ...(myPendingBookings || [])
+        ...(myPendingBookings || []),
+        ...(pendingRequests || [])
     ].filter((b, i, arr) => arr.findIndex(x => x.id === b.id) === i); // dedupe
 
     const recentChats = allChattableBookings
