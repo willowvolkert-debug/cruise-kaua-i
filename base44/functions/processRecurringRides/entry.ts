@@ -79,7 +79,10 @@ Deno.serve(async (req) => {
       const user = users.find(u => u.id === schedule.user_id);
       if (!user) continue;
 
-      const upcomingDates = getUpcomingOccurrences(schedule, 30);
+      const upcomingDates = getUpcomingOccurrences(schedule, 30).filter(dateStr => {
+        if (!schedule.end_date) return true;
+        return dateStr <= schedule.end_date;
+      });
 
       for (const dateStr of upcomingDates) {
         const rideDate = new Date(dateStr + 'T00:00:00');

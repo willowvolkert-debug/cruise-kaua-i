@@ -41,6 +41,11 @@
       },
       "description": "List of specific dates (YYYY-MM-DD) to post rides. Used for specific_dates schedule."
     },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Optional end date (YYYY-MM-DD) after which no more rides will be auto-posted"
+    },
     "is_active": {
       "type": "boolean",
       "default": true,

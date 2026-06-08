@@ -158,6 +158,7 @@ export default function RecurringAutoPostModal({ isOpen, onClose, trip, existing
   const [weeklyDays, setWeeklyDays] = useState([]);
   const [monthlyDay, setMonthlyDay] = useState(1);
   const [specificDates, setSpecificDates] = useState([]);
+  const [endDate, setEndDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -167,11 +168,13 @@ export default function RecurringAutoPostModal({ isOpen, onClose, trip, existing
       setWeeklyDays(existingSchedule.weekly_days || []);
       setMonthlyDay(existingSchedule.monthly_day || 1);
       setSpecificDates(existingSchedule.specific_dates || []);
+      setEndDate(existingSchedule.end_date || "");
     } else {
       setScheduleType("weekly");
       setWeeklyDays([]);
       setMonthlyDay(1);
       setSpecificDates([]);
+      setEndDate("");
     }
     setSuccess(false);
   }, [existingSchedule, isOpen]);
@@ -210,6 +213,7 @@ export default function RecurringAutoPostModal({ isOpen, onClose, trip, existing
         weekly_days: scheduleType === "weekly" ? weeklyDays : [],
         monthly_day: scheduleType === "monthly" ? monthlyDay : null,
         specific_dates: scheduleType === "specific_dates" ? specificDates : [],
+        end_date: endDate || null,
         is_active: true
       };
 
@@ -319,6 +323,26 @@ export default function RecurringAutoPostModal({ isOpen, onClose, trip, existing
                       </Badge>
                     ))}
                   </div>
+                )}
+              </div>
+            )}
+
+            {/* End date (optional) */}
+            {scheduleType !== "specific_dates" && (
+              <div className="space-y-2">
+                <Label className="font-semibold">end date <span className="text-gray-400 font-normal">(optional)</span></Label>
+                <p className="text-xs text-gray-500">stop auto-posting rides after this date</p>
+                <input
+                  type="date"
+                  value={endDate}
+                  min={new Date().toISOString().split('T')[0]}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="w-full border border-gray-300 rounded-2xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                {endDate && (
+                  <button type="button" onClick={() => setEndDate("")} className="text-xs text-gray-400 underline">
+                    clear end date
+                  </button>
                 )}
               </div>
             )}
