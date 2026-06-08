@@ -345,7 +345,7 @@ export default function ConfirmedRidesPage() {
                         <CardContent className="space-y-3">
                             {upcomingRides.map(ride => {
                                 const isDriver = String(ride.driver_id) === String(user?.id);
-                                const bookingsForRide = activeBookings.filter(b => b.ride_id === ride.id && b.booking_status === 'confirmed');
+                                const bookingsForRide = activeBookings.filter(b => b.ride_id === ride.id && (b.booking_status === 'confirmed' || b.booking_status === 'pending'));
 
                                 return (
                                     <div key={ride.id} className="bg-white rounded-xl border border-blue-200 overflow-hidden">
@@ -364,9 +364,16 @@ export default function ConfirmedRidesPage() {
                                                 <MapPin className="w-4 h-4 text-primary" />
                                                 <span className="font-semibold text-secondary">{ride.departure_location} → {ride.destination}</span>
                                             </div>
-                                            <Badge variant="outline" className={`text-xs ${isDriver ? 'bg-green-50 text-green-700 border-green-300' : 'bg-blue-50 text-blue-700 border-blue-300'}`}>
-                                                {isDriver ? 'you\'re driving' : 'you\'re riding'}
-                                            </Badge>
+                                            <div className="flex gap-2 flex-wrap">
+                                                <Badge variant="outline" className={`text-xs ${isDriver ? 'bg-green-50 text-green-700 border-green-300' : 'bg-blue-50 text-blue-700 border-blue-300'}`}>
+                                                    {isDriver ? 'you\'re driving' : 'you\'re riding'}
+                                                </Badge>
+                                                {!isDriver && activeBookings.find(b => b.ride_id === ride.id && String(b.passenger_id) === String(user?.id))?.booking_status === 'pending' && (
+                                                    <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-300">
+                                                        awaiting driver acceptance
+                                                    </Badge>
+                                                )}
+                                            </div>
                                         </button>
 
                                         {/* Show chat buttons for each confirmed booking */}
