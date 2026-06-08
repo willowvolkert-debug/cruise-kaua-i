@@ -53,9 +53,10 @@ Deno.serve(async (req) => {
 
 
         // Check if this is user's first COMPLETED PAYMENT
-        const existingBookings = await base44.entities.RideBooking.filter({ passenger_id: user.id });
+        // Use asServiceRole to ensure we get all bookings for this user across the platform
+        const existingBookings = await base44.asServiceRole.entities.RideBooking.list();
         const hasCompletedPayments = existingBookings.some(b => 
-            b.payment_status === 'paid'
+            String(b.passenger_id) === String(user.id) && b.payment_status === 'paid'
         );
         const isFirstBooking = !hasCompletedPayments;
 
