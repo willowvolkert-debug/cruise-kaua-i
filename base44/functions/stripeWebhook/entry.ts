@@ -24,6 +24,27 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Invalid signature' }, { status: 400 });
         }
 
+        // Handle failed/expired checkout sessions
+        if (event.type === 'checkout.session.expired' || 
+            (event.type === 'payment_intent.payment_failed')) {
+            const obj = event.data.object;
+            // For checkout session expired, metadata is on the session
+            // For payment_intent.payment_failed, we need to find the booking by stripe_charge_id
+            const bookingId = obj.metadata?.booking_id;
+            const failureReason = obj.last_payment_error?.message || 
+                                  obj.cancellation_reason || 
+                                  'Payment was blocked or failed';
+
+            if (bookingId) {
+                await base44.asServiceRole.entities.RideBooking.update(bookingId, {
+                    payment_status: 'failed',
+                    payment_failure_reason: failureReason
+                });
+                console.log(`Payment failed for booking ${bookingId}: ${failureReason}`);
+            }
+            return Response.json({ received: true });
+        }
+
         if (event.type === 'checkout.session.completed') {
             const session = event.data.object;
             const { booking_id, ride_id, passenger_id, driver_id } = session.metadata;

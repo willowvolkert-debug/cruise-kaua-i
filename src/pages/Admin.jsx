@@ -47,6 +47,7 @@ export default function AdminPage() {
   const [newRecurringSchedules, setNewRecurringSchedules] = useState([]);
   const [contactInquiries, setContactInquiries] = useState([]);
   const [phoneAlerts, setPhoneAlerts] = useState([]);
+  const [failedPaymentBookings, setFailedPaymentBookings] = useState([]);
   const [allBookingsWithMessages, setAllBookingsWithMessages] = useState([]);
   const [pendingCommunityPosts, setPendingCommunityPosts] = useState([]);
   const [landingPageViews, setLandingPageViews] = useState(0);
@@ -134,6 +135,10 @@ export default function AdminPage() {
       const allBookings = await base44.entities.RideBooking.list('-updated_date');
       const phoneDetected = allBookings.filter(b => b.phone_number_detected === true);
       setPhoneAlerts(phoneDetected);
+
+      // Failed payments
+      const failedPayments = allBookings.filter(b => b.payment_status === 'failed');
+      setFailedPaymentBookings(failedPayments);
 
       // All bookings with at least one message
       const withMessages = allBookings.filter(b => b.messages && b.messages.length > 0);
@@ -636,6 +641,44 @@ export default function AdminPage() {
             </Badge>
           </div>
         </div>
+
+        {/* Failed Payment Alerts - Top Priority */}
+        {failedPaymentBookings.length > 0 && (
+          <Card className="shadow-lg border-red-400 bg-red-50 rounded-3xl">
+            <CardHeader>
+              <CardTitle className="text-xl text-red-800 flex items-center gap-2">
+                <AlertCircle className="w-6 h-6 text-red-600" />
+                failed / blocked payments ({failedPaymentBookings.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-red-700 mb-4 text-sm">
+                These payments were blocked or failed in Stripe. The rider must submit a new booking request.
+              </p>
+              <div className="space-y-3">
+                {failedPaymentBookings.map(booking => (
+                  <div key={booking.id} className="bg-white rounded-lg p-4 border border-red-300">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="font-semibold text-secondary">
+                          {booking.passenger_name} → @{booking.driver_username || 'Driver'}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          ${booking.total_amount?.toFixed(2)} · {booking.seats_booked} seat{booking.seats_booked > 1 ? 's' : ''}
+                        </p>
+                        {booking.payment_failure_reason && (
+                          <p className="text-xs text-red-700 mt-1">Reason: {booking.payment_failure_reason}</p>
+                        )}
+                        <p className="text-xs text-gray-400 mt-1">Booking: {booking.id.substring(0, 10)}…</p>
+                      </div>
+                      <Badge className="bg-red-600 text-white shrink-0">blocked</Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Phone Number Alerts - Top Priority */}
         {phoneAlerts.length > 0 && (

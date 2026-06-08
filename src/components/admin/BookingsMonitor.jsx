@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Car, ChevronDown, ChevronUp, RefreshCw } from "lucide-react";
+import { MessageSquare, Car, ChevronDown, ChevronUp, RefreshCw, AlertTriangle } from "lucide-react";
 import { formatHST } from "@/lib/formatHST";
 
 const STATUS_COLORS = {
@@ -17,9 +17,10 @@ const STATUS_COLORS = {
 
 function BookingRow({ booking }) {
   const [expanded, setExpanded] = useState(false);
+  const isFailed = booking.payment_status === "failed";
 
   return (
-    <div className="border border-gray-200 rounded-2xl overflow-hidden bg-white">
+    <div className={`border rounded-2xl overflow-hidden ${isFailed ? "border-red-400 bg-red-50" : "border-gray-200 bg-white"}`}>
       {/* Header row */}
       <button
         onClick={() => setExpanded(!expanded)}
@@ -37,6 +38,12 @@ function BookingRow({ booking }) {
             </Badge>
             {booking.payment_status === "paid" && (
               <Badge className="bg-emerald-100 text-emerald-700 text-xs border border-emerald-300">💳 paid</Badge>
+            )}
+            {isFailed && (
+              <Badge className="bg-red-600 text-white text-xs flex items-center gap-1">
+                <AlertTriangle className="w-3 h-3" />
+                payment failed
+              </Badge>
             )}
             {booking.messages?.length > 0 && (
               <span className="flex items-center gap-1 text-xs text-gray-500">
@@ -63,6 +70,15 @@ function BookingRow({ booking }) {
             <span><strong>has luggage:</strong> {booking.has_luggage ? "yes" : "no"}</span>
           </div>
 
+          {isFailed && (
+            <div className="p-3 bg-red-100 border border-red-300 rounded-xl text-sm text-red-800 mb-2">
+              <p className="font-semibold flex items-center gap-2"><AlertTriangle className="w-4 h-4" /> Payment blocked/failed</p>
+              {booking.payment_failure_reason && (
+                <p className="text-xs mt-1 text-red-700">Reason: {booking.payment_failure_reason}</p>
+              )}
+              <p className="text-xs mt-1 text-red-600">Rider needs to submit a new booking request.</p>
+            </div>
+          )}
           {booking.messages && booking.messages.length > 0 ? (
             <div className="space-y-2 max-h-72 overflow-y-auto">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">message thread</p>
@@ -112,12 +128,14 @@ export default function BookingsMonitor() {
 
 
   const filtered = filter === "all" ? bookings
+    : filter === "failed" ? bookings.filter(b => b.payment_status === "failed")
     : filter === "paid" ? bookings.filter(b => b.payment_status === "paid" && b.booking_status === "pending")
     : bookings.filter(b => b.booking_status === filter);
 
   const counts = {
     all: bookings.length,
-    pending: bookings.filter(b => b.booking_status === "pending" && b.payment_status !== "paid").length,
+    failed: bookings.filter(b => b.payment_status === "failed").length,
+    pending: bookings.filter(b => b.booking_status === "pending" && b.payment_status !== "paid" && b.payment_status !== "failed").length,
     paid: bookings.filter(b => b.payment_status === "paid" && b.booking_status === "pending").length,
     confirmed: bookings.filter(b => b.booking_status === "confirmed").length,
     completed: bookings.filter(b => b.booking_status === "completed").length,
@@ -151,17 +169,17 @@ export default function BookingsMonitor() {
         <CardContent className="p-4 space-y-4">
           {/* Filter tabs */}
           <div className="flex flex-wrap gap-2">
-            {["all", "pending", "paid", "confirmed", "completed", "cancelled"].map(s => (
+            {["all", "failed", "pending", "paid", "confirmed", "completed", "cancelled"].map(s => (
               <button
                 key={s}
                 onClick={() => setFilter(s)}
                 className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
                   filter === s
-                    ? "bg-primary text-white border-primary"
-                    : "bg-white text-gray-600 border-gray-300 hover:border-primary"
+                    ? s === "failed" ? "bg-red-600 text-white border-red-600" : "bg-primary text-white border-primary"
+                    : s === "failed" && counts.failed > 0 ? "bg-red-50 text-red-700 border-red-400 hover:border-red-600" : "bg-white text-gray-600 border-gray-300 hover:border-primary"
                 }`}
               >
-                {s} ({counts[s] ?? 0})
+                {s === "failed" && counts.failed > 0 ? "⚠ " : ""}{s} ({counts[s] ?? 0})
               </button>
             ))}
           </div>

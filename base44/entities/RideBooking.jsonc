@@ -59,25 +59,20 @@
     },
     "is_partial_ride": {
       "type": "boolean",
-      "default": false,
-      "description": "Whether rider is only taking a section of the full route"
+      "default": false
     },
     "partial_from": {
-      "type": "string",
-      "description": "Where rider wants to be picked up (partial ride)"
+      "type": "string"
     },
     "partial_to": {
-      "type": "string",
-      "description": "Where rider wants to be dropped off (partial ride)"
+      "type": "string"
     },
     "is_price_offer": {
       "type": "boolean",
-      "default": false,
-      "description": "Whether the rider submitted a custom price offer instead of the requested price"
+      "default": false
     },
     "offered_price": {
-      "type": "number",
-      "description": "The custom price per seat the rider offered, if is_price_offer is true"
+      "type": "number"
     },
     "price_offer_status": {
       "type": "string",
@@ -87,17 +82,21 @@
         "driver_requesting_full",
         "rejected"
       ],
-      "default": "pending",
-      "description": "Status of the rider's price offer negotiation"
+      "default": "pending"
     },
     "payment_status": {
       "type": "string",
       "enum": [
         "pending",
         "paid",
-        "refunded"
+        "refunded",
+        "failed"
       ],
       "default": "pending"
+    },
+    "payment_failure_reason": {
+      "type": "string",
+      "description": "Reason the payment was blocked or failed (from Stripe)"
     },
     "payment_method_id": {
       "type": "string"
@@ -134,7 +133,7 @@
     },
     "read_message_counts": {
       "type": "object",
-      "description": "Map of userId -> number of messages they've read (to track unread)",
+      "description": "Map of userId -> number of messages they've read",
       "default": {}
     },
     "phone_number_detected": {
