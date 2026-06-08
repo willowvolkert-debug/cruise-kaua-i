@@ -30,6 +30,7 @@ export default function JoinPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [signupError, setSignupError] = useState("");
   const [signupLoading, setSignupLoading] = useState(false);
 
@@ -302,14 +303,23 @@ export default function JoinPage() {
               </div>
               <div>
                 <label className="text-sm font-semibold text-gray-700 mb-1 block">confirm password</label>
-                <Input
-                  type="password"
-                  placeholder="re-enter password"
-                  value={confirmPassword}
-                  onChange={e => setConfirmPassword(e.target.value)}
-                  className="rounded-xl h-12"
-                  onKeyDown={e => e.key === "Enter" && handleSignup()}
-                />
+                <div className="relative">
+                  <Input
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="re-enter password"
+                    value={confirmPassword}
+                    onChange={e => setConfirmPassword(e.target.value)}
+                    className="rounded-xl h-12 pr-10"
+                    onKeyDown={e => e.key === "Enter" && handleSignup()}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
               {signupError && (
                 <p className="text-red-500 text-sm font-medium">{signupError}</p>
