@@ -36,6 +36,11 @@ const AuthenticatedApp = () => {
   // Check auth status on mount to determine landing page
   React.useEffect(() => {
     const checkAuth = async () => {
+      // Skip auth check on success page — just render it immediately
+      if (window.location.pathname === '/bookingsuccess') {
+        setIsCheckingAuth(false);
+        return;
+      }
       try {
         await base44.auth.me();
         // User is authenticated - redirect to trips if on home

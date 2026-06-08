@@ -14,7 +14,7 @@ export default function BookingSuccess() {
     const params = new URLSearchParams(window.location.search);
     const bookingId = params.get("booking_id");
     if (!bookingId) {
-      navigate("/confirmedrides");
+      setLoading(false);
       return;
     }
     loadBookingDetails(bookingId);
@@ -22,21 +22,22 @@ export default function BookingSuccess() {
 
   const loadBookingDetails = async (bookingId) => {
     try {
-      // Poll up to 8 seconds for payment_status to become 'paid'
+      // Poll up to 10 seconds for payment_status to become 'paid'
       let b = null;
-      for (let i = 0; i < 8; i++) {
-        const results = await base44.entities.RideBooking.filter({ id: bookingId });
-        b = results[0];
+      for (let i = 0; i < 10; i++) {
+        const results = await base44.entities.RideBooking.list();
+        b = results.find(r => r.id === bookingId) || null;
         if (b && b.payment_status === "paid") break;
         await new Promise(r => setTimeout(r, 1000));
       }
       if (b) {
         setBooking(b);
-        const rides = await base44.entities.Ride.filter({ id: b.ride_id });
-        setRide(rides[0] || null);
+        const rides = await base44.entities.Ride.list();
+        const foundRide = rides.find(r => r.id === b.ride_id) || null;
+        setRide(foundRide);
       }
     } catch (e) {
-      // silently handle
+      console.error("BookingSuccess load error:", e);
     }
     setLoading(false);
   };
