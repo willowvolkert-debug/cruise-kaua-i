@@ -178,8 +178,11 @@ Deno.serve(async (req) => {
     const PAGE_SIZE = 50;
 
     const seenEmails = new Set();
+    // Exclude drivers (users with car_model, driver_license_state, or has_posted_rides)
     const allRecipients = allUsers.filter(u => {
       if (!u.email || seenEmails.has(u.email)) return false;
+      // Skip drivers - they get the driver-specific daily update
+      if (u.car_model || u.driver_license_state || u.has_posted_rides) return false;
       seenEmails.add(u.email);
       const freq = u.email_update_frequency || 'daily';
       if (freq === 'never') return false;
