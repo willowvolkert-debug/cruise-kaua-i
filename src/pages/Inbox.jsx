@@ -277,9 +277,25 @@ export default function InboxPage() {
             }
             setAllUsers(allUsersList);
 
-            const allRides = await base44.entities.Ride.list();
-            setAllRidesData(allRides);
             const allBookings = await base44.entities.RideBooking.list();
+
+            // Collect all ride IDs we need to fetch
+            const myBookingRideIds = allBookings
+                .filter(b => String(b.passenger_id) === String(currentUser.id) || String(b.driver_id) === String(currentUser.id))
+                .map(b => b.ride_id)
+                .filter(id => id && !id.startsWith('ride-request-'));
+
+            // Fetch my own rides (as driver) + rides referenced in my bookings (as passenger)
+            const [myOwnRides, ...bookingRideResults] = await Promise.all([
+                base44.entities.Ride.list(),
+                ...myBookingRideIds.map(id => base44.entities.Ride.get(id).catch(() => null))
+            ]);
+
+            // Merge, deduplicate
+            const rideMap = new Map();
+            [...myOwnRides, ...bookingRideResults].forEach(r => { if (r) rideMap.set(r.id, r); });
+            const allRides = Array.from(rideMap.values());
+            setAllRidesData(allRides);
 
             const myRideIds = allRides.filter(r => String(r.driver_id) === String(currentUser.id)).map(r => r.id);
             // Only show pending requests where payment has been completed

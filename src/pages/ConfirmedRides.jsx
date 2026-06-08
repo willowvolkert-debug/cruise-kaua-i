@@ -120,11 +120,26 @@ export default function ConfirmedRidesPage() {
             const currentUser = await base44.auth.me();
             setUser(currentUser);
 
-            const [allRides, allBookings, allRatings] = await Promise.all([
-                base44.entities.Ride.list(),
+            const [allBookings, allRatings] = await Promise.all([
                 base44.entities.RideBooking.list(),
                 base44.entities.Rating.list()
             ]);
+
+            // Collect ride IDs from bookings we're involved in
+            const myBookingRideIds = allBookings
+                .filter(b => String(b.passenger_id) === String(currentUser.id) || String(b.driver_id) === String(currentUser.id))
+                .map(b => b.ride_id)
+                .filter(id => id && !id.startsWith('ride-request-'));
+
+            // Fetch own rides (as driver) + rides from bookings (as passenger)
+            const [myOwnRides, ...bookingRideResults] = await Promise.all([
+                base44.entities.Ride.list(),
+                ...myBookingRideIds.map(id => base44.entities.Ride.get(id).catch(() => null))
+            ]);
+
+            const rideMap = new Map();
+            [...myOwnRides, ...bookingRideResults].forEach(r => { if (r) rideMap.set(r.id, r); });
+            const allRides = Array.from(rideMap.values());
             setAllRidesData(allRides);
 
             const confirmedBookings = allBookings.filter(b => {
