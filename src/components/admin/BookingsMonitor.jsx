@@ -96,7 +96,7 @@ function BookingRow({ booking }) {
 export default function BookingsMonitor() {
   const [bookings, setBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState("pending");
   const [expanded, setExpanded] = useState(false);
 
   const load = () => {
