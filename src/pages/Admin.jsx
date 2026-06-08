@@ -695,11 +695,19 @@ export default function AdminPage() {
               </p>
               <div className="space-y-3">
                 {phoneAlerts.map(booking => (
-                  <button
-                    key={booking.id}
-                    onClick={() => { setSelectedPhoneAlert(booking); setShowPhoneAlertModal(true); }}
-                    className="w-full bg-white rounded-lg p-4 border border-red-200 hover:shadow-md transition-shadow text-left"
-                  >
+                   <button
+                     key={booking.id}
+                     onClick={() => {
+                       const stillExists = allBookingsWithMessages.find(b => b.id === booking.id);
+                       if (stillExists) {
+                         setSelectedPhoneAlert(booking);
+                         setShowPhoneAlertModal(true);
+                       } else {
+                         loadData();
+                       }
+                     }}
+                     className="w-full bg-white rounded-lg p-4 border border-red-200 hover:shadow-md transition-shadow text-left"
+                   >
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-semibold text-secondary">
