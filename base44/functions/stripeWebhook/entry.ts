@@ -6,7 +6,7 @@ Deno.serve(async (req) => {
     const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
     // Initialize base44 client first (before reading body)
     const base44 = createClientFromRequest(req);
-    
+     
     try {
         const body = await req.text();
         const signature = req.headers.get('stripe-signature');
