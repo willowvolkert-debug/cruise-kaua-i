@@ -1,12 +1,10 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+
+// Runs daily via scheduled automation — no user auth needed, uses service role throughout
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    if (user?.role !== 'admin') {
-      return Response.json({ error: 'Forbidden' }, { status: 403 });
-    }
 
     const allUsers = await base44.asServiceRole.entities.User.list();
     const today = new Date();
@@ -18,22 +16,17 @@ Deno.serve(async (req) => {
     for (const u of allUsers) {
       if (u.drivers_license_verified && u.license_expiry_date) {
         const expiry = new Date(u.license_expiry_date + 'T00:00:00');
-        if (expiry <= today) {
-          expiredLicenseUsers.push(u);
-        }
+        if (expiry <= today) expiredLicenseUsers.push(u);
       }
       if (u.vehicle_verified && u.insurance_expiry_date) {
         const expiry = new Date(u.insurance_expiry_date + 'T00:00:00');
-        if (expiry <= today) {
-          expiredInsuranceUsers.push(u);
-        }
+        if (expiry <= today) expiredInsuranceUsers.push(u);
       }
     }
 
     const results = { license_expired: [], insurance_expired: [] };
 
     for (const u of expiredLicenseUsers) {
-      // Check if we already sent an alert recently (avoid duplicates)
       const existing = await base44.asServiceRole.entities.AdminMessage.filter({
         recipient_id: 'admin',
         subject: `⚠️ Expired License: ${u.full_name}`
