@@ -8,6 +8,7 @@ import { formatHST } from "@/lib/formatHST";
 
 const STATUS_COLORS = {
   pending: "bg-yellow-100 text-yellow-800 border-yellow-300",
+  paid: "bg-emerald-100 text-emerald-800 border-emerald-300",
   confirmed: "bg-green-100 text-green-800 border-green-300",
   completed: "bg-blue-100 text-blue-800 border-blue-300",
   cancelled: "bg-gray-100 text-gray-600 border-gray-300",
@@ -108,11 +109,16 @@ export default function BookingsMonitor() {
 
   useEffect(() => { load(); }, []);
 
-  const filtered = filter === "all" ? bookings : bookings.filter(b => b.booking_status === filter);
+
+
+  const filtered = filter === "all" ? bookings
+    : filter === "paid" ? bookings.filter(b => b.payment_status === "paid" && b.booking_status === "pending")
+    : bookings.filter(b => b.booking_status === filter);
 
   const counts = {
     all: bookings.length,
-    pending: bookings.filter(b => b.booking_status === "pending").length,
+    pending: bookings.filter(b => b.booking_status === "pending" && b.payment_status !== "paid").length,
+    paid: bookings.filter(b => b.payment_status === "paid" && b.booking_status === "pending").length,
     confirmed: bookings.filter(b => b.booking_status === "confirmed").length,
     completed: bookings.filter(b => b.booking_status === "completed").length,
     cancelled: bookings.filter(b => b.booking_status === "cancelled").length,
@@ -145,7 +151,7 @@ export default function BookingsMonitor() {
         <CardContent className="p-4 space-y-4">
           {/* Filter tabs */}
           <div className="flex flex-wrap gap-2">
-            {["all", "pending", "confirmed", "completed", "cancelled"].map(s => (
+            {["all", "pending", "paid", "confirmed", "completed", "cancelled"].map(s => (
               <button
                 key={s}
                 onClick={() => setFilter(s)}
