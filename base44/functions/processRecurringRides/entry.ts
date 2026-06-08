@@ -108,16 +108,16 @@ Deno.serve(async (req) => {
           schedule.confirmation_sent_dates = [...(schedule.confirmation_sent_dates || []), dateStr];
         }
 
-        // STEP 3: Queue ride deletion if confirmation sent but not confirmed within 24h window
-        if (confirmationSent && !isConfirmed && rideDate < in24h && rideDate >= today) {
-          const rideToDelete = existingRides.find(r =>
-            r.driver_id === schedule.user_id &&
-            r.departure_date === dateStr &&
-            r.departure_location === trip.departure_location &&
-            r.destination === trip.destination
-          );
-          if (rideToDelete) ridesToDelete.push(rideToDelete.id);
-        }
+        // STEP 3: Auto-delete disabled — rides are no longer removed for missing confirmation
+        // if (confirmationSent && !isConfirmed && rideDate < in24h && rideDate >= today) {
+        //   const rideToDelete = existingRides.find(r =>
+        //     r.driver_id === schedule.user_id &&
+        //     r.departure_date === dateStr &&
+        //     r.departure_location === trip.departure_location &&
+        //     r.destination === trip.destination
+        //   );
+        //   if (rideToDelete) ridesToDelete.push(rideToDelete.id);
+        // }
 
         // STEP 4: Queue cleanup of past specific_dates
         if (schedule.schedule_type === 'specific_dates' && rideDate < today) {
