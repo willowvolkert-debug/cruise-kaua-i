@@ -44,6 +44,7 @@ export default function AdminPage() {
   const [userEdits, setUserEdits] = useState([]);
   const [recentRideRequests, setRecentRideRequests] = useState([]);
   const [recentRides, setRecentRides] = useState([]);
+  const [newRecurringSchedules, setNewRecurringSchedules] = useState([]);
   const [contactInquiries, setContactInquiries] = useState([]);
   const [phoneAlerts, setPhoneAlerts] = useState([]);
   const [allBookingsWithMessages, setAllBookingsWithMessages] = useState([]);
@@ -108,7 +109,11 @@ export default function AdminPage() {
       const allRides = await base44.entities.Ride.list('-created_date', 500);
       const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
       const newRideRequests = allRideRequests.filter(r => new Date(r.created_date) > threeDaysAgo && r.status === 'active');
-      const newRides = allRides.filter(r => new Date(r.created_date) > threeDaysAgo && r.status === 'active');
+      // Only show one-off rides (not auto-posted recurring instances) + new recurring schedules set up recently
+      const newRides = allRides.filter(r => new Date(r.created_date) > threeDaysAgo && r.status === 'active' && !r.is_recurring);
+      // New recurring schedules created in last 72h
+      const allRecurringSchedules = await base44.entities.RecurringSchedule.list('-created_date', 200);
+      const newRecurringSchedules = allRecurringSchedules.filter(s => new Date(s.created_date) > threeDaysAgo);
 
       setPendingLicenses(pendingLic);
       setPendingVehicles(pendingVeh);
@@ -118,6 +123,7 @@ export default function AdminPage() {
       setUserEdits(unreviewedEdits);
       setRecentRideRequests(newRideRequests);
       setRecentRides(newRides);
+      setNewRecurringSchedules(newRecurringSchedules);
 
       // Load contact inquiries
       const allInquiries = await base44.entities.ContactInquiry.list('-created_date');
@@ -974,7 +980,7 @@ export default function AdminPage() {
         )}
 
         {/* New Ride Requests & Rides */}
-        {(recentRideRequests.length > 0 || recentRides.length > 0) && (
+        {(recentRideRequests.length > 0 || recentRides.length > 0 || newRecurringSchedules.length > 0) && (
           <Card className="shadow-lg border-blue-300 bg-blue-50 rounded-3xl">
             <CardHeader>
               <CardTitle className="text-xl text-blue-800 flex items-center justify-between">
@@ -992,7 +998,7 @@ export default function AdminPage() {
                     {showNewActivity ? 'hide' : 'show'}
                   </Button>
                   <Button
-                    onClick={() => { setRecentRideRequests([]); setRecentRides([]); }}
+                    onClick={() => { setRecentRideRequests([]); setRecentRides([]); setNewRecurringSchedules([]); }}
                     variant="ghost"
                     size="sm"
                     className="text-blue-700 hover:bg-blue-100"
@@ -1036,66 +1042,67 @@ export default function AdminPage() {
                   </div>
                 </div>
               )}
-              {recentRides.length > 0 && (() => {
-                // Group rides: recurring ones (is_recurring=true) share driver+route+time → show once with count
-                const groups = [];
-                const seen = new Map();
-                for (const ride of recentRides) {
-                  if (ride.is_recurring) {
-                    const key = `${ride.driver_id}|${ride.departure_location}|${ride.destination}|${ride.departure_time}`;
-                    if (seen.has(key)) {
-                      seen.get(key).count++;
-                    } else {
-                      const entry = { ride, count: 1, isRecurring: true };
-                      seen.set(key, entry);
-                      groups.push(entry);
-                    }
-                  } else {
-                    groups.push({ ride, count: 1, isRecurring: false });
-                  }
-                }
-                return (
-                  <div>
-                    <h3 className="font-semibold text-blue-900 mb-2">posted rides ({groups.length} unique)</h3>
-                    <div className="grid gap-3">
-                      {groups.map(({ ride, count, isRecurring }) => (
-                        <div key={ride.id} className="bg-white rounded-lg p-4 border border-blue-200">
+              {recentRides.length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-blue-900 mb-2">new one-off rides ({recentRides.length})</h3>
+                  <div className="grid gap-3">
+                    {recentRides.map(ride => (
+                      <div key={ride.id} className="bg-white rounded-lg p-4 border border-blue-200">
+                        <div className="flex items-center gap-4">
+                          <Avatar className="w-10 h-10 bg-gradient-to-r from-primary to-secondary">
+                            <AvatarFallback className="text-white font-semibold text-sm">
+                              {getInitials(ride.driver_name)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1">
+                            <button
+                              onClick={() => { const u = users.find(u => u.id === ride.driver_id); if (u) handleViewUserAccount(u.id); }}
+                              className="font-semibold text-secondary hover:text-primary transition-colors text-left"
+                            >{ride.driver_name}</button>
+                            <p className="text-sm text-gray-600">{ride.departure_location} → {ride.destination}</p>
+                            <p className="text-xs text-gray-500">{format(new Date(ride.departure_date + 'T00:00:00'), "MM/dd/yyyy")} at {ride.departure_time}</p>
+                          </div>
+                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300">
+                            {ride.seats_available} seat{ride.seats_available > 1 ? 's' : ''}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {newRecurringSchedules.length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-blue-900 mb-2">new recurring schedules set up ({newRecurringSchedules.length})</h3>
+                  <div className="grid gap-3">
+                    {newRecurringSchedules.map(schedule => {
+                      const u = users.find(u => u.id === schedule.user_id);
+                      return (
+                        <div key={schedule.id} className="bg-white rounded-lg p-4 border border-purple-200">
                           <div className="flex items-center gap-4">
                             <Avatar className="w-10 h-10 bg-gradient-to-r from-primary to-secondary">
                               <AvatarFallback className="text-white font-semibold text-sm">
-                                {getInitials(ride.driver_name)}
+                                {getInitials(u?.full_name || schedule.trip_name)}
                               </AvatarFallback>
                             </Avatar>
                             <div className="flex-1">
                               <button
-                                onClick={() => {
-                                  const u = users.find(u => u.id === ride.driver_id);
-                                  if (u) handleViewUserAccount(u.id);
-                                }}
+                                onClick={() => { if (u) handleViewUserAccount(u.id); }}
                                 className="font-semibold text-secondary hover:text-primary transition-colors text-left"
-                              >{ride.driver_name}</button>
-                              <p className="text-sm text-gray-600">{ride.departure_location} → {ride.destination}</p>
-                              <p className="text-xs text-gray-500">
-                                {isRecurring ? `recurring · ${ride.departure_time}` : `${format(new Date(ride.departure_date + 'T00:00:00'), "MM/dd/yyyy")} at ${ride.departure_time}`}
-                              </p>
+                              >{u?.full_name || 'Unknown'}</button>
+                              <p className="text-sm text-gray-600">{schedule.trip_name}</p>
+                              <p className="text-xs text-gray-500">{schedule.schedule_type} · set up {format(new Date(schedule.created_date), "MM/dd/yyyy")}</p>
                             </div>
-                            <div className="flex flex-col items-end gap-1">
-                              {isRecurring && (
-                                <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-300 text-xs">
-                                  🔁 {count}x this week
-                                </Badge>
-                              )}
-                              <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300">
-                                {ride.seats_available} seat{ride.seats_available > 1 ? 's' : ''}
-                              </Badge>
-                            </div>
+                            <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-300 text-xs">
+                              🔁 recurring
+                            </Badge>
                           </div>
                         </div>
-                      ))}
-                    </div>
+                      );
+                    })}
                   </div>
-                );
-              })()}
+                </div>
+              )}
               </CardContent>
             )}
           </Card>
