@@ -130,10 +130,10 @@ export default function ConfirmedRidesPage() {
             const confirmedBookings = allBookings.filter(b => {
                 const isPassenger = String(b.passenger_id) === String(currentUser.id);
                 const isDriver = String(b.driver_id) === String(currentUser.id);
-                const isConfirmed = b.booking_status === 'confirmed';
+                const isConfirmedOrPending = b.booking_status === 'confirmed' || b.booking_status === 'pending';
                 const isPaid = b.payment_status === 'paid';
-                const isRideRequestReply = isConfirmed && b.total_amount === 0 && b.ride_id?.startsWith('ride-request-');
-                return (isPassenger || isDriver) && isConfirmed && (isPaid || isRideRequestReply);
+                const isRideRequestReply = b.booking_status === 'confirmed' && b.total_amount === 0 && b.ride_id?.startsWith('ride-request-');
+                return (isPassenger || isDriver) && isConfirmedOrPending && (isPaid || isRideRequestReply);
             });
             setActiveBookings(confirmedBookings);
 
