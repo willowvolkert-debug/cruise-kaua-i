@@ -174,8 +174,8 @@ export default function ConfirmedRidesPage() {
                 return rideDateTime.toComparable() > nowComparable;
             });
 
-            // Upcoming rides (passenger)
-            const myBookedRides = stillActive
+            // Upcoming rides (passenger) - use all confirmedBookings, not just stillActive
+            const myBookedRides = confirmedBookings
                 .filter(b => String(b.passenger_id) === String(currentUser.id))
                 .map(b => allRides.find(r => r.id === b.ride_id))
                 .filter(ride => {

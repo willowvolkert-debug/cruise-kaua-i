@@ -328,7 +328,7 @@ export default function InboxPage() {
             const hawaiiNow = getHawaiiNow();
 
             for (const booking of userActiveBookings) {
-                const ride = allRides.find(r => String(r.id) === String(booking.id));
+                const ride = allRides.find(r => String(r.id) === String(booking.ride_id));
 
                 if (ride) {
                     // Parse ride date/time as Hawaii local time
@@ -856,6 +856,50 @@ Please process the refund manually via Stripe.
                 </div>
 
 
+
+                {/* Rides Needing Review */}
+                {ridesNeedingReview.length > 0 && (
+                    <Card className="shadow-lg border-orange-300 bg-orange-50 rounded-3xl">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-orange-900">
+                                <Star className="w-6 h-6 text-orange-500" />
+                                leave a review ({ridesNeedingReview.length})
+                            </CardTitle>
+                            <p className="text-sm text-orange-700">your recent trips are waiting for a review!</p>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                            {ridesNeedingReview.map(({ booking, ride }) => {
+                                const isDriver = String(ride.driver_id) === String(user?.id);
+                                const otherUsername = isDriver
+                                    ? (booking.passenger_username || booking.passenger_name)
+                                    : (booking.driver_username || ride.driver_name);
+                                const otherUserId = isDriver ? booking.passenger_id : ride.driver_id;
+                                return (
+                                    <div key={booking.id} className="bg-white rounded-xl p-4 border border-orange-200">
+                                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-600 mb-1">
+                                            <span className="flex items-center gap-1"><Calendar className="w-4 h-4" />{format(parseDateString(ride.departure_date), "MM/dd/yyyy")}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <MapPin className="w-4 h-4 text-primary" />
+                                            <span className="font-semibold text-secondary">{ride.departure_location} → {ride.destination}</span>
+                                        </div>
+                                        <p className="text-sm text-gray-600 mb-3">trip with @{otherUsername}</p>
+                                        <Button
+                                            onClick={() => {
+                                                setCurrentReviewUser({ username: otherUsername, id: otherUserId });
+                                                setCurrentReviewRide(ride);
+                                                setShowReviewModal(true);
+                                            }}
+                                            className="w-full bg-primary hover:bg-primary/90 rounded-2xl"
+                                        >
+                                            <Star className="w-4 h-4 mr-1" /> leave review for @{otherUsername}
+                                        </Button>
+                                    </div>
+                                );
+                            })}
+                        </CardContent>
+                    </Card>
+                )}
 
                 {/* My Ride Requests */}
                 <MyRideRequestsCard
