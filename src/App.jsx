@@ -17,6 +17,8 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import { base44 } from '@/api/base44Client';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Welcome from './pages/Welcome';
+import TermsOfService from './pages/TermsOfService';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -87,6 +89,8 @@ const AuthenticatedApp = () => {
     <Routes>
       <Route path="/" element={<Welcome />} />
       <Route path="/welcome" element={<Welcome />} />
+      <Route path="/termsofservice" element={<TermsOfService />} />
+      <Route path="/privacypolicy" element={<PrivacyPolicy />} />
 
       {Object.entries(Pages).map(([path, Page]) => (
         <Route

@@ -463,6 +463,20 @@ export default function WelcomePage() {
       </section>
 
       <WelcomeTutorialModal isOpen={showTutorial} onClose={() => setShowTutorial(false)} />
+
+      {/* ── FOOTER ── */}
+      <footer className="bg-gray-900 text-gray-400 px-6 py-8 text-center space-y-3">
+        <p className="text-white font-bold text-base">cruise kauaʻi</p>
+        <p className="text-sm">sharing aloha one ride at a time</p>
+        <div className="flex flex-wrap items-center justify-center gap-4 text-sm pt-1">
+          <a href="/termsofservice" className="hover:text-white underline underline-offset-2 transition-colors">Terms of Service</a>
+          <span className="text-gray-600">·</span>
+          <a href="/privacypolicy" className="hover:text-white underline underline-offset-2 transition-colors">Privacy Policy</a>
+          <span className="text-gray-600">·</span>
+          <a href="mailto:cruisekauai@gmail.com" className="hover:text-white underline underline-offset-2 transition-colors">cruisekauai@gmail.com</a>
+        </div>
+        <p className="text-xs text-gray-600 pt-2">© {new Date().getFullYear()} Cruise Kauaʻi. All rights reserved.</p>
+      </footer>
     </div>);
 
 }
