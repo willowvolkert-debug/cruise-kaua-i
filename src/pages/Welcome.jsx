@@ -89,9 +89,14 @@ export default function WelcomePage() {
           alt={`${config.appName} logo`}
           className="relative z-10 w-32 h-32 md:w-40 md:h-40 object-cover rounded-3xl shadow-2xl border-2 border-white/20 mb-6" />
         
-        <h1 className="relative z-10 text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-3 leading-tight">
+        <h1 className="relative z-10 text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-1 leading-tight">
           {config.appName}
         </h1>
+        {config.islandSubtitle && (
+          <p className="relative z-10 text-xl md:text-2xl font-semibold text-white/70 mb-2 tracking-wide">
+            {config.islandSubtitle}
+          </p>
+        )}
         <p className="relative z-10 text-base md:text-lg text-white/80 font-medium leading-relaxed max-w-xs mx-auto mb-2">
           {config.heroSubtitle || "a community carpooling service in hawaiʻi"}
         </p>
@@ -466,7 +471,7 @@ export default function WelcomePage() {
 
       {/* ── FOOTER ── */}
       <footer className="bg-gray-900 text-gray-400 px-6 py-8 text-center space-y-3">
-        <p className="text-white font-bold text-base">cruise kauaʻi</p>
+        <p className="text-white font-bold text-base">cruise hawaiʻi</p>
         <p className="text-sm">sharing aloha one ride at a time</p>
         <div className="flex flex-wrap items-center justify-center gap-4 text-sm pt-1">
           <a href="/termsofservice" className="hover:text-white underline underline-offset-2 transition-colors">Terms of Service</a>
