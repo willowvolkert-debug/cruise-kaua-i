@@ -1879,19 +1879,23 @@ export default function AdminPage() {
                 </div>
 
                 <div className="flex gap-3 pt-2 border-t border-gray-200">
-                  <Button
-                    onClick={async () => {
-                      await base44.entities.RideBooking.update(selectedPhoneAlert.id, { phone_number_detected: false });
-                      setShowPhoneAlertModal(false);
-                      setSelectedPhoneAlert(null);
-                      loadData();
-                    }}
-                    variant="outline"
-                    className="flex-1 border-green-300 text-green-700 hover:bg-green-50"
-                  >
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    mark reviewed (dismiss)
-                  </Button>
+                   <Button
+                     onClick={async () => {
+                       try {
+                         await base44.entities.RideBooking.update(selectedPhoneAlert.id, { phone_number_detected: false });
+                       } catch (e) {
+                         console.error("Error marking phone alert reviewed:", e);
+                       }
+                       setShowPhoneAlertModal(false);
+                       setSelectedPhoneAlert(null);
+                       loadData();
+                     }}
+                     variant="outline"
+                     className="flex-1 border-green-300 text-green-700 hover:bg-green-50"
+                   >
+                     <CheckCircle className="w-4 h-4 mr-2" />
+                     mark reviewed (dismiss)
+                   </Button>
                   <Button
                     onClick={() => {
                       const u = users.find(u => u.id === selectedPhoneAlert.passenger_id);
