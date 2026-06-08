@@ -132,10 +132,14 @@ Deno.serve(async (req) => {
       return parseTime(a.departure_time) - parseTime(b.departure_time);
     };
 
+    const tomorrowStr = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
     const newRides = allRides.filter(r => {
       if (r.is_recurring) {
-        return r.departure_date >= todayStr && r.departure_date <= in7days;
+        // Only include recurring rides happening today or tomorrow
+        return r.departure_date === todayStr || r.departure_date === tomorrowStr;
       }
+      // Non-recurring: posted in last 24 hours and not in the past
       return r.created_date >= since && r.departure_date >= todayStr;
     }).sort(rideSort);
     const newRequests = allRequests.filter(r => r.created_date >= since).sort(rideSort);
