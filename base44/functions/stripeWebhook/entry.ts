@@ -65,8 +65,11 @@ Deno.serve(async (req) => {
             // Get ride details
             const ride = await base44.asServiceRole.entities.Ride.get(ride_id);
 
+            // Use ride's driver_id (the actual ride poster), not the metadata's driver_id
+            const actualDriverId = ride?.driver_id || driver_id;
+
             // Get driver details
-            const driver = await base44.asServiceRole.entities.User.get(driver_id);
+            const driver = await base44.asServiceRole.entities.User.get(actualDriverId);
 
             // Get passenger details
             const passenger = await base44.asServiceRole.entities.User.get(passenger_id);
@@ -100,7 +103,7 @@ Deno.serve(async (req) => {
                 ride_id: ride_id,
                 payer_id: passenger_id,
                 payer_name: passenger?.full_name || booking.passenger_name,
-                recipient_id: driver_id,
+                recipient_id: actualDriverId,
                 recipient_name: driver?.full_name || 'Driver',
                 ride_amount: rideAmount, // This amount goes to driver
                 connect_fee: connectFee, // This amount goes to Cruise Kauaʻi business
@@ -114,25 +117,28 @@ Deno.serve(async (req) => {
             // Send notification email to driver
             if (driver?.email) {
                 try {
+                    let emailBody = `Hi ${driver.full_name || 'Driver'},\n\nYou have a new ride request! The rider has already paid.\n\nRider: ${booking.passenger_name} (@${booking.passenger_username || 'user'})\nSeats requested: ${booking.seats_booked}\n`;
+
+                    // If price offer was used, show pricing details and action buttons
+                    if (booking.is_price_offer) {
+                        const originalPrice = ride?.price_per_seat || 0;
+                        const offeredPrice = booking.offered_price || 0;
+                        emailBody += `\n⚠️ PRICE OFFER USED\nYour asking price: $${originalPrice.toFixed(2)} per seat\nRider offered: $${offeredPrice.toFixed(2)} per seat\nYour payout if accepted: $${rideAmount.toFixed(2)}\n`;
+                        emailBody += `\nWhat would you like to do?\n1. Accept the offer: https://www.cruisekauai.org/inbox?action=accept_offer&booking_id=${booking_id}\n2. Request full fare: https://www.cruisekauai.org/inbox?action=request_full_fare&booking_id=${booking_id}\n3. Deny request: https://www.cruisekauai.org/inbox?action=deny_request&booking_id=${booking_id}\n`;
+                    } else {
+                        emailBody += `Your payout: $${rideAmount.toFixed(2)} (after the rider confirms the trip)\n`;
+                    }
+
+                    if (booking.description) {
+                        emailBody += `\nRider's message: "${booking.description}"\n`;
+                    }
+
+                    emailBody += `\nPlease log into Cruise Kauaʻi to accept or decline this request.\n\nMahalo,\nCruise Kauaʻi Team`;
+
                     await base44.asServiceRole.integrations.Core.SendEmail({
                         to: driver.email,
-                        subject: `🚗 New ride request from ${booking.passenger_name}!`,
-                        body: `
-Hi ${driver.full_name || 'Driver'},
-
-You have a new ride request! The rider has already paid.
-
-Rider: ${booking.passenger_name} (@${booking.passenger_username || 'user'})
-Seats requested: ${booking.seats_booked}
-Your payout: $${rideAmount.toFixed(2)} (after the rider confirms the trip)
-
-${booking.description ? `Rider's message: "${booking.description}"` : ''}
-
-Please log into Cruise Kauaʻi to accept or decline this request.
-
-Mahalo,
-Cruise Kauaʻi Team
-                        `.trim()
+                        subject: booking.is_price_offer ? `💰 Price offer received from ${booking.passenger_name}!` : `🚗 New ride request from ${booking.passenger_name}!`,
+                        body: emailBody
                     });
                 } catch (emailError) {
                     console.error('Error sending driver notification email:', emailError);
