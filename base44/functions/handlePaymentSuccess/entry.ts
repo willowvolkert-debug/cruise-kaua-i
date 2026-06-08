@@ -56,11 +56,20 @@ Deno.serve(async (req) => {
                     const connectFee = rideAmount * connectFeeRate;
                     const totalPaid = session.amount_total / 100;
 
-                    // Update booking payment status (use service role to ensure it works regardless of session state)
+                    // Seed initial message thread from rider's description
+                    const initialMessages = booking.description ? [{
+                        sender_id: user.id,
+                        sender_name: booking.passenger_name,
+                        message: booking.description,
+                        timestamp: new Date().toISOString()
+                    }] : [];
+
+                    // Update booking payment status + seed message thread
                     await base44.asServiceRole.entities.RideBooking.update(booking_id, {
                         payment_status: 'paid',
                         stripe_charge_id: session.payment_intent,
-                        initial_notification_sent: true
+                        initial_notification_sent: true,
+                        ...(initialMessages.length > 0 && (!booking.messages || booking.messages.length === 0) ? { messages: initialMessages } : {})
                     });
 
                     // Check if transaction already exists

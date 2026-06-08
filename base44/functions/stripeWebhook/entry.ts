@@ -56,11 +56,20 @@ Deno.serve(async (req) => {
             const connectFeeRate = ride?.driver_license_state === 'HI' ? 0.10 : 0.30;
             const connectFee = rideAmount * connectFeeRate;
 
-            // Update booking to paid status
+            // Seed initial message thread from rider's description
+            const initialMessages = booking.description ? [{
+                sender_id: passenger_id,
+                sender_name: booking.passenger_name,
+                message: booking.description,
+                timestamp: new Date().toISOString()
+            }] : [];
+
+            // Update booking to paid status + seed message thread
             await base44.asServiceRole.entities.RideBooking.update(booking_id, {
                 payment_status: 'paid',
                 stripe_charge_id: session.payment_intent,
-                initial_notification_sent: true
+                initial_notification_sent: true,
+                ...(initialMessages.length > 0 && (!booking.messages || booking.messages.length === 0) ? { messages: initialMessages } : {})
             });
 
             // Create transaction record

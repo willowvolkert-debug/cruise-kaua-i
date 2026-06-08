@@ -803,7 +803,13 @@ Please process the refund manually via Stripe.
         }
     };
 
-    const recentChats = activeBookings
+    // Include pending paid bookings too so chat appears immediately after payment
+    const allChattableBookings = [
+        ...activeBookings,
+        ...(myPendingBookings || [])
+    ].filter((b, i, arr) => arr.findIndex(x => x.id === b.id) === i); // dedupe
+
+    const recentChats = allChattableBookings
         .filter(booking => {
             if (!booking.messages || booking.messages.length === 0) return false;
             // Ride-request reply bookings always show (no real ride attached)
@@ -820,7 +826,6 @@ Please process the refund manually via Stripe.
             const isDriver = String(user?.id) === String(booking.driver_id);
             const otherUserId = isDriver ? booking.passenger_id : booking.driver_id;
             const otherUser = getUserById(otherUserId);
-            // For drivers viewing passengers, use passenger info; for passengers viewing drivers, use driver info from booking
             const otherPartyUsername = otherUser?.username || (isDriver 
                 ? (booking.passenger_username || booking.passenger_name) 
                 : (booking.driver_username || allRidesData.find(r => r.id === booking.ride_id)?.driver_name || "Driver"));
