@@ -46,7 +46,7 @@ const buildEmailBody = (firstName, newRides, newRequests, recipientId) => {
     </table>` : '';
 
   const requestsSection = newRequests.length > 0 ? `
-    <h2 style="font-family:Georgia,serif;font-size:1.1rem;font-weight:700;color:#1a1a1a;margin:0 0 8px;">🙋 New Ride Requests (${newRequests.length})</h2>
+    <h2 style="font-family:Georgia,serif;font-size:1.1rem;font-weight:700;color:#1a1a1a;margin:0 0 8px;">🙋 Open Ride Requests (${newRequests.length})</h2>
     <table width="100%" cellpadding="0" cellspacing="0" style="background:#faf7f2;border:1px solid #ede5d4;border-radius:12px;margin:0 0 24px;overflow:hidden;">
       ${requestRows}
       ${newRequests.length > 5 ? `<tr><td style="padding:10px 16px;text-align:center;font-size:0.82rem;color:#888;">+${newRequests.length - 5} more requests</td></tr>` : ''}
@@ -142,10 +142,11 @@ Deno.serve(async (req) => {
       // Non-recurring: posted in last 24 hours and not in the past
       return r.created_date >= since && r.departure_date >= todayStr;
     }).sort(rideSort);
-    const newRequests = allRequests.filter(r => r.created_date >= since).sort(rideSort);
+    // Include all active ride requests where the trip date hasn't passed yet
+    const newRequests = allRequests.filter(r => r.departure_date >= todayStr).sort(rideSort);
 
     const subject = newRequests.length > 0
-      ? `${newRides.length} new ride${newRides.length !== 1 ? 's' : ''} + ${newRequests.length} request${newRequests.length !== 1 ? 's' : ''} posted today`
+      ? `${newRides.length} new ride${newRides.length !== 1 ? 's' : ''} posted today + ${newRequests.length} open ride request${newRequests.length !== 1 ? 's' : ''}`
       : `${newRides.length} new ride${newRides.length !== 1 ? 's' : ''} posted today`;
 
     if (testEmail) {
