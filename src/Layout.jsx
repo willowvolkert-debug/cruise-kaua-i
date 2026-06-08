@@ -256,6 +256,13 @@ export default function Layout({ children, currentPageName }) {
           // Mark as seen since they're authenticated — no need to redirect back to Welcome
           base44.auth.updateMe({ has_seen_welcome: true });
         }
+
+        // Send welcome email immediately on first load if not yet sent
+        if (!user.onboarding_email_sent) {
+          import('@/functions/sendWelcomeEmail').then(({ sendWelcomeEmail }) => {
+            sendWelcomeEmail({});
+          }).catch(() => {});
+        }
         // Skip the old tutorial intro for new users — WelcomeNewUserModal handles onboarding now
 
         // Load unread counts
