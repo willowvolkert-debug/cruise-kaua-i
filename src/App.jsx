@@ -19,6 +19,7 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Welcome from './pages/Welcome';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import BookingSuccess from './pages/BookingSuccess';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -91,6 +92,7 @@ const AuthenticatedApp = () => {
       <Route path="/welcome" element={<Welcome />} />
       <Route path="/termsofservice" element={<TermsOfService />} />
       <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+      <Route path="/bookingsuccess" element={<BookingSuccess />} />
 
       {Object.entries(Pages).map(([path, Page]) => (
         <Route

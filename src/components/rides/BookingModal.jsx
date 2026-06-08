@@ -135,7 +135,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         offered_price: bookingData.is_price_offer ? parseFloat(bookingData.offered_price) : null,
         driver_id: ride.driver_id,
         driver_username: ride.driver_username || '',
-        success_url: window.location.origin + '/trips',
+        success_url: window.location.origin + '/bookingsuccess',
         cancel_url: window.location.origin + '/trips'
       });
 
