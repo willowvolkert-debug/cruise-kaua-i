@@ -11,6 +11,7 @@ import ChatModal from "../components/inbox/ChatModal";
 import RiderCancelModal from "../components/inbox/RiderCancelModal";
 import DriverRideModal from "../components/inbox/DriverRideModal";
 import { sendBookingEmail } from "../functions/sendBookingEmail";
+import PendingTripsCard from "../components/inbox/PendingTripsCard";
 
 const formatTime12Hour = (timeStr) => {
     if (!timeStr) return '';
@@ -111,6 +112,7 @@ export default function ConfirmedRidesPage() {
     const [reviewData, setReviewData] = useState({ rating: 0, comment: '' });
     const [currentReviewUser, setCurrentReviewUser] = useState(null);
     const [currentReviewRide, setCurrentReviewRide] = useState(null);
+    const [myPendingBookings, setMyPendingBookings] = useState([]);
 
     useEffect(() => { loadData(); }, []);
 
@@ -141,6 +143,14 @@ export default function ConfirmedRidesPage() {
             [...myOwnRides, ...bookingRideResults].forEach(r => { if (r) rideMap.set(r.id, r); });
             const allRides = Array.from(rideMap.values());
             setAllRidesData(allRides);
+
+            // Rider's pending paid bookings (awaiting driver acceptance)
+            const riderPendingBookings = allBookings.filter(b =>
+                String(b.passenger_id) === String(currentUser.id) &&
+                b.booking_status === 'pending' &&
+                b.payment_status === 'paid'
+            );
+            setMyPendingBookings(riderPendingBookings);
 
             const confirmedBookings = allBookings.filter(b => {
                 const isPassenger = String(b.passenger_id) === String(currentUser.id);
@@ -230,6 +240,45 @@ export default function ConfirmedRidesPage() {
             console.error(e);
         }
         setIsLoading(false);
+    };
+
+    const handleCancelPendingRequest = async (booking) => {
+        if (!confirm("Are you sure you want to cancel this ride request? Your payment will be refunded.")) return;
+        try {
+            await base44.entities.RideBooking.update(booking.id, {
+                booking_status: 'cancelled',
+                cancellation_reason: 'Cancelled by rider before acceptance',
+                cancellation_date: new Date().toISOString()
+            });
+            alert("Ride request cancelled successfully. Your payment will be refunded.");
+            loadData();
+        } catch (error) {
+            console.error("Error cancelling request:", error);
+            alert("Error cancelling request. Please try again.");
+        }
+    };
+
+    const handleMessageDriverFromPending = (booking, driverUsername, driverPicture) => {
+        setSelectedBooking(booking);
+        setSelectedChatName(driverUsername);
+        setSelectedChatPicture(driverPicture || '');
+        setShowChatModal(true);
+    };
+
+    const handlePayDifference = async (booking) => {
+        try {
+            const response = await base44.functions.invoke('createDifferenceCheckout', {
+                booking_id: booking.id,
+                success_url: window.location.origin + '/confirmedrides',
+                cancel_url: window.location.origin + '/confirmedrides'
+            });
+            if (response.data?.checkout_url) {
+                window.location.href = response.data.checkout_url;
+            }
+        } catch (error) {
+            console.error('Error creating difference checkout:', error);
+            alert('Error processing payment. Please try again.');
+        }
     };
 
     const handleOpenChat = (booking, otherPartyName, otherPartyPicture) => {
@@ -347,6 +396,16 @@ export default function ConfirmedRidesPage() {
                         </CardContent>
                     </Card>
                 )}
+
+                {/* Pending Trips Card for Riders */}
+                <PendingTripsCard
+                    pendingBookings={myPendingBookings}
+                    allRidesData={allRidesData}
+                    getUserById={() => null}
+                    onCancelRequest={handleCancelPendingRequest}
+                    onMessageDriver={handleMessageDriverFromPending}
+                    onPayDifference={handlePayDifference}
+                />
 
                 {/* Upcoming Rides */}
                 {upcomingRides.length > 0 ? (

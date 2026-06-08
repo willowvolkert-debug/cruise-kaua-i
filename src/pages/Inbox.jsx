@@ -941,15 +941,7 @@ Please process the refund manually via Stripe.
                     onDismiss={handleDismissRejection}
                 />
 
-                {/* Pending Trips Card for Riders */}
-                <PendingTripsCard
-                    pendingBookings={myPendingBookings}
-                    allRidesData={allRidesData}
-                    getUserById={getUserById}
-                    onCancelRequest={handleCancelPendingRequest}
-                    onMessageDriver={handleMessageDriverFromPending}
-                    onPayDifference={handlePayDifference}
-                />
+
 
                 {/* Admin Messages Card */}
                 <AdminMessageCard
