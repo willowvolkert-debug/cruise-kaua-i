@@ -26,6 +26,17 @@ export default function ConfirmRidePage() {
     setScheduleId(sid);
     setDate(d);
     if (name) setTripName(decodeURIComponent(name));
+
+    // Auto-confirm immediately on page load
+    setStatus("confirming");
+    confirmRecurringRide({ schedule_id: sid, date: d }).then(res => {
+      if (res.data?.success) {
+        if (res.data.trip_name) setTripName(res.data.trip_name);
+        setStatus("confirmed");
+      } else {
+        setStatus("error");
+      }
+    }).catch(() => setStatus("error"));
   }, []);
 
   const handleConfirm = async () => {
