@@ -178,19 +178,37 @@ Deno.serve(async (req) => {
         base44.asServiceRole.integrations.Core.SendEmail({
           to: user.email,
           subject: `⏰ Confirm your ride on ${dateStr} - Cruise Kauaʻi`,
-          body: `<html><body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;">
-<div style="text-align:center;margin-bottom:24px;">
-  <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #f97316;" />
-  <p style="margin:8px 0 0 0;font-weight:bold;color:#3b82f6;font-size:15px;">Cruise Kauaʻi</p>
-</div>
-<h2 style="color:#3b82f6;">Aloha ${user.full_name}! 👋</h2>
-<p>Your recurring ride <strong>${schedule.trip_name}</strong> is auto-posted for <strong>${dateStr}</strong>.</p>
-<p>Please confirm you'll be making this trip, or it will be <strong>removed within 24 hours</strong>:</p>
-<p style="text-align:center;margin:24px 0;">
-  <a href="${confirmUrl}" style="background-color:#f97316;color:white;padding:14px 28px;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block;font-size:16px;">✅ Yes, I'm making this trip</a>
-</p>
-<p style="color:#6b7280;font-size:14px;">If you don't confirm within 24 hours, the ride listing will be automatically removed.</p>
-<p>Mahalo,<br/>Cruise Kauaʻi Team</p>
+          body: `<html><body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;background-color:#f5f0e8;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f0e8;">
+  <tr><td align="center" style="padding:32px 16px;">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+      <tr><td align="center" style="padding:32px 24px 20px;border-bottom:1px solid #f0ebe0;">
+        <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;display:block;margin:0 auto 10px;" />
+        <div style="font-family:Georgia,serif;font-size:1.3rem;font-weight:700;color:#1a1a1a;">Confirm your recurring ride</div>
+      </td></tr>
+      <tr><td style="padding:32px 32px 24px;">
+        <div style="background:#fff3cd;border-left:4px solid #e8742a;border-radius:8px;padding:14px 16px;margin-bottom:24px;">
+          <p style="margin:0;font-weight:600;color:#d48806;font-size:0.9rem;">⏰ Action required</p>
+        </div>
+        <h1 style="font-family:Georgia,serif;font-size:1.5rem;font-weight:700;color:#1a1a1a;margin:0 0 12px;">Aloha ${user.full_name}! 🤙</h1>
+        <p style="font-size:0.95rem;line-height:1.7;color:#444;margin:0 0 24px;">Your recurring ride <strong>"${schedule.trip_name}"</strong> is auto-posted for <strong>${dateStr}</strong>. Please confirm you'll be making this trip — if not confirmed within 24 hours, the listing will be automatically removed.</p>
+        <table width="100%" cellpadding="0" cellspacing="0">
+          <tr><td align="center" style="padding:8px 0 24px;">
+            <a href="${confirmUrl}" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:600;font-size:1rem;padding:14px 36px;border-radius:50px;">✅ Confirm I'm Making This Trip →</a>
+          </td></tr>
+        </table>
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0fdf4;border:1px solid #dcfce7;border-radius:12px;padding:14px 16px;margin-bottom:24px;">
+          <tr><td>
+            <p style="margin:0;font-size:0.85rem;color:#166534;line-height:1.5;">💡 Or simply reply to this email with <strong>confirm</strong> and we'll take care of it for you.</p>
+          </td></tr>
+        </table>
+      </td></tr>
+      <tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:20px 32px;text-align:center;">
+        <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0;">— The Cruise Kaua'i Team</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
 </body></html>`
         }),
         base44.asServiceRole.entities.AdminMessage.create({

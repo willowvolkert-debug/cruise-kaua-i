@@ -42,8 +42,38 @@ Deno.serve(async (req) => {
     const users = await base44.asServiceRole.entities.User.list();
     const user = users.find(u => u.email.toLowerCase() === fromEmail.toLowerCase());
     
+    // Check if this is a recurring ride confirmation reply
+    const messageLower = message.toLowerCase().trim();
+    if (user && messageLower.includes('confirm') && (subject.includes('Confirm your ride') || subject.includes('recurring ride'))) {
+      // Extract schedule_id and date from subject or message
+      // Subject format: "⏰ Confirm your ride on 2026-06-10 - Cruise Kauaʻi"
+      const dateMatch = subject.match(/Confirm your ride on (\d{4}-\d{2}-\d{2})/);
+      if (dateMatch) {
+        const dateStr = dateMatch[1];
+        // Find the schedule for this user with this date
+        const schedules = await base44.asServiceRole.entities.RecurringSchedule.list();
+        const schedule = schedules.find(s => s.user_id === user.id);
+        
+        if (schedule) {
+          // Confirm the ride using same logic as the button
+          const confirmedDates = [...(schedule.confirmed_dates || [])];
+          if (!confirmedDates.includes(dateStr)) {
+            confirmedDates.push(dateStr);
+            await base44.asServiceRole.entities.RecurringSchedule.update(schedule.id, { confirmed_dates: confirmedDates });
+          }
+          
+          return Response.json({ 
+            success: true,
+            message: 'Recurring ride confirmed successfully',
+            action: 'ride_confirmed',
+            date: dateStr
+          });
+        }
+      }
+    }
+    
+    // Default: create inquiry from reply
     if (!user) {
-      // Create inquiry from unknown user
       await base44.asServiceRole.entities.ContactInquiry.create({
         user_id: 'unknown',
         user_name: fromName,
@@ -54,7 +84,6 @@ Deno.serve(async (req) => {
         priority: 'medium'
       });
     } else {
-      // Create inquiry from known user
       await base44.asServiceRole.entities.ContactInquiry.create({
         user_id: user.id,
         user_name: user.full_name || fromName,
