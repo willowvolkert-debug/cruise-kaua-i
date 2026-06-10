@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 
 export default function ContactInquiriesPanel({ inquiries, onRefresh }) {
-  const [inquiryFilter, setInquiryFilter] = useState('all');
+  const [inquiryFilter, setInquiryFilter] = useState('pending');
   const [showRespondModal, setShowRespondModal] = useState(false);
   const [selectedInquiry, setSelectedInquiry] = useState(null);
   const [responseMessage, setResponseMessage] = useState('');
@@ -75,7 +75,7 @@ export default function ContactInquiriesPanel({ inquiries, onRefresh }) {
               contact inquiries ({inquiries.length})
             </div>
             <div className="flex gap-1 flex-wrap">
-              {['all', 'pending', 'reviewed', 'resolved'].map(s => (
+              {['pending', 'reviewed'].map(s => (
                 <button
                   key={s}
                   onClick={() => setInquiryFilter(s)}

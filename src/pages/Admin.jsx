@@ -127,9 +127,9 @@ export default function AdminPage() {
       setRecentRides(newRides);
       setNewRecurringSchedules(newRecurringSchedules);
 
-      // Load contact inquiries (all statuses)
+      // Load contact inquiries — only open (pending/reviewed), exclude resolved
       const allInquiries = await base44.entities.ContactInquiry.list('-created_date');
-      setContactInquiries(allInquiries);
+      setContactInquiries(allInquiries.filter(i => i.status !== 'resolved'));
 
       // Load phone number alerts
       const allBookings = await base44.entities.RideBooking.list('-updated_date');
