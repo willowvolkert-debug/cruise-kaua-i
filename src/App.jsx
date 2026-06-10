@@ -20,6 +20,7 @@ import Welcome from './pages/Welcome';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import BookingSuccess from './pages/BookingSuccess';
+import SmsOptIn from './pages/SmsOptIn';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -78,7 +79,7 @@ const AuthenticatedApp = () => {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
       // Only redirect to login if not on a public page (Welcome, JoinUs, etc.)
-      const publicPaths = ['/', '/welcome', '/joinus', '/aboutus', '/about-us', '/contactus', '/contact-us'];
+      const publicPaths = ['/', '/welcome', '/joinus', '/aboutus', '/about-us', '/contactus', '/contact-us', '/sms-opt-in'];
       const isPublicPath = publicPaths.some(p => window.location.pathname.toLowerCase() === p);
       if (!isPublicPath) {
         navigateToLogin();
@@ -98,6 +99,7 @@ const AuthenticatedApp = () => {
       <Route path="/termsofservice" element={<TermsOfService />} />
       <Route path="/privacypolicy" element={<PrivacyPolicy />} />
       <Route path="/bookingsuccess" element={<BookingSuccess />} />
+      <Route path="/sms-opt-in" element={<SmsOptIn />} />
 
       {Object.entries(Pages).map(([path, Page]) => (
         <Route
