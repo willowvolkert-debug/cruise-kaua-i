@@ -1026,6 +1026,7 @@ export default function AccountPage() {
                                                     <Label htmlFor="account-update">account number</Label>
                                                     <Input
                                                         id="account-update"
+                                                        type="password"
                                                         value={bankDetails.account_number}
                                                         onChange={(e) => setBankDetails({...bankDetails, account_number: e.target.value})}
                                                         placeholder="Account number"
@@ -1072,37 +1073,40 @@ export default function AccountPage() {
                                                 </div>
                                                 <div className="space-y-2">
                                                     <Label htmlFor="routing">routing number *</Label>
-                                                    <Input
-                                                        id="routing"
-                                                        value={bankDetails.routing_number}
-                                                        onChange={(e) => setBankDetails({...bankDetails, routing_number: e.target.value})}
-                                                        placeholder="9-digit routing number"
-                                                        maxLength="9"
-                                                        required
-                                                        className="rounded-2xl border-gray-300"
-                                                    />
+                                                        <Input
+                                                            id="routing"
+                                                            type="password"
+                                                            value={bankDetails.routing_number}
+                                                            onChange={(e) => setBankDetails({...bankDetails, routing_number: e.target.value})}
+                                                            placeholder="9-digit routing number"
+                                                            maxLength="9"
+                                                            required
+                                                            className="rounded-2xl border-gray-300"
+                                                        />
                                                 </div>
                                                 <div className="space-y-2">
                                                     <Label htmlFor="account">account number *</Label>
-                                                    <Input
-                                                        id="account"
-                                                        value={bankDetails.account_number}
-                                                        onChange={(e) => setBankDetails({...bankDetails, account_number: e.target.value})}
-                                                        placeholder="Account number"
-                                                        required
-                                                        className="rounded-2xl border-gray-300"
-                                                    />
+                                                        <Input
+                                                            id="account"
+                                                            type="password"
+                                                            value={bankDetails.account_number}
+                                                            onChange={(e) => setBankDetails({...bankDetails, account_number: e.target.value})}
+                                                            placeholder="Account number"
+                                                            required
+                                                            className="rounded-2xl border-gray-300"
+                                                        />
                                                 </div>
                                                 <div className="space-y-2">
                                                     <Label htmlFor="confirm">confirm account number *</Label>
-                                                    <Input
-                                                        id="confirm"
-                                                        value={bankDetails.account_number_confirm}
-                                                        onChange={(e) => setBankDetails({...bankDetails, account_number_confirm: e.target.value})}
-                                                        placeholder="Re-enter account number"
-                                                        required
-                                                        className="rounded-2xl border-gray-300"
-                                                    />
+                                                        <Input
+                                                            id="confirm"
+                                                            type="password"
+                                                            value={bankDetails.account_number_confirm}
+                                                            onChange={(e) => setBankDetails({...bankDetails, account_number_confirm: e.target.value})}
+                                                            placeholder="Re-enter account number"
+                                                            required
+                                                            className="rounded-2xl border-gray-300"
+                                                        />
                                                 </div>
                                                 {payoutError && (
                                                     <Alert variant="destructive" className="rounded-2xl border-red-200">
