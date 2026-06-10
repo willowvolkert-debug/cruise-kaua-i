@@ -14,6 +14,7 @@ import { sendUserLifecycleEmail } from "@/functions/sendUserLifecycleEmail";
 import UserAccountView from "../components/admin/UserAccountView";
 import TransactionLedger from "../components/admin/TransactionLedger";
 import BookingsMonitor from "../components/admin/BookingsMonitor";
+import ContactInquiriesPanel from "../components/admin/ContactInquiriesPanel";
 import {
   Dialog,
   DialogContent,
@@ -126,10 +127,9 @@ export default function AdminPage() {
       setRecentRides(newRides);
       setNewRecurringSchedules(newRecurringSchedules);
 
-      // Load contact inquiries
+      // Load contact inquiries (all statuses)
       const allInquiries = await base44.entities.ContactInquiry.list('-created_date');
-      const pendingInquiries = allInquiries.filter(i => i.status === 'pending');
-      setContactInquiries(pendingInquiries);
+      setContactInquiries(allInquiries);
 
       // Load phone number alerts
       const allBookings = await base44.entities.RideBooking.list('-updated_date');
@@ -382,70 +382,6 @@ export default function AdminPage() {
       alert("Error rejecting vehicle. Please try again.");
     }
     setIsProcessing(false);
-  };
-
-  const [showRespondModal, setShowRespondModal] = useState(false);
-  const [selectedInquiry, setSelectedInquiry] = useState(null);
-  const [responseMessage, setResponseMessage] = useState('');
-  const [isSendingResponse, setIsSendingResponse] = useState(false);
-
-  const handleResolveInquiry = async (inquiryId) => {
-    try {
-      await base44.entities.ContactInquiry.update(inquiryId, {
-        status: 'resolved'
-      });
-      loadData();
-    } catch (error) {
-      console.error("Error resolving inquiry:", error);
-    }
-  };
-
-  const handleRespondToInquiry = (inquiry) => {
-    setSelectedInquiry(inquiry);
-    setResponseMessage('');
-    setShowRespondModal(true);
-  };
-
-  const handleSendResponse = async () => {
-    if (!selectedInquiry || !responseMessage.trim()) {
-      alert('Please enter a response message.');
-      return;
-    }
-
-    setIsSendingResponse(true);
-    try {
-      // Send email notification
-      await base44.integrations.Core.SendEmail({
-        to: selectedInquiry.user_email,
-        subject: `Re: ${selectedInquiry.subject} - Cruise Kauaʻi Support`,
-        body: `Aloha ${selectedInquiry.user_name},\n\nThank you for contacting us. We've responded to your inquiry:\n\n"${selectedInquiry.subject}"\n\n---\n\n${responseMessage}\n\n---\n\nYou can view this response in your Cruise Kauaʻi inbox.\n\nMahalo,\nCruise Kauaʻi Team`
-      });
-
-      // Create admin message in user's inbox
-      await base44.entities.AdminMessage.create({
-        recipient_id: selectedInquiry.user_id,
-        recipient_name: selectedInquiry.user_name,
-        recipient_email: selectedInquiry.user_email,
-        subject: `Re: ${selectedInquiry.subject}`,
-        message: responseMessage,
-        message_type: 'info'
-      });
-
-      // Update inquiry status to reviewed
-      await base44.entities.ContactInquiry.update(selectedInquiry.id, {
-        status: 'reviewed'
-      });
-
-      alert('Response sent successfully! The user will see it in their inbox.');
-      setShowRespondModal(false);
-      setSelectedInquiry(null);
-      setResponseMessage('');
-      loadData();
-    } catch (error) {
-      console.error('Error sending response:', error);
-      alert('Error sending response. Please try again.');
-    }
-    setIsSendingResponse(false);
   };
 
   const handleApproveCommunityPost = async (postId, userId) => {
@@ -845,61 +781,7 @@ export default function AdminPage() {
         )}
 
         {/* Contact Inquiries */}
-        {contactInquiries.length > 0 && (
-          <Card className="shadow-lg border-blue-300 bg-blue-50 rounded-3xl">
-            <CardHeader>
-              <CardTitle className="text-xl text-blue-800 flex items-center gap-2">
-                <MessageSquare className="w-6 h-6 text-blue-600" />
-                contact inquiries ({contactInquiries.length})
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {contactInquiries.map(inquiry => (
-                  <div key={inquiry.id} className="bg-white rounded-lg p-4 border border-blue-200">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <p className="font-semibold text-secondary">{inquiry.subject}</p>
-                          <Badge variant="outline" className={
-                            inquiry.priority === 'high' ? 'bg-red-50 text-red-700 border-red-300' :
-                            inquiry.priority === 'medium' ? 'bg-orange-50 text-orange-700 border-orange-300' :
-                            'bg-gray-50 text-gray-700'
-                          }>
-                            {inquiry.priority}
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-gray-700 mb-2">{inquiry.message}</p>
-                        <p className="text-xs text-gray-500">
-                          From: {inquiry.user_name} ({inquiry.user_email})
-                        </p>
-                      </div>
-                      <div className="flex gap-2 ml-4">
-                        <Button
-                          onClick={() => handleRespondToInquiry(inquiry)}
-                          size="sm"
-                          variant="outline"
-                          className="border-blue-300 text-blue-600 hover:bg-blue-50"
-                        >
-                          <MessageSquare className="w-4 h-4 mr-1" />
-                          respond
-                        </Button>
-                        <Button
-                          onClick={() => handleResolveInquiry(inquiry.id)}
-                          size="sm"
-                          variant="outline"
-                        >
-                          <CheckCircle className="w-4 h-4 mr-1" />
-                          resolve
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        <ContactInquiriesPanel inquiries={contactInquiries} onRefresh={loadData} />
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-4">
@@ -1934,64 +1816,7 @@ export default function AdminPage() {
           userId={viewingUserId}
         />
 
-        {/* Contact Inquiry Response Modal */}
-        <Dialog open={showRespondModal} onOpenChange={setShowRespondModal}>
-          <DialogContent className="sm:max-w-2xl">
-            <DialogHeader>
-              <DialogTitle className="text-2xl font-bold text-secondary">
-                respond to inquiry
-              </DialogTitle>
-            </DialogHeader>
 
-            {selectedInquiry && (
-              <div className="space-y-4 py-4">
-                <div className="p-4 bg-gray-50 rounded-2xl border border-gray-200">
-                  <p className="font-semibold text-secondary mb-2">Original Inquiry:</p>
-                  <p className="text-sm text-gray-600 mb-1">
-                    <strong>From:</strong> {selectedInquiry.user_name} ({selectedInquiry.user_email})
-                  </p>
-                  <p className="text-sm text-gray-600 mb-1">
-                    <strong>Subject:</strong> {selectedInquiry.subject}
-                  </p>
-                  <p className="text-sm text-gray-700 mt-2 p-3 bg-white rounded-lg">
-                    {selectedInquiry.message}
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="font-semibold text-secondary">Your Response:</label>
-                  <Textarea
-                    value={responseMessage}
-                    onChange={(e) => setResponseMessage(e.target.value)}
-                    placeholder="Type your response here..."
-                    className="h-40 rounded-2xl"
-                  />
-                  <p className="text-xs text-gray-500">
-                    This will be sent via email and appear in the user's Cruise Kauaʻi inbox.
-                  </p>
-                </div>
-
-                <div className="flex gap-3 pt-4">
-                  <Button
-                    onClick={() => setShowRespondModal(false)}
-                    variant="outline"
-                    className="flex-1"
-                    disabled={isSendingResponse}
-                  >
-                    cancel
-                  </Button>
-                  <Button
-                    onClick={handleSendResponse}
-                    className="flex-1 bg-primary hover:bg-primary/90"
-                    disabled={isSendingResponse || !responseMessage.trim()}
-                  >
-                    {isSendingResponse ? 'sending...' : 'send response'}
-                  </Button>
-                </div>
-              </div>
-            )}
-          </DialogContent>
-        </Dialog>
       </div>
     </div>
   );
