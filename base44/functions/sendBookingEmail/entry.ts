@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
 Deno.serve(async (req) => {
   try {
@@ -8,17 +8,23 @@ Deno.serve(async (req) => {
 
     const { userId, bookingId } = await req.json();
 
+    // Fetch booking first so we can verify the caller is involved
+    const allBookings = await base44.asServiceRole.entities.RideBooking.filter({ id: bookingId });
+    const booking = allBookings[0];
+    if (!booking) return Response.json({ ok: false, reason: 'Booking not found' });
+
+    // Only the passenger, the driver, or an admin can trigger this email
+    const isInvolved = user.id === booking.passenger_id || user.id === booking.driver_id;
+    if (!isInvolved && user.role !== 'admin') {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
     const allUsers = await base44.asServiceRole.entities.User.list();
     const driver = allUsers.find(u => u.id === userId);
 
     if (!driver?.email) {
       return Response.json({ ok: false, reason: 'Driver not found or no email' });
     }
-
-    // Fetch booking details
-    const allBookings = await base44.asServiceRole.entities.RideBooking.filter({ id: bookingId });
-    const booking = allBookings[0];
-    if (!booking) return Response.json({ ok: false, reason: 'Booking not found' });
 
     // Fetch ride details
     const allRides = await base44.asServiceRole.entities.Ride.filter({ id: booking.ride_id });

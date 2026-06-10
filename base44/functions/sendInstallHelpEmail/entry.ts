@@ -3,10 +3,20 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+
+    // Must be authenticated — users can only send this to themselves
+    const me = await base44.auth.me();
+    if (!me) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+
     const payload = await req.json().catch(() => ({}));
     const { email, name } = payload;
 
     if (!email) return Response.json({ error: 'Email required' }, { status: 400 });
+
+    // Non-admins can only send to their own email
+    if (me.role !== 'admin' && email.toLowerCase() !== me.email.toLowerCase()) {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
 
     const firstName = name?.split(' ')[0] || 'there';
     const appUrl = 'https://cruisekauai.org';

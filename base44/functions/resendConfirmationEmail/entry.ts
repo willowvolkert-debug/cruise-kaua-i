@@ -1,21 +1,27 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+
+    // Must be authenticated
+    const me = await base44.auth.me();
+    if (!me) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+
     const { scheduleId, dateStr, email } = await req.json();
 
     const schedules = await base44.asServiceRole.entities.RecurringSchedule.list();
     const schedule = schedules.find(s => s.id === scheduleId);
-    if (!schedule) {
-      return Response.json({ error: 'Schedule not found' }, { status: 404 });
+    if (!schedule) return Response.json({ error: 'Schedule not found' }, { status: 404 });
+
+    // Only the schedule owner or an admin can request a resend
+    if (schedule.user_id !== me.id && me.role !== 'admin') {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     const users = await base44.asServiceRole.entities.User.list();
     const user = users.find(u => u.email === email);
-    if (!user) {
-      return Response.json({ error: 'User not found' }, { status: 404 });
-    }
+    if (!user) return Response.json({ error: 'User not found' }, { status: 404 });
 
     const confirmUrl = `https://cruisekauai.base44.app/ConfirmRide?schedule_id=${schedule.id}&date=${dateStr}`;
     await base44.asServiceRole.integrations.Core.SendEmail({
