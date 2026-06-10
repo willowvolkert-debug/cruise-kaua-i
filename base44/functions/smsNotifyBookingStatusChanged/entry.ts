@@ -28,9 +28,9 @@ Deno.serve(async (req) => {
     const driverName = booking.driver_username || 'Your driver';
     let message;
     if (isConfirmed) {
-      message = `🚗🌀 Cruise Kauaʻi: Great news! ${driverName} accepted your ride request. Finish your profile or start posting/requesting rides here: https://cruisekauai.org`;
+      message = `🚗🌀 Cruise Kauaʻi: Great news! ${driverName} accepted your ride request. Finish your profile or start posting/requesting rides by opening the application on your home screen, or on the website here: https://cruisekauai.org`;
     } else {
-      message = `🚗🌀 Cruise Kauaʻi: ${driverName} was unable to accept your ride request. Finish your profile or start posting/requesting rides here: https://cruisekauai.org`;
+      message = `🚗🌀 Cruise Kauaʻi: ${driverName} was unable to accept your ride request. Finish your profile or start posting/requesting rides by opening the application on your home screen, or on the website here: https://cruisekauai.org`;
     }
 
     const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
