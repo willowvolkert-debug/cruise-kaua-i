@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Star, Check, X, Wind, MessageCircle, Loader2, DollarSign, RefreshCw } from "lucide-react";
+import { Star, Check, X, Wind, MessageCircle, Loader2, DollarSign, RefreshCw, AlertTriangle } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { sendBookingEmail } from "@/functions/sendBookingEmail";
 import { format } from "date-fns";
@@ -16,6 +16,8 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
   const [riderRatings, setRiderRatings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showBgCheckBlock, setShowBgCheckBlock] = useState(false);
+  const [currentDriverUsername, setCurrentDriverUsername] = useState(null);
 
   useEffect(() => {
     const loadRiderData = async () => {
@@ -23,6 +25,10 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
       
       setIsLoading(true);
       try {
+        // Load current driver username for background check restriction
+        const me = await base44.auth.me();
+        setCurrentDriverUsername(me?.username || null);
+
         // Fetch full user profile to get pic, age, etc.
         const allUsers = await base44.asServiceRole.entities.User.list();
         const rider = allUsers.find(u => u.id === booking.passenger_id);
@@ -54,6 +60,10 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
     : 0;
 
   const handleAccept = async () => {
+    if (currentDriverUsername === '247pono') {
+      setShowBgCheckBlock(true);
+      return;
+    }
     setIsProcessing(true);
     await onAccept(booking);
     setIsProcessing(false);
@@ -74,6 +84,41 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
   if (!booking) return null;
 
   return (
+    <>
+    {/* Background check block popup */}
+    <Dialog open={showBgCheckBlock} onOpenChange={setShowBgCheckBlock}>
+      <DialogContent className="sm:max-w-md bg-white rounded-3xl">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-bold text-red-700 flex items-center gap-2">
+            <AlertTriangle className="w-6 h-6 text-red-600" />
+            Background Check Issue
+          </DialogTitle>
+        </DialogHeader>
+        <div className="py-4 space-y-4">
+          <p className="text-gray-700">
+            There is an issue with your background check. Please contact admin through the{" "}
+            <a href="/contactus" className="text-primary underline font-semibold">Contact Us form</a>{" "}
+            to accept this ride.
+          </p>
+        </div>
+        <div className="flex gap-3">
+          <Button
+            onClick={() => setShowBgCheckBlock(false)}
+            variant="outline"
+            className="flex-1 rounded-2xl"
+          >
+            Close
+          </Button>
+          <Button
+            onClick={() => { setShowBgCheckBlock(false); window.location.href = '/contactus'; }}
+            className="flex-1 bg-primary hover:bg-primary/90 rounded-2xl"
+          >
+            Contact Admin
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto bg-white rounded-3xl">
         <DialogHeader>
@@ -267,5 +312,6 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
         )}
       </DialogContent>
     </Dialog>
+    </>
   );
 }
