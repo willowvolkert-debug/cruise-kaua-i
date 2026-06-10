@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
     }
 
     const riderName = booking.passenger_name || booking.passenger_username || 'A rider';
-    const message = `🚗🌀 Cruise Kauaʻi: ${riderName} has cancelled their booking on your trip. Log in to see your updated ride: https://cruisekauai.org/account`;
+    const message = `🚗🌀 Cruise Kauaʻi: ${riderName} has cancelled their booking on your trip. Finish your profile or start posting/requesting rides here: https://cruisekauai.org`;
 
     const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
     const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');
