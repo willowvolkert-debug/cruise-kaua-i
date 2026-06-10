@@ -1236,10 +1236,13 @@ export default function AdminPage() {
                               {user.full_name}
                             </button>
                             <p className="text-xs md:text-sm text-gray-600 truncate">{user.email}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-1 md:gap-2 flex-wrap justify-end">
-                          <Button
+                            </div>
+                            </div>
+                            <div className="flex items-center gap-1 md:gap-2 flex-wrap justify-end">
+                            {user.phone_number && (
+                            <span className="text-xs text-gray-500">{user.phone_number}</span>
+                            )}
+                            <Button
                             onClick={() => handleMessageUser(user)}
                             size="sm"
                             variant="outline"
