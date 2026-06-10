@@ -478,6 +478,8 @@ export default function WelcomePage() {
           <span className="text-gray-600">·</span>
           <a href="/privacypolicy" className="hover:text-white underline underline-offset-2 transition-colors">Privacy Policy</a>
           <span className="text-gray-600">·</span>
+          <a href="/sms-opt-in" className="hover:text-white underline underline-offset-2 transition-colors">SMS Notifications</a>
+          <span className="text-gray-600">·</span>
           <a href="mailto:cruisekauai@gmail.com" className="hover:text-white underline underline-offset-2 transition-colors">cruisekauai@gmail.com</a>
         </div>
         <p className="text-xs text-gray-600 pt-2">© {new Date().getFullYear()} Cruise Kauaʻi. All rights reserved.</p>

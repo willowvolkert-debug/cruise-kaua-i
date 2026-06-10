@@ -39,6 +39,7 @@ export default function SmsOptIn() {
         });
         setSubmitted(true);
       } else {
+        // Always redirect to signup so phone gets linked to a real account
         const encoded = encodeURIComponent(phone.trim());
         window.location.href = `/RiderSignupFlow?phone=${encoded}`;
       }
@@ -66,12 +67,18 @@ export default function SmsOptIn() {
         {submitted ? (
           <div className="bg-white border border-green-200 rounded-2xl p-8 text-center space-y-4">
             <CheckCircle className="w-12 h-12 text-green-600 mx-auto" />
-            <h2 className="text-2xl font-bold text-green-800">You're opted in!</h2>
+            <h2 className="text-2xl font-bold text-green-800">SMS Opt-In Saved!</h2>
             <p className="text-gray-700 text-sm leading-relaxed">
-              You will now receive SMS notifications from <strong>Cruise Kauaʻi</strong> for ride bookings, confirmations, and reminders.
+              Your phone number has been saved. To complete your account setup and start using Cruise Kauaʻi, continue creating your profile.
             </p>
+            <Button
+              onClick={() => window.location.href = '/RiderSignupFlow'}
+              className="w-full bg-green-700 hover:bg-green-800 text-white rounded-xl py-3 font-bold"
+            >
+              Continue Creating Your Account →
+            </Button>
             <p className="text-xs text-gray-500 border-t pt-3 mt-3">
-              Reply <strong>STOP</strong> to cancel. Reply <strong>HELP</strong> for help. Message &amp; data rates may apply.
+              Reply <strong>STOP</strong> to any message to unsubscribe. Message &amp; data rates may apply.
             </p>
           </div>
         ) : alreadyOptedIn ? (
