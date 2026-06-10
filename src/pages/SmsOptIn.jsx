@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CheckCircle, MessageSquare } from "lucide-react";
+import { CheckCircle, MessageSquare, Phone } from "lucide-react";
 
 export default function SmsOptIn() {
   const [phone, setPhone] = useState('');
@@ -37,8 +37,12 @@ export default function SmsOptIn() {
           sms_notifications_enabled: true,
           sms_opt_in_date: new Date().toISOString(),
         });
+        setSubmitted(true);
+      } else {
+        // Not logged in — redirect to signup with phone pre-filled
+        const encoded = encodeURIComponent(phone.trim());
+        window.location.href = `/RiderSignupFlow?phone=${encoded}`;
       }
-      setSubmitted(true);
     } catch (err) {
       console.error(err);
     }
@@ -124,10 +128,16 @@ export default function SmsOptIn() {
               <Button
                 type="submit"
                 disabled={!phone.trim() || !agreed || isLoading}
-                className="w-full bg-green-700 hover:bg-green-800 text-white rounded-xl py-3 font-semibold"
+                className="w-full bg-green-700 hover:bg-green-800 text-white rounded-xl py-3 font-semibold flex items-center justify-center gap-2"
               >
-                {isLoading ? 'Saving...' : 'Opt In to SMS Notifications'}
+                <Phone className="w-4 h-4" />
+                {isLoading ? 'Saving...' : isAuthenticated ? 'Opt In to SMS Notifications' : 'Continue & Sign Up'}
               </Button>
+              {!isAuthenticated && (
+                <p className="text-xs text-gray-500 text-center mt-2">
+                  You'll be taken to the sign-up page with your phone number already filled in. SMS opt-in will be recorded when you complete registration.
+                </p>
+              )}
             </form>
           </section>
 

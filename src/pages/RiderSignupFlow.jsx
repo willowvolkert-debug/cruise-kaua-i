@@ -148,12 +148,17 @@ export default function RiderSignupFlow() {
   const hostname = window.location.hostname.toLowerCase();
   const islandKey = hostname.includes('oahu') ? 'Oʻahu' : hostname.includes('maui') ? 'Maui' : hostname.includes('bigisland') ? 'Big Island' : 'Kauaʻi';
 
+  // Pick up phone pre-fill from SMS opt-in page
+  const urlParams = new URLSearchParams(window.location.search);
+  const prefillPhone = urlParams.get('phone') || '';
+
   const currentStep = STEPS[step];
   const isLast = step === STEPS.length - 1;
   const isFirst = step === 0;
 
   const handleSignUp = () => {
-    base44.auth.redirectToLogin(createPageUrl("Account") + "?setup=true");
+    const accountUrl = createPageUrl("Account") + "?setup=true" + (prefillPhone ? `&phone=${encodeURIComponent(prefillPhone)}` : "");
+    base44.auth.redirectToLogin(accountUrl);
   };
 
   const handleExplore = () => {

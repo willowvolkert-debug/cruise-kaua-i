@@ -117,6 +117,12 @@ export default function AccountPage() {
         if (urlParams.get('setup') === 'true') {
             setShowProfileQuiz(true);
         }
+        // If redirected from SMS opt-in page, pre-fill phone and show prompt
+        const prefillPhone = urlParams.get('phone');
+        if (prefillPhone) {
+            setPhonePromptValue(decodeURIComponent(prefillPhone));
+            setShowPhonePrompt(true);
+        }
         
         loadData();
         if ('Notification' in window) {
