@@ -573,16 +573,16 @@ export default function AccountPage() {
                                                 className="rounded-2xl"
                                                 type="tel"
                                             />
-                                            <div className="flex items-center gap-2 mt-1">
+                                            <div className="flex items-start gap-2 mt-2">
                                                 <input
                                                     type="checkbox"
                                                     id="sms-opt-in"
                                                     checked={!!editData.sms_notifications_enabled}
                                                     onChange={(e) => setEditData({...editData, sms_notifications_enabled: e.target.checked})}
-                                                    className="rounded"
+                                                    className="mt-0.5 h-4 w-4 rounded border-gray-400 accent-green-700 cursor-pointer"
                                                 />
-                                                <label htmlFor="sms-opt-in" className="text-xs text-gray-600">
-                                                    text me when someone messages me or books my ride
+                                                <label htmlFor="sms-opt-in" className="text-xs text-gray-600 leading-relaxed cursor-pointer">
+                                                    I agree to receive recurring automated transactional SMS text messages from <strong>Cruise Kauaʻi</strong> at the number above (ride confirmations, reminders, and messages). Consent is not required to use the platform. Message &amp; data rates may apply. Reply <strong>STOP</strong> to unsubscribe, <strong>HELP</strong> for help. See our <a href="/sms-opt-in" className="text-green-700 underline" target="_blank">SMS Terms</a>.
                                                 </label>
                                             </div>
                                         </div>
@@ -1321,7 +1321,7 @@ export default function AccountPage() {
                     <DialogHeader>
                         <DialogTitle className="text-xl font-bold text-secondary">📱 New: SMS Notifications!</DialogTitle>
                         <DialogDescription className="text-gray-600 leading-relaxed mt-2">
-                            Cruise Kauaʻi will send you a text when a rider requests a seat, when a driver accepts your ride request, and when someone sends you a message. We will NOT text you with any promotions, only to have safe, organized communication between drivers &amp; riders.
+                            By saving your number and checking the box below, you agree to receive recurring automated transactional SMS text messages from <strong>Cruise Kauaʻi</strong> (ride confirmations, reminders, booking notifications). Consent is not required to use the platform. Message &amp; data rates may apply. Reply STOP to unsubscribe, HELP for help.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-3 py-2">
@@ -1332,6 +1332,21 @@ export default function AccountPage() {
                             placeholder="e.g. (808) 555-1234"
                             className="rounded-2xl"
                         />
+                        <div className="flex items-start gap-2">
+                            <input
+                                type="checkbox"
+                                id="phone-prompt-consent"
+                                defaultChecked={false}
+                                className="mt-0.5 h-4 w-4 rounded border-gray-400 accent-green-700 cursor-pointer"
+                                onChange={(e) => {
+                                    const btn = document.getElementById('phone-prompt-save-btn');
+                                    if (btn) btn.disabled = !e.target.checked || !phonePromptValue;
+                                }}
+                            />
+                            <label htmlFor="phone-prompt-consent" className="text-xs text-gray-600 leading-relaxed cursor-pointer">
+                                I agree to receive automated transactional SMS messages from <strong>Cruise Kauaʻi</strong>. Message &amp; data rates may apply. Reply <strong>STOP</strong> to unsubscribe. <a href="/sms-opt-in" className="text-green-700 underline" target="_blank">SMS Terms</a>.
+                            </label>
+                        </div>
                     </div>
                     <DialogFooter className="flex flex-col gap-2 sm:flex-col">
                         <Button
