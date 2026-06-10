@@ -183,5 +183,37 @@
     "seats_available",
     "driver_name",
     "driver_id"
-  ]
+  ],
+  "rls": {
+    "create": {
+      "data.driver_id": "{{user.id}}"
+    },
+    "read": {
+      "*": "*"
+    },
+    "update": {
+      "$or": [
+        {
+          "data.driver_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.driver_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
 }

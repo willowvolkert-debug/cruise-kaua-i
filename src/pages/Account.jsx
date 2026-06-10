@@ -365,14 +365,17 @@ export default function AccountPage() {
             return;
         }
 
-        if (bankDetails.routing_number.length !== 9 || isNaN(bankDetails.routing_number)) {
-            setPayoutError("Routing number must be exactly 9 digits.");
-            return;
-        }
-
-        if (bankDetails.account_number.length < 4 || isNaN(bankDetails.account_number)) {
-            setPayoutError("Please enter a valid account number.");
-            return;
+        // Only validate full numbers for new entries (not the masked ****XXXX display)
+        const isNewEntry = !user.bank_account_linked;
+        if (isNewEntry) {
+            if (bankDetails.routing_number.length !== 9 || isNaN(bankDetails.routing_number)) {
+                setPayoutError("Routing number must be exactly 9 digits.");
+                return;
+            }
+            if (bankDetails.account_number.length < 4 || isNaN(bankDetails.account_number)) {
+                setPayoutError("Please enter a valid account number.");
+                return;
+            }
         }
 
         if (!user.bank_account_linked && bankDetails.account_number !== bankDetails.account_number_confirm) {
@@ -399,11 +402,12 @@ export default function AccountPage() {
                 }
             });
 
+            // Only store last 4 digits — never persist full account/routing numbers
             await base44.auth.updateMe({
                 bank_account_linked: true,
                 bank_account_holder_name: bankDetails.account_holder_name,
-                bank_routing_number: bankDetails.routing_number,
-                bank_account_number: bankDetails.account_number,
+                bank_routing_number: bankDetails.routing_number.slice(-4),
+                bank_account_number: bankDetails.account_number.slice(-4),
                 bank_account_verified: true
             });
 
@@ -1010,6 +1014,7 @@ export default function AccountPage() {
                                                     <Label htmlFor="routing-update">routing number</Label>
                                                     <Input
                                                         id="routing-update"
+                                                        type="password"
                                                         value={bankDetails.routing_number}
                                                         onChange={(e) => setBankDetails({...bankDetails, routing_number: e.target.value})}
                                                         placeholder="9-digit routing number"
