@@ -743,7 +743,7 @@ export default function AdminPage() {
                       </Avatar>
                       <div className="flex-1">
                         <p className="font-semibold text-secondary">@{post.user_username || post.user_name}</p>
-                        <p className="text-xs text-gray-500">Submitted {new Date(post.created_date).toLocaleDateString()}</p>
+                        <p className="text-xs text-gray-500">Submitted {formatHST(post.created_date, "MMM d, yyyy")} HST</p>
                       </div>
                     </div>
                     <p className="text-gray-700 mb-3 whitespace-pre-wrap">{post.content}</p>

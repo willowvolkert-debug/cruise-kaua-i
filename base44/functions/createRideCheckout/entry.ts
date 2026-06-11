@@ -107,7 +107,7 @@ Deno.serve(async (req) => {
                     currency: 'usd',
                     product_data: {
                         name: `Cruise Kauaʻi Ride`,
-                        description: `${ride.departure_location} → ${ride.destination} on ${hawaiiDateStr} at ${hawaiiTimeStr} HST (${seats_booked} seat${seats_booked > 1 ? 's' : ''})`
+                        description: `${ride.departure_location} → ${ride.destination} on ${hawaiiDateStr} at ${hawaiiTimeStr} HST · ${seats_booked} seat${seats_booked > 1 ? 's' : ''}`
                     },
                     unit_amount: Math.round(rideAmount * 100)
                 },
