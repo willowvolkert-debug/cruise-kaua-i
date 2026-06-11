@@ -84,6 +84,12 @@ Deno.serve(async (req) => {
             const connectFeeRate = ride?.driver_license_state === 'HI' ? 0.10 : 0.30;
             const connectFee = rideAmount * connectFeeRate;
 
+            // Idempotency guard — check BEFORE making any changes
+            if (booking.payment_status === 'paid') {
+                console.log(`Booking ${booking_id} already marked paid, skipping.`);
+                return Response.json({ received: true });
+            }
+
             // Seed initial message thread from rider's description
             const initialMessages = booking.description ? [{
                 sender_id: passenger_id,
@@ -100,9 +106,10 @@ Deno.serve(async (req) => {
                 ...(initialMessages.length > 0 && (!booking.messages || booking.messages.length === 0) ? { messages: initialMessages } : {})
             });
 
-            // Skip if already processed (idempotency guard)
-            if (booking.payment_status === 'paid') {
-                console.log(`Booking ${booking_id} already marked paid, skipping.`);
+            // Guard against duplicate transactions
+            const existingTxns = await base44.asServiceRole.entities.Transaction.filter({ booking_id });
+            if (existingTxns.length > 0) {
+                console.log(`Transaction already exists for booking ${booking_id}, skipping.`);
                 return Response.json({ received: true });
             }
 
