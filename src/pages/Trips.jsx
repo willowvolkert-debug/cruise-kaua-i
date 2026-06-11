@@ -127,8 +127,8 @@ export default function TripsPage() {
           <div className="space-y-4">
             <p className="text-lg font-semibold text-gray-700 mb-2">what would you like to do?</p>
             {[
-              { id: "view_sub", emoji: "🔍", label: "get a ride", desc: "Browse available rides from local drivers" },
-              { id: "post", emoji: "🚗", label: "post a ride", desc: "Offer seats on a trip you're already making" },
+              { id: "view_sub", emoji: "🔍", label: "get a ride", desc: "Browse available rides to see how you could get around when your schedule is flexible" },
+              { id: "post", emoji: "🚗", label: "post a ride", desc: "Offer seats on the trips you're already making — whether it's your commute, an errand run, or a trip around the island to go camping. By offering seats, you can save ~$1000 per year on vehicle costs." },
               { id: "request", emoji: "🙋", label: "request a ride", desc: "Post a ride request so drivers know you need one. Best for airport runs & doctor's appts — schedule at least 24 hrs in advance for the best chance someone can give you a ride." },
             ].map(({ id, emoji, label, desc }) => (
               <button
