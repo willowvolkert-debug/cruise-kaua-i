@@ -129,7 +129,7 @@ export default function TripsPage() {
             {[
               { id: "view_sub", emoji: "🔍", label: "get a ride", desc: "Browse available rides from local drivers" },
               { id: "post", emoji: "🚗", label: "post a ride", desc: "Offer seats on a trip you're already making" },
-              { id: "request", emoji: "🙋", label: "request a ride", desc: "Post a ride request so drivers know you need one" },
+              { id: "request", emoji: "🙋", label: "request a ride", desc: "Post a ride request so drivers know you need one. Best for airport runs & doctor's appts — schedule at least 24 hrs in advance for the best chance someone can give you a ride." },
             ].map(({ id, emoji, label, desc }) => (
               <button
                 key={id}
