@@ -55,7 +55,8 @@ Deno.serve(async (req) => {
             }
 
             // Get booking details
-            const booking = await base44.asServiceRole.entities.RideBooking.get(booking_id);
+            const bookings = await base44.asServiceRole.entities.RideBooking.filter({ id: booking_id });
+            const booking = bookings[0];
 
             if (!booking) {
                 console.error('Booking not found:', booking_id);
@@ -63,16 +64,19 @@ Deno.serve(async (req) => {
             }
 
             // Get ride details
-            const ride = await base44.asServiceRole.entities.Ride.get(ride_id);
+            const rides = await base44.asServiceRole.entities.Ride.filter({ id: ride_id });
+            const ride = rides[0];
 
             // Use ride's driver_id (the actual ride poster), not the metadata's driver_id
             const actualDriverId = ride?.driver_id || driver_id;
 
             // Get driver details
-            const driver = await base44.asServiceRole.entities.User.get(actualDriverId);
+            const drivers = await base44.asServiceRole.entities.User.filter({ id: actualDriverId });
+            const driver = drivers[0];
 
             // Get passenger details
-            const passenger = await base44.asServiceRole.entities.User.get(passenger_id);
+            const passengers = await base44.asServiceRole.entities.User.filter({ id: passenger_id });
+            const passenger = passengers[0];
 
             // Calculate amounts from the session
             const totalPaid = session.amount_total / 100; // Convert from cents
@@ -95,6 +99,12 @@ Deno.serve(async (req) => {
                 initial_notification_sent: true,
                 ...(initialMessages.length > 0 && (!booking.messages || booking.messages.length === 0) ? { messages: initialMessages } : {})
             });
+
+            // Skip if already processed (idempotency guard)
+            if (booking.payment_status === 'paid') {
+                console.log(`Booking ${booking_id} already marked paid, skipping.`);
+                return Response.json({ received: true });
+            }
 
             // Create transaction record
             // The ride_amount goes to driver, connect_fee goes to business
