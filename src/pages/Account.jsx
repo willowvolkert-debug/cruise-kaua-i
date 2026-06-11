@@ -310,6 +310,13 @@ export default function AccountPage() {
             await base44.auth.updateMe({ user_type: 'rider' });
         }
 
+        // If a phone number was just added for the first time, send welcome SMS
+        if (editData.phone_number && !user.phone_number && editData.sms_notifications_enabled) {
+            import('@/functions/sendWelcomeSms').then(({ sendWelcomeSms }) => {
+                sendWelcomeSms({}).catch(() => {});
+            }).catch(() => {});
+        }
+
         await loadData();
         setIsEditing(false);
         setProfilePicFile(null);
@@ -1372,6 +1379,12 @@ export default function AccountPage() {
                                     sms_notifications_enabled: !!phonePromptValue,
                                     has_dismissed_phone_prompt: true
                                 });
+                                // Send one-time welcome SMS after phone number is saved
+                                if (phonePromptValue) {
+                                    import('@/functions/sendWelcomeSms').then(({ sendWelcomeSms }) => {
+                                        sendWelcomeSms({}).catch(() => {});
+                                    }).catch(() => {});
+                                }
                                 setIsSavingPhone(false);
                                 setShowPhonePrompt(false);
                                 loadData();

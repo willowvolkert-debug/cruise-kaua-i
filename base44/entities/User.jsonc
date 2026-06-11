@@ -58,6 +58,11 @@
       "default": false,
       "description": "Whether the user has dismissed the phone number prompt"
     },
+    "welcome_sms_sent": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the one-time welcome SMS has been sent to this user"
+    },
     "drivers_license_verified": {
       "type": "boolean",
       "default": false
@@ -160,6 +165,34 @@
       "default": 0
     },
     "unsubscribed_from_setup_reminders": {
+      "type": "boolean",
+      "default": false
+    },
+    "onboarding_email_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "email_update_frequency": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "every_3_days",
+        "weekly",
+        "monthly",
+        "never"
+      ],
+      "default": "daily"
+    },
+    "last_setup_reminder_sent": {
+      "type": "string"
+    },
+    "car_model": {
+      "type": "string"
+    },
+    "driver_license_state": {
+      "type": "string"
+    },
+    "has_posted_rides": {
       "type": "boolean",
       "default": false
     }
