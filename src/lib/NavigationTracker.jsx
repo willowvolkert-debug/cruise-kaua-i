@@ -45,9 +45,7 @@ export default function NavigationTracker() {
 
         // Track page views for all visitors (authenticated or not)
         if (pageName) {
-            import('@/functions/trackPageView').then(({ trackPageView }) => {
-                trackPageView({ page_name: pageName }).catch(() => {});
-            }).catch(() => {});
+            base44.entities.PageView.create({ page_name: pageName }).catch(() => {});
         }
     }, [location, isAuthenticated, Pages, mainPageKey]);
 
