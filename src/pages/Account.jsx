@@ -105,6 +105,11 @@ export default function AccountPage() {
     const [phonePromptValue, setPhonePromptValue] = useState('');
     const [isSavingPhone, setIsSavingPhone] = useState(false);
     const [showTutorial, setShowTutorial] = useState(false);
+  const [emailVerifyCode, setEmailVerifyCode] = useState("");
+  const [emailVerifyLoading, setEmailVerifyLoading] = useState(false);
+  const [emailVerifyError, setEmailVerifyError] = useState("");
+  const [emailResendLoading, setEmailResendLoading] = useState(false);
+  const [emailResendSent, setEmailResendSent] = useState(false);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -323,7 +328,37 @@ export default function AccountPage() {
         setIsSaving(false);
     };
 
-    const handleLicenseVerificationSuccess = async () => {
+    const handleEmailVerify = async () => {
+    setEmailVerifyError("");
+    if (!emailVerifyCode || emailVerifyCode.length < 4) {
+      setEmailVerifyError("please enter the code from your email.");
+      return;
+    }
+    setEmailVerifyLoading(true);
+    try {
+      await base44.auth.verifyOtp({ email: user.email, otpCode: emailVerifyCode });
+      await loadData();
+      setEmailVerifyCode("");
+      setEmailVerifyLoading(false);
+    } catch (e) {
+      setEmailVerifyError(e?.response?.data?.message || e?.message || "invalid or expired code. please try again.");
+      setEmailVerifyLoading(false);
+    }
+  };
+
+  const handleEmailResend = async () => {
+    setEmailResendLoading(true);
+    setEmailResendSent(false);
+    try {
+      await base44.auth.resendOtp(user.email);
+      setEmailResendSent(true);
+    } catch (e) {
+      setEmailVerifyError("couldn't resend code. please try again.");
+    }
+    setEmailResendLoading(false);
+  };
+
+  const handleLicenseVerificationSuccess = async () => {
         await loadData();
         // Check all requirements and auto-upgrade
         const updatedUser = await base44.auth.me();
@@ -750,6 +785,52 @@ export default function AccountPage() {
 
                     </CardContent>
                 </Card>
+
+                {/* Email Verification Warning */}
+                {user.email && !user.email_verified && (
+                  <div className="mt-4 p-4 bg-yellow-50 border border-yellow-300 rounded-2xl space-y-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">📬</span>
+                      <div>
+                        <p className="font-bold text-yellow-800">verify your email</p>
+                        <p className="text-sm text-yellow-700">We sent a verification email to <strong>{user.email}</strong>. Verify your email to unlock all features, but you can still book and post rides for now.</p>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex gap-2">
+                        <Input
+                          type="text"
+                          inputMode="numeric"
+                          placeholder="enter verification code"
+                          value={emailVerifyCode}
+                          onChange={e => setEmailVerifyCode(e.target.value.replace(/\D/g, ""))}
+                          className="rounded-xl h-10 text-sm flex-1"
+                          maxLength={8}
+                        />
+                        <Button
+                          onClick={handleEmailVerify}
+                          disabled={emailVerifyLoading || !emailVerifyCode}
+                          className="bg-primary hover:bg-primary/90 rounded-xl h-10 text-sm shrink-0"
+                        >
+                          {emailVerifyLoading ? "..." : "verify"}
+                        </Button>
+                      </div>
+                      {emailVerifyError && (
+                        <p className="text-red-500 text-xs font-medium">{emailVerifyError}</p>
+                      )}
+                      {emailResendSent && (
+                        <p className="text-green-600 text-xs font-medium">✓ new code sent! check your email.</p>
+                      )}
+                      <button
+                        onClick={handleEmailResend}
+                        disabled={emailResendLoading}
+                        className="text-xs text-primary underline underline-offset-2 font-medium disabled:opacity-50"
+                      >
+                        {emailResendLoading ? "sending..." : "didn't get a code? resend it"}
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Admin Messages */}
                 {adminMessages.length > 0 && (
