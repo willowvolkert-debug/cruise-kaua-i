@@ -186,7 +186,16 @@
   ],
   "rls": {
     "create": {
-      "data.driver_id": "{{user.id}}"
+      "$or": [
+        {
+          "data.driver_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     },
     "read": {
       "$or": [
