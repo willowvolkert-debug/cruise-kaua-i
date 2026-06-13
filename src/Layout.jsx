@@ -304,7 +304,9 @@ export default function Layout({ children, currentPageName }) {
         count += unreadAdminMessages.length;
 
         // Count bookings with unread messages (messages since user last opened the chat)
+        // Only count active bookings — cancelled/rejected won't appear in inbox
         const bookingsWithNewMessages = bookings.filter(b => {
+          if (b.booking_status === 'cancelled' || b.booking_status === 'rejected') return false;
           const isInvolved = String(b.driver_id) === String(user.id) || String(b.passenger_id) === String(user.id);
           if (!isInvolved || !b.messages || b.messages.length === 0) return false;
           const totalMessages = b.messages.length;
