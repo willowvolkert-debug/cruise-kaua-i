@@ -408,7 +408,6 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
       bio: answers.bio || user?.bio || '',
       phone_number: answers.phone_number || user?.phone_number || '',
       profile_quiz_saved_step: step,
-      has_dismissed_welcome_modal: false, // ensure tutorial shows after saving
     });
     // Fire onboarding email once (non-blocking)
     sendOnboardingEmail({}).catch(() => null);

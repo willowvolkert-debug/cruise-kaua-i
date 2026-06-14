@@ -108,6 +108,8 @@ export default function JoinPage() {
       // Try to auto-login (works for new registrations where we have the password)
       try {
         await base44.auth.loginViaEmailPassword(email, password);
+        // Mark that the user completed OTP verification through the Join flow
+        await base44.auth.updateMe({ has_verified_otp: true });
         const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
         window.location.href = `/account?setup=true&role=${driverRole}&island=${island}`;
         return;

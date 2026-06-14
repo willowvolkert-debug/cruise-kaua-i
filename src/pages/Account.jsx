@@ -851,8 +851,8 @@ export default function AccountPage() {
                     </CardContent>
                 </Card>
 
-                {/* Email Verification Warning */}
-                {user.email && !user.email_verified && (
+                {/* Email Verification Warning — only if user registered via legacy flow (no OTP verified) */}
+                {user.email && !user.email_verified && !user.has_verified_otp && (
                   <div className="mt-4 p-4 bg-yellow-50 border border-yellow-300 rounded-2xl space-y-3">
                     <div className="flex items-center gap-2">
                       <span className="text-xl">📬</span>
