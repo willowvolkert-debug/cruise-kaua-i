@@ -62,7 +62,7 @@ export default function JoinPage() {
     }
     setSignupLoading(true);
     try {
-      await base44.auth.register({ email, password });
+      await base44.auth.register({ email, password, requireEmailVerification: false });
       await base44.auth.loginViaEmailPassword(email, password);
       const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
       const params = new URLSearchParams({ setup: "true", role: driverRole, island });
