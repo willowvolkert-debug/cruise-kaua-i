@@ -18,142 +18,17 @@ import RiderCancelModal from "../components/inbox/RiderCancelModal";
 import AdminMessageCard from "../components/inbox/AdminMessageCard";
 import DriverRideModal from "../components/inbox/DriverRideModal";
 import MyRideRequestsCard from "../components/inbox/MyRideRequestsCard";
-import { useSearchParams } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 import { format } from "date-fns";
 import { formatHST } from "@/lib/formatHST";
 import { sendNotification } from "../components/utils/notifications";
 import { sendBookingEmail } from "../functions/sendBookingEmail";
+import { getHawaiiNow, parseRideDateTimeHST, parseDateString, formatTime12Hour } from "@/lib/hstHelpers";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
-// Helper to convert 24-hour time to 12-hour format with AM/PM
-const formatTime12Hour = (timeStr) => {
-    if (!timeStr) return '';
-    
-    // If already in 12-hour format (contains AM/PM), return as is
-    if (/AM|PM/i.test(timeStr)) return timeStr;
-    
-    // Parse 24-hour time (e.g., "14:30" or "9:00")
-    const [hours, minutes] = timeStr.split(':').map(Number);
-    const period = hours >= 12 ? 'PM' : 'AM';
-    const displayHours = hours % 12 || 12;
-    return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
-};
-
-// Helper to parse date string correctly without timezone conversion
-const parseDateString = (dateStr) => {
-    if (!dateStr) return new Date();
-    const [year, month, day] = dateStr.split('-').map(Number);
-    return new Date(year, month - 1, day);
-};
-
-// Helper to get current time in Hawaii (UTC-10) as a simple comparable object
-const getHawaiiNow = () => {
-    const now = new Date();
-    // Get Hawaii time by using Date UTC methods and adjusting for Hawaii timezone (UTC-10)
-    const utcTime = now.getTime();
-    const hawaiiTime = new Date(utcTime - (10 * 60 * 60 * 1000)); // Subtract 10 hours
-    
-    return {
-        year: hawaiiTime.getUTCFullYear(),
-        month: hawaiiTime.getUTCMonth() + 1,
-        day: hawaiiTime.getUTCDate(),
-        hour: hawaiiTime.getUTCHours(),
-        minute: hawaiiTime.getUTCMinutes(),
-        // For easy comparison: YYYYMMDDHHMM as number
-        toComparable: function() {
-            return this.year * 100000000 + this.month * 1000000 + this.day * 10000 + this.hour * 100 + this.minute;
-        }
-    };
-};
-
-// Helper to parse time strings in various formats (e.g., "19:30", "7:30pm", "730pm")
-const parseTimeString = (timeStr) => {
-    if (!timeStr) return { hours: 23, minutes: 59 };
-    
-    const normalized = timeStr.toLowerCase().trim();
-    
-    // Try HH:MM format first
-    if (normalized.includes(':')) {
-        const [h, m] = normalized.replace(/[ap]m/i, '').split(':').map(Number);
-        let hours = h;
-        if (normalized.includes('pm') && hours < 12) hours += 12;
-        if (normalized.includes('am') && hours === 12) hours = 0;
-        return { hours, minutes: m || 0 };
-    }
-    
-    // Try formats like "730pm", "7pm", "1130am"
-    const match = normalized.match(/^(\d{1,4})(am|pm)?$/);
-    if (match) {
-        const numPart = match[1];
-        const period = match[2];
-        let hours, minutes;
-        
-        if (numPart.length <= 2) {
-            hours = parseInt(numPart);
-            minutes = 0;
-        } else if (numPart.length === 3) {
-            hours = parseInt(numPart[0]);
-            minutes = parseInt(numPart.substring(1));
-        } else {
-            hours = parseInt(numPart.substring(0, 2));
-            minutes = parseInt(numPart.substring(2));
-        }
-        
-        if (period === 'pm' && hours < 12) hours += 12;
-        if (period === 'am' && hours === 12) hours = 0;
-        
-        return { hours, minutes };
-    }
-    
-    return { hours: 23, minutes: 59 };
-};
-
-// Helper to parse a ride date/time as comparable object (same format as getHawaiiNow)
-const parseRideDateTimeHST = (dateStr, timeStr) => {
-    if (!dateStr) return { toComparable: () => 0 }; // No date = treat as past
-    
-    const [year, month, day] = dateStr.split('-').map(Number);
-    const { hours, minutes } = parseTimeString(timeStr);
-    
-    return {
-        year,
-        month,
-        day,
-        hour: hours,
-        minute: minutes,
-        toComparable: function() {
-            return this.year * 100000000 + this.month * 1000000 + this.day * 10000 + this.hour * 100 + this.minute;
-        },
-        // Add hours and return new comparable
-        addHours: function(h) {
-            let newHour = this.hour + h;
-            let newDay = this.day;
-            let newMonth = this.month;
-            let newYear = this.year;
-            
-            while (newHour >= 24) {
-                newHour -= 24;
-                newDay++;
-            }
-            
-            return {
-                year: newYear,
-                month: newMonth,
-                day: newDay,
-                hour: newHour,
-                minute: this.minute,
-                toComparable: function() {
-                    return this.year * 100000000 + this.month * 1000000 + this.day * 10000 + this.hour * 100 + this.minute;
-                }
-            };
-        }
-    };
-};
-
 export default function InboxPage() {
-    const [searchParams] = useSearchParams();
     const [activeBookings, setActiveBookings] = useState([]);
     const [pendingRequests, setPendingRequests] = useState([]);
     const [myPendingBookings, setMyPendingBookings] = useState([]);
@@ -189,48 +64,7 @@ export default function InboxPage() {
     useEffect(() => {
         loadData();
         checkNotifications();
-        handlePaymentReturn();
     }, []);
-
-    const handlePaymentReturn = async () => {
-        const paymentStatus = searchParams.get('payment');
-        const bookingId = searchParams.get('booking_id');
-        const sessionId = searchParams.get('session_id');
-
-        if (paymentStatus === 'difference_paid' && bookingId && sessionId) {
-            try {
-                await base44.functions.invoke('handleDifferencePayment', {
-                    booking_id: bookingId,
-                    session_id: sessionId
-                });
-                // Clear params
-                window.history.replaceState({}, document.title, '/inbox');
-                loadData();
-                alert('✅ Payment successful! The driver has been notified. Please wait for them to accept your ride.');
-            } catch (error) {
-                console.error('Error processing difference payment:', error);
-            }
-        } else if (paymentStatus === 'difference_cancelled') {
-            window.history.replaceState({}, document.title, '/inbox');
-        }
-    };
-
-    const handlePayDifference = async (booking) => {
-        try {
-            const response = await base44.functions.invoke('createDifferenceCheckout', {
-                booking_id: booking.id,
-                success_url: window.location.origin + '/inbox',
-                cancel_url: window.location.origin + '/inbox'
-            });
-
-            if (response.data?.checkout_url) {
-                window.location.href = response.data.checkout_url;
-            }
-        } catch (error) {
-            console.error('Error creating difference checkout:', error);
-            alert('Error processing payment. Please try again.');
-        }
-    };
 
     const checkNotifications = () => {
         if ('Notification' in window) {

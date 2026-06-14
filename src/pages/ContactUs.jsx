@@ -11,6 +11,8 @@ import { MessageSquare, Paperclip, X } from "lucide-react";
 export default function ContactUsPage() {
   const [currentUser, setCurrentUser] = useState(null);
   const [formData, setFormData] = useState({
+    name: '',
+    email: '',
     subject: '',
     message: '',
     priority: 'medium'
@@ -25,8 +27,9 @@ export default function ContactUsPage() {
       try {
         const user = await base44.auth.me();
         setCurrentUser(user);
+        setFormData(prev => ({ ...prev, name: user.full_name || '', email: user.email || '' }));
       } catch (error) {
-        console.error("Error loading user:", error);
+        // Not logged in — fine, allow guest submission
       }
     };
     loadUser();
@@ -35,11 +38,6 @@ export default function ContactUsPage() {
   const handleSubmit = async (e) => {
     if (e && typeof e.preventDefault === 'function') {
       e.preventDefault();
-    }
-    
-    if (!currentUser) {
-      alert("Please log in to submit an inquiry.");
-      return;
     }
 
     setIsSubmitting(true);
@@ -62,9 +60,9 @@ export default function ContactUsPage() {
         : formData.message;
 
       await base44.entities.ContactInquiry.create({
-        user_id: currentUser.id,
-        user_name: currentUser.full_name,
-        user_email: currentUser.email,
+        user_id: currentUser?.id || 'guest',
+        user_name: currentUser?.full_name || formData.name || 'Guest',
+        user_email: currentUser?.email || formData.email || 'guest@unknown.com',
         subject: formData.subject,
         message: messageWithScreenshots,
         priority: formData.priority,
@@ -72,7 +70,7 @@ export default function ContactUsPage() {
       });
 
       setSubmitted(true);
-      setFormData({ subject: '', message: '', priority: 'medium' });
+      setFormData({ name: '', email: '', subject: '', message: '', priority: 'medium' });
       setScreenshots([]);
 
       setTimeout(() => {
@@ -111,6 +109,31 @@ export default function ContactUsPage() {
               <CardTitle className="text-xl text-secondary">send us a message</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
+              {!currentUser && (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="name">your name *</Label>
+                    <Input
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      placeholder="Your full name"
+                      className="rounded-2xl"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">your email *</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      placeholder="you@example.com"
+                      className="rounded-2xl"
+                    />
+                  </div>
+                </>
+              )}
               <div className="space-y-2">
                 <Label htmlFor="subject">subject *</Label>
                 <Input
@@ -185,7 +208,7 @@ export default function ContactUsPage() {
 
               <Button
                 onClick={handleSubmit}
-                disabled={isSubmitting || isUploading}
+                disabled={isSubmitting || isUploading || (!currentUser && (!formData.name || !formData.email || !formData.subject || !formData.message))}
                 className="w-full bg-primary hover:bg-primary/90 rounded-2xl"
               >
                 {isUploading ? 'uploading screenshots...' : isSubmitting ? 'sending...' : 'send message'}

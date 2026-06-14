@@ -851,49 +851,57 @@ export default function AccountPage() {
                     </CardContent>
                 </Card>
 
-                {/* Email Verification Warning — only if user registered via legacy flow (no OTP verified) */}
+                {/* Email Verification — only if user registered via legacy flow (no OTP verified) */}
                 {user.email && !user.email_verified && !user.has_verified_otp && (
                   <div className="mt-4 p-4 bg-yellow-50 border border-yellow-300 rounded-2xl space-y-3">
                     <div className="flex items-center gap-2">
                       <span className="text-xl">📬</span>
                       <div>
                         <p className="font-bold text-yellow-800">verify your email</p>
-                        <p className="text-sm text-yellow-700">We sent a verification email to <strong>{user.email}</strong>. Verify your email to unlock all features, but you can still book and post rides for now.</p>
+                        <p className="text-sm text-yellow-700">Verify <strong>{user.email}</strong> to unlock all features. You can still book and post rides for now.</p>
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <div className="flex gap-2">
-                        <Input
-                          type="text"
-                          inputMode="numeric"
-                          placeholder="enter verification code"
-                          value={emailVerifyCode}
-                          onChange={e => setEmailVerifyCode(e.target.value.replace(/\D/g, ""))}
-                          className="rounded-xl h-10 text-sm flex-1"
-                          maxLength={8}
-                        />
-                        <Button
-                          onClick={handleEmailVerify}
-                          disabled={emailVerifyLoading || !emailVerifyCode}
-                          className="bg-primary hover:bg-primary/90 rounded-xl h-10 text-sm shrink-0"
+                    {emailResendSent ? (
+                      <div className="space-y-2">
+                        <div className="flex gap-2">
+                          <Input
+                            type="text"
+                            inputMode="numeric"
+                            placeholder="enter verification code"
+                            value={emailVerifyCode}
+                            onChange={e => setEmailVerifyCode(e.target.value.replace(/\D/g, ""))}
+                            className="rounded-xl h-10 text-sm flex-1"
+                            maxLength={8}
+                            autoFocus
+                          />
+                          <Button
+                            onClick={handleEmailVerify}
+                            disabled={emailVerifyLoading || !emailVerifyCode}
+                            className="bg-primary hover:bg-primary/90 rounded-xl h-10 text-sm shrink-0"
+                          >
+                            {emailVerifyLoading ? "..." : "verify"}
+                          </Button>
+                        </div>
+                        {emailVerifyError && (
+                          <p className="text-red-500 text-xs font-medium">{emailVerifyError}</p>
+                        )}
+                        <button
+                          onClick={handleEmailResend}
+                          disabled={emailResendLoading}
+                          className="text-xs text-primary underline underline-offset-2 font-medium disabled:opacity-50"
                         >
-                          {emailVerifyLoading ? "..." : "verify"}
-                        </Button>
+                          {emailResendLoading ? "sending..." : "didn't get a code? resend it"}
+                        </button>
                       </div>
-                      {emailVerifyError && (
-                        <p className="text-red-500 text-xs font-medium">{emailVerifyError}</p>
-                      )}
-                      {emailResendSent && (
-                        <p className="text-green-600 text-xs font-medium">✓ new code sent! check your email.</p>
-                      )}
-                      <button
+                    ) : (
+                      <Button
                         onClick={handleEmailResend}
                         disabled={emailResendLoading}
-                        className="text-xs text-primary underline underline-offset-2 font-medium disabled:opacity-50"
+                        className="bg-primary hover:bg-primary/90 rounded-xl h-10 text-sm"
                       >
-                        {emailResendLoading ? "sending..." : "didn't get a code? resend it"}
-                      </button>
-                    </div>
+                        {emailResendLoading ? "sending..." : "send verification code →"}
+                      </Button>
+                    )}
                   </div>
                 )}
 
