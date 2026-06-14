@@ -198,6 +198,15 @@ export default function RequestRide({ island = "Kauai" }) {
         <a href="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">edit a pre-existing ride request here →</a>
       </p>
 
+      <Alert variant="destructive" className="rounded-2xl border-red-300 bg-red-50">
+        <AlertCircle className="h-4 w-4 text-red-600" />
+        <AlertDescription className="text-red-700 font-medium">
+          This feature is temporarily unavailable. Please text your ride request to{" "}
+          <a href="tel:8087209854" className="underline font-bold">(808) 720-9854</a>{" "}
+          and we'll post it on your behalf.
+        </AlertDescription>
+      </Alert>
+
       {error && (
         <Alert variant="destructive" className="rounded-2xl border-red-200">
           <AlertCircle className="h-4 w-4" />
@@ -256,6 +265,7 @@ export default function RequestRide({ island = "Kauai" }) {
                     onChange={(value) => handleInputChange('departure_location', value)}
                     placeholder="e.g., Lihue"
                     island={island}
+                    disabled
                   />
                 </div>
                 <div className="space-y-2">
@@ -266,6 +276,7 @@ export default function RequestRide({ island = "Kauai" }) {
                     onChange={(value) => handleInputChange('destination', value)}
                     placeholder="e.g., Hanalei"
                     island={island}
+                    disabled
                   />
                 </div>
               </div>
@@ -279,6 +290,7 @@ export default function RequestRide({ island = "Kauai" }) {
                       onChange={(e) => handleStopChange(index, e.target.value)} 
                       placeholder={`stop ${index + 1}`}
                       className="rounded-2xl"
+                      disabled
                     />
                     {stops.length > 1 && (
                       <Button 
@@ -299,6 +311,7 @@ export default function RequestRide({ island = "Kauai" }) {
                   size="sm" 
                   onClick={addStop}
                   className="mt-2 rounded-2xl"
+                  disabled
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   add stop
@@ -314,6 +327,7 @@ export default function RequestRide({ island = "Kauai" }) {
                   placeholder="e.g., Going to work, need airport pickup..."
                   className="h-24 rounded-2xl"
                   required
+                  disabled
                 />
               </div>
             </CardContent>
@@ -340,6 +354,7 @@ export default function RequestRide({ island = "Kauai" }) {
                     onChange={(e) => handleInputChange('departure_date', e.target.value)}
                     required
                     className="rounded-2xl"
+                    disabled
                   />
                 </div>
                 <div className="space-y-2">
@@ -356,6 +371,7 @@ export default function RequestRide({ island = "Kauai" }) {
                       }}
                       required
                       className="rounded-2xl flex-1"
+                      disabled
                     />
                     <Select
                       value={requestData.departure_time.match(/\s*(AM|PM)$/i)?.[1]?.toUpperCase() || 'AM'}
@@ -363,8 +379,9 @@ export default function RequestRide({ island = "Kauai" }) {
                         const timeWithoutPeriod = requestData.departure_time.replace(/\s*(AM|PM)$/i, '').trim();
                         handleInputChange('departure_time', timeWithoutPeriod + ' ' + period);
                       }}
+                      disabled
                     >
-                      <SelectTrigger className="rounded-2xl w-24">
+                      <SelectTrigger className="rounded-2xl w-24" disabled>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="rounded-2xl">
@@ -382,6 +399,7 @@ export default function RequestRide({ island = "Kauai" }) {
                   id="flexible"
                   checked={requestData.is_flexible}
                   onCheckedChange={(checked) => handleInputChange('is_flexible', checked)}
+                  disabled
                 />
               </div>
 
@@ -398,6 +416,7 @@ export default function RequestRide({ island = "Kauai" }) {
                     id="recurring"
                     checked={isRecurring}
                     onCheckedChange={setIsRecurring}
+                    disabled
                   />
                 </div>
                 {isRecurring && (
@@ -437,8 +456,9 @@ export default function RequestRide({ island = "Kauai" }) {
                 <Select
                   value={requestData.seats_needed.toString()}
                   onValueChange={(value) => handleInputChange('seats_needed', parseInt(value))}
+                  disabled
                 >
-                  <SelectTrigger className="rounded-2xl">
+                  <SelectTrigger className="rounded-2xl" disabled>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-2xl">
@@ -457,6 +477,7 @@ export default function RequestRide({ island = "Kauai" }) {
                   id="luggage"
                   checked={requestData.has_luggage}
                   onCheckedChange={(checked) => handleInputChange('has_luggage', checked)}
+                  disabled
                 />
               </div>
             </CardContent>
@@ -515,11 +536,11 @@ export default function RequestRide({ island = "Kauai" }) {
       <div className="pb-8 space-y-2">
         <Button
           onClick={handleSubmit}
-          disabled={isSubmitting || !currentUser?.profile_complete || !currentUser?.profile_picture_url || !currentUser?.terms_accepted || !currentUser?.privacy_policy_accepted || !currentUser?.community_agreement_accepted}
+          disabled
           size="lg"
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-8 py-4 rounded-2xl shadow-lg"
+          className="w-full bg-gray-400 text-white font-bold px-8 py-4 rounded-2xl shadow-lg cursor-not-allowed"
         >
-          {isSubmitting ? 'submitting...' : 'submit request'}
+          temporarily unavailable
         </Button>
         <p className="text-center text-sm text-gray-500">
           <a href="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">
