@@ -20,13 +20,6 @@
       "type": "string",
       "description": "End destination"
     },
-    "stops": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "Optional stops along the way"
-    },
     "departure_date": {
       "type": "string",
       "format": "date",
@@ -35,11 +28,6 @@
     "departure_time": {
       "type": "string",
       "description": "Time of departure"
-    },
-    "is_flexible": {
-      "type": "boolean",
-      "default": false,
-      "description": "Whether the departure time is flexible"
     },
     "seats_needed": {
       "type": "integer",
@@ -51,38 +39,13 @@
       "type": "string",
       "description": "Why the rider needs this trip"
     },
-    "has_luggage": {
-      "type": "boolean",
-      "default": false,
-      "description": "Whether rider has luggage"
-    },
     "rider_id": {
       "type": "string",
-      "description": "ID of the rider making the request"
+      "description": "ID of the rider"
     },
     "rider_name": {
       "type": "string",
       "description": "Name of the rider"
-    },
-    "rider_username": {
-      "type": "string",
-      "description": "Username of the rider"
-    },
-    "rider_profile_picture_url": {
-      "type": "string",
-      "description": "Profile picture URL of the rider"
-    },
-    "rider_bio": {
-      "type": "string",
-      "description": "Bio of the rider"
-    },
-    "rider_age": {
-      "type": "integer",
-      "description": "Age of the rider"
-    },
-    "rider_gender": {
-      "type": "string",
-      "description": "Gender of the rider"
     },
     "status": {
       "type": "string",
@@ -92,8 +55,7 @@
         "expired",
         "cancelled"
       ],
-      "default": "active",
-      "description": "Status of the ride request"
+      "default": "active"
     }
   },
   "required": [
