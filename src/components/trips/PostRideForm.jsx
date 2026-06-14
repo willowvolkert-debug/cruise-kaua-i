@@ -530,11 +530,15 @@ export default function PostRideForm({ island = "Kauai" }) {
             <div className="flex items-start gap-3">
               <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
               <div>
-                <p className="font-bold text-amber-800">ride requests need your help!</p>
+                <p className="font-bold text-amber-800">ride requests temporarily unavailable</p>
                 <p className="text-sm text-amber-700 mt-1">
-                  new ride requests are temporarily not loading due to a platform database issue. 
-                  the following request still needs a driver: <strong>Kim — Lihue → Princeville, weekday mornings</strong>.
-                  please text <strong>+1 (808) 720-9854</strong> if you can help or have questions.
+                  ride requests are temporarily unavailable due to a platform issue. we have 1 rider who needs a ride:
+                </p>
+                <ul className="text-sm text-amber-700 mt-2 ml-4 list-disc">
+                  <li><strong>Kim — Lihue → Princeville, Tue 6/16 at 10:15 AM, 1 seat</strong></li>
+                </ul>
+                <p className="text-sm text-amber-700 mt-2">
+                  go to post a ride and enter the details of their ride (or yours, if longer) — we&apos;ll notify the rider to book it.
                 </p>
               </div>
             </div>
