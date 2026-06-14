@@ -506,6 +506,14 @@ export default function PostRideForm({ island = "Kauai" }) {
         <Link to="/confirmedrides" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">edit a pre-existing ride here →</Link>
       </p>
 
+      {/* Platform bug warning for ride requests */}
+      <Alert className="rounded-2xl bg-amber-50 border-amber-300">
+        <AlertTriangle className="h-4 w-4 text-amber-600" />
+        <AlertDescription className="text-amber-800 text-sm">
+          <strong>Ride requests are temporarily unavailable</strong> due to a platform issue — new requests can't be saved right now. If you received a ride request by text/SMS, you can still <strong>post a ride below matching that request</strong>. We'll send the rider an in-app notification with a link to book it once your ride is posted.
+        </AlertDescription>
+      </Alert>
+
       {respondingToRequest && (
         <Alert className="rounded-2xl bg-blue-50 border-blue-200">
           <Car className="h-4 w-4 text-blue-600" />
