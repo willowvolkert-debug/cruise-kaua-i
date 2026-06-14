@@ -557,7 +557,7 @@ export default function AccountPage() {
                             </div>
                             <div className="flex-1 text-center md:text-left space-y-2">
                                 <h2 className="text-3xl font-bold text-secondary">
-                                    {user.username ? `@${user.username}` : user.full_name}
+                                    {user.username ? `@${user.username}` : (user.full_name || user.email?.split('@')[0] || 'Cruise member')}
                                 </h2>
                                 {isEditing ? (
                                     <div className="space-y-4">

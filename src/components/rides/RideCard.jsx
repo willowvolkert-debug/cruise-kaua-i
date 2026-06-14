@@ -8,6 +8,7 @@ import { format } from "date-fns";
 
 export default function RideCard({ ride, onBookRide, showBookButton = true, currentUser, driverProfile, driverRatings = [] }) {
   const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
+  const driverDisplayName = ride.driver_name || ride.driver_username || 'Cruise member';
   
   const isLocal = currentUser?.driver_license_state === 'HI';
   const displayPrice = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);
@@ -58,10 +59,10 @@ export default function RideCard({ ride, onBookRide, showBookButton = true, curr
           <div className="flex items-center gap-3">
             <Avatar className="h-12 w-12 bg-gradient-to-r from-primary to-secondary">
               <AvatarImage src={driverProfile?.profile_picture_url} />
-              <AvatarFallback className="text-white font-semibold">{getInitials(ride.driver_name)}</AvatarFallback>
+              <AvatarFallback className="text-white font-semibold">{getInitials(driverDisplayName)}</AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-medium text-secondary">{ride.driver_name}</p>
+              <p className="font-medium text-secondary">{driverDisplayName}</p>
               {averageRating && (
                 <div className="flex items-center gap-1">
                   <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />

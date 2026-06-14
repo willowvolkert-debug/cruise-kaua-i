@@ -101,11 +101,13 @@ export default function RequestRide({ island = "Kauai" }) {
       const hawaiiDate = new Date(localDate.getTime() - (localDate.getTimezoneOffset() * 60000));
       const hawaiiDateString = hawaiiDate.toISOString().split('T')[0];
 
+      const riderDisplayName = currentUser.full_name || currentUser.username || currentUser.email?.split('@')[0] || 'Cruise member';
+
       const requestPayload = {
         ...requestData,
         departure_date: hawaiiDateString,
         rider_id: currentUser.id,
-        rider_name: currentUser.full_name,
+        rider_name: riderDisplayName,
         rider_username: currentUser.username || null,
         rider_profile_picture_url: currentUser.profile_picture_url || null,
         rider_bio: currentUser.bio || null,
@@ -134,7 +136,7 @@ export default function RequestRide({ island = "Kauai" }) {
           schedule_type: 'weekly',
           weekly_days: recurringDays,
           is_active: true,
-          rider_name: currentUser.full_name,
+          rider_name: riderDisplayName,
           rider_username: currentUser.username || null,
           rider_profile_picture_url: currentUser.profile_picture_url || null,
           rider_bio: currentUser.bio || null,

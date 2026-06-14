@@ -381,11 +381,13 @@ export default function PostRideForm({ island = "Kauai" }) {
       const hawaiiDate = new Date(localDate.getTime() - (localDate.getTimezoneOffset() * 60000));
       const hawaiiDateString = hawaiiDate.toISOString().split('T')[0];
 
+      const driverDisplayName = currentUser.full_name || currentUser.username || currentUser.email?.split('@')[0] || 'Cruise member';
+
       const ridePayload = {
         ...rideData,
         departure_date: hawaiiDateString,
         driver_id: currentUser.id,
-        driver_name: currentUser.full_name,
+        driver_name: driverDisplayName,
         driver_username: currentUser.username || null,
         driver_profile_picture_url: currentUser.profile_picture_url || null,
         driver_bio: currentUser.bio || null,

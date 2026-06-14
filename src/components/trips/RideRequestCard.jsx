@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
 export default function RideRequestCard({ request, onMessage, onViewProfile, onRespondWithRide }) {
+  const riderDisplayName = request.rider_name || request.rider_username || 'Cruise member';
   return (
     <Card className="border-gray-200 hover:border-primary/50 transition-all rounded-3xl">
       <CardContent className="p-4">
@@ -19,7 +20,7 @@ export default function RideRequestCard({ request, onMessage, onViewProfile, onR
               <Avatar className="w-12 h-12 cursor-pointer">
                 <AvatarImage src={request.rider_profile_picture_url} />
                 <AvatarFallback className="bg-gradient-to-r from-primary to-green-400 text-white font-semibold">
-                  {getInitials(request.rider_name)}
+                  {getInitials(riderDisplayName)}
                 </AvatarFallback>
               </Avatar>
             </button>
@@ -29,7 +30,7 @@ export default function RideRequestCard({ request, onMessage, onViewProfile, onR
                 onClick={() => onViewProfile && onViewProfile(request)}
                 className="flex items-center gap-2 hover:opacity-80 transition-opacity text-left"
               >
-                <span className="font-semibold text-secondary">{request.rider_name}</span>
+                <span className="font-semibold text-secondary">{riderDisplayName}</span>
                 {request.rider_username && (
                   <span className="text-sm text-gray-500">@{request.rider_username}</span>
                 )}
