@@ -52,13 +52,14 @@ export default function LicenseVerificationModal({ isOpen, onClose, onSuccess })
         }
       });
 
-      await base44.entities.AdminMessage.create({
+      // Notify admins - non-blocking, RLS allows admin-only create so this will be caught silently
+      base44.entities.AdminMessage.create({
         recipient_id: 'admin',
         recipient_name: 'Admin',
         subject: `License Pending Review: ${currentUser.full_name}`,
         message: `A user has uploaded their driver's license for verification.\n\nUser: ${currentUser.full_name}\nEmail: ${currentUser.email}\n\nPlease review in the Admin Dashboard.`,
         message_type: 'action_required'
-      });
+      }).catch(() => null);
 
       // Fire onboarding email (non-blocking)
       sendOnboardingEmail({}).catch(() => null);
