@@ -524,6 +524,23 @@ export default function PostRideForm({ island = "Kauai" }) {
         </Alert>
       )}
 
+      {rideRequests.length === 0 && !matchedRequest && (
+        <Card className="border-amber-300 shadow-sm bg-amber-50 rounded-3xl">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
+              <div>
+                <p className="font-bold text-amber-800">ride requests temporarily unavailable</p>
+                <p className="text-sm text-amber-700 mt-1">
+                  the ride requests section is not loading due to a platform database issue being addressed by Base44 support. 
+                  existing ride requests remain accessible. please text <strong>+1 (808) 320-5072</strong> if you have questions.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {rideRequests.length > 0 && !matchedRequest && (
         <Card className="border-primary/20 shadow-sm bg-orange-50 rounded-3xl">
           <CardHeader className="cursor-pointer" onClick={() => setShowRideRequests(!showRideRequests)}>

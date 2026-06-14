@@ -194,6 +194,16 @@ export default function RequestRide({ island = "Kauai" }) {
   return (
     <div className="space-y-6 max-w-4xl mx-auto relative">
       <h2 className="text-2xl font-bold text-secondary">request a ride</h2>
+
+      <Alert variant="destructive" className="rounded-2xl border-red-300 bg-red-50">
+        <AlertCircle className="h-5 w-5 text-red-600" />
+        <AlertDescription className="text-red-800 font-medium">
+          ride requests are temporarily unavailable due to a platform database issue. 
+          please text your ride request to <strong>+1 (808) 320-5072</strong> and we&apos;ll post it manually. 
+          mahalo for your patience!
+        </AlertDescription>
+      </Alert>
+
       <p className="text-sm text-gray-500 -mt-4">
         <a href="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">edit a pre-existing ride request here →</a>
       </p>
@@ -515,11 +525,11 @@ export default function RequestRide({ island = "Kauai" }) {
       <div className="pb-8 space-y-2">
         <Button
           onClick={handleSubmit}
-          disabled={isSubmitting}
+          disabled={true}
           size="lg"
-          className="w-full bg-primary hover:bg-primary/90 text-white font-bold px-8 py-4 rounded-2xl shadow-lg"
+          className="w-full bg-gray-400 text-white font-bold px-8 py-4 rounded-2xl shadow-lg cursor-not-allowed"
         >
-          {isSubmitting ? 'submitting...' : 'submit ride request'}
+          temporarily unavailable
         </Button>
         <p className="text-center text-sm text-gray-500">
           <a href="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">
