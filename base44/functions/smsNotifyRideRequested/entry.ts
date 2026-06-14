@@ -8,7 +8,7 @@ Deno.serve(async (req) => {
     const booking = payload.data;
 
     if (!booking) return Response.json({ ok: true, skipped: 'no data' });
-    // Only fire on newly paid bookings
+    // Only fire on newly paid bookings (create events where payment is complete)
     if (booking.payment_status !== 'paid') return Response.json({ ok: true, skipped: 'not paid yet' });
 
     const allUsers = await base44.asServiceRole.entities.User.list();
