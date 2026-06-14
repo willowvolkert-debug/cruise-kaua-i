@@ -199,7 +199,7 @@ export default function RequestRide({ island = "Kauai" }) {
         <AlertCircle className="h-5 w-5 text-red-600" />
         <AlertDescription className="text-red-800 font-medium">
           ride requests are temporarily unavailable due to a platform database issue. 
-          please text your ride request to <strong>+1 (808) 320-5072</strong> and we&apos;ll post it manually. 
+          please text your ride request to <strong>+1 (808) 720-9854</strong> and we&apos;ll post it manually. 
           mahalo for your patience!
         </AlertDescription>
       </Alert>
