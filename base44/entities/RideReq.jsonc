@@ -1,0 +1,26 @@
+{
+  "name": "RideReq",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "create": {
+      "*": "*"
+    },
+    "read": {
+      "*": "*"
+    },
+    "update": {
+      "*": "*"
+    },
+    "delete": {
+      "*": "*"
+    }
+  }
+}
