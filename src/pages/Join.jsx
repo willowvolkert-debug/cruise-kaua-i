@@ -83,7 +83,9 @@ export default function JoinPage() {
           await base44.auth.resendOtp(email);
           setOtpState("sent");
         } catch (resendErr) {
-          setSignupError("this email is already registered. try logging in instead.");
+          setSignupError("");
+          setOtpError("this email is already registered. enter the verification code sent to your inbox, or resend below.");
+          setOtpState("sent"); // still show OTP screen so they can enter code or resend
         }
       } else {
         setSignupError(msg || "something went wrong. please try again.");
@@ -382,15 +384,15 @@ export default function JoinPage() {
 
         {/* Navigation */}
         <div className="flex gap-3 pt-8">
-          {step > 0 && !otpState && (
+          {(step > 0 && !otpState) || otpState === "sent" ? (
             <Button
               variant="outline"
-              onClick={() => { resetOtp(); setStep(step - 1); }}
+              onClick={() => { resetOtp(); setStep(step > 0 && !otpState ? step - 1 : step); }}
               className="rounded-full px-6 border-gray-300 text-gray-600"
             >
               <ChevronLeft className="w-4 h-4 mr-1" /> back
             </Button>
-          )}
+          ) : null}
           {step < 3 && (
             <Button
               onClick={handleContinue}
