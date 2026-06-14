@@ -333,6 +333,12 @@ export default function JoinPage() {
               {signupError && (
                 <p className="text-red-500 text-sm font-medium">{signupError}</p>
               )}
+              <p className="text-sm text-gray-400 pt-2">
+                forgot your password?{" "}
+                <a href="/forgot-password" className="text-primary underline font-medium hover:text-primary/80">
+                  reset it here
+                </a>
+              </p>
             </div>
           </div>
         )}
