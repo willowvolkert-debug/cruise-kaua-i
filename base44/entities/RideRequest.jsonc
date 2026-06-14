@@ -89,6 +89,7 @@
       "enum": [
         "active",
         "matched",
+        "expired",
         "cancelled"
       ],
       "default": "active",

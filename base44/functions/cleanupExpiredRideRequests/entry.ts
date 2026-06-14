@@ -13,16 +13,17 @@ Deno.serve(async (req) => {
     // Fetch all active ride requests
     const requests = await base44.asServiceRole.entities.RideRequest.list();
 
-    let deleted = 0;
+    let expired = 0;
     for (const r of requests) {
       const depDate = r.departure_date?.substring(0, 10);
-      if (depDate && depDate < todayStr) {
-        await base44.asServiceRole.entities.RideRequest.delete(r.id);
-        deleted++;
+      // Only expire requests that are still active and whose date has passed
+      if (depDate && depDate < todayStr && r.status === 'active') {
+        await base44.asServiceRole.entities.RideRequest.update(r.id, { status: 'expired' });
+        expired++;
       }
     }
 
-    return Response.json({ ok: true, deleted });
+    return Response.json({ ok: true, expired });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

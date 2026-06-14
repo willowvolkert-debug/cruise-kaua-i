@@ -110,7 +110,11 @@ export default function AdminPage() {
       const allRideRequests = await base44.entities.RideRequest.list('-created_date', 500);
       const allRides = await base44.entities.Ride.list('-created_date', 500);
       const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
-      const newRideRequests = allRideRequests.filter(r => new Date(r.created_date) > threeDaysAgo && r.status === 'active');
+      // Show ride requests created in last 72h that are active, matched, or expired (not cancelled)
+      const newRideRequests = allRideRequests.filter(r =>
+        new Date(r.created_date) > threeDaysAgo &&
+        (r.status === 'active' || r.status === 'matched' || r.status === 'expired')
+      );
       // Only show one-off rides (not auto-posted recurring instances) + new recurring schedules set up recently
       const newRides = allRides.filter(r => new Date(r.created_date) > threeDaysAgo && r.status === 'active' && !r.is_recurring);
       // New recurring schedules created in last 72h
@@ -966,9 +970,17 @@ export default function AdminPage() {
                             <p className="text-sm text-gray-600">{request.departure_location} → {request.destination}</p>
                             <p className="text-xs text-gray-500">{format(new Date(request.departure_date + 'T00:00:00'), "MM/dd/yyyy")} at {request.departure_time}</p>
                           </div>
-                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300">
-                            {request.seats_needed} seat{request.seats_needed > 1 ? 's' : ''}
-                          </Badge>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300">
+                              {request.seats_needed} seat{request.seats_needed > 1 ? 's' : ''}
+                            </Badge>
+                            {request.status === 'matched' && (
+                              <Badge className="bg-blue-100 text-blue-700 text-xs">matched</Badge>
+                            )}
+                            {request.status === 'expired' && (
+                              <Badge className="bg-amber-100 text-amber-700 text-xs">expired</Badge>
+                            )}
+                          </div>
                         </div>
                       </div>
                     ))}
