@@ -78,6 +78,8 @@ export default function AccountPage() {
     const [ratings, setRatings] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
+    const [editMode, setEditMode] = useState('guided');
+    const [expandedToFull, setExpandedToFull] = useState(false);
     const [showLicenseModal, setShowLicenseModal] = useState(false);
     const [editData, setEditData] = useState({});
     const [profilePicFile, setProfilePicFile] = useState(null);
@@ -164,6 +166,7 @@ export default function AccountPage() {
                 }
             }
             setEditData({
+                email: currentUser.email || '',
                 username: currentUser.username || '',
                 bio: currentUser.bio || '',
                 age: currentUser.age || '',
@@ -262,6 +265,10 @@ export default function AccountPage() {
         // Persist phone fields explicitly
         saveData.phone_number = editData.phone_number || '';
         saveData.sms_notifications_enabled = !!editData.sms_notifications_enabled;
+        // Only include email if it changed
+        if (editData.email && editData.email !== user.email) {
+          saveData.email = editData.email;
+        }
 
         const isProfileComplete = !!(editData.username && editData.bio && editData.age && editData.gender && profilePicUrl);
 
@@ -324,6 +331,8 @@ export default function AccountPage() {
 
         await loadData();
         setIsEditing(false);
+        setEditMode('guided');
+        setExpandedToFull(false);
         setProfilePicFile(null);
         setIsSaving(false);
     };
@@ -508,7 +517,7 @@ export default function AccountPage() {
                     <CardContent className="p-6 md:p-8">
                         {isEditing && (
                             <div className="flex justify-end mb-4 gap-2">
-                                <Button variant="outline" onClick={() => { setIsEditing(false); setProfilePicFile(null); }} className="rounded-2xl border-gray-300 text-gray-600">cancel</Button>
+                                <Button variant="outline" onClick={() => { setIsEditing(false); setProfilePicFile(null); setEditMode('guided'); setExpandedToFull(false); }} className="rounded-2xl border-gray-300 text-gray-600">cancel</Button>
                                 <Button onClick={handleSave} disabled={isSaving} className="bg-primary hover:bg-primary/90 rounded-2xl">
                                     {isSaving ? <><span className="animate-spin mr-2">⏳</span>saving...</> : <><Save className="w-4 h-4 mr-2"/>save changes</>}
                                 </Button>
@@ -552,130 +561,181 @@ export default function AccountPage() {
                                 </h2>
                                 {isEditing ? (
                                     <div className="space-y-4">
-                                        <div className="p-3 bg-gray-100 rounded-2xl mb-4">
-                                            <p className="text-sm text-gray-500">Account Email</p>
-                                            <p className="font-medium text-secondary">{user.full_name} ({user.email})</p>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>Username *</Label>
-                                            <Input 
-                                                value={editData.username} 
-                                                onChange={(e) => setEditData({...editData, username: e.target.value})} 
-                                                placeholder="username"
-                                                className="max-w-xs rounded-2xl"
-                                            />
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-4 max-w-xs">
+                                        {editMode === 'guided' && !expandedToFull && (
+                                            <div className="p-3 bg-blue-50 border border-blue-200 rounded-2xl text-sm text-blue-800">
+                                                filling in a few missing details to help you get the most out of Cruise Kauaʻi
+                                            </div>
+                                        )}
+                                        
+                                        {/* Email — only shown in full mode */}
+                                        {editMode === 'full' && (
                                             <div className="space-y-2">
-                                                <Label>Age *</Label>
+                                                <Label>Email</Label>
                                                 <Input 
-                                                    type="number"
-                                                    min="18"
-                                                    value={editData.age} 
-                                                    onChange={(e) => setEditData({...editData, age: parseInt(e.target.value)})} 
-                                                    placeholder="Age"
+                                                    value={editData.email || ''} 
+                                                    onChange={(e) => setEditData({...editData, email: e.target.value})} 
+                                                    placeholder="your@email.com"
+                                                    className="max-w-xs rounded-2xl"
+                                                    type="email"
+                                                />
+                                                <p className="text-xs text-gray-500">Changing your email will send a verification to the new address.</p>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Username — show if missing (guided) or always (full) */}
+                                        {(editMode === 'full' || !user.username || expandedToFull) && (
+                                            <div className="space-y-2">
+                                                <Label>Username *</Label>
+                                                <Input 
+                                                    value={editData.username} 
+                                                    onChange={(e) => setEditData({...editData, username: e.target.value})} 
+                                                    placeholder="username"
+                                                    className="max-w-xs rounded-2xl"
+                                                />
+                                            </div>
+                                        )}
+                                        
+                                        {/* Age + Gender — show if missing (guided) or always (full) */}
+                                        {(editMode === 'full' || !user.age || !user.gender || expandedToFull) && (
+                                            <div className="grid grid-cols-2 gap-4 max-w-xs">
+                                                {(editMode === 'full' || !user.age || expandedToFull) && (
+                                                    <div className="space-y-2">
+                                                        <Label>Age *</Label>
+                                                        <Input 
+                                                            type="number"
+                                                            min="18"
+                                                            value={editData.age} 
+                                                            onChange={(e) => setEditData({...editData, age: parseInt(e.target.value)})} 
+                                                            placeholder="Age"
+                                                            className="rounded-2xl"
+                                                        />
+                                                    </div>
+                                                )}
+                                                {(editMode === 'full' || !user.gender || expandedToFull) && (
+                                                    <div className="space-y-2">
+                                                        <Label>Gender *</Label>
+                                                        <Select 
+                                                            value={editData.gender} 
+                                                            onValueChange={(v) => setEditData({...editData, gender: v})}
+                                                        >
+                                                            <SelectTrigger className="rounded-2xl">
+                                                                <SelectValue placeholder="Select" />
+                                                            </SelectTrigger>
+                                                            <SelectContent className="rounded-2xl">
+                                                                <SelectItem value="male">Male</SelectItem>
+                                                                <SelectItem value="female">Female</SelectItem>
+                                                                <SelectItem value="non-binary">Non-binary</SelectItem>
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                        
+                                        {/* Bio — show if missing (guided) or always (full) */}
+                                        {(editMode === 'full' || !user.bio || expandedToFull) && (
+                                            <div className="space-y-2">
+                                                <Label>Bio *</Label>
+                                                <p className="text-sm text-gray-600">
+                                                    Tell us a bit about yourself and why you're using Cruise Kauaʻi!
+                                                </p>
+                                                <Textarea 
+                                                    value={editData.bio} 
+                                                    onChange={(e) => setEditData({...editData, bio: e.target.value})} 
+                                                    placeholder="Tell us about yourself..."
                                                     className="rounded-2xl"
                                                 />
                                             </div>
-                                            <div className="space-y-2">
-                                                <Label>Gender *</Label>
-                                                <Select 
-                                                    value={editData.gender} 
-                                                    onValueChange={(v) => setEditData({...editData, gender: v})}
-                                                >
-                                                    <SelectTrigger className="rounded-2xl">
-                                                        <SelectValue placeholder="Select" />
-                                                    </SelectTrigger>
-                                                    <SelectContent className="rounded-2xl">
-                                                        <SelectItem value="male">Male</SelectItem>
-                                                        <SelectItem value="female">Female</SelectItem>
-                                                        <SelectItem value="non-binary">Non-binary</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>Bio *</Label>
-                                            <p className="text-sm text-gray-600">
-                                                Tell us a bit about yourself and why you're using Cruise Kauaʻi!
-                                            </p>
-                                            <Textarea 
-                                                value={editData.bio} 
-                                                onChange={(e) => setEditData({...editData, bio: e.target.value})} 
-                                                placeholder="Tell us about yourself..."
-                                                className="rounded-2xl"
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>home base</Label>
-                                            <Input 
-                                                value={editData.home_base} 
-                                                onChange={(e) => setEditData({...editData, home_base: e.target.value})} 
-                                                placeholder="e.g., Koloa, Lihue, Hanalei"
-                                                className="rounded-2xl"
-                                            />
-                                            <p className="text-xs text-gray-500">Your home town on Kauai (optional) - you'll get notifications for ride requests in your area</p>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>📱 phone number for text alerts</Label>
-                                            <Input 
-                                                value={editData.phone_number || ''} 
-                                                onChange={(e) => setEditData({...editData, phone_number: e.target.value})} 
-                                                placeholder="e.g., (808) 555-1234"
-                                                className="rounded-2xl"
-                                                type="tel"
-                                            />
-                                            <div className="flex items-start gap-2 mt-2">
-                                                <input
-                                                    type="checkbox"
-                                                    id="sms-opt-in"
-                                                    checked={!!editData.sms_notifications_enabled}
-                                                    onChange={(e) => setEditData({...editData, sms_notifications_enabled: e.target.checked})}
-                                                    className="mt-0.5 h-4 w-4 rounded border-gray-400 accent-green-700 cursor-pointer"
-                                                />
-                                                <label htmlFor="sms-opt-in" className="text-xs text-gray-600 leading-relaxed cursor-pointer">
-                                                    I agree to receive recurring automated transactional SMS text messages from <strong>Cruise Kauaʻi</strong> at the number above (ride confirmations, reminders, and messages). Consent is not required to use the platform. Message &amp; data rates may apply. Reply <strong>STOP</strong> to unsubscribe, <strong>HELP</strong> for help. See our <a href="/sms-opt-in" className="text-green-700 underline" target="_blank">SMS Terms</a>.
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div className="space-y-4 pt-2">
-                                            <h4 className="font-semibold text-secondary">preferences</h4>
-                                            <div className="space-y-2">
-                                                <Label className="flex items-center gap-2"><MessageCircle className="w-4 h-4"/>chattiness</Label>
-                                                <Select value={editData.preferences_chattiness} onValueChange={(v) => setEditData({...editData, preferences_chattiness: v})}>
-                                                    <SelectTrigger className="rounded-2xl"><SelectValue/></SelectTrigger>
-                                                    <SelectContent className="rounded-2xl"><SelectItem value="Quiet">quiet</SelectItem><SelectItem value="Chatty">chatty</SelectItem><SelectItem value="Flexible">flexible</SelectItem></SelectContent>
-                                                </Select>
-                                            </div>
-                                            <div className="space-y-2">
-                                               <Label className="flex items-center gap-2"><Wind className="w-4 h-4"/>scents</Label>
-                                               <Select value={editData.preferences_scents} onValueChange={(v) => setEditData({...editData, preferences_scents: v})}>
-                                                   <SelectTrigger className="rounded-2xl"><SelectValue/></SelectTrigger>
-                                                   <SelectContent className="rounded-2xl"><SelectItem value="None">none</SelectItem><SelectItem value="Light">light</SelectItem><SelectItem value="Any">any</SelectItem></SelectContent>
-                                               </Select>
-                                            </div>
-                                            <div className="space-y-2">
-                                               <Label className="flex items-center gap-2"><Music className="w-4 h-4"/>music</Label>
-                                               <Select value={editData.preferences_music} onValueChange={(v) => setEditData({...editData, preferences_music: v})}>
-                                                   <SelectTrigger className="rounded-2xl"><SelectValue/></SelectTrigger>
-                                                   <SelectContent className="rounded-2xl">
-                                                       <SelectItem value="No music">no music</SelectItem>
-                                                       <SelectItem value="Soft/chill">soft / chill</SelectItem>
-                                                       <SelectItem value="Any genre">any genre</SelectItem>
-                                                       <SelectItem value="Flexible">flexible</SelectItem>
-                                                       <SelectItem value="custom">write in...</SelectItem>
-                                                   </SelectContent>
-                                                   </Select>
-                                                   {editData.preferences_music === 'custom' && (
-                                                   <Input
-                                                       value={editData.preferences_music_custom || ''}
-                                                       onChange={(e) => setEditData({...editData, preferences_music_custom: e.target.value})}
-                                                       placeholder="e.g. Hawaiian, jazz, podcasts..."
-                                                       className="rounded-2xl mt-2"
-                                                   />
-                                                   )}
-                                                   </div>
-                                            </div>
+                                        )}
+                                        
+                                        {/* Expand to full button — shown when all required fields are now filled */}
+                                        {editMode === 'guided' && !expandedToFull && (
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                onClick={() => { setEditMode('full'); setExpandedToFull(true); }}
+                                                disabled={!editData.username || !editData.bio || !editData.age || !editData.gender}
+                                                className="w-full border-blue-300 text-blue-600 hover:bg-blue-50 rounded-2xl text-sm"
+                                            >
+                                                show all fields →
+                                            </Button>
+                                        )}
+                                        
+                                        {/* Full mode fields */}
+                                        {editMode === 'full' && (
+                                            <>
+                                                <div className="space-y-2">
+                                                    <Label>home base</Label>
+                                                    <Input 
+                                                        value={editData.home_base} 
+                                                        onChange={(e) => setEditData({...editData, home_base: e.target.value})} 
+                                                        placeholder="e.g., Koloa, Lihue, Hanalei"
+                                                        className="rounded-2xl"
+                                                    />
+                                                    <p className="text-xs text-gray-500">Your home town on Kauai (optional) - you'll get notifications for ride requests in your area</p>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label>📱 phone number for text alerts</Label>
+                                                    <Input 
+                                                        value={editData.phone_number || ''} 
+                                                        onChange={(e) => setEditData({...editData, phone_number: e.target.value})} 
+                                                        placeholder="e.g., (808) 555-1234"
+                                                        className="rounded-2xl"
+                                                        type="tel"
+                                                    />
+                                                    <div className="flex items-start gap-2 mt-2">
+                                                        <input
+                                                            type="checkbox"
+                                                            id="sms-opt-in"
+                                                            checked={!!editData.sms_notifications_enabled}
+                                                            onChange={(e) => setEditData({...editData, sms_notifications_enabled: e.target.checked})}
+                                                            className="mt-0.5 h-4 w-4 rounded border-gray-400 accent-green-700 cursor-pointer"
+                                                        />
+                                                        <label htmlFor="sms-opt-in" className="text-xs text-gray-600 leading-relaxed cursor-pointer">
+                                                            I agree to receive recurring automated transactional SMS text messages from <strong>Cruise Kauaʻi</strong> at the number above (ride confirmations, reminders, and messages). Consent is not required to use the platform. Message &amp; data rates may apply. Reply <strong>STOP</strong> to unsubscribe, <strong>HELP</strong> for help. See our <a href="/sms-opt-in" className="text-green-700 underline" target="_blank">SMS Terms</a>.
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-4 pt-2">
+                                                    <h4 className="font-semibold text-secondary">preferences</h4>
+                                                    <div className="space-y-2">
+                                                        <Label className="flex items-center gap-2"><MessageCircle className="w-4 h-4"/>chattiness</Label>
+                                                        <Select value={editData.preferences_chattiness} onValueChange={(v) => setEditData({...editData, preferences_chattiness: v})}>
+                                                            <SelectTrigger className="rounded-2xl"><SelectValue/></SelectTrigger>
+                                                            <SelectContent className="rounded-2xl"><SelectItem value="Quiet">quiet</SelectItem><SelectItem value="Chatty">chatty</SelectItem><SelectItem value="Flexible">flexible</SelectItem></SelectContent>
+                                                        </Select>
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                       <Label className="flex items-center gap-2"><Wind className="w-4 h-4"/>scents</Label>
+                                                       <Select value={editData.preferences_scents} onValueChange={(v) => setEditData({...editData, preferences_scents: v})}>
+                                                           <SelectTrigger className="rounded-2xl"><SelectValue/></SelectTrigger>
+                                                           <SelectContent className="rounded-2xl"><SelectItem value="None">none</SelectItem><SelectItem value="Light">light</SelectItem><SelectItem value="Any">any</SelectItem></SelectContent>
+                                                       </Select>
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                       <Label className="flex items-center gap-2"><Music className="w-4 h-4"/>music</Label>
+                                                       <Select value={editData.preferences_music} onValueChange={(v) => setEditData({...editData, preferences_music: v})}>
+                                                           <SelectTrigger className="rounded-2xl"><SelectValue/></SelectTrigger>
+                                                           <SelectContent className="rounded-2xl">
+                                                               <SelectItem value="No music">no music</SelectItem>
+                                                               <SelectItem value="Soft/chill">soft / chill</SelectItem>
+                                                               <SelectItem value="Any genre">any genre</SelectItem>
+                                                               <SelectItem value="Flexible">flexible</SelectItem>
+                                                               <SelectItem value="custom">write in...</SelectItem>
+                                                           </SelectContent>
+                                                           </Select>
+                                                           {editData.preferences_music === 'custom' && (
+                                                           <Input
+                                                               value={editData.preferences_music_custom || ''}
+                                                               onChange={(e) => setEditData({...editData, preferences_music_custom: e.target.value})}
+                                                               placeholder="e.g. Hawaiian, jazz, podcasts..."
+                                                               className="rounded-2xl mt-2"
+                                                           />
+                                                           )}
+                                                           </div>
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                 ) : (
                                     <>
@@ -728,7 +788,12 @@ export default function AccountPage() {
                                                ✨ finish profile
                                            </Button>
                                        ) : (
-                                       <Button onClick={() => setIsEditing(true)} className="bg-primary hover:bg-primary/90 rounded-2xl">
+                                       <Button onClick={() => {
+                                           const missingFields = !user.username || !user.bio || !user.age || !user.gender || !user.profile_picture_url;
+                                           setEditMode(missingFields ? 'guided' : 'full');
+                                           setExpandedToFull(false);
+                                           setIsEditing(true);
+                                       }} className="bg-primary hover:bg-primary/90 rounded-2xl">
                                            <Edit className="w-4 h-4 mr-2"/>edit profile
                                        </Button>
                                        )}

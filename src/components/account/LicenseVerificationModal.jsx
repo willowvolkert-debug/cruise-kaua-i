@@ -21,50 +21,55 @@ export default function LicenseVerificationModal({ isOpen, onClose, onSuccess })
     setIsUploading(true);
     setError(null);
 
-    const currentUser = await base44.auth.me();
+    try {
+      const currentUser = await base44.auth.me();
 
-    const [frontResult, backResult] = await Promise.all([
-      base44.integrations.Core.UploadFile({ file: licenseFrontFile }),
-      base44.integrations.Core.UploadFile({ file: licenseBackFile })
-    ]);
+      const [frontResult, backResult] = await Promise.all([
+        base44.integrations.Core.UploadFile({ file: licenseFrontFile }),
+        base44.integrations.Core.UploadFile({ file: licenseBackFile })
+      ]);
 
-    await base44.auth.updateMe({
-      drivers_license_front_url: frontResult.file_url,
-      drivers_license_back_url: backResult.file_url,
-      drivers_license_pending_review: true,
-      license_submitted_date: new Date().toISOString()
-    });
+      await base44.auth.updateMe({
+        drivers_license_front_url: frontResult.file_url,
+        drivers_license_back_url: backResult.file_url,
+        drivers_license_pending_review: true,
+        license_submitted_date: new Date().toISOString()
+      });
 
-    await base44.entities.UserEdit.create({
-      user_id: currentUser.id,
-      user_name: currentUser.full_name,
-      user_email: currentUser.email,
-      change_type: "license",
-      change_description: "Uploaded driver's license",
-      old_values: {
-        license_front_url: currentUser.drivers_license_front_url || null,
-        license_back_url: currentUser.drivers_license_back_url || null
-      },
-      new_values: {
-        license_front_url: frontResult.file_url,
-        license_back_url: backResult.file_url
-      }
-    });
+      await base44.entities.UserEdit.create({
+        user_id: currentUser.id,
+        user_name: currentUser.full_name,
+        user_email: currentUser.email,
+        change_type: "license",
+        change_description: "Uploaded driver's license",
+        old_values: {
+          license_front_url: currentUser.drivers_license_front_url || null,
+          license_back_url: currentUser.drivers_license_back_url || null
+        },
+        new_values: {
+          license_front_url: frontResult.file_url,
+          license_back_url: backResult.file_url
+        }
+      });
 
-    await base44.entities.AdminMessage.create({
-      recipient_id: 'admin',
-      recipient_name: 'Admin',
-      subject: `License Pending Review: ${currentUser.full_name}`,
-      message: `A user has uploaded their driver's license for verification.\n\nUser: ${currentUser.full_name}\nEmail: ${currentUser.email}\n\nPlease review in the Admin Dashboard.`,
-      message_type: 'action_required'
-    });
+      await base44.entities.AdminMessage.create({
+        recipient_id: 'admin',
+        recipient_name: 'Admin',
+        subject: `License Pending Review: ${currentUser.full_name}`,
+        message: `A user has uploaded their driver's license for verification.\n\nUser: ${currentUser.full_name}\nEmail: ${currentUser.email}\n\nPlease review in the Admin Dashboard.`,
+        message_type: 'action_required'
+      });
 
-    // Fire onboarding email (non-blocking)
-    sendOnboardingEmail({}).catch(() => null);
+      // Fire onboarding email (non-blocking)
+      sendOnboardingEmail({}).catch(() => null);
 
-    setIsUploading(false);
-    if (onSuccess) onSuccess();
-    onClose();
+      setIsUploading(false);
+      if (onSuccess) onSuccess();
+      onClose();
+    } catch (err) {
+      setIsUploading(false);
+      setError("Upload failed. Please try again. If the problem persists, contact us.");
+    }
   };
 
   return (
