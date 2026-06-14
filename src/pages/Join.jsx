@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChevronLeft, ChevronRight, Eye, EyeOff } from "lucide-react";
+import { ChevronLeft, ChevronRight, Eye, EyeOff, Mail } from "lucide-react";
 
 const ISLANDS = [
   { value: "Kauai", label: "Kauaʻi", emoji: "🌿", status: "fully launched!" },
@@ -32,7 +32,13 @@ export default function JoinPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [signupError, setSignupError] = useState("");
   const [signupLoading, setSignupLoading] = useState(false);
-  const [registered, setRegistered] = useState(false);
+
+  // OTP state: null = not yet, "sent" = waiting for code, "verified" = done
+  const [otpState, setOtpState] = useState(null);
+  const [otpCode, setOtpCode] = useState("");
+  const [otpError, setOtpError] = useState("");
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [otpResending, setOtpResending] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -43,6 +49,12 @@ export default function JoinPage() {
     if (step === 1) return true;
     if (step === 2) return !!island;
     return false;
+  };
+
+  const resetOtp = () => {
+    setOtpState(null);
+    setOtpCode("");
+    setOtpError("");
   };
 
   const handleSignup = async () => {
@@ -61,17 +73,63 @@ export default function JoinPage() {
     }
     setSignupLoading(true);
     try {
-      await base44.auth.register({ email, password, requireEmailVerification: false });
-      setRegistered(true);
+      await base44.auth.register({ email, password });
+      setOtpState("sent");
     } catch (e) {
       const msg = e?.response?.data?.message || e?.message || "";
       if (msg.toLowerCase().includes("already") || msg.toLowerCase().includes("exists")) {
-        setRegistered("already");
+        // Account exists — send a new OTP so they can verify their existing account
+        try {
+          await base44.auth.resendOtp(email);
+          setOtpState("sent");
+        } catch (resendErr) {
+          setSignupError("this email is already registered. try logging in instead.");
+        }
       } else {
         setSignupError(msg || "something went wrong. please try again.");
       }
     }
     setSignupLoading(false);
+  };
+
+  const handleVerifyOtp = async () => {
+    setOtpError("");
+    if (!otpCode || otpCode.length < 4) {
+      setOtpError("please enter the verification code from your email.");
+      return;
+    }
+    setOtpLoading(true);
+    try {
+      await base44.auth.verifyOtp({ email, otpCode });
+      // Try to auto-login (works for new registrations where we have the password)
+      try {
+        await base44.auth.loginViaEmailPassword(email, password);
+        const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
+        window.location.href = `/account?setup=true&role=${driverRole}&island=${island}`;
+        return;
+      } catch (loginErr) {
+        // Auto-login failed (likely existing user with different password)
+        // Send them to platform login — their account is now verified so it'll work
+      }
+      const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
+      const params = new URLSearchParams({ setup: "true", role: driverRole, island });
+      base44.auth.redirectToLogin(`/account?${params.toString()}`);
+    } catch (e) {
+      const msg = e?.response?.data?.message || e?.message || "";
+      setOtpError(msg || "invalid code. please try again.");
+    }
+    setOtpLoading(false);
+  };
+
+  const handleResendOtp = async () => {
+    setOtpResending(true);
+    setOtpError("");
+    try {
+      await base44.auth.resendOtp(email);
+    } catch (e) {
+      setOtpError("couldn't resend. please try again.");
+    }
+    setOtpResending(false);
   };
 
   const handleGoToLogin = () => {
@@ -82,6 +140,7 @@ export default function JoinPage() {
 
   const handleContinue = () => {
     if (step < TOTAL_STEPS - 1) {
+      resetOtp();
       setStep(step + 1);
     }
   };
@@ -125,23 +184,6 @@ export default function JoinPage() {
               className="bg-primary hover:bg-primary/90 text-white rounded-full font-bold px-4 py-1.5 text-xs h-auto disabled:opacity-40"
             >
               continue <ChevronRight className="w-3 h-3 ml-0.5" />
-            </Button>
-          )}
-          {step === 3 && !registered && (
-            <Button
-              onClick={handleSignup}
-              disabled={signupLoading}
-              className="bg-primary hover:bg-primary/90 text-white rounded-full font-bold px-4 py-1.5 text-xs h-auto disabled:opacity-40"
-            >
-              {signupLoading ? "..." : "create account →"}
-            </Button>
-          )}
-          {step === 3 && registered && (
-            <Button
-              onClick={handleGoToLogin}
-              className="bg-primary hover:bg-primary/90 text-white rounded-full font-bold px-4 py-1.5 text-xs h-auto"
-            >
-              log in now →
             </Button>
           )}
         </div>
@@ -191,8 +233,8 @@ export default function JoinPage() {
               <p className="font-semibold text-green-900 text-base">what happens next:</p>
               <ul className="space-y-2 text-sm text-green-800">
                 <li className="flex gap-2"><span>1️⃣</span><span>create your account — takes 30 seconds</span></li>
-                <li className="flex gap-2"><span>2️⃣</span><span>fill out a short profile — about 2 minutes</span></li>
-                <li className="flex gap-2"><span>3️⃣</span><span>upload your driver's license to verify your identity</span></li>
+                <li className="flex gap-2"><span>2️⃣</span><span>verify your email with a quick code we send you</span></li>
+                <li className="flex gap-2"><span>3️⃣</span><span>fill out a short profile — about 2 minutes</span></li>
                 <li className="flex gap-2"><span>4️⃣</span><span>once approved, you can book or post rides!</span></li>
               </ul>
             </div>
@@ -231,8 +273,8 @@ export default function JoinPage() {
           </div>
         )}
 
-        {/* STEP 3: Signup */}
-        {step === 3 && !registered && (
+        {/* STEP 3: Signup (before OTP) */}
+        {step === 3 && !otpState && (
           <div className="space-y-5 flex-1">
             <div>
               <h1 className="text-3xl font-extrabold text-gray-900 mb-1">create your account 🎉</h1>
@@ -295,60 +337,49 @@ export default function JoinPage() {
           </div>
         )}
 
-        {/* STEP 3: Registered success */}
-        {step === 3 && registered === true && (
-          <div className="space-y-6 flex-1">
+        {/* STEP 3: OTP Verification */}
+        {step === 3 && otpState === "sent" && (
+          <div className="space-y-5 flex-1">
             <div>
-              <h1 className="text-3xl font-extrabold text-gray-900 mb-1">account created! ✅</h1>
-              <p className="text-gray-500 text-base">you're all set. now log in to set up your profile.</p>
+              <h1 className="text-3xl font-extrabold text-gray-900 mb-1">check your email 📧</h1>
+              <p className="text-gray-500 text-base">
+                we sent a verification code to <strong>{email}</strong>. enter it below.
+              </p>
             </div>
-            <div className="bg-green-50 border border-green-200 rounded-2xl p-5 space-y-3">
-              <p className="font-semibold text-green-900 text-base">what's next:</p>
-              <ul className="space-y-2 text-sm text-green-800">
-                <li className="flex gap-2"><span>👉</span><span>click "log in now" below to go to the login page</span></li>
-                <li className="flex gap-2"><span>📝</span><span>use the email and password you just created</span></li>
-                <li className="flex gap-2"><span>🚀</span><span>you'll be taken straight to your profile setup</span></li>
-              </ul>
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 flex items-start gap-3">
+              <Mail className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+              <p className="text-sm text-blue-800">
+                can't find the email? check your spam folder or{" "}
+                <button onClick={handleResendOtp} disabled={otpResending} className="underline font-semibold hover:text-blue-600">
+                  {otpResending ? "sending..." : "resend code"}
+                </button>
+              </p>
             </div>
-            <Button
-              onClick={handleGoToLogin}
-              className="w-full bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base"
-            >
-              log in & set up my profile →
-            </Button>
-          </div>
-        )}
-
-        {/* STEP 3: Already registered */}
-        {step === 3 && registered === "already" && (
-          <div className="space-y-6 flex-1">
             <div>
-              <h1 className="text-3xl font-extrabold text-gray-900 mb-1">you're already registered! 🙌</h1>
-              <p className="text-gray-500 text-base">your account already exists. just log in to continue.</p>
+              <label className="text-sm font-semibold text-gray-700 mb-1 block">verification code</label>
+              <Input
+                type="text"
+                placeholder="6-digit code"
+                value={otpCode}
+                onChange={e => setOtpCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))}
+                className="rounded-xl h-14 text-center text-2xl tracking-[0.5em] font-bold"
+                maxLength={6}
+                autoFocus
+                onKeyDown={e => e.key === "Enter" && handleVerifyOtp()}
+              />
             </div>
-            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 space-y-3">
-              <p className="font-semibold text-blue-900 text-base">what's next:</p>
-              <ul className="space-y-2 text-sm text-blue-800">
-                <li className="flex gap-2"><span>👉</span><span>click below to go to the login page</span></li>
-                <li className="flex gap-2"><span>📝</span><span>enter your email and the password you created</span></li>
-                <li className="flex gap-2"><span>🚀</span><span>you'll be taken straight to your profile setup</span></li>
-              </ul>
-            </div>
-            <Button
-              onClick={handleGoToLogin}
-              className="w-full bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base"
-            >
-              log in & set up my profile →
-            </Button>
+            {otpError && (
+              <p className="text-red-500 text-sm font-medium">{otpError}</p>
+            )}
           </div>
         )}
 
         {/* Navigation */}
         <div className="flex gap-3 pt-8">
-          {step > 0 && step < 3 && (
+          {step > 0 && !otpState && (
             <Button
               variant="outline"
-              onClick={() => setStep(step - 1)}
+              onClick={() => { resetOtp(); setStep(step - 1); }}
               className="rounded-full px-6 border-gray-300 text-gray-600"
             >
               <ChevronLeft className="w-4 h-4 mr-1" /> back
@@ -364,7 +395,7 @@ export default function JoinPage() {
               <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
           )}
-          {step === 3 && !registered && (
+          {step === 3 && !otpState && (
             <Button
               onClick={handleSignup}
               disabled={signupLoading}
@@ -373,12 +404,13 @@ export default function JoinPage() {
               {signupLoading ? "creating account..." : "create my account →"}
             </Button>
           )}
-          {step === 3 && registered && (
+          {step === 3 && otpState === "sent" && (
             <Button
-              onClick={handleGoToLogin}
-              className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base"
+              onClick={handleVerifyOtp}
+              disabled={otpLoading || otpCode.length < 4}
+              className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base disabled:opacity-40"
             >
-              {registered === "already" ? "log in (account exists) →" : "log in & set up my profile →"}
+              {otpLoading ? "verifying..." : "verify & continue →"}
             </Button>
           )}
         </div>
