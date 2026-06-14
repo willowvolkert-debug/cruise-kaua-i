@@ -41,8 +41,8 @@ export default function JoinPage() {
   const [otpResending, setOtpResending] = useState(false);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
-  }, [step]);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [step, otpState]);
 
   const canContinue = () => {
     if (step === 0) return !!role;
@@ -75,19 +75,21 @@ export default function JoinPage() {
     try {
       await base44.auth.register({ email, password });
       setOtpState("sent");
+      setSignupError("");
     } catch (e) {
       const msg = e?.response?.data?.message || e?.message || "";
       if (msg.toLowerCase().includes("already") || msg.toLowerCase().includes("exists")) {
         // Account exists — send a new OTP so they can verify their existing account
         try {
           await base44.auth.resendOtp(email);
-          setOtpState("sent");
         } catch (resendErr) {
-          setSignupError("");
-          setOtpError("this email is already registered. enter the verification code sent to your inbox, or resend below.");
-          setOtpState("sent"); // still show OTP screen so they can enter code or resend
+          // resendOtp failed, but still show OTP screen so user can try manually
         }
+        setSignupError("");
+        setOtpError("this email is already registered. we sent a new verification code — enter it below.");
+        setOtpState("sent");
       } else {
+        // Unknown error — stay on signup form and show the error
         setSignupError(msg || "something went wrong. please try again.");
       }
     }
