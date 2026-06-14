@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ChevronLeft, ChevronRight, Eye, EyeOff } from "lucide-react";
 
 const ISLANDS = [
   { value: "Kauai", label: "Kauaʻi", emoji: "🌿", status: "fully launched!" },
@@ -17,12 +18,21 @@ const ROLES = [
   { value: "both", emoji: "🤙", label: "both", desc: "Drive when you can, ride when you need to. Most members do both!" },
 ];
 
-const TOTAL_STEPS = 3;
+const TOTAL_STEPS = 4;
 
 export default function JoinPage() {
-  const [step, setStep] = useState(0); // 0=role, 1=info, 2=island
+  const [step, setStep] = useState(0); // 0=role, 1=info, 2=island, 3=signup
   const [role, setRole] = useState(null);
   const [island, setIsland] = useState(null);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [signupError, setSignupError] = useState("");
+  const [signupLoading, setSignupLoading] = useState(false);
+  const [registered, setRegistered] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -35,7 +45,31 @@ export default function JoinPage() {
     return false;
   };
 
-  const handleFinish = () => {
+  const handleSignup = async () => {
+    setSignupError("");
+    if (!email || !password || !confirmPassword) {
+      setSignupError("please fill in all fields.");
+      return;
+    }
+    if (password.length < 8) {
+      setSignupError("password must be at least 8 characters.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setSignupError("passwords don't match.");
+      return;
+    }
+    setSignupLoading(true);
+    try {
+      await base44.auth.register({ email, password, requireEmailVerification: false });
+      setRegistered(true);
+    } catch (e) {
+      setSignupError(e?.response?.data?.message || e?.message || "something went wrong. please try again.");
+    }
+    setSignupLoading(false);
+  };
+
+  const handleGoToLogin = () => {
     const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
     const params = new URLSearchParams({ setup: "true", role: driverRole, island });
     base44.auth.redirectToLogin(`/account?${params.toString()}`);
@@ -44,8 +78,6 @@ export default function JoinPage() {
   const handleContinue = () => {
     if (step < TOTAL_STEPS - 1) {
       setStep(step + 1);
-    } else {
-      handleFinish();
     }
   };
 
@@ -81,13 +113,32 @@ export default function JoinPage() {
           <p className="text-xs font-bold tracking-widest uppercase text-primary">
             step {step + 1} of {TOTAL_STEPS}
           </p>
-          <Button
-            onClick={handleContinue}
-            disabled={!canContinue()}
-            className="bg-primary hover:bg-primary/90 text-white rounded-full font-bold px-4 py-1.5 text-xs h-auto disabled:opacity-40"
-          >
-            {step === TOTAL_STEPS - 1 ? "create account →" : "continue"} <ChevronRight className="w-3 h-3 ml-0.5" />
-          </Button>
+          {step < 3 && (
+            <Button
+              onClick={handleContinue}
+              disabled={!canContinue()}
+              className="bg-primary hover:bg-primary/90 text-white rounded-full font-bold px-4 py-1.5 text-xs h-auto disabled:opacity-40"
+            >
+              continue <ChevronRight className="w-3 h-3 ml-0.5" />
+            </Button>
+          )}
+          {step === 3 && !registered && (
+            <Button
+              onClick={handleSignup}
+              disabled={signupLoading}
+              className="bg-primary hover:bg-primary/90 text-white rounded-full font-bold px-4 py-1.5 text-xs h-auto disabled:opacity-40"
+            >
+              {signupLoading ? "..." : "create account →"}
+            </Button>
+          )}
+          {step === 3 && registered && (
+            <Button
+              onClick={handleGoToLogin}
+              className="bg-primary hover:bg-primary/90 text-white rounded-full font-bold px-4 py-1.5 text-xs h-auto"
+            >
+              log in now →
+            </Button>
+          )}
         </div>
 
         {/* STEP 0: Role */}
@@ -129,20 +180,17 @@ export default function JoinPage() {
           <div className="space-y-6 flex-1">
             <div>
               <h1 className="text-3xl font-extrabold text-gray-900 mb-1">great choice! 🤙</h1>
-              <p className="text-gray-500 text-base">next, you'll create your account — no email verification needed.</p>
+              <p className="text-gray-500 text-base">next, you'll create your account with your email.</p>
             </div>
             <div className="bg-green-50 border border-green-200 rounded-2xl p-5 space-y-3">
               <p className="font-semibold text-green-900 text-base">what happens next:</p>
               <ul className="space-y-2 text-sm text-green-800">
-                <li className="flex gap-2"><span>1️⃣</span><span>we'll create your account on the next screen</span></li>
-                <li className="flex gap-2"><span>2️⃣</span><span>fill out a short profile — takes about 2 minutes</span></li>
+                <li className="flex gap-2"><span>1️⃣</span><span>create your account — takes 30 seconds</span></li>
+                <li className="flex gap-2"><span>2️⃣</span><span>fill out a short profile — about 2 minutes</span></li>
                 <li className="flex gap-2"><span>3️⃣</span><span>upload your driver's license to verify your identity</span></li>
                 <li className="flex gap-2"><span>4️⃣</span><span>once approved, you can book or post rides!</span></li>
               </ul>
             </div>
-            <p className="text-xs text-gray-400 text-center">
-              you'll be taken to a secure signup page. no verification emails — just create your account and go.
-            </p>
           </div>
         )}
 
@@ -178,9 +226,97 @@ export default function JoinPage() {
           </div>
         )}
 
+        {/* STEP 3: Signup */}
+        {step === 3 && !registered && (
+          <div className="space-y-5 flex-1">
+            <div>
+              <h1 className="text-3xl font-extrabold text-gray-900 mb-1">create your account 🎉</h1>
+              <p className="text-gray-500 text-base">enter your email and a password to get started.</p>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <label className="text-sm font-semibold text-gray-700 mb-1 block">email</label>
+                <Input
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  className="rounded-xl h-12"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-semibold text-gray-700 mb-1 block">password</label>
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="min. 8 characters"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    className="rounded-xl h-12 pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+              <div>
+                <label className="text-sm font-semibold text-gray-700 mb-1 block">confirm password</label>
+                <div className="relative">
+                  <Input
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="re-enter password"
+                    value={confirmPassword}
+                    onChange={e => setConfirmPassword(e.target.value)}
+                    className="rounded-xl h-12 pr-10"
+                    onKeyDown={e => e.key === "Enter" && handleSignup()}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+              {signupError && (
+                <p className="text-red-500 text-sm font-medium">{signupError}</p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* STEP 3: Registered success */}
+        {step === 3 && registered && (
+          <div className="space-y-6 flex-1">
+            <div>
+              <h1 className="text-3xl font-extrabold text-gray-900 mb-1">account created! ✅</h1>
+              <p className="text-gray-500 text-base">you're all set. now log in to set up your profile.</p>
+            </div>
+            <div className="bg-green-50 border border-green-200 rounded-2xl p-5 space-y-3">
+              <p className="font-semibold text-green-900 text-base">what's next:</p>
+              <ul className="space-y-2 text-sm text-green-800">
+                <li className="flex gap-2"><span>👉</span><span>click "log in now" below to go to the login page</span></li>
+                <li className="flex gap-2"><span>📝</span><span>use the email and password you just created</span></li>
+                <li className="flex gap-2"><span>🚀</span><span>you'll be taken straight to your profile setup</span></li>
+              </ul>
+            </div>
+            <Button
+              onClick={handleGoToLogin}
+              className="w-full bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base"
+            >
+              log in & set up my profile →
+            </Button>
+          </div>
+        )}
+
         {/* Navigation */}
         <div className="flex gap-3 pt-8">
-          {step > 0 && (
+          {step > 0 && step < 3 && (
             <Button
               variant="outline"
               onClick={() => setStep(step - 1)}
@@ -189,14 +325,33 @@ export default function JoinPage() {
               <ChevronLeft className="w-4 h-4 mr-1" /> back
             </Button>
           )}
-          <Button
-            onClick={handleContinue}
-            disabled={!canContinue()}
-            className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base disabled:opacity-40"
-          >
-            {step === TOTAL_STEPS - 1 ? "create my account →" : "continue"}
-            <ChevronRight className="w-4 h-4 ml-1" />
-          </Button>
+          {step < 3 && (
+            <Button
+              onClick={handleContinue}
+              disabled={!canContinue()}
+              className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base disabled:opacity-40"
+            >
+              continue
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </Button>
+          )}
+          {step === 3 && !registered && (
+            <Button
+              onClick={handleSignup}
+              disabled={signupLoading}
+              className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base disabled:opacity-40"
+            >
+              {signupLoading ? "creating account..." : "create my account →"}
+            </Button>
+          )}
+          {step === 3 && registered && (
+            <Button
+              onClick={handleGoToLogin}
+              className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base"
+            >
+              log in & set up my profile →
+            </Button>
+          )}
         </div>
       </div>
     </div>
