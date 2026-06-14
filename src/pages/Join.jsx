@@ -64,7 +64,12 @@ export default function JoinPage() {
       await base44.auth.register({ email, password, requireEmailVerification: false });
       setRegistered(true);
     } catch (e) {
-      setSignupError(e?.response?.data?.message || e?.message || "something went wrong. please try again.");
+      const msg = e?.response?.data?.message || e?.message || "";
+      if (msg.toLowerCase().includes("already") || msg.toLowerCase().includes("exists")) {
+        setRegistered("already");
+      } else {
+        setSignupError(msg || "something went wrong. please try again.");
+      }
     }
     setSignupLoading(false);
   };
@@ -291,7 +296,7 @@ export default function JoinPage() {
         )}
 
         {/* STEP 3: Registered success */}
-        {step === 3 && registered && (
+        {step === 3 && registered === true && (
           <div className="space-y-6 flex-1">
             <div>
               <h1 className="text-3xl font-extrabold text-gray-900 mb-1">account created! ✅</h1>
@@ -302,6 +307,30 @@ export default function JoinPage() {
               <ul className="space-y-2 text-sm text-green-800">
                 <li className="flex gap-2"><span>👉</span><span>click "log in now" below to go to the login page</span></li>
                 <li className="flex gap-2"><span>📝</span><span>use the email and password you just created</span></li>
+                <li className="flex gap-2"><span>🚀</span><span>you'll be taken straight to your profile setup</span></li>
+              </ul>
+            </div>
+            <Button
+              onClick={handleGoToLogin}
+              className="w-full bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base"
+            >
+              log in & set up my profile →
+            </Button>
+          </div>
+        )}
+
+        {/* STEP 3: Already registered */}
+        {step === 3 && registered === "already" && (
+          <div className="space-y-6 flex-1">
+            <div>
+              <h1 className="text-3xl font-extrabold text-gray-900 mb-1">you're already registered! 🙌</h1>
+              <p className="text-gray-500 text-base">your account already exists. just log in to continue.</p>
+            </div>
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 space-y-3">
+              <p className="font-semibold text-blue-900 text-base">what's next:</p>
+              <ul className="space-y-2 text-sm text-blue-800">
+                <li className="flex gap-2"><span>👉</span><span>click below to go to the login page</span></li>
+                <li className="flex gap-2"><span>📝</span><span>enter your email and the password you created</span></li>
                 <li className="flex gap-2"><span>🚀</span><span>you'll be taken straight to your profile setup</span></li>
               </ul>
             </div>
@@ -349,7 +378,7 @@ export default function JoinPage() {
               onClick={handleGoToLogin}
               className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base"
             >
-              log in & set up my profile →
+              {registered === "already" ? "log in (account exists) →" : "log in & set up my profile →"}
             </Button>
           )}
         </div>
