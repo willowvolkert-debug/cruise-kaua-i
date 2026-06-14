@@ -271,7 +271,7 @@ export default function Layout({ children, currentPageName }) {
         // Only redirect to login on a definitive 401 auth error, not network/transient errors
         const is401 = e?.status === 401 || e?.response?.status === 401;
         if (is401) {
-          const publicPaths = ['/', '/welcome', createPageUrl("AboutUs"), createPageUrl("ContactUs"), '/joinus', '/join'];
+          const publicPaths = ['/', '/welcome', createPageUrl("AboutUs"), createPageUrl("ContactUs"), '/joinus', '/join', '/trips'];
           if (!publicPaths.includes(location.pathname.toLowerCase())) {
             base44.auth.redirectToLogin(window.location.href);
           }
