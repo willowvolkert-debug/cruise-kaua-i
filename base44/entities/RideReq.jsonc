@@ -11,7 +11,7 @@
   ],
   "rls": {
     "create": {
-      "*": "*"
+      "data.name": "{{user.id}}"
     },
     "read": {
       "*": "*"
