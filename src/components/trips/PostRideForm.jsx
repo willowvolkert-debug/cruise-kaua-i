@@ -509,8 +509,11 @@ export default function PostRideForm({ island = "Kauai" }) {
       {/* Platform bug warning for ride requests */}
       <Alert className="rounded-2xl bg-amber-50 border-amber-300">
         <AlertTriangle className="h-4 w-4 text-amber-600" />
-        <AlertDescription className="text-amber-800 text-sm">
-          <strong>Ride requests are temporarily unavailable</strong> due to a platform issue — new requests can't be saved right now. If you received a ride request by text/SMS, you can still <strong>post a ride below matching that request</strong>. We'll send the rider an in-app notification with a link to book it once your ride is posted.
+        <AlertDescription className="text-amber-800 text-sm space-y-2">
+          <p><strong>Ride requests are temporarily unavailable</strong> due to a platform issue. We have 2 riders who need rides:</p>
+          <p>• <strong>Rohan</strong> — Kilauea → Lihue Airport, Sun 6/14 at 11 AM, 1 seat</p>
+          <p>• <strong>Kim</strong> — Lihue → Princeville, Tue 6/16 at 10:15 AM, 1 seat</p>
+          <p>Go to Post a Ride and enter the details of their ride (or yours, if longer) — we'll notify the rider to book it.</p>
         </AlertDescription>
       </Alert>
 
