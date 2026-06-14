@@ -108,7 +108,16 @@
   ],
   "rls": {
     "create": {
-      "data.rider_id": "{{user.id}}"
+      "$or": [
+        {
+          "data.rider_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     },
     "read": {
       "*": "*"
