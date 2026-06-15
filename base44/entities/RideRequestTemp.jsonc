@@ -2,149 +2,41 @@
   "name": "RideRequestTemp",
   "type": "object",
   "properties": {
-    "island": {
-      "type": "string",
-      "enum": [
-        "Kauai",
-        "Oahu",
-        "Maui",
-        "Big Island"
-      ],
-      "description": "Which island this ride request is for"
-    },
-    "departure_location": {
-      "type": "string",
-      "description": "Starting point of the ride"
-    },
-    "destination": {
-      "type": "string",
-      "description": "End destination"
-    },
-    "stops": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "Optional stops along the way"
-    },
-    "departure_date": {
-      "type": "string",
-      "format": "date",
-      "description": "Date of departure"
-    },
-    "departure_time": {
-      "type": "string",
-      "description": "Time of departure"
-    },
-    "is_flexible": {
-      "type": "boolean",
-      "default": false,
-      "description": "Whether the departure time is flexible"
-    },
-    "seats_needed": {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 8,
-      "description": "Number of seats needed"
-    },
-    "description": {
-      "type": "string",
-      "description": "Why the rider needs this trip"
-    },
-    "has_luggage": {
-      "type": "boolean",
-      "default": false,
-      "description": "Whether rider has luggage"
-    },
-    "rider_id": {
-      "type": "string",
-      "description": "ID of the rider making the request"
-    },
-    "rider_name": {
+    "riderName": {
       "type": "string",
       "description": "Name of the rider"
     },
-    "rider_username": {
+    "pickupLocation": {
       "type": "string",
-      "description": "Username of the rider"
+      "description": "Pickup location"
     },
-    "rider_profile_picture_url": {
+    "dropoffLocation": {
       "type": "string",
-      "description": "Profile picture URL of the rider"
-    },
-    "rider_bio": {
-      "type": "string",
-      "description": "Bio of the rider"
-    },
-    "rider_age": {
-      "type": "integer",
-      "description": "Age of the rider"
-    },
-    "rider_gender": {
-      "type": "string",
-      "description": "Gender of the rider"
+      "description": "Drop-off location"
     },
     "status": {
       "type": "string",
-      "enum": [
-        "active",
-        "matched",
-        "expired",
-        "cancelled"
-      ],
-      "default": "active",
-      "description": "Status of the ride request"
+      "default": "pending",
+      "description": "Status of the request"
     }
   },
   "required": [
-    "departure_location",
-    "destination",
-    "departure_date",
-    "departure_time",
-    "seats_needed",
-    "description",
-    "rider_name",
-    "rider_id"
+    "riderName",
+    "pickupLocation",
+    "dropoffLocation"
   ],
   "rls": {
     "create": {
-      "$or": [
-        {
-          "data.rider_id": "{{user.id}}"
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "*": "*"
     },
     "read": {
       "*": "*"
     },
     "update": {
-      "$or": [
-        {
-          "data.rider_id": "{{user.id}}"
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "*": "*"
     },
     "delete": {
-      "$or": [
-        {
-          "data.rider_id": "{{user.id}}"
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "*": "*"
     }
   }
 }
