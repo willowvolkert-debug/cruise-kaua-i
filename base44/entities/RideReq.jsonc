@@ -2,25 +2,32 @@
   "name": "RideReq",
   "type": "object",
   "properties": {
-    "name": {
-      "type": "string"
+    "riderName": {
+      "type": "string",
+      "description": "Name of the rider"
+    },
+    "pickupLocation": {
+      "type": "string",
+      "description": "Pickup location"
+    },
+    "dropoffLocation": {
+      "type": "string",
+      "description": "Drop-off location"
+    },
+    "status": {
+      "type": "string",
+      "default": "pending",
+      "description": "Status of the request"
     }
   },
   "required": [
-    "name"
+    "riderName",
+    "pickupLocation",
+    "dropoffLocation"
   ],
   "rls": {
     "create": {
-      "$or": [
-        {
-          "data.name": "{{user.id}}"
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "*": "*"
     },
     "read": {
       "*": "*"
