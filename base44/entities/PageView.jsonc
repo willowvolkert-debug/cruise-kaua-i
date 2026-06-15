@@ -19,9 +19,6 @@
     "page_name"
   ],
   "rls": {
-    "create": {
-      "*": "*"
-    },
     "read": {
       "user_condition": {
         "role": "admin"
