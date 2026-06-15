@@ -75,17 +75,9 @@
     "seats_needed"
   ],
   "rls": {
-    "create": {
-      "*": "*"
-    },
-    "read": {
-      "*": "*"
-    },
-    "update": {
-      "*": "*"
-    },
-    "delete": {
-      "*": "*"
-    }
+    "create": true,
+    "read": true,
+    "update": true,
+    "delete": true
   }
 }
