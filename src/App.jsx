@@ -21,6 +21,8 @@ import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import BookingSuccess from './pages/BookingSuccess';
 import SmsOptIn from './pages/SmsOptIn';
+import OpioSignup from './pages/OpioSignup';
+import KupunaSignup from './pages/KupunaSignup';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -100,6 +102,8 @@ const AuthenticatedApp = () => {
       <Route path="/privacypolicy" element={<PrivacyPolicy />} />
       <Route path="/bookingsuccess" element={<BookingSuccess />} />
       <Route path="/sms-opt-in" element={<SmsOptIn />} />
+      <Route path="/opiosignup" element={<OpioSignup />} />
+      <Route path="/kupunasignup" element={<KupunaSignup />} />
 
       {Object.entries(Pages).map(([path, Page]) => (
         <Route

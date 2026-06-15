@@ -75,6 +75,9 @@ export default function AdminPage() {
   const [showPhoneAlertModal, setShowPhoneAlertModal] = useState(false);
   const [selectedPhoneAlert, setSelectedPhoneAlert] = useState(null);
   const [foundersGroups, setFoundersGroups] = useState({ Oahu: [], Maui: [], "Big Island": [] });
+  const [opioFounders, setOpioFounders] = useState([]);
+  const [kupunaSignups, setKupunaSignups] = useState([]);
+  const [showKupunaSignups, setShowKupunaSignups] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -179,6 +182,12 @@ export default function AdminPage() {
         new Date(v.created_date) > oneDayAgo
       );
       setLandingPageViews(recentLandingViews.length);
+
+      // Load Opio Founders and Kupuna Signups
+      const opioAll = await base44.entities.OpioFounder.list('-created_date');
+      setOpioFounders(opioAll);
+      const kupunaAll = await base44.entities.KupunaSignup.list('-created_date');
+      setKupunaSignups(kupunaAll);
 
     } catch (error) {
       console.error("Error loading data:", error);
@@ -1053,6 +1062,50 @@ export default function AdminPage() {
           </Card>
         )}
 
+        {/* Kupuna Signups */}
+        {kupunaSignups.length > 0 && (
+          <Card className="shadow-lg border-green-300 bg-green-50 rounded-3xl">
+            <CardHeader>
+              <CardTitle className="text-xl text-green-800 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Phone className="w-6 h-6" />
+                  kūpuna signups ({kupunaSignups.length})
+                </div>
+                <Button
+                  onClick={() => setShowKupunaSignups(!showKupunaSignups)}
+                  variant="ghost"
+                  size="sm"
+                  className="text-green-700 hover:bg-green-100"
+                >
+                  {showKupunaSignups ? 'hide' : 'show'}
+                </Button>
+              </CardTitle>
+            </CardHeader>
+            {showKupunaSignups && (
+              <CardContent>
+                <div className="space-y-3">
+                  {kupunaSignups.map(k => (
+                    <div key={k.id} className="bg-white rounded-lg p-4 border border-green-200">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-semibold text-secondary text-lg">{k.name}</p>
+                          <p className="text-gray-600">
+                            <Phone className="w-4 h-4 inline mr-1 text-green-600" />
+                            {k.phone_number}
+                          </p>
+                        </div>
+                        <span className="text-xs text-gray-400">
+                          {formatHST(k.created_date, "MMM d, h:mm a")} HST
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            )}
+          </Card>
+        )}
+
         {/* User Edit Notifications */}
         {userEdits.length > 0 && (
           <Card className="shadow-lg border-purple-300 bg-purple-50 rounded-3xl">
@@ -1436,6 +1489,35 @@ export default function AdminPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* ʻŌpio Founder's Group */}
+        {opioFounders.length > 0 && (
+          <Card className="shadow-md bg-white border-gray-200 rounded-3xl">
+            <CardHeader>
+              <CardTitle className="text-xl text-secondary flex items-center gap-2">
+                <span className="text-2xl">🌱</span>
+                ʻōpio founder's group ({opioFounders.length})
+              </CardTitle>
+              <p className="text-sm text-gray-500">Youth who signed up to be notified when Cruise Hawaiʻi ʻŌpio launches.</p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {opioFounders.map(o => (
+                  <div key={o.id} className="bg-gray-50 rounded-xl p-4 border border-gray-100 flex items-center justify-between">
+                    <div>
+                      <p className="font-semibold text-secondary">{o.name}</p>
+                      <p className="text-sm text-gray-600">{o.email}</p>
+                      <p className="text-xs text-gray-400">age: {o.age}</p>
+                    </div>
+                    <span className="text-xs text-gray-400">
+                      {formatHST(o.created_date, "MMM d, yyyy")}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <footer className="pt-6 border-t border-border text-center text-sm text-gray-500">
           © {new Date().getFullYear()} Cruise Kauaʻi. All rights reserved.

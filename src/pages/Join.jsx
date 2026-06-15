@@ -18,10 +18,17 @@ const ROLES = [
   { value: "both", emoji: "🤙", label: "both", desc: "Drive when you can, ride when you need to. Most members do both!" },
 ];
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 5;
+
+const AGE_GROUPS = [
+  { value: "opio", label: "ʻōpio", emoji: "🌱", desc: "youth", subtitle: "under 18" },
+  { value: "makua", label: "mākua", emoji: "🤙", desc: "adult", subtitle: "18–69" },
+  { value: "kupuna", label: "kūpuna", emoji: "🌺", desc: "elder", subtitle: "70+" },
+];
 
 export default function JoinPage() {
-  const [step, setStep] = useState(0); // 0=role, 1=info, 2=island, 3=signup
+  const [step, setStep] = useState(0); // 0=age, 1=role, 2=info, 3=island, 4=signup
+  const [ageGroup, setAgeGroup] = useState(null);
   const [role, setRole] = useState(null);
   const [island, setIsland] = useState(null);
 
@@ -45,9 +52,10 @@ export default function JoinPage() {
   }, [step, otpState]);
 
   const canContinue = () => {
-    if (step === 0) return !!role;
-    if (step === 1) return true;
-    if (step === 2) return !!island;
+    if (step === 0) return !!ageGroup;
+    if (step === 1) return !!role;
+    if (step === 2) return true;
+    if (step === 3) return !!island;
     return false;
   };
 
@@ -145,6 +153,16 @@ export default function JoinPage() {
   };
 
   const handleContinue = () => {
+    if (step === 0) {
+      if (ageGroup === "opio") {
+        window.location.href = "/opiosignup";
+        return;
+      }
+      if (ageGroup === "kupuna") {
+        window.location.href = "/kupunasignup";
+        return;
+      }
+    }
     if (step < TOTAL_STEPS - 1) {
       resetOtp();
       setStep(step + 1);
@@ -183,7 +201,7 @@ export default function JoinPage() {
           <p className="text-xs font-bold tracking-widest uppercase text-primary">
             step {step + 1} of {TOTAL_STEPS}
           </p>
-          {step < 3 && (
+          {step < 4 && (
             <Button
               onClick={handleContinue}
               disabled={!canContinue()}
@@ -194,8 +212,44 @@ export default function JoinPage() {
           )}
         </div>
 
-        {/* STEP 0: Role */}
+        {/* STEP 0: Age Group */}
         {step === 0 && (
+          <div className="space-y-6 flex-1">
+            <div>
+              <h1 className="text-3xl font-extrabold text-gray-900 mb-1">welcome! 🌺</h1>
+              <p className="text-gray-500 text-base">which age group do you belong to?</p>
+            </div>
+            <div className="grid gap-3">
+              {AGE_GROUPS.map(({ value, emoji, label, desc, subtitle }) => (
+                <button
+                  key={value}
+                  onClick={() => setAgeGroup(value)}
+                  className={`flex items-start gap-4 p-5 rounded-2xl border-2 transition-all text-left ${
+                    ageGroup === value
+                      ? "border-primary bg-primary/5"
+                      : "border-gray-200 bg-gray-50 hover:border-primary/40"
+                  }`}
+                >
+                  <span className="text-3xl shrink-0">{emoji}</span>
+                  <div className="flex-1">
+                    <p className="font-bold text-gray-900 text-base">{label}</p>
+                    <p className="text-gray-500 text-sm mt-0.5">
+                      {desc} <span className="text-gray-400">({subtitle})</span>
+                    </p>
+                  </div>
+                  {ageGroup === value && (
+                    <span className="shrink-0 w-5 h-5 rounded-full bg-primary flex items-center justify-center mt-0.5">
+                      <span className="text-white text-xs font-bold">✓</span>
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* STEP 1: Role */}
+        {step === 1 && (
           <div className="space-y-6 flex-1">
             <div>
               <h1 className="text-3xl font-extrabold text-gray-900 mb-1">welcome! 🌺</h1>
@@ -228,8 +282,8 @@ export default function JoinPage() {
           </div>
         )}
 
-        {/* STEP 1: Info */}
-        {step === 1 && (
+        {/* STEP 2: Info */}
+        {step === 2 && (
           <div className="space-y-6 flex-1">
             <div>
               <h1 className="text-3xl font-extrabold text-gray-900 mb-1">great choice! 🤙</h1>
@@ -247,8 +301,8 @@ export default function JoinPage() {
           </div>
         )}
 
-        {/* STEP 2: Island */}
-        {step === 2 && (
+        {/* STEP 3: Island */}
+        {step === 3 && (
           <div className="space-y-6 flex-1">
             <div>
               <h1 className="text-3xl font-extrabold text-gray-900 mb-1">which island are you on?</h1>
@@ -279,8 +333,8 @@ export default function JoinPage() {
           </div>
         )}
 
-        {/* STEP 3: Signup (before OTP) */}
-        {step === 3 && !otpState && (
+        {/* STEP 4: Signup (before OTP) */}
+        {step === 4 && !otpState && (
           <div className="space-y-5 flex-1">
             <div>
               <h1 className="text-3xl font-extrabold text-gray-900 mb-1">create your account 🎉</h1>
@@ -349,8 +403,8 @@ export default function JoinPage() {
           </div>
         )}
 
-        {/* STEP 3: OTP Verification */}
-        {step === 3 && otpState === "sent" && (
+        {/* STEP 4: OTP Verification */}
+        {step === 4 && otpState === "sent" && (
           <div className="space-y-5 flex-1">
             <div>
               <h1 className="text-3xl font-extrabold text-gray-900 mb-1">check your email 📧</h1>
@@ -397,7 +451,7 @@ export default function JoinPage() {
               <ChevronLeft className="w-4 h-4 mr-1" /> back
             </Button>
           ) : null}
-          {step < 3 && (
+          {step < 4 && (
             <Button
               onClick={handleContinue}
               disabled={!canContinue()}
@@ -407,7 +461,7 @@ export default function JoinPage() {
               <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
           )}
-          {step === 3 && !otpState && (
+          {step === 4 && !otpState && (
             <Button
               onClick={handleSignup}
               disabled={signupLoading}
@@ -416,7 +470,7 @@ export default function JoinPage() {
               {signupLoading ? "creating account..." : "create my account →"}
             </Button>
           )}
-          {step === 3 && otpState === "sent" && (
+          {step === 4 && otpState === "sent" && (
             <Button
               onClick={handleVerifyOtp}
               disabled={otpLoading || otpCode.length < 4}
