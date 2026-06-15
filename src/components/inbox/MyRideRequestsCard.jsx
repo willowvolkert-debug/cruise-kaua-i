@@ -143,7 +143,7 @@ function EditRequestModal({ isOpen, onClose, request, onSave }) {
 
     const handleSubmit = async () => {
         try {
-            await base44.entities.RideRequest.update(request.id, formData);
+            await base44.entities.RidePost.update(request.id, formData);
             alert('Ride request updated successfully!');
             onSave();
         } catch (error) {

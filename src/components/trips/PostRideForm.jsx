@@ -77,7 +77,7 @@ export default function PostRideForm({ island = "Kauai" }) {
         setCurrentUser(user);
         
         // Fetch active ride requests filtered by island
-        const requests = await base44.entities.RideRequest.filter({ status: 'active', island });
+        const requests = await base44.entities.RidePost.filter({ status: 'active', island });
         
         // Get current Hawaii time
         const now = new Date();
@@ -524,27 +524,7 @@ export default function PostRideForm({ island = "Kauai" }) {
         </Alert>
       )}
 
-      {!matchedRequest && (
-        <Card className="border-amber-300 shadow-sm bg-amber-50 rounded-3xl">
-          <CardContent className="p-6">
-            <div className="flex items-start gap-3">
-              <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
-              <div>
-                <p className="font-bold text-amber-800">ride requests temporarily unavailable</p>
-                <p className="text-sm text-amber-700 mt-1">
-                  ride requests are temporarily unavailable due to a platform issue. we have 1 rider who needs a ride:
-                </p>
-                <ul className="text-sm text-amber-700 mt-2 ml-4 list-disc">
-                  <li><strong>Kim — Lihue → Princeville, Tue 6/16 at 10:15 AM, 1 seat</strong></li>
-                </ul>
-                <p className="text-sm text-amber-700 mt-2">
-                  go to post a ride and enter the details of their ride (or yours, if longer) — we&apos;ll notify the rider to book it.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+
 
       {rideRequests.length > 0 && !matchedRequest && (
         <Card className="border-primary/20 shadow-sm bg-orange-50 rounded-3xl">

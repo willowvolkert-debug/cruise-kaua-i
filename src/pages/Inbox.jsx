@@ -281,7 +281,7 @@ export default function InboxPage() {
             setAdminMessages(myAdminMessages);
 
             // Load my ride requests (active and future only)
-            const allRideRequests = await base44.entities.RideRequest.filter({ 
+            const allRideRequests = await base44.entities.RidePost.filter({ 
                 rider_id: currentUser.id, 
                 status: 'active' 
             });
@@ -640,7 +640,7 @@ Please process the refund manually via Stripe.
     const handleRideRequestUpdate = async (request, action) => {
         if (action === 'cancel') {
             try {
-                await base44.entities.RideRequest.update(request.id, {
+                await base44.entities.RidePost.update(request.id, {
                     status: 'cancelled'
                 });
                 alert('Ride request cancelled successfully!');
