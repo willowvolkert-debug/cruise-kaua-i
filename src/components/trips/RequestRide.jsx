@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MapPin, X, Plus, AlertCircle, Clock, Repeat, RefreshCw } from "lucide-react";
+import { createRideRequest } from "@/functions/createRideRequest";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import LocationAutocomplete from "../shared/LocationAutocomplete";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -119,7 +120,9 @@ export default function RequestRide({ island = "Kauai" }) {
         status: 'active'
       };
 
-      const newRequest = await base44.entities.RideRequest.create(requestPayload);
+      const response = await createRideRequest({ payload: requestPayload });
+      if (!response.data?.success) throw new Error(response.data?.error || 'Failed to submit');
+      const newRequest = { ...requestPayload, id: response.data?.id };
 
       // Save recurring ride request if enabled
       if (isRecurring && recurringDays.length > 0) {

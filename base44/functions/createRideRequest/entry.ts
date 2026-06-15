@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.32';
 
 Deno.serve(async (req) => {
   try {
@@ -10,7 +10,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'payload required' }, { status: 400 });
     }
 
-    const record = await base44.asServiceRole.entities.RideRequest.create(payload);
+    const record = await base44.asServiceRole.entities.RidePost.create(payload);
     return Response.json({ success: true, id: record.id });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
