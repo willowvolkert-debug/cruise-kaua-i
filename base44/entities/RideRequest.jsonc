@@ -2,111 +2,41 @@
   "name": "RideRequest",
   "type": "object",
   "properties": {
-    "island": {
+    "riderName": {
       "type": "string",
-      "enum": [
-        "Kauai",
-        "Oahu",
-        "Maui",
-        "Big Island"
-      ],
-      "description": "Which island this ride request is for"
+      "description": "Name of the rider making the request"
     },
-    "departure_location": {
+    "pickupLocation": {
       "type": "string",
-      "description": "Starting point of the ride"
+      "description": "Pickup location for the ride"
     },
-    "destination": {
+    "dropoffLocation": {
       "type": "string",
-      "description": "End destination"
-    },
-    "departure_date": {
-      "type": "string",
-      "format": "date",
-      "description": "Date of departure"
-    },
-    "departure_time": {
-      "type": "string",
-      "description": "Time of departure"
-    },
-    "seats_needed": {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 8,
-      "description": "Number of seats needed"
-    },
-    "description": {
-      "type": "string",
-      "description": "Why the rider needs this trip"
-    },
-    "rider_id": {
-      "type": "string",
-      "description": "ID of the rider"
-    },
-    "rider_name": {
-      "type": "string",
-      "description": "Name of the rider"
+      "description": "Drop-off location for the ride"
     },
     "status": {
       "type": "string",
-      "enum": [
-        "active",
-        "matched",
-        "expired",
-        "cancelled"
-      ],
-      "default": "active"
+      "default": "pending",
+      "description": "Status of the ride request"
     }
   },
   "required": [
-    "departure_location",
-    "destination",
-    "departure_date",
-    "departure_time",
-    "seats_needed",
-    "description",
-    "rider_name",
-    "rider_id"
+    "riderName",
+    "pickupLocation",
+    "dropoffLocation"
   ],
   "rls": {
     "create": {
-      "$or": [
-        {
-          "data.rider_id": "{{user.id}}"
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "*": "*"
     },
     "read": {
       "*": "*"
     },
     "update": {
-      "$or": [
-        {
-          "data.rider_id": "{{user.id}}"
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "*": "*"
     },
     "delete": {
-      "$or": [
-        {
-          "data.rider_id": "{{user.id}}"
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "*": "*"
     }
   }
 }
