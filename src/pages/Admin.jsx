@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { format } from "date-fns";
 import { formatHST } from "@/lib/formatHST";
+import { getHawaiiNow, parseRideDateTimeHST } from "@/lib/hstHelpers";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -110,16 +111,29 @@ export default function AdminPage() {
       const unreviewedEdits = allEdits.filter(e => !e.is_reviewed);
 
       // Fetch recent ride requests and rides (last 72 hours)
-      const allRideRequests = await base44.entities.RideRequest.list('-created_date', 500);
+      const allRideRequests = await base44.entities.RidePost.list('-created_date', 500);
       const allRides = await base44.entities.Ride.list('-created_date', 500);
       const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
-      // Show ride requests created in last 72h that are active, matched, or expired (not cancelled)
-      const newRideRequests = allRideRequests.filter(r =>
-        new Date(r.created_date) > threeDaysAgo &&
-        (r.status === 'active' || r.status === 'matched' || r.status === 'expired')
-      );
-      // Only show one-off rides (not auto-posted recurring instances) + new recurring schedules set up recently
-      const newRides = allRides.filter(r => new Date(r.created_date) > threeDaysAgo && r.status === 'active' && !r.is_recurring);
+      const hawaiiNow = getHawaiiNow();
+      const nowComparable = hawaiiNow.toComparable();
+      // Show ride requests created in last 72h that are active and not past departure
+      const newRideRequests = allRideRequests.filter(r => {
+        const createdRecently = new Date(r.created_date) > threeDaysAgo;
+        const isActive = r.status === 'active';
+        const departureDateTime = r.departure_date && r.departure_time
+          ? parseRideDateTimeHST(r.departure_date, r.departure_time)
+          : null;
+        const notPastDeparture = !departureDateTime || departureDateTime.toComparable() > nowComparable;
+        return createdRecently && isActive && notPastDeparture;
+      });
+      // Only show one-off rides (not auto-posted recurring instances) that are active and not past departure
+      const newRides = allRides.filter(r => {
+        const createdRecently = new Date(r.created_date) > threeDaysAgo;
+        const isActiveOneOff = r.status === 'active' && !r.is_recurring;
+        const departureDateTime = parseRideDateTimeHST(r.departure_date, r.departure_time);
+        const notPastDeparture = departureDateTime.toComparable() > nowComparable;
+        return createdRecently && isActiveOneOff && notPastDeparture;
+      });
       // New recurring schedules created in last 72h
       const allRecurringSchedules = await base44.entities.RecurringSchedule.list('-created_date', 200);
       const newRecurringSchedules = allRecurringSchedules.filter(s => new Date(s.created_date) > threeDaysAgo);
@@ -983,12 +997,6 @@ export default function AdminPage() {
                             <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300">
                               {request.seats_needed} seat{request.seats_needed > 1 ? 's' : ''}
                             </Badge>
-                            {request.status === 'matched' && (
-                              <Badge className="bg-blue-100 text-blue-700 text-xs">matched</Badge>
-                            )}
-                            {request.status === 'expired' && (
-                              <Badge className="bg-amber-100 text-amber-700 text-xs">expired</Badge>
-                            )}
                           </div>
                         </div>
                       </div>
