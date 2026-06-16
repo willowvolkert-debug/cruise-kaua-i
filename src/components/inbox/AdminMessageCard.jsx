@@ -109,9 +109,11 @@ export default function AdminMessageCard({ adminMessages = [], onMessageRead, on
           <div 
             key={msg.id} 
             className={`p-4 rounded-2xl border ${
-              !msg.is_read 
-                ? 'bg-white border-red-300'
-                : 'bg-gray-50 border-gray-200'
+              parseConfirmationUrl(msg.message)
+                ? 'bg-green-50 border-green-400'
+                : !msg.is_read
+                  ? 'bg-white border-red-300'
+                  : 'bg-gray-50 border-gray-200'
             }`}
           >
             <div className="space-y-3">
@@ -139,22 +141,22 @@ export default function AdminMessageCard({ adminMessages = [], onMessageRead, on
                       const isConfirming = confirmingIds[msg.id];
                       return (
                         <div>
-                          <p className="text-gray-700 text-sm whitespace-pre-wrap mb-3">{cleanMessage}</p>
+                          <p className="text-gray-700 text-sm whitespace-pre-wrap mb-4">{cleanMessage}</p>
                           {isConfirmed ? (
-                            <div className="flex items-center gap-2 text-green-600 text-sm font-medium">
-                              <CheckCircle className="w-4 h-4" /> Ride confirmed!
+                            <div className="flex items-center gap-2 text-green-600 font-semibold text-base py-3 px-4 bg-green-50 border border-green-200 rounded-2xl">
+                              <CheckCircle className="w-5 h-5" /> Ride confirmed — thank you!
                             </div>
                           ) : (
                             <Button
                               onClick={() => handleConfirmRide(msg, confData)}
                               disabled={isConfirming}
-                              size="sm"
-                              className="bg-green-600 hover:bg-green-700 text-white rounded-2xl"
+                              size="lg"
+                              className="w-full bg-green-600 hover:bg-green-700 text-white rounded-2xl py-6 text-lg font-bold shadow-md hover:shadow-lg transition-all"
                             >
                               {isConfirming ? (
-                                <><Loader2 className="w-4 h-4 mr-1 animate-spin" /> Confirming...</>
+                                <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Confirming your ride...</>
                               ) : (
-                                <><CheckCircle className="w-4 h-4 mr-1" /> Confirm Ride</>
+                                <><CheckCircle className="w-5 h-5 mr-2" /> Yes, I'm making this trip!</>
                               )}
                             </Button>
                           )}
