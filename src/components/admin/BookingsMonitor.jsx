@@ -130,13 +130,15 @@ export default function BookingsMonitor() {
   const filtered = filter === "all" ? bookings
     : filter === "failed" ? bookings.filter(b => b.payment_status === "failed")
     : filter === "paid" ? bookings.filter(b => b.payment_status === "paid" && b.booking_status === "pending")
+    : filter === "refunded" ? bookings.filter(b => b.payment_status === "refunded")
     : bookings.filter(b => b.booking_status === filter);
 
   const counts = {
     all: bookings.length,
     failed: bookings.filter(b => b.payment_status === "failed").length,
-    pending: bookings.filter(b => b.booking_status === "pending" && b.payment_status !== "paid" && b.payment_status !== "failed").length,
+    pending: bookings.filter(b => b.booking_status === "pending" && b.payment_status !== "paid" && b.payment_status !== "failed" && b.payment_status !== "refunded").length,
     paid: bookings.filter(b => b.payment_status === "paid" && b.booking_status === "pending").length,
+    refunded: bookings.filter(b => b.payment_status === "refunded").length,
     confirmed: bookings.filter(b => b.booking_status === "confirmed").length,
     cancelled: bookings.filter(b => b.booking_status === "cancelled").length,
   };
@@ -168,7 +170,7 @@ export default function BookingsMonitor() {
         <CardContent className="p-4 space-y-4">
           {/* Filter tabs */}
           <div className="flex flex-wrap gap-2">
-            {["all", "failed", "pending", "paid", "confirmed", "cancelled"].map(s => (
+            {["all", "failed", "pending", "paid", "refunded", "confirmed", "cancelled"].map(s => (
               <button
                 key={s}
                 onClick={() => setFilter(s)}
