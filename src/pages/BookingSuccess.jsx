@@ -24,9 +24,10 @@ export default function BookingSuccess() {
     try {
       const params = new URLSearchParams(window.location.search);
       const sessionId = params.get("session_id");
+      const paymentType = params.get("payment");
 
-      // Call handlePaymentSuccess as the primary payment sync (webhook fallback)
-      if (sessionId) {
+      // For Stripe-paid rides, sync payment via handlePaymentSuccess
+      if (sessionId && paymentType !== 'free') {
         try {
           const { handlePaymentSuccess } = await import("@/functions/handlePaymentSuccess");
           await handlePaymentSuccess({ booking_id: bookingId, session_id: sessionId });
@@ -36,6 +37,7 @@ export default function BookingSuccess() {
       }
 
       // Poll up to 10 seconds for payment_status to become 'paid'
+      // (free rides are already 'paid', so they resolve immediately)
       let b = null;
       for (let i = 0; i < 10; i++) {
         const results = await base44.entities.RideBooking.list();
@@ -81,8 +83,15 @@ export default function BookingSuccess() {
               <CheckCircle className="w-12 h-12 text-green-600" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-secondary">you're booked! 🤙</h1>
-          <p className="text-gray-600">payment confirmed — the driver will review your request.</p>
+          {(() => {
+            const isFree = new URLSearchParams(window.location.search).get('payment') === 'free';
+            return (
+              <>
+                <h1 className="text-3xl font-bold text-secondary">{isFree ? "free ride requested! 🤙" : "you're booked! 🤙"}</h1>
+                <p className="text-gray-600">{isFree ? "request sent — the driver will review it shortly." : "payment confirmed — the driver will review your request."}</p>
+              </>
+            );
+          })()}
         </div>
 
         {/* Ride details card */}
