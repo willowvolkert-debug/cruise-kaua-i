@@ -138,7 +138,6 @@ export default function BookingsMonitor() {
     pending: bookings.filter(b => b.booking_status === "pending" && b.payment_status !== "paid" && b.payment_status !== "failed").length,
     paid: bookings.filter(b => b.payment_status === "paid" && b.booking_status === "pending").length,
     confirmed: bookings.filter(b => b.booking_status === "confirmed").length,
-    completed: bookings.filter(b => b.booking_status === "completed").length,
     cancelled: bookings.filter(b => b.booking_status === "cancelled").length,
   };
 
@@ -169,7 +168,7 @@ export default function BookingsMonitor() {
         <CardContent className="p-4 space-y-4">
           {/* Filter tabs */}
           <div className="flex flex-wrap gap-2">
-            {["all", "failed", "pending", "paid", "confirmed", "completed", "cancelled"].map(s => (
+            {["all", "failed", "pending", "paid", "confirmed", "cancelled"].map(s => (
               <button
                 key={s}
                 onClick={() => setFilter(s)}
