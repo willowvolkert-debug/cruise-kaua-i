@@ -8,7 +8,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Admin only' }, { status: 403 });
     }
 
-    const { rideId } = await req.json();
+    const { rideId, testNumber } = await req.json();
     if (!rideId) return Response.json({ error: 'rideId required' }, { status: 400 });
 
     const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
@@ -18,14 +18,41 @@ Deno.serve(async (req) => {
       return Response.json({ ok: false, reason: 'Twilio not configured' });
     }
 
-    // Get the ride
     const ride = await base44.asServiceRole.entities.Ride.filter({ id: rideId });
     if (!ride || ride.length === 0) {
       return Response.json({ error: 'Ride not found' }, { status: 404 });
     }
     const r = ride[0];
 
-    // Get confirmed bookings for this ride
+    const price = r.price_per_seat != null ? `$${r.price_per_seat}/seat` : '';
+
+    const msg = `Aloha! A ride from ${r.departure_location} to ${r.destination} is available on ${r.departure_date} at ${r.departure_time}${price ? ' for ' + price : ''}. To request a seat, find the ride on the "get a ride" page on the app on your Home Screen or at cruisehi.org. Mahalo from Cruise Kaua'i!`;
+
+    // Preview mode: send to a single test number
+    if (testNumber) {
+      let toNumber = testNumber.replace(/\D/g, '');
+      if (toNumber.length === 10) toNumber = '+1' + toNumber;
+      else if (!toNumber.startsWith('+')) toNumber = '+' + toNumber;
+
+      const twilioRes = await fetch(
+        `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: 'Basic ' + btoa(`${accountSid}:${authToken}`),
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({ From: fromNumber, To: toNumber, Body: msg }).toString(),
+        }
+      );
+      const twilioResult = await twilioRes.json();
+      if (twilioRes.ok) {
+        return Response.json({ preview: true, status: 'sent', sid: twilioResult.sid, to: toNumber, message: msg });
+      }
+      return Response.json({ preview: true, status: 'failed', reason: twilioResult.message });
+    }
+
+    // Blast mode: send to all confirmed bookings
     const bookings = await base44.asServiceRole.entities.RideBooking.filter({
       ride_id: rideId,
       booking_status: 'confirmed'
@@ -35,29 +62,19 @@ Deno.serve(async (req) => {
       return Response.json({ sent: 0, message: 'No confirmed bookings on this ride' });
     }
 
-    // Get passenger phone numbers
     const allUsers = await base44.asServiceRole.entities.User.list();
     const results = [];
-
-    const rideDate = r.departure_date;
-    const rideTime = r.departure_time;
 
     for (const booking of bookings) {
       const passenger = allUsers.find(u => u.id === booking.passenger_id);
       if (!passenger || !passenger.phone_number) {
-        results.push({
-          passengerName: booking.passenger_name,
-          status: 'skipped',
-          reason: 'No phone number on file'
-        });
+        results.push({ passengerName: booking.passenger_name, status: 'skipped', reason: 'No phone number on file' });
         continue;
       }
 
       let toNumber = passenger.phone_number.replace(/\D/g, '');
       if (toNumber.length === 10) toNumber = '+1' + toNumber;
       else if (!toNumber.startsWith('+')) toNumber = '+' + toNumber;
-
-      const msg = `Aloha ${booking.passenger_name}! Reminder: your ride with ${r.driver_name || 'your driver'} from ${r.departure_location} to ${r.destination} is tomorrow, ${rideDate} at ${rideTime}. Please be ready on time. Mahalo from Cruise Kaua'i!`;
 
       try {
         const twilioRes = await fetch(
@@ -72,22 +89,20 @@ Deno.serve(async (req) => {
           }
         );
         const twilioResult = await twilioRes.json();
-        if (twilioRes.ok) {
-          results.push({ passengerName: booking.passenger_name, status: 'sent', sid: twilioResult.sid });
-        } else {
-          results.push({ passengerName: booking.passenger_name, status: 'failed', reason: twilioResult.message });
-        }
+        results.push({
+          passengerName: booking.passenger_name,
+          status: twilioRes.ok ? 'sent' : 'failed',
+          ...(twilioRes.ok ? { sid: twilioResult.sid } : { reason: twilioResult.message })
+        });
       } catch (err) {
         results.push({ passengerName: booking.passenger_name, status: 'failed', reason: err.message });
       }
     }
 
-    const sent = results.filter(r => r.status === 'sent').length;
     return Response.json({
-      sent,
+      sent: results.filter(r => r.status === 'sent').length,
       total: bookings.length,
-      ride: `${r.departure_location} → ${r.destination} on ${rideDate} at ${rideTime}`,
-      driver: r.driver_name,
+      ride: `${r.departure_location} → ${r.destination} on ${r.departure_date} at ${r.departure_time}`,
       results
     });
   } catch (error) {
