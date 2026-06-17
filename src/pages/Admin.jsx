@@ -808,9 +808,6 @@ export default function AdminPage() {
           </Card>
         )}
 
-        {/* Admin Messages */}
-        <AdminMessagesPanel />
-
         {/* Contact Inquiries */}
         <ContactInquiriesPanel inquiries={contactInquiries} onRefresh={loadData} />
 
@@ -1435,6 +1432,9 @@ export default function AdminPage() {
             </Tabs>
           </CardContent>
         </Card>
+
+        {/* Admin Messages */}
+        <AdminMessagesPanel />
 
         {/* Founder's Groups */}
         <Card className="shadow-md bg-white border-gray-200 rounded-3xl">
