@@ -52,27 +52,18 @@ Deno.serve(async (req) => {
       return Response.json({ preview: true, status: 'failed', reason: twilioResult.message });
     }
 
-    // Blast mode: send to all confirmed bookings
-    const bookings = await base44.asServiceRole.entities.RideBooking.filter({
-      ride_id: rideId,
-      booking_status: 'confirmed'
-    });
+    // Blast mode: send to all users with a phone number (exclude admins)
+    const allUsers = await base44.asServiceRole.entities.User.list();
+    const recipients = allUsers.filter(u => u.phone_number && u.role !== 'admin');
 
-    if (bookings.length === 0) {
-      return Response.json({ sent: 0, message: 'No confirmed bookings on this ride' });
+    if (recipients.length === 0) {
+      return Response.json({ sent: 0, message: 'No riders with phone numbers found' });
     }
 
-    const allUsers = await base44.asServiceRole.entities.User.list();
     const results = [];
 
-    for (const booking of bookings) {
-      const passenger = allUsers.find(u => u.id === booking.passenger_id);
-      if (!passenger || !passenger.phone_number) {
-        results.push({ passengerName: booking.passenger_name, status: 'skipped', reason: 'No phone number on file' });
-        continue;
-      }
-
-      let toNumber = passenger.phone_number.replace(/\D/g, '');
+    for (const user of recipients) {
+      let toNumber = user.phone_number.replace(/\D/g, '');
       if (toNumber.length === 10) toNumber = '+1' + toNumber;
       else if (!toNumber.startsWith('+')) toNumber = '+' + toNumber;
 
@@ -90,18 +81,18 @@ Deno.serve(async (req) => {
         );
         const twilioResult = await twilioRes.json();
         results.push({
-          passengerName: booking.passenger_name,
+          name: user.full_name,
           status: twilioRes.ok ? 'sent' : 'failed',
           ...(twilioRes.ok ? { sid: twilioResult.sid } : { reason: twilioResult.message })
         });
       } catch (err) {
-        results.push({ passengerName: booking.passenger_name, status: 'failed', reason: err.message });
+        results.push({ name: user.full_name, status: 'failed', reason: err.message });
       }
     }
 
     return Response.json({
       sent: results.filter(r => r.status === 'sent').length,
-      total: bookings.length,
+      total: recipients.length,
       ride: `${r.departure_location} → ${r.destination} on ${r.departure_date} at ${r.departure_time}`,
       results
     });
