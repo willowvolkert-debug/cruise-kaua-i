@@ -16,6 +16,7 @@ import UserAccountView from "../components/admin/UserAccountView";
 import TransactionLedger from "../components/admin/TransactionLedger";
 import BookingsMonitor from "../components/admin/BookingsMonitor";
 import ContactInquiriesPanel from "../components/admin/ContactInquiriesPanel";
+import AdminMessagesPanel from "../components/admin/AdminMessagesPanel";
 import {
   Dialog,
   DialogContent,
@@ -806,6 +807,9 @@ export default function AdminPage() {
             </CardContent>
           </Card>
         )}
+
+        {/* Admin Messages */}
+        <AdminMessagesPanel />
 
         {/* Contact Inquiries */}
         <ContactInquiriesPanel inquiries={contactInquiries} onRefresh={loadData} />
