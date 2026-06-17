@@ -23,6 +23,7 @@ import { requestNotificationPermission } from "../components/utils/notifications
 import AdminMessageCard from "../components/inbox/AdminMessageCard";
 import ProfileSetupQuiz from "../components/account/ProfileSetupQuiz";
 import WelcomeTutorialModal from "../components/tutorial/WelcomeTutorialModal";
+import SignupInfoCard from "../components/account/SignupInfoCard";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -103,10 +104,8 @@ export default function AccountPage() {
     const [adminMessages, setAdminMessages] = useState([]);
     const [showProfileQuiz, setShowProfileQuiz] = useState(false);
     const [profileQuizSavedStep, setProfileQuizSavedStep] = useState(0);
-    const [showPhonePrompt, setShowPhonePrompt] = useState(false);
-    const [phonePromptValue, setPhonePromptValue] = useState('');
-    const [isSavingPhone, setIsSavingPhone] = useState(false);
     const [showTutorial, setShowTutorial] = useState(false);
+    const [showSignupInfoCard, setShowSignupInfoCard] = useState(false);
   const [emailVerifyCode, setEmailVerifyCode] = useState("");
   const [emailVerifyLoading, setEmailVerifyLoading] = useState(false);
   const [emailVerifyError, setEmailVerifyError] = useState("");
@@ -116,19 +115,9 @@ export default function AccountPage() {
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         
-        // If deep-linked with show_phone_prompt, force the prompt open after load
-        if (urlParams.get('show_phone_prompt') === 'true') {
-            setShowPhonePrompt(true);
-        }
         // If redirected from signup flow, force open the profile quiz
         if (urlParams.get('setup') === 'true') {
             setShowProfileQuiz(true);
-        }
-        // If redirected from SMS opt-in page, pre-fill phone and show prompt
-        const prefillPhone = urlParams.get('phone');
-        if (prefillPhone) {
-            setPhonePromptValue(decodeURIComponent(prefillPhone));
-            setShowPhonePrompt(true);
         }
         
         loadData();
@@ -158,8 +147,10 @@ export default function AccountPage() {
             const forceQuiz = urlParams2.get('reopen_quiz') === 'true';
             if (!currentUser.has_completed_profile_quiz || forceQuiz) {
                 if (forceQuiz) await base44.auth.updateMe({ has_completed_profile_quiz: false });
-                // New users who haven't seen the tutorial yet see it first (which then launches quiz)
-                if (!currentUser.has_dismissed_welcome_modal && !forceQuiz) {
+                // New flow: SignupInfoCard → Welcome Tutorial → Profile Quiz
+                if (!currentUser.has_seen_signup_info_card && !forceQuiz) {
+                    setShowSignupInfoCard(true);
+                } else if (!currentUser.has_dismissed_welcome_modal && !forceQuiz) {
                     setShowTutorial(true);
                 } else {
                     setShowProfileQuiz(prev => prev === false ? false : true);
@@ -1398,16 +1389,11 @@ export default function AccountPage() {
             {showProfileQuiz && user && (
                 <ProfileSetupQuiz
                     user={user}
-                    initialStep={profileQuizSavedStep}
+                    initialStep={profileQuizSavedStep > 0 ? profileQuizSavedStep : 3}
                     onComplete={async () => {
                         setShowProfileQuiz(false);
                         setProfileQuizSavedStep(0);
                         await loadData();
-                        // Show the welcome tutorial after quiz exit (save-and-come-back or finish)
-                        const freshUser = await base44.auth.me();
-                        if (!freshUser.has_dismissed_welcome_modal) {
-                            setShowTutorial(true);
-                        }
                     }}
                 />
             )}
@@ -1491,76 +1477,19 @@ export default function AccountPage() {
                 }}
             />
 
-            {/* Phone number prompt modal */}
-            <Dialog open={showPhonePrompt} onOpenChange={() => {}}>
-                <DialogContent className="sm:max-w-md bg-white rounded-3xl" hideCloseButton>
-                    <DialogHeader>
-                        <DialogTitle className="text-xl font-bold text-secondary">📱 New: SMS Notifications!</DialogTitle>
-                        <DialogDescription className="text-gray-600 leading-relaxed mt-2">
-                            By saving your number and checking the box below, you agree to receive recurring automated transactional SMS text messages from <strong>Cruise Kauaʻi</strong> (ride confirmations, reminders, booking notifications). Consent is not required to use the platform. Message &amp; data rates may apply. Reply STOP to unsubscribe, HELP for help.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-3 py-2">
-                        <Input
-                            type="tel"
-                            value={phonePromptValue}
-                            onChange={(e) => setPhonePromptValue(e.target.value)}
-                            placeholder="e.g. (808) 555-1234"
-                            className="rounded-2xl"
-                        />
-                        <div className="flex items-start gap-2">
-                            <input
-                                type="checkbox"
-                                id="phone-prompt-consent"
-                                defaultChecked={false}
-                                className="mt-0.5 h-4 w-4 rounded border-gray-400 accent-green-700 cursor-pointer"
-                                onChange={(e) => {
-                                    const btn = document.getElementById('phone-prompt-save-btn');
-                                    if (btn) btn.disabled = !e.target.checked || !phonePromptValue;
-                                }}
-                            />
-                            <label htmlFor="phone-prompt-consent" className="text-xs text-gray-600 leading-relaxed cursor-pointer">
-                                I agree to receive automated transactional SMS messages from <strong>Cruise Kauaʻi</strong>. Message &amp; data rates may apply. Reply <strong>STOP</strong> to unsubscribe. <a href="/sms-opt-in" className="text-green-700 underline" target="_blank">SMS Terms</a>.
-                            </label>
-                        </div>
-                    </div>
-                    <DialogFooter className="flex flex-col gap-2 sm:flex-col">
-                        <Button
-                            onClick={async () => {
-                                setIsSavingPhone(true);
-                                await base44.auth.updateMe({
-                                    phone_number: phonePromptValue,
-                                    sms_notifications_enabled: !!phonePromptValue,
-                                    has_dismissed_phone_prompt: true
-                                });
-                                // Send one-time welcome SMS after phone number is saved
-                                if (phonePromptValue) {
-                                    import('@/functions/sendWelcomeSms').then(({ sendWelcomeSms }) => {
-                                        sendWelcomeSms({}).catch(() => {});
-                                    }).catch(() => {});
-                                }
-                                setIsSavingPhone(false);
-                                setShowPhonePrompt(false);
-                                loadData();
-                            }}
-                            disabled={isSavingPhone}
-                            className="w-full bg-primary hover:bg-primary/90 rounded-2xl"
-                        >
-                            {isSavingPhone ? 'saving...' : 'save phone number'}
-                        </Button>
-                        <Button
-                            variant="ghost"
-                            onClick={async () => {
-                                await base44.auth.updateMe({ has_dismissed_phone_prompt: true });
-                                setShowPhonePrompt(false);
-                            }}
-                            className="w-full text-gray-400 rounded-2xl text-sm"
-                        >
-                            skip for now
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+            {showSignupInfoCard && user && (
+                <SignupInfoCard
+                    user={user}
+                    onComplete={async () => {
+                        setShowSignupInfoCard(false);
+                        await loadData();
+                        // Show welcome tutorial after quick info
+                        setShowTutorial(true);
+                    }}
+                />
+            )}
+
+
 
             </div>
             );
