@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
 
     // Blast mode: send to all users with a phone number (exclude admins)
     const allUsers = await base44.asServiceRole.entities.User.list();
-    const recipients = allUsers.filter(u => u.phone_number && u.role !== 'admin');
+    const recipients = allUsers.filter(u => u.phone_number && u.role !== 'admin' && u.drivers_license_verified === true);
 
     if (recipients.length === 0) {
       return Response.json({ sent: 0, message: 'No riders with phone numbers found' });
