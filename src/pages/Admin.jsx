@@ -1806,11 +1806,14 @@ export default function AdminPage() {
                 <div className="space-y-2">
                   <p className="font-semibold text-secondary">insurance policy</p>
                   {selectedUser.auto_policy_photo_url ? (
-                    <img
-                      src={toPublicUrl(selectedUser.auto_policy_photo_url)}
-                      alt="Insurance"
-                      className="w-full rounded-lg border-2 border-border object-cover max-h-96"
-                    />
+                    <div>
+                      <a href={toPublicUrl(selectedUser.auto_policy_photo_url)} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline block mb-2">open full image in new tab ↗</a>
+                      <img
+                        src={toPublicUrl(selectedUser.auto_policy_photo_url)}
+                        alt="Insurance"
+                        className="w-full rounded-lg border-2 border-border object-contain max-h-96 bg-gray-100"
+                      />
+                    </div>
                   ) : (
                     <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
                       <p className="text-gray-400">No insurance photo uploaded</p>
