@@ -75,9 +75,33 @@
     "seats_needed"
   ],
   "rls": {
-    "create": true,
+    "create": {
+      "data.rider_id": "{{user.id}}"
+    },
     "read": true,
-    "update": true,
-    "delete": true
+    "update": {
+      "$or": [
+        {
+          "data.rider_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.rider_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
   }
 }
