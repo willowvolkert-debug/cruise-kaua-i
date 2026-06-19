@@ -13,7 +13,7 @@ Deno.serve(async (req) => {
     const drivers = allUsers.filter(u => 
       u.sms_notifications_enabled && 
       u.phone_number && 
-      (u.user_type === 'driver' || u.vehicle_verified)
+      u.user_type === 'driver'
     );
 
     if (drivers.length === 0) return Response.json({ ok: true, skipped: 'no driver recipients' });
