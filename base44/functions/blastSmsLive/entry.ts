@@ -9,14 +9,22 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
+    const { customMessage, targetGroup } = await req.json().catch(() => ({}));
+
     const allUsers = await base44.asServiceRole.entities.User.list();
-    const eligible = allUsers.filter(u => u.phone_number && u.sms_notifications_enabled === true);
+    
+    let eligible;
+    if (targetGroup === 'verified_drivers') {
+      eligible = allUsers.filter(u => u.user_type === 'driver' && u.phone_number && u.sms_notifications_enabled === true);
+    } else {
+      eligible = allUsers.filter(u => u.phone_number && u.sms_notifications_enabled === true);
+    }
 
     const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
     const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');
     const fromNumber = Deno.env.get('TWILIO_PHONE_NUMBER');
 
-    const message = `🚗🌀 Cruise Kauaʻi SMS is live! You'll now get texts when riders request seats, drivers accept/deny, and new messages come in. Finish your profile or start posting/requesting rides by opening the application in your Home Screen, or the website- cruisehi.org`;
+    const message = customMessage || `🚗🌀 Cruise Kauaʻi SMS is live! You'll now get texts when riders request seats, drivers accept/deny, and new messages come in. Finish your profile or start posting/requesting rides by opening the application in your Home Screen, or the website- cruisehi.org`;
 
     let sent = 0;
     let failed = 0;
