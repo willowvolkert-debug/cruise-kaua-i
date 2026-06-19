@@ -9,6 +9,7 @@ Deno.serve(async (req) => {
 
     if (!ride) return Response.json({ ok: true, skipped: 'no data' });
     if (ride.is_recurring) return Response.json({ ok: true, skipped: 'recurring ride' });
+    if (ride.is_last_minute) return Response.json({ ok: true, skipped: 'last-minute ride (handled by blast)' });
 
     const allUsers = await base44.asServiceRole.entities.User.list();
     const riders = allUsers.filter(u =>
@@ -36,8 +37,20 @@ Deno.serve(async (req) => {
 
     const message = `🚗🌀 Cruise Kauaʻi: ${driver} is offering a ride from ${loc} to ${dest} on ${date} at ${time}. ${seats} seat(s) available${price}. Request a seat on the app or cruisekauai.org\n\nReply STOP to opt out.`;
 
-    const results = [];
+    // Deduplicate by phone number
+    const seenPhones = new Set();
+    const uniqueRiders = [];
     for (const user of riders) {
+      let normalized = user.phone_number.replace(/\D/g, '');
+      if (normalized.length === 10) normalized = '+1' + normalized;
+      else if (!normalized.startsWith('+')) normalized = '+' + normalized;
+      if (seenPhones.has(normalized)) continue;
+      seenPhones.add(normalized);
+      uniqueRiders.push(user);
+    }
+
+    const results = [];
+    for (const user of uniqueRiders) {
       let normalized = user.phone_number.replace(/\D/g, '');
       if (normalized.length === 10) normalized = '+1' + normalized;
       else if (!normalized.startsWith('+')) normalized = '+' + normalized;

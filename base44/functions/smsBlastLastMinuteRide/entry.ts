@@ -32,8 +32,20 @@ Deno.serve(async (req) => {
 
     const message = `🚗🌀 Cruise Kauaʻi: Last-minute ride! ${driver} is driving from ${loc} to ${dest} on ${date} at ${time}. ${seats} seat(s) available. view the app on your Home Screen or cruisehi.org\n\nReply STOP to opt out.`;
 
-    const results = [];
+    // Deduplicate by phone number
+    const seenPhones = new Set();
+    const uniqueRecipients = [];
     for (const user of recipients) {
+      let normalized = user.phone_number.replace(/\D/g, '');
+      if (normalized.length === 10) normalized = '+1' + normalized;
+      else if (!normalized.startsWith('+')) normalized = '+' + normalized;
+      if (seenPhones.has(normalized)) continue;
+      seenPhones.add(normalized);
+      uniqueRecipients.push(user);
+    }
+
+    const results = [];
+    for (const user of uniqueRecipients) {
       let normalized = user.phone_number.replace(/\D/g, '');
       if (normalized.length === 10) normalized = '+1' + normalized;
       else if (!normalized.startsWith('+')) normalized = '+' + normalized;
