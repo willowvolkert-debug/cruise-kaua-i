@@ -97,16 +97,15 @@ Deno.serve(async (req) => {
           existingRideSet.add(rideKey); // prevent duplicates within same run
         }
 
-        // STEP 2: Queue confirmation email if within 48h window and not yet sent
-        if (!confirmationSent && rideDate <= in48h && rideDate >= today) {
-          emailsToSend.push({ schedule, user, dateStr });
-          schedulesToUpdateConfirmation.push({
-            scheduleId: schedule.id,
-            newDates: [...(schedule.confirmation_sent_dates || []), dateStr]
-          });
-          // Update local copy to prevent duplicate queuing within same run
-          schedule.confirmation_sent_dates = [...(schedule.confirmation_sent_dates || []), dateStr];
-        }
+        // STEP 2: Confirmation emails disabled — recurring rides auto-post without driver confirmation
+        // if (!confirmationSent && rideDate <= in48h && rideDate >= today) {
+        //   emailsToSend.push({ schedule, user, dateStr });
+        //   schedulesToUpdateConfirmation.push({
+        //     scheduleId: schedule.id,
+        //     newDates: [...(schedule.confirmation_sent_dates || []), dateStr]
+        //   });
+        //   schedule.confirmation_sent_dates = [...(schedule.confirmation_sent_dates || []), dateStr];
+        // }
 
         // STEP 3: Auto-delete disabled — rides are no longer removed for missing confirmation
         // if (confirmationSent && !isConfirmed && rideDate < in24h && rideDate >= today) {
