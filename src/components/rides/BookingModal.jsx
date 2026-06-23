@@ -33,6 +33,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   const [currentUser, setCurrentUser] = useState(null);
   const [driverRatings, setDriverRatings] = useState([]);
   const [offerError, setOfferError] = useState('');
+  const [isFirstBooking, setIsFirstBooking] = useState(false);
 
   const scrollRef = useRef(null);
 
@@ -72,6 +73,13 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         );
         setDriverRatings(driverRatingsFiltered || []);
       }
+
+      // Check if this is the user's first paid booking (to show the $1.50 license verification fee)
+      const existingBookings = await base44.entities.RideBooking.list();
+      const hasCompletedPayments = existingBookings.some(b => 
+        String(b.passenger_id) === String(user.id) && b.payment_status === 'paid'
+      );
+      setIsFirstBooking(!hasCompletedPayments);
     } catch (error) {
       // silently handle
     }
@@ -226,7 +234,8 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   const rideAmount = (bookingData.seats_booked || 0) * pricePerSeat + detourFee;
   const connectFeeRate = ride?.driver_license_state === 'HI' ? 0.10 : 0.30;
   const connectFee = rideAmount * connectFeeRate;
-  const subtotal = rideAmount + connectFee;
+  const licenseVerificationFee = isFirstBooking ? 1.50 : 0;
+  const subtotal = rideAmount + connectFee + licenseVerificationFee;
   const creditCardFee = subtotal * 0.03;
   const totalAmount = subtotal + creditCardFee;
 
@@ -463,6 +472,12 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                 <span className="font-medium">${connectFee.toFixed(2)}</span>
               </div>
 
+              {isFirstBooking && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-700">License verification fee:</span>
+                  <span className="font-medium">$1.50</span>
+                </div>
+              )}
               <div className="flex justify-between text-sm">
                 <span className="text-gray-700">Credit card fee (3%):</span>
                 <span className="font-medium">${creditCardFee.toFixed(2)}</span>
