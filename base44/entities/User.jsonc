@@ -53,6 +53,15 @@
       "default": false,
       "description": "Whether the user has opted in to SMS notifications"
     },
+    "sms_disabled_inactivity": {
+      "type": "boolean",
+      "default": false,
+      "description": "True when SMS was turned off automatically due to 14+ days of inactivity (drives the reactivation card on the Account page)"
+    },
+    "last_activity_date": {
+      "type": "string",
+      "description": "ISO timestamp of the user's last app activity (used to determine SMS eligibility)"
+    },
     "has_dismissed_phone_prompt": {
       "type": "boolean",
       "default": false,

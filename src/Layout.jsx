@@ -252,6 +252,15 @@ export default function Layout({ children, currentPageName }) {
         const user = await base44.auth.me();
         setCurrentUser(user);
 
+        // Track last activity date (throttled to once per ~6 hours to avoid DB churn)
+        try {
+          const now = new Date();
+          const last = user.last_activity_date ? new Date(user.last_activity_date) : null;
+          if (!last || (now - last) > 6 * 60 * 60 * 1000) {
+            base44.auth.updateMe({ last_activity_date: now.toISOString() }).catch(() => {});
+          }
+        } catch (e) { /* non-critical */ }
+
         if (!user.has_seen_welcome) {
           // Mark as seen since they're authenticated — no need to redirect back to Welcome
           base44.auth.updateMe({ has_seen_welcome: true });

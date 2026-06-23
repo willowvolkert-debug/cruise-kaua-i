@@ -24,6 +24,7 @@ import AdminMessageCard from "../components/inbox/AdminMessageCard";
 import ProfileSetupQuiz from "../components/account/ProfileSetupQuiz";
 import WelcomeTutorialModal from "../components/tutorial/WelcomeTutorialModal";
 import SignupInfoCard from "../components/account/SignupInfoCard";
+import SmsReactivationCard from "../components/account/SmsReactivationCard";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -894,6 +895,11 @@ export default function AccountPage() {
                       </Button>
                     )}
                   </div>
+                )}
+
+                {/* SMS Reactivation — shown when SMS was auto-paused for inactivity */}
+                {user.sms_disabled_inactivity && (
+                    <SmsReactivationCard user={user} onReactivated={loadData} />
                 )}
 
                 {/* Admin Messages */}
