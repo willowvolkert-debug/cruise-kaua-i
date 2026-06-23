@@ -9,6 +9,22 @@ Deno.serve(async (req) => {
 
     if (!rideRequest) return Response.json({ ok: true, skipped: 'no data' });
 
+    // Dedup: only send SMS for the first ride or ride request a user posts per day
+    const posterId = rideRequest.rider_id;
+    const todayStr = new Date().toISOString().substring(0, 10);
+    const currentCreated = rideRequest.created_date ? new Date(rideRequest.created_date) : new Date();
+    const [allRidesToday, allPostsToday] = await Promise.all([
+      base44.asServiceRole.entities.Ride.list(),
+      base44.asServiceRole.entities.RidePost.list()
+    ]);
+    const earlierToday = [
+      ...allRidesToday.filter(r => r.driver_id === posterId && (r.created_date || '').substring(0, 10) === todayStr && new Date(r.created_date) < currentCreated),
+      ...allPostsToday.filter(p => p.rider_id === posterId && (p.created_date || '').substring(0, 10) === todayStr && new Date(p.created_date) < currentCreated)
+    ];
+    if (earlierToday.length > 0) {
+      return Response.json({ ok: true, skipped: 'user already posted a ride or request earlier today' });
+    }
+
     const allUsers = await base44.asServiceRole.entities.User.list();
     const drivers = allUsers.filter(u => 
       u.sms_notifications_enabled && 
