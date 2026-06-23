@@ -62,7 +62,8 @@ Deno.serve(async (req) => {
         const connectFeeRate = ride.driver_license_state === 'HI' ? 0.10 : 0.30;
         const connectFee = rideAmount * connectFeeRate;
         const licenseVerificationFee = isFirstBooking ? 1.50 : 0;
-        const subtotal = rideAmount + connectFee + licenseVerificationFee;
+        const smsFee = user.sms_notifications_enabled ? 0.50 : 0;
+        const subtotal = rideAmount + connectFee + licenseVerificationFee + smsFee;
         const creditCardFee = subtotal * 0.03;
         const totalAmount = subtotal + creditCardFee;
 
@@ -136,6 +137,21 @@ Deno.serve(async (req) => {
                         description: 'One-time Stripe identity verification fee'
                     },
                     unit_amount: Math.round(licenseVerificationFee * 100)
+                },
+                quantity: 1
+            });
+        }
+
+        // Add SMS fee for users opted into SMS notifications
+        if (smsFee > 0) {
+            lineItems.push({
+                price_data: {
+                    currency: 'usd',
+                    product_data: {
+                        name: 'SMS Notification Fee',
+                        description: 'SMS ride alerts & notifications'
+                    },
+                    unit_amount: Math.round(smsFee * 100)
                 },
                 quantity: 1
             });

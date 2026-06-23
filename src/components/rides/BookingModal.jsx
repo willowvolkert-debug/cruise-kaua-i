@@ -235,7 +235,8 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   const connectFeeRate = ride?.driver_license_state === 'HI' ? 0.10 : 0.30;
   const connectFee = rideAmount * connectFeeRate;
   const licenseVerificationFee = isFirstBooking ? 1.50 : 0;
-  const subtotal = rideAmount + connectFee + licenseVerificationFee;
+  const smsFee = currentUser?.sms_notifications_enabled ? 0.50 : 0;
+  const subtotal = rideAmount + connectFee + licenseVerificationFee + smsFee;
   const creditCardFee = subtotal * 0.03;
   const totalAmount = subtotal + creditCardFee;
 
@@ -476,6 +477,12 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-700">License verification fee:</span>
                   <span className="font-medium">$1.50</span>
+                </div>
+              )}
+              {smsFee > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-700">SMS notification fee:</span>
+                  <span className="font-medium">$0.50</span>
                 </div>
               )}
               <div className="flex justify-between text-sm">
