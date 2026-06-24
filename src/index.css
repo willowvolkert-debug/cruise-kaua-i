@@ -158,14 +158,12 @@ button:focus-visible {
     overflow-x: hidden;
   }
 
-  /* ── Mobile font scale-up ──────────────────────────────────────────────
-     Tailwind's defaults (text-sm=14px, text-xs=12px) are too small on mobile.
-     Setting a larger root font-size on mobile scales ALL rem/em-based sizes
-     proportionally — text, spacing, icons — without touching individual components.
-  */
+  /* Mobile: keep root font-size at 16px (browser default) to prevent
+     horizontal overflow. Bumping it to 18px scales all rem-based spacing
+     and causes content to exceed the viewport width. */
   @media (max-width: 768px) {
     html {
-      font-size: 18px; /* up from browser default 16px — ~12% bigger across the board */
+      font-size: 16px;
     }
   }
 
