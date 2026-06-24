@@ -51,7 +51,8 @@ Deno.serve(async (req) => {
     const seats = ride.seats_available || '?';
     const price = ride.price_per_seat != null ? ` for $${ride.price_per_seat}/seat` : '';
 
-    const message = `🚗🌀 Cruise Kauaʻi: ${driver} is offering a ride from ${loc} to ${dest} on ${date} at ${time}. ${seats} seat(s) available${price}. Request a seat on the app or cruisekauai.org\n\nReply STOP to opt out.`;
+    const shortDate = (date || '?').replace(/^20/, '');
+    const message = `Cruise Kauai: ${driver} - ${loc} to ${dest}, ${shortDate} ${time}, ${seats} seat(s)${price}. cruisekauai.org STOP=optout`;
 
     // Deduplicate by phone number
     const seenPhones = new Set();

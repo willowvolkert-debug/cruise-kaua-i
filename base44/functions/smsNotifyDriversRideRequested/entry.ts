@@ -49,7 +49,8 @@ Deno.serve(async (req) => {
     const rider = rideRequest.rider_name || rideRequest.rider_username || 'a rider';
     const seats = rideRequest.seats_needed || '?';
 
-    const message = `🚗🌀 Cruise Kauaʻi: ${rider} is looking for a ride from ${loc} to ${dest} on ${date} at ${time}. ${seats} seat(s) needed. view the app on your Home Screen or cruisehi.org\n\nReply STOP to opt out.`;
+    const shortDate = (date || '?').replace(/^20/, '');
+    const message = `Cruise Kauai: ${rider} needs ride ${loc} to ${dest}, ${shortDate} ${time}, ${seats} seat(s). cruisekauai.org STOP=optout`;
 
     const results = [];
     for (const driver of drivers) {
