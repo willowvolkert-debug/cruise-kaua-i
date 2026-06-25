@@ -176,14 +176,14 @@ export default function ContactUsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label>screenshots (optional)</Label>
-                <p className="text-xs text-gray-500">Attach screenshots if you're reporting a technical issue.</p>
+                <Label>screenshots / files (optional)</Label>
+                <p className="text-xs text-gray-500">Attach screenshots or documents (images, PDF, Word, Excel).</p>
                 <label className="flex items-center gap-2 cursor-pointer border border-dashed border-gray-300 rounded-2xl px-4 py-3 hover:bg-gray-50 transition-colors">
                   <Paperclip className="w-4 h-4 text-gray-400" />
-                  <span className="text-sm text-gray-500">attach screenshots</span>
+                  <span className="text-sm text-gray-500">attach files</span>
                   <input
                     type="file"
-                    accept="image/*"
+                    accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt"
                     multiple
                     className="hidden"
                     onChange={(e) => {
