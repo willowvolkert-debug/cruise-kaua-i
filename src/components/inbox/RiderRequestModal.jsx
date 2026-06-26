@@ -3,9 +3,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Star, Check, X, Wind, MessageCircle, Loader2, DollarSign, RefreshCw, AlertTriangle } from "lucide-react";
+import { Star, Check, X, Wind, MessageCircle, Loader2, DollarSign, RefreshCw, AlertTriangle, ShieldAlert, Send } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { sendBookingEmail } from "@/functions/sendBookingEmail";
+import { sendSmsNotification } from "@/functions/sendSmsNotification";
 import { format } from "date-fns";
 
 
@@ -18,6 +19,8 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
   const [isProcessing, setIsProcessing] = useState(false);
   const [showBgCheckBlock, setShowBgCheckBlock] = useState(false);
   const [currentDriverUsername, setCurrentDriverUsername] = useState(null);
+  const [sendingReminder, setSendingReminder] = useState(false);
+  const [reminderSent, setReminderSent] = useState(false);
 
   useEffect(() => {
     const loadRiderData = async () => {
@@ -64,6 +67,43 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
   const averageRating = riderRatings.length > 0 
     ? (riderRatings.reduce((sum, r) => sum + r.rating_value, 0) / riderRatings.length).toFixed(1)
     : 0;
+
+  const profileComplete = riderProfile?.profile_picture_url && riderProfile?.bio && riderProfile?.gender && riderProfile?.age && booking.passenger_username;
+
+  const handleSendProfileReminder = async () => {
+    setSendingReminder(true);
+    try {
+      const driver = await base44.auth.me();
+      const reminderMessage = "I can't accept your request until you've finished your profile. Can you do that in your account?";
+      const newMessage = {
+        sender_id: driver.id,
+        sender_name: driver.full_name,
+        message: reminderMessage,
+        timestamp: new Date().toISOString()
+      };
+      const updatedMessages = [...(booking.messages || []), newMessage];
+      await base44.entities.RideBooking.update(booking.id, {
+        messages: updatedMessages,
+        read_message_counts: {
+          ...(booking.read_message_counts || {}),
+          [driver.id]: updatedMessages.length
+        }
+      });
+
+      // SMS the rider so they see it immediately
+      try {
+        await sendSmsNotification({
+          userId: booking.passenger_id,
+          message: `Cruise Kauaʻi: ${driver.full_name} sent you a message: "${reminderMessage}" Log in to finish your profile: https://cruisekauai.org/account`
+        });
+      } catch (smsErr) { /* non-critical */ }
+
+      setReminderSent(true);
+    } catch (e) {
+      console.error("Error sending profile reminder:", e);
+    }
+    setSendingReminder(false);
+  };
 
   const handleAccept = async () => {
     if (currentDriverUsername === '247pono') {
@@ -214,6 +254,20 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
               </div>
             )}
 
+            {/* License Pending Warning */}
+            {booking.license_pending && (
+              <div className="flex items-start gap-3 p-4 bg-orange-50 border border-orange-300 rounded-2xl">
+                <ShieldAlert className="w-5 h-5 text-orange-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-bold text-orange-900 text-sm">license not yet uploaded</p>
+                  <p className="text-xs text-orange-800 mt-0.5 leading-relaxed">
+                    This rider booked without uploading their license. They've been reminded to
+                    finish their profile &amp; upload it before the ride.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Booking Details */}
             <div className="bg-gray-50 rounded-2xl p-4 space-y-2 border border-gray-200">
               <h4 className="font-semibold text-secondary">Request Details</h4>
@@ -263,12 +317,44 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
               </div>
             )}
 
+            {/* Profile Incomplete Warning */}
+            {!profileComplete && (
+              <div className="space-y-3 pt-2">
+                <div className="flex items-start gap-3 p-4 bg-amber-50 border-2 border-amber-300 rounded-2xl">
+                  <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                  <div className="space-y-1">
+                    <p className="font-bold text-amber-900 text-sm">rider profile incomplete</p>
+                    <p className="text-xs text-amber-800 leading-relaxed">
+                      This rider hasn't finished setting up their profile yet. You can't
+                      accept their request until they do. Send them a quick message to let them know:
+                    </p>
+                    {!reminderSent ? (
+                      <Button
+                        onClick={handleSendProfileReminder}
+                        disabled={sendingReminder}
+                        size="sm"
+                        className="bg-amber-600 hover:bg-amber-700 text-white rounded-xl mt-2"
+                      >
+                        {sendingReminder ? (
+                          <><Loader2 className="w-3 h-3 mr-1 animate-spin" /> sending...</>
+                        ) : (
+                          <><Send className="w-3 h-3 mr-1" /> ask rider to finish profile</>
+                        )}
+                      </Button>
+                    ) : (
+                      <p className="text-xs text-green-700 font-semibold mt-2">✓ message sent! we'll let them know.</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Action Buttons */}
             {booking.is_price_offer && booking.offered_price ? (
               <div className="space-y-2 pt-4">
                 <Button
                   onClick={handleAccept}
-                  disabled={isProcessing}
+                  disabled={isProcessing || !profileComplete}
                   className="w-full bg-green-600 hover:bg-green-700 rounded-2xl"
                 >
                   <Check className="w-4 h-4 mr-2" />
@@ -306,7 +392,7 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
                 </Button>
                 <Button
                   onClick={handleAccept}
-                  disabled={isProcessing}
+                  disabled={isProcessing || !profileComplete}
                   className="flex-1 bg-primary hover:bg-primary/90 rounded-2xl"
                 >
                   <Check className="w-4 h-4 mr-2" />

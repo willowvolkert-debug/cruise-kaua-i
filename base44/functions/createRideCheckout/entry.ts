@@ -99,6 +99,7 @@ Deno.serve(async (req) => {
             passenger_gender: user.gender || null,
             passenger_preferences_chattiness: user.preferences_chattiness || null,
             passenger_preferences_scents: user.preferences_scents || null,
+            license_pending: !user.drivers_license_verified,
         });
 
         // Build line items

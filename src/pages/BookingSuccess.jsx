@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { CheckCircle, MapPin, Clock, Calendar, Users, MessageSquare, Settings, Loader2 } from "lucide-react";
+import { CheckCircle, MapPin, Clock, Calendar, Users, MessageSquare, Settings, Loader2, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function BookingSuccess() {
   const navigate = useNavigate();
   const [booking, setBooking] = useState(null);
   const [ride, setRide] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -50,6 +51,29 @@ export default function BookingSuccess() {
         const rides = await base44.entities.Ride.list();
         const foundRide = rides.find(r => r.id === b.ride_id) || null;
         setRide(foundRide);
+
+        // Load current user to check profile/license status
+        try {
+          const me = await base44.auth.me();
+          setCurrentUser(me);
+
+          const profileComplete = me.username && me.bio && me.age && me.gender && me.profile_picture_url;
+          const needsReminder = !profileComplete || !me.drivers_license_verified;
+
+          // Send SMS reminder once per booking if rider hasn't finished profile/license
+          if (needsReminder && !b.license_reminder_sent) {
+            try {
+              const { sendSmsNotification } = await import("@/functions/sendSmsNotification");
+              await sendSmsNotification({
+                userId: me.id,
+                message: "Cruise Kauaʻi: Your ride is booked! Before you can ride, finish your profile and upload your driver's license in your account: https://cruisekauai.org/account"
+              });
+            } catch (smsErr) { /* non-critical */ }
+            try {
+              await base44.entities.RideBooking.update(b.id, { license_reminder_sent: true });
+            } catch (updErr) { /* non-critical */ }
+          }
+        } catch (userErr) { /* non-critical */ }
       }
     } catch (e) {
       console.error("BookingSuccess load error:", e);
@@ -149,6 +173,44 @@ export default function BookingSuccess() {
             </div>
           </div>
         </div>
+
+        {/* Profile + License warning */}
+        {currentUser && (() => {
+          const profileComplete = currentUser.username && currentUser.bio && currentUser.age && currentUser.gender && currentUser.profile_picture_url;
+          const licenseReady = currentUser.drivers_license_verified;
+          if (profileComplete && licenseReady) return null;
+          return (
+            <div className="bg-amber-50 border-2 border-amber-300 rounded-3xl p-5 space-y-3">
+              <div className="flex items-start gap-3">
+                <ShieldAlert className="w-6 h-6 text-amber-600 shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="font-bold text-amber-900 text-base">finish your profile &amp; upload license</h3>
+                  <p className="text-sm text-amber-800 mt-1 leading-relaxed">
+                    You're booked! But before you can get in the car, you need to{" "}
+                    {!profileComplete && <>finish your profile{!licenseReady ? " and " : "."}</>}
+                    {!licenseReady && <>upload your driver's license.</>}
+                    {" "}Do it now so you're ready to ride.
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  className="flex-1 bg-amber-600 hover:bg-amber-700 text-white rounded-2xl py-5"
+                  onClick={() => navigate("/account")}
+                >
+                  finish setup →
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1 border-amber-300 text-amber-700 hover:bg-amber-100 rounded-2xl py-5"
+                  onClick={() => navigate("/confirmedrides")}
+                >
+                  I'll do it later
+                </Button>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* CTA */}
         <Button

@@ -104,6 +104,16 @@
     "stripe_charge_id": {
       "type": "string"
     },
+    "license_pending": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the rider booked without a verified license"
+    },
+    "license_reminder_sent": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the post-booking license/profile reminder SMS was sent"
+    },
     "cancellation_reason": {
       "type": "string"
     },

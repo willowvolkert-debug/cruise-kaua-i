@@ -24,6 +24,7 @@ import AdminMessageCard from "../components/inbox/AdminMessageCard";
 import ProfileSetupQuiz from "../components/account/ProfileSetupQuiz";
 import WelcomeTutorialModal from "../components/tutorial/WelcomeTutorialModal";
 import SignupInfoCard from "../components/account/SignupInfoCard";
+import PostSignupCard from "../components/account/PostSignupCard";
 import SmsReactivationCard from "../components/account/SmsReactivationCard";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
@@ -107,6 +108,7 @@ export default function AccountPage() {
     const [profileQuizSavedStep, setProfileQuizSavedStep] = useState(0);
     const [showTutorial, setShowTutorial] = useState(false);
     const [showSignupInfoCard, setShowSignupInfoCard] = useState(false);
+    const [showPostSignupCard, setShowPostSignupCard] = useState(false);
   const [emailVerifyCode, setEmailVerifyCode] = useState("");
   const [emailVerifyLoading, setEmailVerifyLoading] = useState(false);
   const [emailVerifyError, setEmailVerifyError] = useState("");
@@ -151,6 +153,8 @@ export default function AccountPage() {
                 // New flow: SignupInfoCard → Welcome Tutorial → Profile Quiz
                 if (!currentUser.has_seen_signup_info_card && !forceQuiz) {
                     setShowSignupInfoCard(true);
+                } else if (!currentUser.has_seen_post_signup_card && !forceQuiz) {
+                    setShowPostSignupCard(true);
                 } else if (!currentUser.has_dismissed_welcome_modal && !forceQuiz) {
                     setShowTutorial(true);
                 } else {
@@ -1489,7 +1493,16 @@ export default function AccountPage() {
                     onComplete={async () => {
                         setShowSignupInfoCard(false);
                         await loadData();
-                        // Show welcome tutorial after quick info
+                        setShowPostSignupCard(true);
+                    }}
+                />
+            )}
+
+            {showPostSignupCard && user && (
+                <PostSignupCard
+                    user={user}
+                    onFinishProfile={() => {
+                        setShowPostSignupCard(false);
                         setShowTutorial(true);
                     }}
                 />

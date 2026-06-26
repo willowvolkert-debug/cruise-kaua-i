@@ -164,6 +164,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
           passenger_gender: currentUser.gender || null,
           passenger_preferences_chattiness: currentUser.preferences_chattiness || null,
           passenger_preferences_scents: currentUser.preferences_scents || null,
+          license_pending: !currentUser.drivers_license_verified,
         });
 
         // Send SMS to driver
@@ -557,7 +558,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               )}
             </div>
 
-            {(!currentUser || currentUser.drivers_license_verified) && !isFreeRide && (
+            {!isFreeRide && (
               <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                 <CreditCard className="w-5 h-5 text-blue-600" />
                 <p className="text-sm text-blue-800">
@@ -579,7 +580,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                 <Button type="button" variant="outline" onClick={onClose}>cancel</Button>
                 <Button 
                   type="submit" 
-                  disabled={isSubmitting || (currentUser && !currentUser.drivers_license_verified)} 
+                  disabled={isSubmitting} 
                   className="bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
                   {isSubmitting ? (
@@ -596,16 +597,6 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                   )}
                 </Button>
               </div>
-              {currentUser && !currentUser.drivers_license_verified && (
-                <div className="flex items-start gap-2 w-full p-3 bg-red-50 border border-red-300 rounded-xl">
-                  <ShieldAlert className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-                  <p className="text-sm text-red-700">
-                    {currentUser.drivers_license_pending_review
-                      ? "Your license is under review — you'll be able to book once it's approved (usually within 24 hrs)."
-                      : <><strong>License required before booking.</strong> Go to <a href="/account" className="underline font-medium">Account → Verification</a> to submit yours.</>}
-                  </p>
-                </div>
-              )}
             </DialogFooter>
             </form>
       </DialogContent>
