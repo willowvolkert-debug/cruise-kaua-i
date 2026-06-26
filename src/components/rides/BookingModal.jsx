@@ -126,8 +126,9 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
       }
       const baseAmount = (bookingData.seats_booked || 0) * submitPricePerSeat + detourFee;
 
-      // FREE RIDE ($0 offer): skip Stripe, create booking directly
-      if (bookingData.is_price_offer && offerVal === 0 && baseAmount === 0) {
+      // FREE RIDE ($0 total): skip Stripe, create booking directly
+      // Covers both explicit $0 price offers and rides where the driver set price to $0
+      if (baseAmount === 0) {
         const booking = await base44.entities.RideBooking.create({
           ride_id: ride.id,
           driver_id: ride.driver_id,
@@ -147,9 +148,9 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
           is_partial_ride: bookingData.is_partial_ride,
           partial_from: bookingData.partial_from || '',
           partial_to: bookingData.partial_to || '',
-          is_price_offer: true,
-          offered_price: 0,
-          price_offer_status: 'pending',
+          is_price_offer: bookingData.is_price_offer || false,
+          offered_price: bookingData.is_price_offer ? 0 : null,
+          price_offer_status: bookingData.is_price_offer ? 'pending' : null,
           messages: [{
             sender_id: currentUser.id,
             sender_name: currentUser.full_name,
@@ -169,7 +170,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         try {
           await sendSmsNotification({
             userId: ride.driver_id,
-            message: `Cruise Kauaʻi: ${currentUser.full_name} requested a free ride! "${bookingData.description}" Log in to accept or decline: https://cruisekauai.org`
+            message: `Cruise Kauaʻi: ${currentUser.full_name} ${bookingData.is_price_offer ? 'requested a free ride' : 'booked your free ride'}! "${bookingData.description}" Log in to accept or decline: https://cruisekauai.org`
           });
         } catch (smsErr) {
           console.error("SMS error:", smsErr);
@@ -232,6 +233,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   }
 
   const rideAmount = (bookingData.seats_booked || 0) * pricePerSeat + detourFee;
+  const isFreeRide = rideAmount === 0;
   const connectFeeRate = ride?.driver_license_state === 'HI' ? 0.10 : 0.30;
   const connectFee = rideAmount * connectFeeRate;
   const licenseVerificationFee = isFirstBooking ? 1.50 : 0;
@@ -555,7 +557,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               )}
             </div>
 
-            {(!currentUser || currentUser.drivers_license_verified) && !(bookingData.is_price_offer && bookingData.offered_price !== '' && parseFloat(bookingData.offered_price) === 0) && (
+            {(!currentUser || currentUser.drivers_license_verified) && !isFreeRide && (
               <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                 <CreditCard className="w-5 h-5 text-blue-600" />
                 <p className="text-sm text-blue-800">
@@ -563,7 +565,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                 </p>
               </div>
             )}
-            {bookingData.is_price_offer && bookingData.offered_price !== '' && parseFloat(bookingData.offered_price) === 0 && (
+            {isFreeRide && (
               <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
                 <HeartHandshake className="w-5 h-5 text-green-600" />
                 <p className="text-sm text-green-800">
@@ -585,7 +587,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                       redirecting...
                     </>
-                  ) : bookingData.is_price_offer && bookingData.offered_price !== '' && parseFloat(bookingData.offered_price) === 0 ? (
+                  ) : isFreeRide ? (
                     'request free ride →'
                   ) : bookingData.is_price_offer && bookingData.offered_price !== '' ? (
                     'submit request & payment →'

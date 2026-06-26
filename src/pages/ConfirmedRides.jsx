@@ -173,6 +173,23 @@ export default function ConfirmedRidesPage() {
                 cancellation_reason: 'Cancelled by rider before acceptance',
                 cancellation_date: new Date().toISOString()
             });
+            const ride = allRidesData.find(r => r.id === booking.ride_id);
+            // Send confirmation email to the rider who cancelled
+            try {
+                await sendBookingEmail({
+                    userId: booking.passenger_id,
+                    subject: `Your ride request is cancelled - Cruise Kauaʻi`,
+                    body: `Aloha ${booking.passenger_name},\n\nYour ride request${ride ? ` for ${ride.departure_location} → ${ride.destination}` : ''} has been cancelled.\n\nYour payment will be refunded.\n\nMahalo,\nCruise Kauaʻi Team`
+                });
+            } catch (e) { console.error(e); }
+            // Notify driver that rider cancelled
+            try {
+                await sendBookingEmail({
+                    userId: booking.driver_id,
+                    subject: `Ride request cancelled - Cruise Kauaʻi`,
+                    body: `Aloha,\n\n${booking.passenger_name} has cancelled their ride request before you accepted it.\n\nNo action is needed on your end.\n\nMahalo,\nCruise Kauaʻi Team`
+                });
+            } catch (e) { console.error(e); }
             alert("Ride request cancelled successfully. Your payment will be refunded.");
             loadData();
         } catch (error) {
@@ -236,6 +253,14 @@ export default function ConfirmedRidesPage() {
                     userId: booking.driver_id,
                     subject: `Rider cancelled - Cruise Kauaʻi`,
                     body: `Aloha,\n\n${booking.passenger_name} has cancelled their confirmed booking.\n\nReason: ${reason}\n\nThe seat(s) have been made available again.\n\nMahalo,\nCruise Kauaʻi Team`
+                });
+            } catch (e) { console.error(e); }
+            // Send confirmation email to the rider who cancelled
+            try {
+                await sendBookingEmail({
+                    userId: booking.passenger_id,
+                    subject: `Your cancellation is confirmed - Cruise Kauaʻi`,
+                    body: `Aloha ${booking.passenger_name},\n\nYour booking for the ride from ${ride?.departure_location} → ${ride?.destination} on ${ride?.departure_date} at ${ride?.departure_time} has been cancelled.\n\nReason: ${reason}\n\nRefund: ${refundPercentage} of your payment will be processed.\n\nMahalo,\nCruise Kauaʻi Team`
                 });
             } catch (e) { console.error(e); }
             alert(`Booking cancelled. A ${refundPercentage} refund will be processed.`);

@@ -150,6 +150,30 @@
     "initial_notification_sent": {
       "type": "boolean",
       "default": false
+    },
+    "passenger_profile_picture_url": {
+      "type": "string",
+      "description": "Profile picture URL of the passenger (stored at booking time)"
+    },
+    "passenger_bio": {
+      "type": "string",
+      "description": "Bio of the passenger (stored at booking time)"
+    },
+    "passenger_age": {
+      "type": "integer",
+      "description": "Age of the passenger (stored at booking time)"
+    },
+    "passenger_gender": {
+      "type": "string",
+      "description": "Gender of the passenger (stored at booking time)"
+    },
+    "passenger_preferences_chattiness": {
+      "type": "string",
+      "description": "Chattiness preference of the passenger (stored at booking time)"
+    },
+    "passenger_preferences_scents": {
+      "type": "string",
+      "description": "Scents preference of the passenger (stored at booking time)"
     }
   },
   "required": [

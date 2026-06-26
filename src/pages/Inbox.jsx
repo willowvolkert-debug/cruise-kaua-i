@@ -488,7 +488,17 @@ export default function InboxPage() {
             } catch (emailError) {
                 console.error("Error sending cancellation email to driver:", emailError);
             }
-            
+            // Send confirmation email to the rider who cancelled
+            try {
+                await sendBookingEmail({
+                    userId: booking.passenger_id,
+                    subject: `Your ride request is cancelled - Cruise Kauaʻi`,
+                    body: `Aloha ${booking.passenger_name},\n\nYour ride request has been cancelled.\n\nYour payment will be refunded.\n\nMahalo,\nCruise Kauaʻi Team`
+                });
+            } catch (emailError) {
+                console.error("Error sending cancellation confirmation email to rider:", emailError);
+            }
+
             alert("Ride request cancelled successfully. Your payment will be refunded.");
             loadData();
         } catch (error) {
@@ -564,6 +574,16 @@ Please process the refund manually via Stripe.
                 });
             } catch (emailError) {
                 console.error("Error sending cancellation email to driver:", emailError);
+            }
+            // Send confirmation email to the rider who cancelled
+            try {
+                await sendBookingEmail({
+                    userId: booking.passenger_id,
+                    subject: `Your cancellation is confirmed - Cruise Kauaʻi`,
+                    body: `Aloha ${booking.passenger_name},\n\nYour booking for the ride from ${ride?.departure_location} → ${ride?.destination} on ${ride?.departure_date ? format(parseDateString(ride.departure_date), "EEE, MMM d, yyyy") : 'TBD'} at ${ride?.departure_time ? formatTime12Hour(ride.departure_time) : 'TBD'} has been cancelled.\n\nReason: ${reason}\n\nRefund: ${refundPercentage} of your payment will be processed.\n\nMahalo,\nCruise Kauaʻi Team`
+                });
+            } catch (emailError) {
+                console.error("Error sending cancellation confirmation email to rider:", emailError);
             }
 
             alert(`Booking cancelled. A ${refundPercentage} refund will be processed by our team.`);

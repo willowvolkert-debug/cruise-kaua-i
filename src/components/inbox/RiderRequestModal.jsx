@@ -30,8 +30,14 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
         setCurrentDriverUsername(me?.username || null);
 
         // Fetch full user profile to get pic, age, etc.
-        const allUsers = await base44.asServiceRole.entities.User.list();
-        const rider = allUsers.find(u => u.id === booking.passenger_id);
+        // Try user-scoped list first (works for admins); fall back to booking fields for non-admins
+        let rider = null;
+        try {
+          const allUsers = await base44.entities.User.list();
+          rider = allUsers.find(u => u.id === booking.passenger_id);
+        } catch (userListErr) {
+          // Non-admin or error — fall back to passenger info stored on the booking
+        }
         setRiderProfile({
           profile_picture_url: rider?.profile_picture_url || booking.passenger_profile_picture_url || null,
           bio: rider?.bio || booking.passenger_bio || null,

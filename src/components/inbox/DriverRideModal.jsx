@@ -115,8 +115,19 @@ Please process full refunds for all affected riders.
                 status: 'cancelled'
             });
 
-            alert(hasRiders 
-                ? "Ride cancelled. Riders have been notified and refunds will be processed." 
+            // Send confirmation email to the driver who cancelled
+            try {
+                await sendBookingEmail({
+                    userId: ride.driver_id,
+                    subject: `Your ride is cancelled - Cruise Kauaʻi`,
+                    body: `Aloha ${ride.driver_name},\n\nYour ride from ${ride.departure_location} → ${ride.destination} on ${format(new Date(ride.departure_date + 'T12:00:00'), "EEE, MMM d, yyyy")} at ${formatTime12Hour(ride.departure_time)} has been cancelled.\n\n${hasRiders ? `All ${confirmedBookings.length} confirmed rider(s) have been notified and will receive full refunds.\n\n` : ''}Mahalo,\nCruise Kauaʻi Team`
+                });
+            } catch (emailError) {
+                console.error("Error sending cancellation confirmation email to driver:", emailError);
+            }
+
+            alert(hasRiders
+                ? "Ride cancelled. Riders have been notified and refunds will be processed."
                 : "Ride cancelled successfully."
             );
             setShowCancelConfirm(false);
