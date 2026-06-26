@@ -187,9 +187,9 @@ export default function AccountPage() {
                 });
             }
 
-            const allRides = await base44.entities.Ride.list();
-            const allBookings = await base44.entities.RideBooking.list();
-            const allRatings = await base44.entities.Rating.list();
+            const allRides = await base44.entities.Ride.list('-created_date', 500);
+            const allBookings = await base44.entities.RideBooking.list('-created_date', 500);
+            const allRatings = await base44.entities.Rating.list('-created_date', 500);
 
             setAllRidesData(allRides);
             setRidesGiven(allRides.filter(r => r.driver_id === currentUser.id));

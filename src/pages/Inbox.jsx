@@ -111,17 +111,26 @@ export default function InboxPage() {
             }
             setAllUsers(allUsersList);
 
-            const allBookings = await base44.entities.RideBooking.list();
+            // Fetch bookings where user is driver and where user is passenger separately
+            // with a high limit so pending requests are never cut off by default pagination
+            const [driverBookings, passengerBookings] = await Promise.all([
+                base44.entities.RideBooking.filter({driver_id: currentUser.id}, '-created_date', 500),
+                base44.entities.RideBooking.filter({passenger_id: currentUser.id}, '-created_date', 500)
+            ]);
 
-            // Collect all ride IDs we need to fetch
+            // Merge, deduplicate by booking id
+            const bookingMap = new Map();
+            [...driverBookings, ...passengerBookings].forEach(b => bookingMap.set(b.id, b));
+            const allBookings = Array.from(bookingMap.values());
+
+            // Collect all ride IDs we need to fetch (exclude ride-request reply bookings)
             const myBookingRideIds = allBookings
-                .filter(b => String(b.passenger_id) === String(currentUser.id) || String(b.driver_id) === String(currentUser.id))
                 .map(b => b.ride_id)
                 .filter(id => id && !id.startsWith('ride-request-'));
 
             // Fetch my own rides (as driver) + rides referenced in my bookings (as passenger)
             const [myOwnRides, ...bookingRideResults] = await Promise.all([
-                base44.entities.Ride.list(),
+                base44.entities.Ride.filter({driver_id: currentUser.id}, '-created_date', 500),
                 ...myBookingRideIds.map(id => base44.entities.Ride.get(id).catch(() => null))
             ]);
 

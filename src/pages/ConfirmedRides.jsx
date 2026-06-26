@@ -46,8 +46,8 @@ export default function ConfirmedRidesPage() {
             setUser(currentUser);
 
             const [allBookings, allRatings] = await Promise.all([
-                base44.entities.RideBooking.list(),
-                base44.entities.Rating.list()
+                base44.entities.RideBooking.list('-created_date', 500),
+                base44.entities.Rating.list('-created_date', 500)
             ]);
 
             // Collect ride IDs from bookings we're involved in
@@ -58,7 +58,7 @@ export default function ConfirmedRidesPage() {
 
             // Fetch own rides (as driver) + rides from bookings (as passenger)
             const [myOwnRides, ...bookingRideResults] = await Promise.all([
-                base44.entities.Ride.list(),
+                base44.entities.Ride.list('-created_date', 500),
                 ...myBookingRideIds.map(id => base44.entities.Ride.get(id).catch(() => null))
             ]);
 
