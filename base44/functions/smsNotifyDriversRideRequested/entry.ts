@@ -49,8 +49,8 @@ Deno.serve(async (req) => {
     const rider = rideRequest.rider_name || rideRequest.rider_username || 'a rider';
     const seats = rideRequest.seats_needed || '?';
 
-    const shortDate = (date || '?').replace(/^20/, '');
-    const message = `Cruise Kauai: ${rider} needs ride ${loc} to ${dest}, ${shortDate} ${time}, ${seats} seat(s). cruisekauai.org STOP=optout`;
+    const formattedDate = (() => { try { const d = new Date(date.includes('T') ? date : date + 'T00:00:00'); return isNaN(d) ? date : d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }); } catch { return date; } })();
+    const message = `Cruise Kauai: ${rider} needs ride ${loc} to ${dest}, ${formattedDate} ${time}, ${seats} seat(s). cruisekauai.org STOP=optout`;
 
     const results = [];
     for (const driver of drivers) {

@@ -51,8 +51,8 @@ Deno.serve(async (req) => {
     const seats = ride.seats_available || '?';
     const price = ride.price_per_seat != null ? ` for $${ride.price_per_seat}/seat` : '';
 
-    const shortDate = (date || '?').replace(/^20/, '');
-    const message = `Cruise Kauai: ${driver} - ${loc} to ${dest}, ${shortDate} ${time}, ${seats} seat(s)${price}. cruisekauai.org STOP=optout`;
+    const formattedDate = (() => { try { const d = new Date(date.includes('T') ? date : date + 'T00:00:00'); return isNaN(d) ? date : d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }); } catch { return date; } })();
+    const message = `Cruise Kauai: ${driver} - ${loc} to ${dest}, ${formattedDate} ${time}, ${seats} seat(s)${price}. cruisekauai.org STOP=optout`;
 
     // Deduplicate by phone number
     const seenPhones = new Set();

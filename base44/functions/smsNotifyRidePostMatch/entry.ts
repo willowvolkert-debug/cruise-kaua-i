@@ -59,6 +59,7 @@ Deno.serve(async (req) => {
     const driver = ride.driver_name || ride.driver_username || 'a driver';
     const seats = ride.seats_available || '?';
     const price = ride.price_per_seat != null ? ` for $${ride.price_per_seat}/seat` : '';
+    const formattedDate = (() => { try { const d = new Date(date.includes('T') ? date : date + 'T00:00:00'); return isNaN(d) ? date : d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }); } catch { return date; } })();
 
     // Deduplicate by rider_id
     const seenRiders = new Set();
@@ -76,7 +77,7 @@ Deno.serve(async (req) => {
       if (normalized.length === 10) normalized = '+1' + normalized;
       else if (!normalized.startsWith('+')) normalized = '+' + normalized;
 
-      const message = `🚗🌀 Cruise Kauaʻi: Great news! ${driver} posted a ride matching your request: ${loc} to ${dest} on ${date} at ${time}. ${seats} seat(s) available${price}. Request a seat on the app or cruisekauai.org\n\nReply STOP to opt out.`;
+      const message = `Cruise Kauaʻi: Great news! ${driver} posted a ride matching your request: ${loc} to ${dest} on ${formattedDate} at ${time}. ${seats} seat(s) available${price}. Request a seat on the app or cruisekauai.org\n\nReply STOP to opt out.`;
 
       try {
         const resp = await fetch(
