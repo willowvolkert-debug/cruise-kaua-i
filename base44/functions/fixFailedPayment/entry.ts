@@ -19,35 +19,117 @@ Deno.serve(async (req) => {
     if (!booking) return Response.json({ error: 'Booking not found' }, { status: 404 });
 
     // Search Stripe for checkout sessions with this booking_id in metadata
-    const sessions = await stripe.checkout.sessions.list({
-      limit: 100,
-    });
-
+    const sessions = await stripe.checkout.sessions.list({ limit: 100 });
     const matchingSessions = sessions.data.filter(s => s.metadata?.booking_id === booking_id);
 
-    if (matchingSessions.length === 0) {
-      return Response.json({
-        booking_id,
-        db_payment_status: booking.payment_status,
-        stripe_found: false,
-        message: 'No Stripe checkout session found for this booking. The payment may not have been initiated, or the session expired before payment.'
-      });
-    }
+    // Also search payment intents by booking_id metadata
+    const paymentIntents = await stripe.paymentIntents.list({ limit: 100 });
+    const matchingPIs = paymentIntents.data.filter(pi => pi.metadata?.booking_id === booking_id);
 
-    const session = matchingSessions[0];
     const result = {
       booking_id,
       db_payment_status: booking.payment_status,
-      stripe_session_id: session.id,
-      stripe_payment_status: session.payment_status,
-      stripe_session_status: session.status,
-      stripe_amount_total: session.amount_total ? session.amount_total / 100 : null,
-      stripe_payment_intent: session.payment_intent,
-      stripe_created: new Date(session.created * 1000).toISOString()
+      checkout_sessions_found: matchingSessions.length,
+      payment_intents_found: matchingPIs.length,
     };
 
+    let stripePaid = false;
+    let stripeChargeId = null;
+    let totalPaid = null;
+
+    // Check checkout sessions first
+    if (matchingSessions.length > 0) {
+      const session = matchingSessions[0];
+      result.stripe_session_id = session.id;
+      result.stripe_session_payment_status = session.payment_status;
+      result.stripe_session_status = session.status;
+      result.stripe_session_amount = session.amount_total ? session.amount_total / 100 : null;
+      result.stripe_session_pi = session.payment_intent;
+      result.stripe_session_created = new Date(session.created * 1000).toISOString();
+      if (session.payment_status === 'paid') {
+        stripePaid = true;
+        stripeChargeId = session.payment_intent;
+        totalPaid = session.amount_total ? session.amount_total / 100 : booking.total_amount;
+      }
+    }
+
+    // If not paid via session, check payment intents by metadata
+    if (!stripePaid && matchingPIs.length > 0) {
+      const pi = matchingPIs[0];
+      result.stripe_pi_id = pi.id;
+      result.stripe_pi_status = pi.status;
+      result.stripe_pi_amount = pi.amount_received ? pi.amount_received / 100 : null;
+      result.stripe_pi_created = new Date(pi.created * 1000).toISOString();
+      if (pi.status === 'succeeded') {
+        stripePaid = true;
+        stripeChargeId = pi.id;
+        totalPaid = pi.amount_received ? pi.amount_received / 100 : booking.total_amount;
+      }
+    }
+
+    // If still not found, search by customer email (PI/charge may not have booking_id metadata)
+    if (!stripePaid) {
+      const passengers = await base44.asServiceRole.entities.User.filter({ id: booking.passenger_id });
+      const passenger = passengers[0];
+      if (passenger?.email) {
+        result.search_email = passenger.email;
+        // List recent charges and filter by amount + email in memory
+        try {
+          const allCharges = await stripe.charges.list({ limit: 100 });
+          result.list_charge_count = allCharges.data.length;
+          // Match by billing_details.email or receipt_email
+          const matchedCharges = allCharges.data.filter(c =>
+            c.status === 'succeeded' && c.paid &&
+            (c.receipt_email === passenger.email ||
+             c.billing_details?.email === passenger.email)
+          );
+          if (matchedCharges.length > 0) {
+            const c = matchedCharges[0];
+            result.stripe_charge_id = c.id;
+            result.stripe_charge_amount = c.amount / 100;
+            result.stripe_charge_created = new Date(c.created * 1000).toISOString();
+            stripePaid = true;
+            stripeChargeId = c.id;
+            totalPaid = c.amount / 100;
+          }
+        } catch (listErr) {
+          result.list_charge_error = listErr.message;
+        }
+        // Also try payment intents list (for cases where charge lookup missed)
+        if (!stripePaid) {
+          try {
+            const allPIs = await stripe.paymentIntents.list({ limit: 100 });
+            result.list_pi_count = allPIs.data.length;
+            const matchedPIs = allPIs.data.filter(pi =>
+              pi.receipt_email === passenger.email && pi.status === 'succeeded'
+            );
+            if (matchedPIs.length > 0) {
+              const pi = matchedPIs[0];
+              result.stripe_fallback_pi_id = pi.id;
+              result.stripe_fallback_pi_status = pi.status;
+              result.stripe_fallback_pi_amount = pi.amount_received ? pi.amount_received / 100 : null;
+              result.stripe_fallback_pi_created = new Date(pi.created * 1000).toISOString();
+              stripePaid = true;
+              stripeChargeId = pi.id;
+              totalPaid = pi.amount_received ? pi.amount_received / 100 : booking.total_amount;
+            }
+          } catch (piListErr) {
+            result.list_pi_error = piListErr.message;
+          }
+        }
+      }
+    }
+
+    if (!stripePaid) {
+      return Response.json({
+        ...result,
+        stripe_found: false,
+        message: 'No successful Stripe payment found for this booking (checked sessions, payment intents, and charges).'
+      });
+    }
+
     // If Stripe says paid but our DB says failed, fix it
-    if (session.payment_status === 'paid' && booking.payment_status !== 'paid') {
+    if (stripePaid && booking.payment_status !== 'paid') {
       const ride_id = booking.ride_id;
       const passenger_id = booking.passenger_id;
       const driver_id = booking.driver_id;
@@ -61,7 +143,6 @@ Deno.serve(async (req) => {
       const passengers = await base44.asServiceRole.entities.User.filter({ id: passenger_id });
       const passenger = passengers[0];
 
-      const totalPaid = session.amount_total / 100;
       const rideAmount = booking.total_amount;
       const connectFeeRate = ride?.driver_license_state === 'HI' ? 0.10 : 0.30;
       const connectFee = rideAmount * connectFeeRate;
@@ -69,7 +150,7 @@ Deno.serve(async (req) => {
       // Update booking to paid
       await base44.asServiceRole.entities.RideBooking.update(booking_id, {
         payment_status: 'paid',
-        stripe_charge_id: session.payment_intent,
+        stripe_charge_id: stripeChargeId,
         payment_failure_reason: null,
         initial_notification_sent: true
       });
@@ -90,7 +171,7 @@ Deno.serve(async (req) => {
           payment_method_last4: 'card',
           payment_method_brand: 'Card',
           transaction_status: 'completed',
-          stripe_charge_id: session.payment_intent
+          stripe_charge_id: stripeChargeId
         });
       }
 
@@ -161,11 +242,12 @@ Deno.serve(async (req) => {
 
       result.fixed = true;
       result.message = 'Payment was confirmed in Stripe. Booking updated to paid, transaction created, and driver notified.';
+    } else if (stripePaid && booking.payment_status === 'paid') {
+      result.fixed = false;
+      result.message = 'Stripe shows paid and DB already shows paid — no fix needed.';
     } else {
       result.fixed = false;
-      result.message = session.payment_status === 'paid'
-        ? 'Stripe shows paid and DB already shows paid — no fix needed.'
-        : `Stripe payment status is "${session.payment_status}" — payment did not actually complete in Stripe.`;
+      result.message = `Stripe payment not confirmed (sessions: ${matchingSessions.length}, PIs: ${matchingPIs.length}) — payment did not actually complete.`;
     }
 
     return Response.json(result);
