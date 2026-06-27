@@ -103,7 +103,7 @@ export default function PostRideForm({ island = "Kauai" }) {
           
           const timeStr = request.departure_time.toLowerCase().trim();
           
-          // Parse time
+          // Parse time — handles "7 PM", "7PM", "7:30 PM", "14:00", etc.
           let hours = 0, minutes = 0;
           if (timeStr.includes(':')) {
             const [h, m] = timeStr.replace(/[ap]m/i, '').trim().split(':').map(Number);
@@ -111,6 +111,14 @@ export default function PostRideForm({ island = "Kauai" }) {
             minutes = m || 0;
             if (timeStr.includes('pm') && hours < 12) hours += 12;
             if (timeStr.includes('am') && hours === 12) hours = 0;
+          } else {
+            // No colon — e.g. "7 pm", "7pm", "3 am"
+            const match = timeStr.match(/(\d+)\s*([ap]m)/i);
+            if (match) {
+              hours = parseInt(match[1]);
+              if (match[2].toLowerCase() === 'pm' && hours < 12) hours += 12;
+              if (match[2].toLowerCase() === 'am' && hours === 12) hours = 0;
+            }
           }
           
           // Create request datetime in Hawaii timezone
