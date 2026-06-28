@@ -21,7 +21,9 @@ Deno.serve(async (req) => {
         const pendingPayouts = [];
 
         for (const transaction of allTransactions) {
-            if (transaction.payout_status !== 'pending' || transaction.transaction_status !== 'completed') continue;
+            // Retry both 'pending' and 'failed' payouts — failed ones (e.g. insufficient
+            // Stripe balance at the time) should re-attempt once balance is replenished.
+            if ((transaction.payout_status !== 'pending' && transaction.payout_status !== 'failed') || transaction.transaction_status !== 'completed') continue;
 
             const ride = allRides.find(r => r.id === transaction.ride_id);
             if (!ride) continue;
