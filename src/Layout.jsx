@@ -273,10 +273,13 @@ export default function Layout({ children, currentPageName }) {
           }).catch(() => {});
         }
 
-        // Check for admin-posted ride requests to claim
-        import('@/functions/linkPendingRidePosts').then(({ linkPendingRidePosts }) => {
-          linkPendingRidePosts({}).catch(() => {});
-        }).catch(() => {});
+        // Check for admin-posted ride requests to claim (once per session)
+        if (!sessionStorage.getItem('ride_posts_checked')) {
+          sessionStorage.setItem('ride_posts_checked', '1');
+          import('@/functions/linkPendingRidePosts').then(({ linkPendingRidePosts }) => {
+            linkPendingRidePosts({}).catch(() => {});
+          }).catch(() => {});
+        }
         // Skip the old tutorial intro for new users — WelcomeNewUserModal handles onboarding now
 
         // Load unread counts
