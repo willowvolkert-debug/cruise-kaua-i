@@ -272,6 +272,11 @@ export default function Layout({ children, currentPageName }) {
             sendWelcomeEmail({});
           }).catch(() => {});
         }
+
+        // Check for admin-posted ride requests to claim
+        import('@/functions/linkPendingRidePosts').then(({ linkPendingRidePosts }) => {
+          linkPendingRidePosts({}).catch(() => {});
+        }).catch(() => {});
         // Skip the old tutorial intro for new users — WelcomeNewUserModal handles onboarding now
 
         // Load unread counts
