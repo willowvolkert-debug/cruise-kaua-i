@@ -40,6 +40,11 @@ export default function ContactUsPage() {
       e.preventDefault();
     }
 
+    if (!formData.subject?.trim() || !formData.message?.trim()) {
+      alert("Please fill in both the subject and message fields.");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       // Upload screenshots first
@@ -78,7 +83,8 @@ export default function ContactUsPage() {
       }, 3000);
     } catch (error) {
       console.error("Error submitting inquiry:", error);
-      alert("Error submitting inquiry. Please try again.");
+      const errMsg = error?.response?.data?.message || error?.message || "Unknown error";
+      alert(`Error submitting inquiry: ${errMsg}. Please try again.`);
     }
     setIsSubmitting(false);
   };
@@ -208,7 +214,7 @@ export default function ContactUsPage() {
 
               <Button
                 onClick={handleSubmit}
-                disabled={isSubmitting || isUploading || (!currentUser && (!formData.name || !formData.email || !formData.subject || !formData.message))}
+                disabled={isSubmitting || isUploading || !formData.subject?.trim() || !formData.message?.trim() || (!currentUser && (!formData.name || !formData.email))}
                 className="w-full bg-primary hover:bg-primary/90 rounded-2xl"
               >
                 {isUploading ? 'uploading screenshots...' : isSubmitting ? 'sending...' : 'send message'}

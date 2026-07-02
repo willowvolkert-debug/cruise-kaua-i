@@ -77,7 +77,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
   const [step, setStep] = useState(initialStep);
   // Show founders screen for non-Kauai islands pre-filled from signup flow
   const [foundersChecked, setFoundersChecked] = useState(false);
-  const [isDriverPath, setIsDriverPath] = useState(_prefilledRole === 'driver');
+  const [isDriverPath, setIsDriverPath] = useState(_prefilledRole === 'driver' || user?.user_type === 'driver' || (!!user?.vehicle_make && !!user?.vehicle_model));
   const [showRiderTips, setShowRiderTips] = useState(false);
   const [showFoundersScreen, setShowFoundersScreen] = useState(false);
   const [done, setDone] = useState(false);
@@ -131,7 +131,8 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
 
   const scrollRef = useRef(null);
   const steps = isDriverPath ? [...BASE_STEPS, ...DRIVER_STEPS] : BASE_STEPS;
-  const current = steps[step];
+  const safeStep = Math.min(Math.max(step, 0), steps.length - 1);
+  const current = steps[safeStep];
 
   // Scroll modal content to top whenever step changes
   useEffect(() => {
@@ -259,8 +260,8 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     // Driver choice step
     if (current.type === "driver_choice") return; // handled by buttons
 
-    const isLastStep = step === steps.length - 1;
-    if (!isLastStep) { setStep(step + 1); return; }
+    const isLastStep = safeStep === steps.length - 1;
+    if (!isLastStep) { setStep(safeStep + 1); return; }
 
     // Final step — save everything
     setSaving(true);
@@ -284,7 +285,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     setError("");
     if (wantsDriver) {
       setIsDriverPath(true);
-      setStep(step + 1);
+      setStep(safeStep + 1);
     } else {
       // Save profile/license first, then show tips card
       setSaving(true);
@@ -414,7 +415,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     onComplete();
   };
 
-  const progress = ((step) / steps.length) * 100;
+  const progress = ((safeStep) / steps.length) * 100;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
@@ -426,7 +427,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
 
         <div ref={scrollRef} className="p-6 overflow-y-auto flex-1">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-xs font-bold tracking-widest uppercase text-primary">step {step + 1} of {steps.length}</p>
+            <p className="text-xs font-bold tracking-widest uppercase text-primary">step {safeStep + 1} of {steps.length}</p>
             <button
               onClick={handleSaveAndComeBack}
               className="text-xs text-blue-500 hover:text-blue-700 font-medium underline underline-offset-2 transition-colors"
@@ -763,14 +764,14 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
           )}
 
           <div className={`flex gap-3 mt-5 ${current.type === "driver_choice" ? "justify-start" : ""}`}>
-            {step > 0 && (
-              <Button variant="outline" onClick={() => { setError(""); setStep(step - 1); }} className="rounded-full px-6 py-6 font-bold border-gray-300 text-gray-600">
+            {safeStep > 0 && (
+              <Button variant="outline" onClick={() => { setError(""); setStep(safeStep - 1); }} className="rounded-full px-6 py-6 font-bold border-gray-300 text-gray-600">
                 ← back
               </Button>
             )}
             {current.type !== "driver_choice" && (
               <Button onClick={handleNext} disabled={saving} className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-full py-6 text-base font-bold">
-                {saving ? "saving..." : step === steps.length - 1 ? "finish & save ✓" : <span className="flex items-center justify-center gap-2">next <ChevronRight className="w-4 h-4" /></span>}
+                {saving ? "saving..." : safeStep === steps.length - 1 ? "finish & save ✓" : <span className="flex items-center justify-center gap-2">next <ChevronRight className="w-4 h-4" /></span>}
               </Button>
             )}
           </div>
