@@ -63,6 +63,20 @@ Deno.serve(async (req) => {
                 return Response.json({ error: 'Booking not found' }, { status: 404 });
             }
 
+            // Handle difference payments separately — booking is already 'paid' from the original checkout
+            if (session.metadata?.payment_type === 'difference') {
+                const diffRides = await base44.asServiceRole.entities.Ride.filter({ id: ride_id });
+                const diffRide = diffRides[0];
+                const fullPrice = (diffRide?.price_per_seat || 0) * booking.seats_booked;
+                await base44.asServiceRole.entities.RideBooking.update(booking_id, {
+                    total_amount: fullPrice,
+                    price_offer_status: 'accepted',
+                    is_price_offer: false
+                });
+                console.log(`Difference payment processed for booking ${booking_id}. Updated total to $${fullPrice}`);
+                return Response.json({ received: true });
+            }
+
             // Get ride details
             const rides = await base44.asServiceRole.entities.Ride.filter({ id: ride_id });
             const ride = rides[0];
