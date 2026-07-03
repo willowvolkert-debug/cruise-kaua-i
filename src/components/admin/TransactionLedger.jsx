@@ -6,6 +6,9 @@ import { DollarSign, AlertTriangle, CheckCircle, Clock, ArrowRight, ChevronDown,
 import { formatHST } from "@/lib/formatHST";
 
 function getStatus(tx) {
+  if (tx.transaction_status === "refunded") {
+    return { label: "refunded — ride cancelled", color: "bg-blue-100 text-blue-700 border-blue-300", icon: "done" };
+  }
   if (tx.transaction_status !== "completed") {
     return { label: "charge failed", color: "bg-red-100 text-red-700 border-red-300", icon: "error" };
   }
@@ -37,7 +40,7 @@ export default function TransactionLedger() {
   }, []);
 
   const failedCount = transactions.filter(tx =>
-    tx.payout_status === "failed" || tx.transaction_status !== "completed"
+    tx.payout_status === "failed" || (tx.transaction_status !== "completed" && tx.transaction_status !== "refunded")
   ).length;
 
   const pendingPayoutCount = transactions.filter(tx =>
