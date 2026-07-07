@@ -1,13 +1,10 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useAuth } from './AuthContext';
-import { base44 } from '@/api/base44Client';
 import { pagesConfig } from '@/pages.config';
 import { trackPageView } from '@/functions/trackPageView';
 
 export default function NavigationTracker() {
     const location = useLocation();
-    const { isAuthenticated } = useAuth();
     const { Pages, mainPage } = pagesConfig;
     const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 
@@ -40,16 +37,12 @@ export default function NavigationTracker() {
             pageName = matchedKey || null;
         }
 
-        if (isAuthenticated && pageName) {
-            base44.appLogs.logUserInApp(pageName).catch(() => {});
-        }
-
         // Track page views for all visitors (authenticated or not)
         // Use backend function (asServiceRole) to reliably create records regardless of auth state
         if (pageName) {
             trackPageView({ page_name: pageName }).catch(() => {});
         }
-    }, [location, isAuthenticated, Pages, mainPageKey]);
+    }, [location, Pages, mainPageKey]);
 
     return null;
 }
