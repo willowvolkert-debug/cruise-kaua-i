@@ -26,6 +26,7 @@ import WelcomeTutorialModal from "../components/tutorial/WelcomeTutorialModal";
 import SignupInfoCard from "../components/account/SignupInfoCard";
 import PostSignupCard from "../components/account/PostSignupCard";
 import SmsReactivationCard from "../components/account/SmsReactivationCard";
+import SmsLocationPreferences from "../components/account/SmsLocationPreferences";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -905,6 +906,9 @@ export default function AccountPage() {
                 {user.sms_disabled_inactivity && (
                     <SmsReactivationCard user={user} onReactivated={loadData} />
                 )}
+
+                {/* SMS Location Preferences — shown when SMS is enabled */}
+                <SmsLocationPreferences user={user} onUserUpdate={(u) => setUser(u)} />
 
                 {/* Admin Messages */}
                 {adminMessages.length > 0 && (

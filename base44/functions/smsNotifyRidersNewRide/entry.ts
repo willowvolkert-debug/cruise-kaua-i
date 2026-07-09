@@ -28,10 +28,21 @@ Deno.serve(async (req) => {
     }
 
     const allUsers = await base44.asServiceRole.entities.User.list();
-    const riders = allUsers.filter(u =>
-      u.sms_notifications_enabled &&
-      u.phone_number
-    );
+    const riders = allUsers.filter(u => {
+      if (!u.sms_notifications_enabled || !u.phone_number) return false;
+      // Location filter: if user has preferred locations, only notify if ride matches
+      const prefs = u.sms_preferred_locations;
+      if (prefs && prefs.length > 0) {
+        const rideLoc = (ride.departure_location || '').toLowerCase();
+        const rideDest = (ride.destination || '').toLowerCase();
+        const rideStops = (ride.stops || []).map(s => s.toLowerCase());
+        return prefs.some(p => {
+          const pl = p.toLowerCase();
+          return rideLoc.includes(pl) || rideDest.includes(pl) || rideStops.includes(pl);
+        });
+      }
+      return true; // No preferred locations = all locations
+    });
 
     if (riders.length === 0) return Response.json({ ok: true, skipped: 'no rider recipients' });
 

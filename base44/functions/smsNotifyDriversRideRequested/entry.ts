@@ -26,11 +26,21 @@ Deno.serve(async (req) => {
     }
 
     const allUsers = await base44.asServiceRole.entities.User.list();
-    const drivers = allUsers.filter(u => 
-      u.sms_notifications_enabled && 
-      u.phone_number && 
-      u.user_type === 'driver'
-    );
+    const drivers = allUsers.filter(u => {
+      if (!u.sms_notifications_enabled || !u.phone_number || u.user_type !== 'driver') return false;
+      // Location filter: if user has preferred locations, only notify if ride request matches
+      const prefs = u.sms_preferred_locations;
+      if (prefs && prefs.length > 0) {
+        const reqLoc = (rideRequest.departure_location || '').toLowerCase();
+        const reqDest = (rideRequest.destination || '').toLowerCase();
+        const reqStops = (rideRequest.stops || []).map(s => s.toLowerCase());
+        return prefs.some(p => {
+          const pl = p.toLowerCase();
+          return reqLoc.includes(pl) || reqDest.includes(pl) || reqStops.includes(pl);
+        });
+      }
+      return true; // No preferred locations = all locations
+    });
 
     if (drivers.length === 0) return Response.json({ ok: true, skipped: 'no driver recipients' });
 
