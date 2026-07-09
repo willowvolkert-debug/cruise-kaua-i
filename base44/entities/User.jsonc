@@ -53,6 +53,14 @@
       "default": false,
       "description": "Whether the user has opted in to SMS notifications"
     },
+    "sms_preferred_locations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Locations the user wants to receive SMS ride alerts for. Empty = all locations."
+    },
     "sms_disabled_inactivity": {
       "type": "boolean",
       "default": false,
