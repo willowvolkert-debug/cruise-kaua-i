@@ -53,6 +53,18 @@ export default function JoinPage() {
   const [loginRetryError, setLoginRetryError] = useState("");
   const [loginRetryLoading, setLoginRetryLoading] = useState(false);
 
+  // If arriving from an auth redirect (e.g. clicked email link while logged out),
+  // skip the signup wizard and jump straight to email/login entry
+  const [nextUrl, setNextUrl] = useState(null);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const next = params.get("next");
+    if (next) {
+      setNextUrl(next);
+      setStep(4);
+    }
+  }, []);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [step, otpState]);
@@ -124,6 +136,10 @@ export default function JoinPage() {
         await base44.auth.loginViaEmailPassword(email, password);
         // Mark that the user completed OTP verification through the Join flow
         await base44.auth.updateMe({ has_verified_otp: true });
+        if (nextUrl) {
+          window.location.href = nextUrl;
+          return;
+        }
         const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
         window.location.href = `/account?setup=true&role=${driverRole}&island=${island}`;
         return;
@@ -161,6 +177,10 @@ export default function JoinPage() {
     try {
       await base44.auth.loginViaEmailPassword(email, loginRetryPassword);
       await base44.auth.updateMe({ has_verified_otp: true });
+      if (nextUrl) {
+        window.location.href = nextUrl;
+        return;
+      }
       const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
       window.location.href = `/account?setup=true&role=${driverRole}&island=${island}`;
     } catch (e) {

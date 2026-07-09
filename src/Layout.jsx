@@ -290,7 +290,8 @@ export default function Layout({ children, currentPageName }) {
         if (is401) {
           const publicPaths = ['/', '/welcome', createPageUrl("AboutUs"), createPageUrl("ContactUs"), '/joinus', '/join', '/trips'];
           if (!publicPaths.includes(location.pathname.toLowerCase())) {
-            base44.auth.redirectToLogin(window.location.href);
+            const next = encodeURIComponent(window.location.pathname + window.location.search);
+            window.location.href = `/join?next=${next}`;
           }
         }
         // For any other error (network issues etc.), stay on the page — don't log the user out
