@@ -47,6 +47,12 @@ export default function JoinPage() {
   const [otpLoading, setOtpLoading] = useState(false);
   const [otpResending, setOtpResending] = useState(false);
 
+  // Login retry state — shown when auto-login fails after OTP verification
+  const [loginRetry, setLoginRetry] = useState(false);
+  const [loginRetryPassword, setLoginRetryPassword] = useState("");
+  const [loginRetryError, setLoginRetryError] = useState("");
+  const [loginRetryLoading, setLoginRetryLoading] = useState(false);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [step, otpState]);
@@ -122,12 +128,11 @@ export default function JoinPage() {
         window.location.href = `/account?setup=true&role=${driverRole}&island=${island}`;
         return;
       } catch (loginErr) {
-        // Auto-login failed (likely existing user with different password)
-        // Send them to platform login — their account is now verified so it'll work
+        // Auto-login failed — show inline login retry instead of redirecting
+        // to the platform auth page (which causes "Login Session Expired" on iOS)
+        setLoginRetry(true);
+        setLoginRetryError("almost there! your email is verified. enter your password to log in.");
       }
-      const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
-      const params = new URLSearchParams({ setup: "true", role: driverRole, island });
-      base44.auth.redirectToLogin(`/account?${params.toString()}`);
     } catch (e) {
       const msg = e?.response?.data?.message || e?.message || "";
       setOtpError(msg || "invalid code. please try again.");
@@ -146,10 +151,27 @@ export default function JoinPage() {
     setOtpResending(false);
   };
 
-  const handleGoToLogin = () => {
-    const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
-    const params = new URLSearchParams({ setup: "true", role: driverRole, island });
-    base44.auth.redirectToLogin(`/account?${params.toString()}`);
+  const handleLoginRetry = async () => {
+    setLoginRetryError("");
+    if (!loginRetryPassword) {
+      setLoginRetryError("please enter your password.");
+      return;
+    }
+    setLoginRetryLoading(true);
+    try {
+      await base44.auth.loginViaEmailPassword(email, loginRetryPassword);
+      await base44.auth.updateMe({ has_verified_otp: true });
+      const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
+      window.location.href = `/account?setup=true&role=${driverRole}&island=${island}`;
+    } catch (e) {
+      const msg = e?.response?.data?.message || e?.message || "";
+      if (msg.toLowerCase().includes("password") || msg.toLowerCase().includes("credential")) {
+        setLoginRetryError("that password didn't match. try again, or use \"forgot password\" below.");
+      } else {
+        setLoginRetryError("couldn't log in. try again, or go to cruisekauai.org and log in directly.");
+      }
+    }
+    setLoginRetryLoading(false);
   };
 
   const handleContinue = () => {
@@ -181,7 +203,7 @@ export default function JoinPage() {
           className="w-9 h-9 rounded-xl object-cover"
         />
         <button
-          onClick={() => base44.auth.redirectToLogin(`${window.location.origin}/trips`)}
+          onClick={() => setStep(4)}
           className="text-sm text-gray-400 hover:text-gray-700 transition-colors underline underline-offset-2"
         >
           already have an account? log in
@@ -404,7 +426,7 @@ export default function JoinPage() {
         )}
 
         {/* STEP 4: OTP Verification */}
-        {step === 4 && otpState === "sent" && (
+        {step === 4 && otpState === "sent" && !loginRetry && (
           <div className="space-y-5 flex-1">
             <div>
               <h1 className="text-3xl font-extrabold text-gray-900 mb-1">check your email 📧</h1>
@@ -440,9 +462,51 @@ export default function JoinPage() {
           </div>
         )}
 
+        {/* STEP 4: Login Retry — shown when auto-login fails after OTP verification */}
+        {step === 4 && loginRetry && (
+          <div className="space-y-5 flex-1">
+            <div>
+              <h1 className="text-3xl font-extrabold text-gray-900 mb-1">email verified! ✅</h1>
+              <p className="text-gray-500 text-base">
+                your email <strong>{email}</strong> is verified. enter your password to finish logging in.
+              </p>
+            </div>
+            <div className="bg-green-50 border border-green-200 rounded-2xl p-4">
+              <p className="text-sm text-green-800">
+                💡 tip: if you can't remember your password, you can{" "}
+                <a href="/forgot-password" className="underline font-semibold hover:text-green-600">reset it here</a>.
+              </p>
+            </div>
+            <div>
+              <label className="text-sm font-semibold text-gray-700 mb-1 block">password</label>
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="your password"
+                  value={loginRetryPassword}
+                  onChange={e => setLoginRetryPassword(e.target.value)}
+                  className="rounded-xl h-12 pr-10"
+                  autoFocus
+                  onKeyDown={e => e.key === "Enter" && handleLoginRetry()}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+            {loginRetryError && (
+              <p className="text-red-500 text-sm font-medium">{loginRetryError}</p>
+            )}
+          </div>
+        )}
+
         {/* Navigation */}
         <div className="flex gap-3 pt-8">
-          {(step > 0 && !otpState) || otpState === "sent" ? (
+          {(step > 0 && !otpState) || (otpState === "sent" && !loginRetry) ? (
             <Button
               variant="outline"
               onClick={() => { resetOtp(); setStep(step > 0 && !otpState ? step - 1 : step); }}
@@ -470,13 +534,22 @@ export default function JoinPage() {
               {signupLoading ? "creating account..." : "create my account →"}
             </Button>
           )}
-          {step === 4 && otpState === "sent" && (
+          {step === 4 && otpState === "sent" && !loginRetry && (
             <Button
               onClick={handleVerifyOtp}
               disabled={otpLoading || otpCode.length < 4}
               className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base disabled:opacity-40"
             >
               {otpLoading ? "verifying..." : "verify & continue →"}
+            </Button>
+          )}
+          {step === 4 && loginRetry && (
+            <Button
+              onClick={handleLoginRetry}
+              disabled={loginRetryLoading || !loginRetryPassword}
+              className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base disabled:opacity-40"
+            >
+              {loginRetryLoading ? "logging in..." : "log in →"}
             </Button>
           )}
         </div>
