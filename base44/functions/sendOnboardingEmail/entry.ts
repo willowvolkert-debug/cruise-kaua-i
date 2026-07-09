@@ -26,12 +26,12 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
       <div style="background:#eff6ff;border-left:4px solid #3b82f6;border-radius:8px;padding:20px;margin-bottom:24px;">
         <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">🚗 Thinking about driving?</p>
         <p style="margin:0 0 10px;color:#555;">If you have a car and make regular trips, you could be earning money on Cruise Kauaʻi. Drivers set their own prices and only take rides they want.</p>
-        <p style="margin:0;font-size:13px;"><a href="${appUrl}/Account" style="color:#3b82f6;font-weight:bold;">Add your vehicle on your Account page</a> to get started</p>
+        <p style="margin:0;font-size:13px;"><a href="${appUrl}/account" style="color:#3b82f6;font-weight:bold;">Add your vehicle on your Account page</a> to get started</p>
       </div>
 
       <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
         <tr><td align="center">
-          <a href="${appUrl}/Trips" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Browse Available Rides →</a>
+          <a href="${appUrl}/trips" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Browse Available Rides →</a>
         </td></tr>
       </table>
 
@@ -65,7 +65,7 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
       <div style="background:#fefce8;border-left:4px solid #ca8a04;border-radius:8px;padding:20px;margin-bottom:20px;">
         <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">💰 Before your first ride</p>
         <p style="margin:0 0 10px;color:#555;">Make sure you\'ve connected your bank account for payouts. This is required before you can receive payments from riders.</p>
-        <p style="margin:0;font-size:13px;"><a href="${appUrl}/Account" style="color:#ca8a04;font-weight:bold;">Connect your bank account here</a></p>
+        <p style="margin:0;font-size:13px;"><a href="${appUrl}/account" style="color:#ca8a04;font-weight:bold;">Connect your bank account here</a></p>
       </div>
 
       <div style="background:#eff6ff;border-left:4px solid #3b82f6;border-radius:8px;padding:20px;margin-bottom:24px;">
@@ -80,7 +80,7 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
 
       <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
         <tr><td align="center">
-          <a href="${appUrl}/Trips" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Post Your First Ride →</a>
+          <a href="${appUrl}/trips" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Post Your First Ride →</a>
         </td></tr>
       </table>
 
@@ -125,8 +125,8 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
       <div style="background:#eff6ff;border-left:4px solid #3b82f6;border-radius:8px;padding:20px;margin-bottom:24px;">
         <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">💡 While you wait</p>
         <ul style="margin:0;padding-left:20px;color:#555;line-height:2.2;">
-          <li><a href="${appUrl}/Account" style="color:#3b82f6;">Connect your bank account</a> (Stripe) for payouts</li>
-          <li><a href="${appUrl}/Trips" style="color:#3b82f6;">Browse the trips board</a> to see what routes are active</li>
+          <li><a href="${appUrl}/account" style="color:#3b82f6;">Connect your bank account</a> (Stripe) for payouts</li>
+          <li><a href="${appUrl}/trips" style="color:#3b82f6;">Browse the trips board</a> to see what routes are active</li>
           <li>Think about your regular commute — that's your first ride to post!</li>
         </ul>
       </div>
@@ -164,12 +164,12 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
       <div style="background:#f0fdf4;border-radius:12px;padding:20px;margin-bottom:24px;border:1px solid #86efac;">
         <p style="font-weight:bold;margin:0 0 8px;color:#166534;">🚗 Also consider becoming a driver</p>
         <p style="margin:0 0 10px;color:#333;">If you have a car and make regular trips — even just to the grocery store or work — you could be earning money on Cruise Kauaʻi. Drivers set their own prices and only take rides they want.</p>
-        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/Account" style="color:#2f7d52;font-weight:bold;">Add your vehicle on your Account page</a> whenever you're ready</p>
+        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/account" style="color:#2f7d52;font-weight:bold;">Add your vehicle on your Account page</a> whenever you're ready</p>
       </div>
 
       <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
         <tr><td align="center">
-          <a href="${appUrl}/Trips" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Browse Available Rides →</a>
+          <a href="${appUrl}/trips" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Browse Available Rides →</a>
         </td></tr>
       </table>
 
@@ -211,7 +211,7 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
       <div style="background:#faf7f2;border-left:4px solid #e8742a;border-radius:8px;padding:20px;margin-bottom:14px;">
         <p style="font-weight:bold;margin:0 0 8px;color:#1a1a1a;">👤 Step 1: Complete your profile</p>
         <p style="margin:0 0 8px;color:#555;">Add a photo, bio, and basic info. This is how drivers and riders get to know you before sharing a car.</p>
-        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/Account" style="color:#e8742a;font-weight:bold;">Go to your Account page</a></p>
+        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/account" style="color:#e8742a;font-weight:bold;">Go to your Account page</a></p>
       </div>
 
       <div style="background:#faf7f2;border-left:4px solid #3b82f6;border-radius:8px;padding:20px;margin-bottom:14px;">
@@ -222,12 +222,12 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
       <div style="background:#faf7f2;border-left:4px solid #8b5cf6;border-radius:8px;padding:20px;margin-bottom:28px;">
         <p style="font-weight:bold;margin:0 0 8px;color:#1a1a1a;">🚗 Step 3 (optional): Become a driver</p>
         <p style="margin:0 0 8px;color:#555;">Already commuting? Add your vehicle and start posting rides. Drivers earn on trips they're already making.</p>
-        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/Account" style="color:#8b5cf6;font-weight:bold;">Add your vehicle on your Account page</a></p>
+        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/account" style="color:#8b5cf6;font-weight:bold;">Add your vehicle on your Account page</a></p>
       </div>
 
       <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
         <tr><td align="center">
-          <a href="${appUrl}/Account" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Finish My Account →</a>
+          <a href="${appUrl}/account" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Finish My Account →</a>
         </td></tr>
       </table>
 
@@ -256,7 +256,7 @@ Deno.serve(async (req) => {
     // Preview mode (admin only) — send a test email without touching user state
     if (preview_email && user.role === 'admin') {
       const firstName = 'Willow';
-      const unsubscribeUrl = `${appUrl}/Unsubscribe?user_id=preview`;
+      const unsubscribeUrl = `${appUrl}/unsubscribe?user_id=preview`;
       const logo = `<div style="text-align:center;margin-bottom:28px;">
         <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;" />
         <p style="margin:8px 0 0 0;font-weight:bold;color:#2f7d52;font-size:15px;letter-spacing:1px;">Cruise Kauaʻi</p>
@@ -303,7 +303,7 @@ Deno.serve(async (req) => {
     }
 
     const firstName = user.full_name?.split(' ')[0] || 'there';
-    const unsubscribeUrl = `${appUrl}/Unsubscribe?user_id=${user.id}`;
+    const unsubscribeUrl = `${appUrl}/unsubscribe?user_id=${user.id}`;
 
     const logo = `<div style="text-align:center;margin-bottom:28px;">
       <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;" />

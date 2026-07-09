@@ -23,7 +23,7 @@ Deno.serve(async (req) => {
 
     const appUrl = 'https://cruisekauai.org';
     const firstName = user.full_name?.split(' ')[0] || 'there';
-    const unsubscribeUrl = `${appUrl}/Unsubscribe?user_id=${user.id}`;
+    const unsubscribeUrl = `${appUrl}/unsubscribe?user_id=${user.id}`;
 
     const logo = `<div style="text-align:center;margin-bottom:28px;">
       <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;" />
@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
       <div style="background:#faf7f2;border-left:4px solid #e8742a;border-radius:8px;padding:20px;margin-bottom:14px;">
         <p style="font-weight:bold;margin:0 0 8px;color:#1a1a1a;">👤 Step 1: Complete your profile</p>
         <p style="margin:0 0 8px;color:#555;">Add a photo, bio, and basic info. This is how drivers and riders get to know you before sharing a car.</p>
-        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/Account" style="color:#e8742a;font-weight:bold;">Go to your Account page</a></p>
+        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/account" style="color:#e8742a;font-weight:bold;">Go to your Account page</a></p>
       </div>
 
       <div style="background:#faf7f2;border-left:4px solid #3b82f6;border-radius:8px;padding:20px;margin-bottom:14px;">
@@ -74,12 +74,12 @@ Deno.serve(async (req) => {
       <div style="background:#faf7f2;border-left:4px solid #8b5cf6;border-radius:8px;padding:20px;margin-bottom:28px;">
         <p style="font-weight:bold;margin:0 0 8px;color:#1a1a1a;">🚗 Step 3 (optional): Become a driver</p>
         <p style="margin:0 0 8px;color:#555;">Already commuting? Add your vehicle and start posting rides. Drivers earn on trips they're already making.</p>
-        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/Account" style="color:#8b5cf6;font-weight:bold;">Add your vehicle on your Account page</a></p>
+        <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/account" style="color:#8b5cf6;font-weight:bold;">Add your vehicle on your Account page</a></p>
       </div>
 
       <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
         <tr><td align="center">
-          <a href="${appUrl}/Account" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Finish My Account →</a>
+          <a href="${appUrl}/account" style="display:inline-block;background:#2f7d52;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:16px 40px;border-radius:50px;">Finish My Account →</a>
         </td></tr>
       </table>
 
