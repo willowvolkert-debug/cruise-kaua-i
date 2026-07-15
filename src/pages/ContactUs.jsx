@@ -214,7 +214,7 @@ export default function ContactUsPage() {
 
               <Button
                 onClick={handleSubmit}
-                disabled={isSubmitting || isUploading || !formData.subject?.trim() || !formData.message?.trim() || (!currentUser && (!formData.name || !formData.email))}
+                disabled={isSubmitting || isUploading || !formData.subject?.trim() || !formData.message?.trim()}
                 className="w-full bg-primary hover:bg-primary/90 rounded-2xl"
               >
                 {isUploading ? 'uploading screenshots...' : isSubmitting ? 'sending...' : 'send message'}
