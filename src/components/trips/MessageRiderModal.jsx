@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Send } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import { messageRideRequester } from "@/functions/messageRideRequester";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -17,76 +18,13 @@ export default function MessageRiderModal({ isOpen, onClose, request, onMessageS
       setIsSending(true);
       const currentUser = await base44.auth.me();
 
-      // Look up rider's email
-      let riderEmail = '';
-      try {
-        const allUsers = await base44.entities.User.list();
-        const rider = allUsers.find(u => u.id === request.rider_id);
-        riderEmail = rider?.email || '';
-      } catch (e) {
-        console.error("Could not fetch rider email:", e);
-      }
-      
-      // Find or create booking for messaging
-      const bookings = await base44.entities.RideBooking.filter({
-        passenger_id: request.rider_id,
-        driver_id: currentUser.id
+      await messageRideRequester({
+        rider_id: request.rider_id,
+        rider_name: request.rider_name,
+        rider_username: request.rider_username,
+        request_id: request.id,
+        message
       });
-
-      let booking;
-      if (bookings.length > 0) {
-        booking = bookings[0];
-      } else {
-        // Create a placeholder booking for messaging purposes
-        booking = await base44.entities.RideBooking.create({
-          ride_id: 'ride-request-' + request.id,
-          driver_id: currentUser.id,
-          driver_username: currentUser.username || currentUser.full_name,
-          passenger_id: request.rider_id,
-          passenger_name: request.rider_name,
-          passenger_username: request.rider_username || request.rider_name,
-          seats_booked: 1,
-          total_amount: 0,
-          booking_status: 'pending',
-          description: 'Driver responded to ride request'
-        });
-      }
-
-      // Add message to booking
-      const updatedMessages = [
-        ...(booking.messages || []),
-        {
-          sender_id: currentUser.id,
-          sender_name: currentUser.full_name,
-          message: message,
-          timestamp: new Date().toISOString()
-        }
-      ];
-
-      await base44.entities.RideBooking.update(booking.id, {
-        messages: updatedMessages,
-        booking_status: 'confirmed'
-      });
-
-      // Send email notification to rider
-      try {
-        const appUrl = 'https://ride-connect-b7a57d59.base44.app';
-        await base44.integrations.Core.SendEmail({
-          to: riderEmail,
-          subject: `🌺 A driver responded to your ride request on Cruise Kauaʻi!`,
-          body: `
-<html><body style="font-family: Arial, sans-serif; line-height: 1.8; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-<p>Aloha ${request.rider_name},</p>
-<p>A driver has seen your ride request and sent you a message on Cruise Kauaʻi!</p>
-<p style="background: #f5f5f5; padding: 16px; border-radius: 8px; font-style: italic;">"${message}"</p>
-<p>Log in to the app to chat with them and book your ride: <a href="${appUrl}">${appUrl}</a></p>
-<p>Mahalo,<br/>Cruise Kauaʻi Team</p>
-</body></html>
-          `.trim()
-        });
-      } catch (emailErr) {
-        console.error("Error sending email to rider:", emailErr);
-      }
 
       onMessageSent(request);
       onClose();

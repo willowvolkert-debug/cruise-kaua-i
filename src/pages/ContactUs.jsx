@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MessageSquare, Paperclip, X } from "lucide-react";
+import { submitContactInquiry } from "@/functions/submitContactInquiry";
 
 export default function ContactUsPage() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -64,14 +65,12 @@ export default function ContactUsPage() {
         ? `${formData.message}\n\n[Screenshots attached: ${screenshotUrls.join(', ')}]`
         : formData.message;
 
-      await base44.entities.ContactInquiry.create({
-        user_id: currentUser?.id || 'guest',
+      await submitContactInquiry({
         user_name: currentUser?.full_name || formData.name || 'Guest',
         user_email: currentUser?.email || formData.email || 'guest@unknown.com',
         subject: formData.subject,
         message: messageWithScreenshots,
-        priority: formData.priority,
-        status: 'pending'
+        priority: formData.priority
       });
 
       setSubmitted(true);
