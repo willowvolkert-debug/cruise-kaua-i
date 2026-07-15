@@ -30,6 +30,10 @@ Deno.serve(async (req) => {
     const allUsers = await base44.asServiceRole.entities.User.list();
     const riders = allUsers.filter(u => {
       if (!u.sms_notifications_enabled || !u.phone_number) return false;
+      // Don't blast drivers about new rides — they post rides, they don't need "new ride available" alerts
+      if (u.user_type === 'driver') return false;
+      // Don't notify the driver who posted this ride about their own ride
+      if (u.id === ride.driver_id) return false;
       // Location filter: if user has preferred locations, only notify if ride matches
       const prefs = u.sms_preferred_locations;
       if (prefs && prefs.length > 0) {

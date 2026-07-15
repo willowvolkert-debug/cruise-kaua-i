@@ -236,12 +236,13 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   const rideAmount = (bookingData.seats_booked || 0) * pricePerSeat + detourFee;
   const isFreeRide = rideAmount === 0;
   const connectFeeRate = ride?.driver_license_state === 'HI' ? 0.10 : 0.30;
-  const connectFee = rideAmount * connectFeeRate;
-  const licenseVerificationFee = isFirstBooking ? 1.50 : 0;
-  const smsFee = currentUser?.sms_notifications_enabled ? 0.50 : 0;
+  // Free rides skip Stripe entirely — no connect fee, license fee, SMS fee, or card fee.
+  const connectFee = isFreeRide ? 0 : rideAmount * connectFeeRate;
+  const licenseVerificationFee = (isFirstBooking && !isFreeRide) ? 1.50 : 0;
+  const smsFee = (currentUser?.sms_notifications_enabled && !isFreeRide) ? 0.50 : 0;
   const subtotal = rideAmount + connectFee + licenseVerificationFee + smsFee;
-  const creditCardFee = subtotal * 0.03;
-  const totalAmount = subtotal + creditCardFee;
+  const creditCardFee = isFreeRide ? 0 : subtotal * 0.03;
+  const totalAmount = isFreeRide ? 0 : subtotal + creditCardFee;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
