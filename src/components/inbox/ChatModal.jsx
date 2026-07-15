@@ -143,16 +143,8 @@ export default function ChatModal({ isOpen, onClose, booking, otherPartyName, ot
           } catch (emailError) {
             console.error("Error sending message email:", emailError);
           }
-          if (otherUser.sms_notifications_enabled && otherUser.phone_number) {
-            try {
-              await base44.functions.invoke('sendSmsNotification', {
-                userId: otherUser.id,
-                message: `Cruise Kauaʻi: New message from ${senderName}: "${preview.substring(0, 100)}${preview.length > 100 ? '...' : ''}" — log in to reply`
-              });
-            } catch (smsError) {
-              console.error("Error sending SMS:", smsError);
-            }
-          }
+          // SMS notification is handled by the "SMS: New Chat Message" entity automation
+          // (smsNotifyNewMessage) which fires on RideBooking update — no need to send here.
         }
       }
     } catch (error) {

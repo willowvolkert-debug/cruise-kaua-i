@@ -33,7 +33,8 @@ Deno.serve(async (req) => {
       return Response.json({ ok: true, skipped: 'recipient not opted in or no phone' });
     }
 
-    const message = `Cruise Kauaʻi: ${senderName} sent you a message! view the application in your Home Screen, or the website- cruisehi.org`;
+    const preview = lastMessage.message.substring(0, 100);
+    const message = `Cruise Kauaʻi: ${senderName} sent you a message: "${preview}${lastMessage.message.length > 100 ? '...' : ''}" — log in to reply at cruisekauai.org`;
 
     const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
     const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');
