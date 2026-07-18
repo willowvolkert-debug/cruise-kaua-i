@@ -46,10 +46,22 @@ const AuthenticatedApp = () => {
         return;
       }
       try {
-        await base44.auth.me();
-        // User is authenticated - redirect to trips if on home
+        const user = await base44.auth.me();
+        // User is authenticated
         if (window.location.pathname === '/') {
-          window.location.replace('/trips');
+          // If user hasn't completed onboarding, send to join flow
+          // (catches users who signed up via the platform's built-in signup page)
+          if (user.user_type === 'new') {
+            window.location.replace('/join');
+          } else {
+            window.location.replace('/trips');
+          }
+          return;
+        }
+        // Catch users who landed on /trips without completing onboarding
+        // (e.g., signed up through the platform login's "Sign up" link)
+        if (window.location.pathname === '/trips' && user.user_type === 'new') {
+          window.location.replace('/join');
         }
       } catch (e) {
         // Not authenticated - stay on welcome page
