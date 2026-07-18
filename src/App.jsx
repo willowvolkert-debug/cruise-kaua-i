@@ -48,23 +48,36 @@ const AuthenticatedApp = () => {
       try {
         const user = await base44.auth.me();
         // User is authenticated
+        // user_type may be undefined for users who signed up via the platform's
+        // built-in signup (it doesn't set custom entity fields like user_type)
+        const needsOnboarding = !user.user_type || user.user_type === 'new';
+
         if (window.location.pathname === '/') {
-          // If user hasn't completed onboarding, send to join flow
-          // (catches users who signed up via the platform's built-in signup page)
-          if (user.user_type === 'new') {
-            window.location.replace('/join');
-          } else {
-            window.location.replace('/trips');
-          }
+          window.location.replace(needsOnboarding ? '/join' : '/trips');
           return;
         }
-        // Catch users who landed on /trips without completing onboarding
-        // (e.g., signed up through the platform login's "Sign up" link)
-        if (window.location.pathname === '/trips' && user.user_type === 'new') {
+
+        // Catch users who landed on any authenticated page without completing onboarding
+        // (e.g., signed up through the platform login's "Sign up" link, which redirects
+        // to /trips and bypasses the Join wizard)
+        const onboardingOrPublicPaths = [
+          '/join', '/account', '/welcome', '/joinus',
+          '/driversignupflow', '/ridersignupflow',
+          '/opiosignup', '/kupunasignup',
+          '/termsofservice', '/privacypolicy', '/sms-opt-in',
+          '/aboutus', '/about-us', '/contactus', '/contact-us',
+          '/driver-verification', '/unsubscrib'
+        ];
+        const currentPath = window.location.pathname.toLowerCase();
+        const isOnboardingOrPublic = onboardingOrPublicPaths.some(
+          p => currentPath === p || currentPath.startsWith(p)
+        );
+
+        if (needsOnboarding && !isOnboardingOrPublic) {
           window.location.replace('/join');
         }
       } catch (e) {
-        // Not authenticated - stay on welcome page
+        // Not authenticated - stay on current page
       }
       setIsCheckingAuth(false);
     };

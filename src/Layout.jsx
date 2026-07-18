@@ -252,6 +252,15 @@ export default function Layout({ children, currentPageName }) {
         const user = await base44.auth.me();
         setCurrentUser(user);
 
+        // Safety net: if an authenticated user hasn't completed onboarding
+        // (user_type missing or "new"), redirect them to the Join flow.
+        // Skip this on /account since that page IS part of the onboarding setup.
+        const needsOnboarding = !user.user_type || user.user_type === 'new';
+        if (needsOnboarding && window.location.pathname.toLowerCase() !== '/account') {
+          window.location.replace('/join');
+          return;
+        }
+
         // Track last activity date (throttled to once per ~6 hours to avoid DB churn)
         try {
           const now = new Date();
