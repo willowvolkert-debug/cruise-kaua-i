@@ -79,7 +79,7 @@ export default function WelcomePage() {
 
         {/* Login button top-right */}
         <button
-          onClick={() => navigate("/join")}
+          onClick={() => base44.auth.redirectToLogin(`${window.location.origin}/trips`)}
           className="absolute top-4 right-4 z-20 bg-white/20 hover:bg-white/30 text-white text-sm font-semibold px-4 py-2 rounded-full border border-white/40 backdrop-blur-sm transition-colors">
           log in →
         </button>
