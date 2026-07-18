@@ -80,7 +80,12 @@ Deno.serve(async (req) => {
 
     if (blast) {
       const allUsers = await base44.asServiceRole.entities.User.list();
-      const drivers = allUsers.filter(u => u.email && u.user_type === 'driver' && u.email_update_frequency !== 'never');
+      const drivers = allUsers.filter(u => 
+        u.email && 
+        u.drivers_license_verified === true &&
+        (u.preferred_island || '').toLowerCase().startsWith('kauai') &&
+        u.email_update_frequency !== 'never'
+      );
       let sent = 0, errors = 0;
       const BATCH_SIZE = 5;
 

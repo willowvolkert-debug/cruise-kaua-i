@@ -27,7 +27,8 @@ Deno.serve(async (req) => {
 
     const allUsers = await base44.asServiceRole.entities.User.list();
     const drivers = allUsers.filter(u => {
-      if (!u.sms_notifications_enabled || !u.phone_number || u.user_type !== 'driver') return false;
+      if (!u.sms_notifications_enabled || !u.phone_number || u.drivers_license_verified !== true) return false;
+      if (!(u.preferred_island || '').toLowerCase().startsWith('kauai')) return false;
       // Location filter: if user has preferred locations, only notify if ride request matches
       const prefs = u.sms_preferred_locations;
       if (prefs && prefs.length > 0) {
