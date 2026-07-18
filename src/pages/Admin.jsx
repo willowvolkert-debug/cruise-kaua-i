@@ -104,7 +104,7 @@ export default function AdminPage() {
       const pendingLic = allUsers.filter(u => u.drivers_license_pending_review === true);
       const pendingVeh = allUsers.filter(u => u.vehicle_pending_review === true);
       const rejectedVeh = allUsers.filter(u => u.vehicle_rejection_reason && !u.vehicle_verified && !u.vehicle_pending_review);
-      const drivers = allUsers.filter(u => u.drivers_license_verified === true && (u.preferred_island || '').toLowerCase().startsWith('kauai'));
+      const drivers = allUsers.filter(u => u.drivers_license_verified === true && u.vehicle_verified === true && (u.preferred_island || '').toLowerCase().startsWith('kauai'));
       const riders = allUsers.filter(u => u.user_type === 'rider');
 
       // Fetch user edits

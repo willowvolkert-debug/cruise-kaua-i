@@ -83,6 +83,7 @@ Deno.serve(async (req) => {
       const drivers = allUsers.filter(u => 
         u.email && 
         u.drivers_license_verified === true &&
+        u.vehicle_verified === true &&
         (u.preferred_island || '').toLowerCase().startsWith('kauai') &&
         u.email_update_frequency !== 'never'
       );
