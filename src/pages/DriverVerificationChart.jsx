@@ -30,11 +30,7 @@ export default function DriverVerificationChart() {
       try {
         const allUsers = await base44.entities.User.list("-created_date", 500);
         const verified = allUsers
-          .filter(
-            (u) =>
-              u.drivers_license_verified === true &&
-              (u.preferred_island || "").toLowerCase().startsWith("kauai")
-          )
+          .filter((u) => u.drivers_license_verified === true)
           .sort((a, b) =>
             (a.full_name || a.email || "")
               .toLowerCase()

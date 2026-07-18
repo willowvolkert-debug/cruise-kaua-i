@@ -84,7 +84,6 @@ Deno.serve(async (req) => {
         u.email && 
         u.drivers_license_verified === true &&
         u.vehicle_verified === true &&
-        (u.preferred_island || '').toLowerCase().startsWith('kauai') &&
         u.email_update_frequency !== 'never'
       );
       let sent = 0, errors = 0;

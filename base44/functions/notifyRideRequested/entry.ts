@@ -35,8 +35,7 @@ Deno.serve(async (req) => {
       u.email && 
       u.id !== request.rider_id && 
       u.drivers_license_verified === true &&
-      u.vehicle_verified === true &&
-      (u.preferred_island || '').toLowerCase().startsWith('kauai')
+      u.vehicle_verified === true
     );
 
     let sent = 0;
