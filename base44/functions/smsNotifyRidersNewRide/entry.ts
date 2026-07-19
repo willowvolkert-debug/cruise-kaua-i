@@ -11,20 +11,28 @@ Deno.serve(async (req) => {
     if (ride.is_recurring) return Response.json({ ok: true, skipped: 'recurring ride' });
     if (ride.is_last_minute) return Response.json({ ok: true, skipped: 'last-minute ride (handled by blast)' });
 
-    // Dedup: only send SMS for the first ride or ride request a user posts per day
-    const posterId = ride.driver_id;
-    const todayStr = new Date().toISOString().substring(0, 10);
-    const currentCreated = ride.created_date ? new Date(ride.created_date) : new Date();
-    const [allRidesToday, allPostsToday] = await Promise.all([
-      base44.asServiceRole.entities.Ride.list(),
-      base44.asServiceRole.entities.RidePost.list()
-    ]);
-    const earlierToday = [
-      ...allRidesToday.filter(r => r.driver_id === posterId && (r.created_date || '').substring(0, 10) === todayStr && new Date(r.created_date) < currentCreated),
-      ...allPostsToday.filter(p => p.rider_id === posterId && (p.created_date || '').substring(0, 10) === todayStr && new Date(p.created_date) < currentCreated)
-    ];
-    if (earlierToday.length > 0) {
-      return Response.json({ ok: true, skipped: 'user already posted a ride or request earlier today' });
+    // Never send SMS for rides that have already departed.
+    // Times are stored in Hawaiʻi time (HST = UTC-10). Parse formats like
+    // "630 PM", "4 PM", "10 AM" and compare against now.
+    const now = new Date();
+    const depDateStr = ride.departure_date || '';
+    const timeStr = (ride.departure_time || '').trim();
+    let depDateTime = null;
+    const tm = timeStr.match(/^(\d{1,2})(\d{2})?\s*(AM|PM)$/i);
+    if (tm && depDateStr) {
+      let h = parseInt(tm[1], 10);
+      const min = tm[2] ? parseInt(tm[2], 10) : 0;
+      const ampm = tm[3].toUpperCase();
+      if (ampm === 'PM' && h !== 12) h += 12;
+      if (ampm === 'AM' && h === 12) h = 0;
+      const [y, mo, d] = depDateStr.split('-').map(Number);
+      depDateTime = new Date(Date.UTC(y, mo - 1, d, h + 10, min)); // HST -> UTC
+    }
+    if (depDateTime && depDateTime < now) {
+      return Response.json({ ok: true, skipped: 'ride already departed' });
+    }
+    if (!depDateTime && depDateStr && depDateStr < now.toISOString().substring(0, 10)) {
+      return Response.json({ ok: true, skipped: 'ride date in the past' });
     }
 
     const allUsers = await base44.asServiceRole.entities.User.list();
