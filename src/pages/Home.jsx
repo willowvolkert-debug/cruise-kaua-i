@@ -21,7 +21,13 @@ export default function Home() {
     { emoji: "✉️", label: "contact us", desc: "Questions, feedback, or need a hand? Reach out and we'll get back to you.", to: createPageUrl("ContactUs") },
   ];
 
-  if (user?.role === "admin") {
+  const adminEmails = [
+    "george.burkhart@pm.me",
+    "nainoa.kaulukukui@gmail.com",
+    "nainoa.kaulukukui@yahoo.com",
+    "nainoa.kaulukuku@gmail.com",
+  ];
+  if (adminEmails.includes((user?.email || "").toLowerCase())) {
     sections.push({ emoji: "🛡️", label: "admin", desc: "Manage users, bookings, transactions, and platform-wide messages.", to: createPageUrl("Admin") });
   }
 
