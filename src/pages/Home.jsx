@@ -13,9 +13,9 @@ export default function Home() {
 
   const sections = [
     { emoji: "🚗", label: "trips", desc: "Browse available rides, post a ride you're already making, or request one for a specific trip.", to: createPageUrl("Trips") },
+    { emoji: "🌺", label: "community", desc: "Stories, updates, and photos from the Cruise Hawaiʻi community.", to: createPageUrl("Community") },
     { emoji: "💬", label: "inbox", desc: "Manage your ride bookings, chat with drivers & riders, and review incoming requests.", to: createPageUrl("Inbox") },
     { emoji: "✅", label: "confirmed rides", desc: "See your upcoming confirmed trips and their details in one place.", to: createPageUrl("ConfirmedRides") },
-    { emoji: "🌺", label: "community", desc: "Stories, updates, and photos from the Cruise Hawaiʻi community.", to: createPageUrl("Community") },
     { emoji: "👤", label: "account", desc: "Edit your profile, verify your license & vehicle, and manage payouts and settings.", to: createPageUrl("Account") },
     { emoji: "ℹ️", label: "about us", desc: "Learn about our mission to make getting around Hawaiʻi more affordable.", to: createPageUrl("AboutUs") },
     { emoji: "✉️", label: "contact us", desc: "Questions, feedback, or need a hand? Reach out and we'll get back to you.", to: createPageUrl("ContactUs") },
@@ -30,7 +30,7 @@ export default function Home() {
       <div className="max-w-2xl mx-auto">
         <div className="mb-5">
           <h1 className="text-2xl md:text-3xl font-bold text-secondary">home</h1>
-          <p className="text-gray-500 text-sm mt-1">aloha! what would you like to do?</p>
+          <p className="text-gray-500 text-sm mt-1 leading-relaxed">Aloha! Welcome to our new flow for Cruise Kauaʻi. Get back to this home page at any time by pressing on our logo in the top right. Check out our community page for more updates on business &amp; community development</p>
         </div>
         <div className="space-y-4">
           {sections.map(({ emoji, label, desc, to }) => (
