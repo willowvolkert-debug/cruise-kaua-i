@@ -74,32 +74,38 @@ export default function AboutUsPage() {
           <p className="text-gray-500 text-sm mt-1">everything you need to know about cruise kauaʻi</p>
         </div>
 
-        {/* About Us Card */}
-        <div className="border border-green-200 rounded-3xl overflow-hidden">
-          <button
-            onClick={() => {}}
-            className="w-full p-5 bg-green-50 text-left"
-          >
-            <AboutUsAccordion />
-          </button>
-        </div>
+        {/* FAQ Card (dropdown) */}
+        <FaqAccordion />
 
-        {/* FAQ Card */}
-        <div className="border border-gray-200 rounded-3xl overflow-hidden">
-          <div className="bg-white p-5 border-b border-gray-100">
-            <h2 className="text-lg font-bold text-secondary">frequently asked questions</h2>
-            <p className="text-xs text-gray-500 mt-0.5">tap a question to see the answer</p>
-          </div>
-          <div className="p-4 space-y-3">
-            {faqItems.map((item, i) => (
-              <Accordion key={i} title={item.q}>
-                {item.a}
-              </Accordion>
-            ))}
-          </div>
-        </div>
+        {/* About Us Card (dropdown) */}
+        <AboutUsAccordion />
 
       </div>
+    </div>
+  );
+}
+
+function FaqAccordion() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border border-gray-200 rounded-3xl overflow-hidden">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between p-5 text-left bg-white hover:bg-gray-50 transition-colors"
+      >
+        <span className="font-bold text-secondary text-base">frequently asked questions</span>
+        <ChevronDown className={`w-5 h-5 text-gray-400 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <div className="bg-white border-t border-gray-100 p-4 space-y-3">
+          <p className="text-xs text-gray-500">tap a question to see the answer</p>
+          {faqItems.map((item, i) => (
+            <Accordion key={i} title={item.q}>
+              {item.a}
+            </Accordion>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -139,9 +145,6 @@ function AboutUsAccordion() {
             </p>
             <p className="text-green-300 text-sm italic">🤙 mahalo for being a part of the movement</p>
           </div>
-          <p className="text-gray-700 text-sm leading-relaxed">
-            We've gone viral online and now have <strong>250 users on Kauaʻi</strong>, with consistent rides being posted across the island. We are launching on Oʻahu <strong>August 1!</strong> 🤙
-          </p>
         </div>
       )}
     </div>
