@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Heart, MessageCircle, Camera, X, Send, Clock } from "lucide-react";
+import { Heart, MessageCircle, Camera, X, Send, Clock, Instagram } from "lucide-react";
 import { format } from "date-fns";
 import InstagramFeed from "@/components/community/InstagramFeed";
 
@@ -19,6 +19,7 @@ export default function CommunityPage() {
   const [selectedImages, setSelectedImages] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasPendingPost, setHasPendingPost] = useState(false);
+  const [activeTab, setActiveTab] = useState("forum");
 
   useEffect(() => {
     loadData();
@@ -126,6 +127,31 @@ export default function CommunityPage() {
           </p>
         </div>
 
+        {/* Tabs */}
+        <div className="flex items-center justify-center gap-2 p-1 bg-gray-100 rounded-2xl">
+          <button
+            onClick={() => setActiveTab("forum")}
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+              activeTab === "forum" ? "bg-white text-primary shadow-sm" : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            <MessageCircle className="w-4 h-4" />
+            Forum
+          </button>
+          <button
+            onClick={() => setActiveTab("instagram")}
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+              activeTab === "instagram" ? "bg-white text-primary shadow-sm" : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            <Instagram className="w-4 h-4" />
+            Instagram
+          </button>
+        </div>
+
+        {/* Forum Tab */}
+        {activeTab === "forum" && (
+        <>
         {/* Create Post */}
         {currentUser && (
           <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
@@ -211,9 +237,6 @@ export default function CommunityPage() {
           </Card>
         )}
 
-        {/* Instagram Feed */}
-        <InstagramFeed />
-
         {/* Posts Feed */}
         <div className="space-y-6">
           {posts.length === 0 ? (
@@ -265,6 +288,11 @@ export default function CommunityPage() {
             ))
           )}
         </div>
+        </>
+        )}
+
+        {/* Instagram Tab */}
+        {activeTab === "instagram" && <InstagramFeed />}
       </div>
     </div>
   );
