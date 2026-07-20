@@ -22,7 +22,7 @@ export default function Home() {
   ];
 
   const adminEmails = [
-    "george.burkhart@pm.me",
+    "willowvolkert@gmail.com",
     "nainoa.kaulukukui@gmail.com",
     "nainoa.kaulukukui@yahoo.com",
     "nainoa.kaulukuku@gmail.com",
