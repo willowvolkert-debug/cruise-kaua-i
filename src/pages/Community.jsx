@@ -118,7 +118,7 @@ export default function CommunityPage() {
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-secondary">community</h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            share success stories with the kauaʻi community here. we want to hear about personal stories of new friends made, money saved, and less cars on the road! all posts are reviewed before posted.
+            this is a forum space to share business &amp; community updates, provide feedback, and share in transparent conversation about building a platform to empower community
           </p>
           <p className="text-sm text-primary font-medium max-w-xl mx-auto mt-4 p-3 bg-green-50 rounded-2xl border border-green-200">
             🌺 This is a safe space for riders to share when they're taking a ride through the app and when they've made it to their destination safely.
