@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Heart, MessageCircle, Camera, X, Send, Clock } from "lucide-react";
 import { format } from "date-fns";
+import InstagramFeed from "@/components/community/InstagramFeed";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -209,6 +210,9 @@ export default function CommunityPage() {
             </CardContent>
           </Card>
         )}
+
+        {/* Instagram Feed */}
+        <InstagramFeed />
 
         {/* Posts Feed */}
         <div className="space-y-6">
