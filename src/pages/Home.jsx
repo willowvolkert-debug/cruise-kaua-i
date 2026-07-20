@@ -1,60 +1,54 @@
 import React from "react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Link } from "react-router-dom";
+import { ChevronLeft } from "lucide-react";
 import { base44 } from "@/api/base44Client";
-import TripsPage from "./Trips";
-import InboxPage from "./Inbox";
-import ConfirmedRidesPage from "./ConfirmedRides";
-import AccountPage from "./Account";
-import CommunityPage from "./Community";
-import AboutUsPage from "./AboutUs";
-import ContactUsPage from "./ContactUs";
-import AdminPage from "./Admin";
+import { createPageUrl } from "@/utils";
 
 export default function Home() {
-  const [isAdmin, setIsAdmin] = React.useState(false);
+  const [user, setUser] = React.useState(null);
 
   React.useEffect(() => {
-    base44.auth.me()
-      .then((user) => setIsAdmin(user?.role === "admin"))
-      .catch(() => {});
+    base44.auth.me().then(setUser).catch(() => {});
   }, []);
 
-  const tabs = [
-    { value: "trips", label: "🚗 trips", content: <TripsPage /> },
-    { value: "inbox", label: "💬 inbox", content: <InboxPage /> },
-    { value: "confirmed", label: "✅ confirmed", content: <ConfirmedRidesPage /> },
-    { value: "account", label: "👤 account", content: <AccountPage /> },
-    { value: "about", label: "ℹ️ about", content: <AboutUsPage /> },
-    { value: "contact", label: "✉️ contact", content: <ContactUsPage /> },
-    { value: "community", label: "🌺 community", content: <CommunityPage /> },
+  const sections = [
+    { emoji: "🚗", label: "trips", desc: "Browse available rides, post a ride you're already making, or request one for a specific trip.", to: createPageUrl("Trips") },
+    { emoji: "💬", label: "inbox", desc: "Manage your ride bookings, chat with drivers & riders, and review incoming requests.", to: createPageUrl("Inbox") },
+    { emoji: "✅", label: "confirmed rides", desc: "See your upcoming confirmed trips and their details in one place.", to: createPageUrl("ConfirmedRides") },
+    { emoji: "🌺", label: "community", desc: "Stories, updates, and photos from the Cruise Hawaiʻi community.", to: createPageUrl("Community") },
+    { emoji: "👤", label: "account", desc: "Edit your profile, verify your license & vehicle, and manage payouts and settings.", to: createPageUrl("Account") },
+    { emoji: "ℹ️", label: "about us", desc: "Learn about our mission to make getting around Hawaiʻi more affordable.", to: createPageUrl("AboutUs") },
+    { emoji: "✉️", label: "contact us", desc: "Questions, feedback, or need a hand? Reach out and we'll get back to you.", to: createPageUrl("ContactUs") },
   ];
 
-  if (isAdmin) {
-    tabs.push({ value: "admin", label: "🛡️ admin", content: <AdminPage /> });
+  if (user?.role === "admin") {
+    sections.push({ emoji: "🛡️", label: "admin", desc: "Manage users, bookings, transactions, and platform-wide messages.", to: createPageUrl("Admin") });
   }
 
   return (
-    <div className="bg-white min-h-screen">
-      <Tabs defaultValue="trips" className="w-full">
-        <div className="border-b border-gray-100 bg-white sticky top-14 z-20">
-          <TabsList className="flex w-full max-w-3xl mx-auto h-auto bg-transparent p-2 gap-1 overflow-x-auto justify-start sm:justify-center rounded-none">
-            {tabs.map((t) => (
-              <TabsTrigger
-                key={t.value}
-                value={t.value}
-                className="rounded-2xl whitespace-nowrap px-4 py-2 text-gray-600 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-sm"
-              >
-                {t.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+    <div className="p-3 md:p-8 bg-white overflow-x-hidden min-h-screen">
+      <div className="max-w-2xl mx-auto">
+        <div className="mb-5">
+          <h1 className="text-2xl md:text-3xl font-bold text-secondary">home</h1>
+          <p className="text-gray-500 text-sm mt-1">aloha! what would you like to do?</p>
         </div>
-        {tabs.map((t) => (
-          <TabsContent key={t.value} value={t.value} className="mt-0 focus-visible:outline-none">
-            {t.content}
-          </TabsContent>
-        ))}
-      </Tabs>
+        <div className="space-y-4">
+          {sections.map(({ emoji, label, desc, to }) => (
+            <Link
+              key={label}
+              to={to}
+              className="w-full flex items-center gap-5 p-5 rounded-3xl border-2 border-gray-200 bg-gray-50 hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
+            >
+              <span className="text-4xl shrink-0">{emoji}</span>
+              <div className="flex-1">
+                <p className="font-bold text-gray-900 text-lg group-hover:text-primary transition-colors">{label}</p>
+                <p className="text-gray-500 text-sm mt-0.5">{desc}</p>
+              </div>
+              <ChevronLeft className="w-5 h-5 text-gray-300 group-hover:text-primary rotate-180 shrink-0 transition-colors" />
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
