@@ -53,7 +53,7 @@ const AuthenticatedApp = () => {
         const needsOnboarding = !user.user_type || user.user_type === 'new';
 
         if (window.location.pathname === '/') {
-          window.location.replace(needsOnboarding ? '/join' : '/trips');
+          window.location.replace(needsOnboarding ? '/join' : '/home');
           return;
         }
 
