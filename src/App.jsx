@@ -17,6 +17,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import CommunityForum from './pages/CommunityForum';
 import CommunityInstagram from './pages/CommunityInstagram';
 import CommunityRecommendations from './pages/CommunityRecommendations';
+import CommunityHowToVisit from './pages/CommunityHowToVisit';
 import { base44 } from '@/api/base44Client';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Welcome from './pages/Welcome';
@@ -153,6 +154,7 @@ const AuthenticatedApp = () => {
       <Route path="/communityforum" element={<LayoutWrapper currentPageName="Community Forum"><CommunityForum /></LayoutWrapper>} />
       <Route path="/communityinstagram" element={<LayoutWrapper currentPageName="Community Instagram"><CommunityInstagram /></LayoutWrapper>} />
       <Route path="/communityrecommendations" element={<LayoutWrapper currentPageName="Community Recommendations"><CommunityRecommendations /></LayoutWrapper>} />
+      <Route path="/communityhowtovisit" element={<LayoutWrapper currentPageName="Community How To Visit"><CommunityHowToVisit /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
