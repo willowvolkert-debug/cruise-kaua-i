@@ -65,7 +65,7 @@ export default function CommunityHowToVisit() {
 
           <div className="aspect-video w-full rounded-3xl overflow-hidden border-2 border-gray-200 bg-gray-100">
             <iframe
-              src="https://www.youtube.com/embed?listType=user_uploads&list=kauaivisitorsbureau5320"
+              src="https://www.youtube.com/embed/videoseries?list=UUQUI-9C_HrdU7j0RZN0um_Q"
               title="Kauaʻi Visitors Bureau videos"
               className="w-full h-full"
               frameBorder="0"
