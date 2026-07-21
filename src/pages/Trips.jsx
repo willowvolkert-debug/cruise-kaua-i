@@ -12,6 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarPicker } from "@/components/ui/calendar";
 import RouteSearch from "../components/trips/RouteSearch";
+import HaenaWarningCard from "../components/trips/HaenaWarningCard";
+import HaenaInfoView from "../components/trips/HaenaInfoView";
 
 const ISLANDS = ["Kauai", "Oahu", "Maui", "Big Island"];
 
@@ -56,7 +58,8 @@ export default function TripsPage() {
   }, [islandLoaded, selectedIsland]);
 
   const goBack = () => {
-    if (view === "view_sub" || view === "request" || view === "post") setView("menu");
+    if (view === "haena_info") setView("view_sub");
+    else if (view === "view_sub" || view === "request" || view === "post") setView("menu");
     else if (view === "view_week" || view === "view_date" || view === "view_route") setView("view_sub");
   };
 
@@ -191,10 +194,13 @@ export default function TripsPage() {
               </div>
               <ChevronLeft className="w-5 h-5 text-gray-300 group-hover:text-primary rotate-180 shrink-0 transition-colors" />
             </button>
+
+            <HaenaWarningCard onClick={() => setView("haena_info")} />
           </div>
         )}
 
-        {/* ── VIEW DATE PICKER ── */}
+        {/* ── HĀʻENA INFO ── */}
+        {view === "haena_info" && <HaenaInfoView onBack={() => setView("view_sub")} />}
         {view === "view_date" && (
           <div className="space-y-5">
             <p className="text-lg font-semibold text-gray-700">pick a date</p>
