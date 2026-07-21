@@ -25,7 +25,7 @@ import ProfileSetupQuiz from "../components/account/ProfileSetupQuiz";
 import WelcomeTutorialModal from "../components/tutorial/WelcomeTutorialModal";
 import SignupInfoCard from "../components/account/SignupInfoCard";
 import PostSignupCard from "../components/account/PostSignupCard";
-import SmsReactivationCard from "../components/account/SmsReactivationCard";
+import SmsSettingsCard from "../components/account/SmsSettingsCard";
 import SmsLocationPreferences from "../components/account/SmsLocationPreferences";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
@@ -110,11 +110,6 @@ export default function AccountPage() {
     const [showTutorial, setShowTutorial] = useState(false);
     const [showSignupInfoCard, setShowSignupInfoCard] = useState(false);
     const [showPostSignupCard, setShowPostSignupCard] = useState(false);
-  const [emailVerifyCode, setEmailVerifyCode] = useState("");
-  const [emailVerifyLoading, setEmailVerifyLoading] = useState(false);
-  const [emailVerifyError, setEmailVerifyError] = useState("");
-  const [emailResendLoading, setEmailResendLoading] = useState(false);
-  const [emailResendSent, setEmailResendSent] = useState(false);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -334,37 +329,7 @@ export default function AccountPage() {
         setIsSaving(false);
     };
 
-    const handleEmailVerify = async () => {
-    setEmailVerifyError("");
-    if (!emailVerifyCode || emailVerifyCode.length < 4) {
-      setEmailVerifyError("please enter the code from your email.");
-      return;
-    }
-    setEmailVerifyLoading(true);
-    try {
-      await base44.auth.verifyOtp({ email: user.email, otpCode: emailVerifyCode });
-      await loadData();
-      setEmailVerifyCode("");
-      setEmailVerifyLoading(false);
-    } catch (e) {
-      setEmailVerifyError(e?.response?.data?.message || e?.message || "invalid or expired code. please try again.");
-      setEmailVerifyLoading(false);
-    }
-  };
-
-  const handleEmailResend = async () => {
-    setEmailResendLoading(true);
-    setEmailResendSent(false);
-    try {
-      await base44.auth.resendOtp(user.email);
-      setEmailResendSent(true);
-    } catch (e) {
-      setEmailVerifyError("couldn't resend code. please try again.");
-    }
-    setEmailResendLoading(false);
-  };
-
-  const handleLicenseVerificationSuccess = async () => {
+    const handleLicenseVerificationSuccess = async () => {
         await loadData();
         // Check all requirements and auto-upgrade
         const updatedUser = await base44.auth.me();
@@ -848,64 +813,8 @@ export default function AccountPage() {
                     </CardContent>
                 </Card>
 
-                {/* Email Verification — only if user registered via legacy flow (no OTP verified) */}
-                {user.email && !user.email_verified && !user.has_verified_otp && (
-                  <div className="mt-4 p-4 bg-yellow-50 border border-yellow-300 rounded-2xl space-y-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl">📬</span>
-                      <div>
-                        <p className="font-bold text-yellow-800">verify your email</p>
-                        <p className="text-sm text-yellow-700">Verify <strong>{user.email}</strong> to unlock all features. You can still book and post rides for now.</p>
-                      </div>
-                    </div>
-                    {emailResendSent ? (
-                      <div className="space-y-2">
-                        <div className="flex gap-2">
-                          <Input
-                            type="text"
-                            inputMode="numeric"
-                            placeholder="enter verification code"
-                            value={emailVerifyCode}
-                            onChange={e => setEmailVerifyCode(e.target.value.replace(/\D/g, ""))}
-                            className="rounded-xl h-10 text-sm flex-1"
-                            maxLength={8}
-                            autoFocus
-                          />
-                          <Button
-                            onClick={handleEmailVerify}
-                            disabled={emailVerifyLoading || !emailVerifyCode}
-                            className="bg-primary hover:bg-primary/90 rounded-xl h-10 text-sm shrink-0"
-                          >
-                            {emailVerifyLoading ? "..." : "verify"}
-                          </Button>
-                        </div>
-                        {emailVerifyError && (
-                          <p className="text-red-500 text-xs font-medium">{emailVerifyError}</p>
-                        )}
-                        <button
-                          onClick={handleEmailResend}
-                          disabled={emailResendLoading}
-                          className="text-xs text-primary underline underline-offset-2 font-medium disabled:opacity-50"
-                        >
-                          {emailResendLoading ? "sending..." : "didn't get a code? resend it"}
-                        </button>
-                      </div>
-                    ) : (
-                      <Button
-                        onClick={handleEmailResend}
-                        disabled={emailResendLoading}
-                        className="bg-primary hover:bg-primary/90 rounded-xl h-10 text-sm"
-                      >
-                        {emailResendLoading ? "sending..." : "send verification code →"}
-                      </Button>
-                    )}
-                  </div>
-                )}
-
-                {/* SMS Reactivation — shown when SMS was auto-paused for inactivity */}
-                {user.sms_disabled_inactivity && (
-                    <SmsReactivationCard user={user} onReactivated={loadData} />
-                )}
+                {/* SMS Settings — lets every user opt in / opt out of text alerts */}
+                <SmsSettingsCard user={user} onUpdated={loadData} />
 
                 {/* SMS Location Preferences — shown when SMS is enabled */}
                 <SmsLocationPreferences user={user} onUserUpdate={(u) => setUser(u)} />
