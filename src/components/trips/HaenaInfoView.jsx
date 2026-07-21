@@ -76,18 +76,6 @@ export default function HaenaInfoView({ onBack }) {
         </CardContent>
       </Card>
 
-      <div className="rounded-3xl border-2 border-gray-200 overflow-hidden bg-white">
-        <div className="aspect-[4/3] w-full">
-          <iframe
-            src="https://gohaena.com/"
-            title="Hāʻena State Park access — gohaena.com"
-            className="w-full h-full"
-            frameBorder="0"
-            allow="fullscreen"
-          />
-        </div>
-      </div>
-
       <div className="text-center pb-4">
         <Button asChild className="bg-primary hover:bg-primary/90 rounded-2xl">
           <a href="https://gohaena.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2">
