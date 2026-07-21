@@ -1,9 +1,94 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { ChevronLeft, ExternalLink, MapPin, Trees, HandHeart } from "lucide-react";
+import { ChevronLeft, ExternalLink, MapPin, Trees, HandHeart, ChevronDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
-const TOWNS = ["Hanalei", "Kīlauea", "Kapaʻa", "Līhuʻe", "Pōʻipu", "Waimea", "Online"];
+// Local food spots per town, sourced from Willow Volkert's Notion recommendations.
+const LOCAL_FOOD = [
+  {
+    town: "Hanalei",
+    spots: [
+      { name: "Waipā", desc: "Tuesdays 2–5" },
+      { name: "Hale Halawai", desc: "Saturdays 9–12" },
+    ],
+  },
+  {
+    town: "Kīlauea",
+    spots: [
+      { name: "Anaina Hou", desc: "Saturdays 9–12" },
+      { name: "ʻOhiʻohi (Kīlauea)", desc: "M–F 11–5; Sat 9–5" },
+      { name: "Johnny's", desc: "M–Sat 9–5, all local produce" },
+    ],
+  },
+  {
+    town: "Kapaʻa",
+    spots: [
+      { name: "Kapaʻa Soccer Field", desc: "Wednesdays 3–5. Smack in the middle of Kapaʻa town — going south, pass Kountry Kitchen & Bubba's Burgers, on your left before the only traffic light; going north, pass the ABC store, drive through the light, take the next right and spot the field ahead." },
+      { name: "Kapaʻa Coconut Marketplace", desc: "Tuesdays & Thursdays 9–1" },
+    ],
+  },
+  {
+    town: "Līhuʻe",
+    spots: [
+      { name: "Kukui Grove", desc: "Mondays 3–5:30" },
+      { name: "Grove Farms (Līhuʻe)", desc: "Saturdays 9–12" },
+    ],
+  },
+  {
+    town: "Pōʻipu",
+    spots: [
+      { name: "Kukuiʻula Shops", desc: "Wednesdays 3:30–5:30" },
+    ],
+  },
+  {
+    town: "Waimea",
+    spots: [
+      { name: "Hale Puna", desc: "Thursdays" },
+    ],
+  },
+  {
+    town: "Online",
+    spots: [
+      { name: "Mālama Kauaʻi", desc: "Weekly deliveries — schedule online at kauailocalfood.com (best for regular visitors)", url: "https://kauailocalfood.com" },
+    ],
+  },
+];
+
+function FoodTown({ town, spots }) {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div className="rounded-3xl border border-gray-200 overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between gap-3 px-5 py-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
+      >
+        <span className="font-semibold text-secondary">{town}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-400">{spots.length} spot{spots.length !== 1 ? "s" : ""}</span>
+          <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${open ? "rotate-180" : ""}`} />
+        </div>
+      </button>
+      {open && (
+        <div className="px-5 py-4 space-y-3 bg-white">
+          {spots.map((s, i) => (
+            <div key={i} className="flex items-start justify-between gap-3">
+              <div className="space-y-0.5">
+                <p className="font-medium text-secondary">{s.name}</p>
+                <p className="text-sm text-gray-600 leading-relaxed">{s.desc}</p>
+              </div>
+              {s.url && (
+                <a href={s.url} target="_blank" rel="noreferrer" className="shrink-0 text-primary hover:text-primary/80 transition-colors">
+                  <ExternalLink className="w-5 h-5" />
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 const TOURS = [
   {
@@ -94,14 +179,12 @@ export default function CommunityRecommendations() {
             <MapPin className="w-5 h-5 text-primary" />
             <h2 className="text-xl font-bold text-secondary">local food</h2>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {TOWNS.map(town => (
-              <span key={town} className="px-4 py-2 rounded-full bg-gray-50 border border-gray-200 text-sm font-medium text-gray-700">
-                {town}
-              </span>
-            ))}
+          <p className="text-sm text-gray-600 leading-relaxed">
+            Tap a town to see farmers' markets & local food spots, with their open days and hours.
+          </p>
+          <div className="space-y-3">
+            {LOCAL_FOOD.map(t => <FoodTown key={t.town} {...t} />)}
           </div>
-          <p className="text-xs text-gray-400">Spots are being added by community — check back soon for local food recommendations in each town.</p>
         </section>
 
         {/* Tour Recommendations */}
