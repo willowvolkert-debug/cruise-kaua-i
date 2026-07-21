@@ -15,7 +15,7 @@ const LOCAL_FOOD = [
   {
     town: "Kīlauea",
     spots: [
-      { name: "Anaina Hou", desc: "Saturdays 9–12" },
+      { name: "Anaina Hou", desc: "Saturdays & Sundays 9–2" },
       { name: "ʻOhiʻohi (Kīlauea)", desc: "M–F 11–5; Sat 9–5" },
       { name: "Johnny's", desc: "M–Sat 9–5, all local produce" },
     ],
