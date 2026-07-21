@@ -14,6 +14,9 @@ import RiderSignupFlow from './pages/RiderSignupFlow';
 import JoinUs from './pages/JoinUs';
 import JoinPage from './pages/Join';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
+import CommunityForum from './pages/CommunityForum';
+import CommunityInstagram from './pages/CommunityInstagram';
+import CommunityRecommendations from './pages/CommunityRecommendations';
 import { base44 } from '@/api/base44Client';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Welcome from './pages/Welcome';
@@ -147,6 +150,9 @@ const AuthenticatedApp = () => {
       <Route path="/RiderSignupFlow" element={<RiderSignupFlow />} />
       <Route path="/joinus" element={<JoinUs />} />
       <Route path="/join" element={<JoinPage />} />
+      <Route path="/communityforum" element={<LayoutWrapper currentPageName="Community Forum"><CommunityForum /></LayoutWrapper>} />
+      <Route path="/communityinstagram" element={<LayoutWrapper currentPageName="Community Instagram"><CommunityInstagram /></LayoutWrapper>} />
+      <Route path="/communityrecommendations" element={<LayoutWrapper currentPageName="Community Recommendations"><CommunityRecommendations /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
