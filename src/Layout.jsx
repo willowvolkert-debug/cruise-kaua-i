@@ -89,7 +89,7 @@ export default function Layout({ children, currentPageName }) {
       </style>
       <div className="min-h-screen flex flex-col w-full bg-background">
         <header className="bg-white border-b border-gray-200 h-14 px-4 flex items-center justify-between gap-3 sticky top-0 z-30">
-          <span className="text-xs text-gray-500 truncate flex-1 min-w-0">press on our logo to return to home screen &amp; navigate the site</span>
+          <span className="text-xs text-gray-500 truncate flex-1 min-w-0">press on logo to return to home screen/navigate</span>
           <Link to="/home" className="flex items-center gap-2 shrink-0">
             <img
               src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
