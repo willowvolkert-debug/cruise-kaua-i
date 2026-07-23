@@ -14,8 +14,32 @@ import { format } from "date-fns";
 
 const HST_OFFSET_MS = 10 * 60 * 60 * 1000;
 
+/**
+ * Normalize server-returned datetime strings to UTC.
+ *
+ * The platform stores built-in fields (created_date, updated_date) as naive
+ * ISO datetimes WITHOUT a timezone designator, e.g.
+ *   "2026-07-23T15:37:16.345000"
+ * Per the ECMAScript spec, new Date() parses a timezone-less datetime string
+ * as the browser's LOCAL time. For an admin in Hawai'i that means the value is
+ * read as HST wall-clock, and the Intl Pacific/Honolulu conversion then
+ * shifts it again — producing a time ~10 hours in the future.
+ *
+ * App-generated timestamps (e.g. chat message timestamps) already carry a "Z"
+ * and are left untouched.
+ */
+const toUTCString = (dateInput) => {
+    if (typeof dateInput !== "string") return dateInput;
+    const s = dateInput.trim();
+    // ISO datetime with no timezone designator (no trailing Z and no ±HH:MM offset)
+    if (s.includes("T") && !s.endsWith("Z") && !/[+-]\d{2}:\d{2}$/.test(s)) {
+        return s + "Z";
+    }
+    return s;
+};
+
 export const toHST = (dateInput) => {
-    const utcMs = new Date(dateInput).getTime();
+    const utcMs = new Date(toUTCString(dateInput)).getTime();
     return new Date(utcMs - HST_OFFSET_MS);
 };
 
@@ -30,7 +54,7 @@ const getHSTParts = (dateInput) => {
         year: "numeric",
     });
     const parts = {};
-    for (const p of dtf.formatToParts(new Date(dateInput))) {
+    for (const p of dtf.formatToParts(new Date(toUTCString(dateInput)))) {
         parts[p.type] = p.value;
     }
     return parts;
