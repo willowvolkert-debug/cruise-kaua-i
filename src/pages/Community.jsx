@@ -8,6 +8,7 @@ export default function Community() {
     { emoji: "📸", label: "instagram", desc: "See our latest posts from the Cruise Kauaʻi Instagram feed.", to: "/communityinstagram" },
     { emoji: "🌴", label: "recommendations", desc: "Authentic ways to support & give back to Kauaʻi — tours, food, and volunteering.", to: "/communityrecommendations" },
     { emoji: "🏝️", label: "how to visit Kauaʻi", desc: "Learn about the Destination Management Action Plan and how to travel to Kauaʻi responsibly.", to: "/communityhowtovisit" },
+    { emoji: "💼", label: "jobs", desc: "We're hiring! Join our team and help shape a community-powered platform for good.", to: "/communityjobs" },
   ];
 
   return (
