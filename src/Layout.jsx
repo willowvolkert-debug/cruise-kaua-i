@@ -14,7 +14,9 @@ export default function Layout({ children, currentPageName }) {
 
         // Safety net: authenticated users who haven't completed onboarding
         // are sent to the Join flow (skip /account, which is part of onboarding).
-        const needsOnboarding = !user.user_type || user.user_type === 'new';
+        const needsOnboarding = user.role !== 'admin'
+          && !user.has_completed_profile_quiz
+          && (!user.user_type || user.user_type === 'new');
         if (needsOnboarding && window.location.pathname.toLowerCase() !== '/account') {
           window.location.replace('/join');
           return;

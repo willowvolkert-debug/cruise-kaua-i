@@ -54,8 +54,12 @@ const AuthenticatedApp = () => {
         const user = await base44.auth.me();
         // User is authenticated
         // user_type may be undefined for users who signed up via the platform's
-        // built-in signup (it doesn't set custom entity fields like user_type)
-        const needsOnboarding = !user.user_type || user.user_type === 'new';
+        // built-in signup (it doesn't set custom entity fields like user_type),
+        // so also treat onboarding as done for admins or anyone who already
+        // finished the profile quiz — otherwise they get stuck in a /join loop.
+        const needsOnboarding = user.role !== 'admin'
+          && !user.has_completed_profile_quiz
+          && (!user.user_type || user.user_type === 'new');
 
         if (window.location.pathname === '/') {
           window.location.replace(needsOnboarding ? '/join' : '/home');
