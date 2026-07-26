@@ -38,7 +38,7 @@ export default function CommunityJobs() {
           <p className="text-gray-600 text-sm mt-3 leading-relaxed">
             Cruise Kauaʻi is growing! If you want to help shape this platform into a community-powered tool for good,
             please send us a cover letter and resume. If none of the position descriptions fit your skills or interests,
-            but you're still interested in working with us, still send us an email with your interests in this platform
+            but you're still interested in working with us, send us an email with your interests in this platform
             and how you'd like to be involved.
           </p>
         </div>
