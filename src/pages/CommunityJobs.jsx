@@ -15,7 +15,7 @@ const THEMES = [
       {
         title: "Co-Director (Business & Operations)",
         description:
-          "Partners with the Founder & Program Director to lead Cruise Hawaiʻi through its DOT pilot contract. Owns business strategy, operational execution, financial oversight, and organizational scaling as the company grows from a Kauaʻi startup into a statewide operation.",
+          "Partners with the Founder & Program Director to lead Cruise Hawaiʻi through its pilot phase. Owns business strategy, operational execution, financial oversight, and organizational scaling as the company grows from a Kauaʻi startup into a statewide operation.",
         skills:
           "Strategic planning, P&L management, team building, government contract management, fundraising/investor relations, cross-functional leadership.",
         experience:
@@ -25,7 +25,7 @@ const THEMES = [
       {
         title: "Operations Director",
         description:
-          "Oversees day-to-day statewide operations, builds and manages the field/ambassador team, and ensures smooth execution across all four islands throughout the 24-month pilot.",
+          "Oversees day-to-day statewide operations, builds and manages the field/ambassador team, and ensures smooth execution across all four islands throughout the pilot.",
         skills:
           "Operations management, staff supervision, logistics coordination, process design, multi-site/multi-team management.",
         experience:
@@ -41,7 +41,7 @@ const THEMES = [
       {
         title: "Finance & Compliance Manager",
         description:
-          "Manages the DOT contract budget and reporting, tracks spend across all funding lines (personnel, marketing, tech, etc.), oversees insurance requirements, and prepares for audits and compliance reviews.",
+          "Manages the contract budget and reporting, tracks spend across all funding lines (personnel, marketing, tech, etc.), oversees insurance requirements, and prepares for audits and compliance reviews.",
         skills:
           "Budgeting/forecasting, government contract compliance, insurance procurement, bookkeeping/accounting, audit prep, reporting.",
         experience:
@@ -57,7 +57,7 @@ const THEMES = [
       {
         title: "Marketing & Communications Director",
         description:
-          "Leads the $1.14M marketing budget — airport advertising, digital campaigns, PR, and island launch events — to convert visitor rental-car trips into rides and recruit local drivers on each island.",
+          "Leads the marketing budget — airport advertising, digital campaigns, PR, and island launch events — to convert visitor rental-car trips into rides and recruit local drivers on each island.",
         skills:
           "Marketing strategy, digital advertising (Meta/Google/TikTok), PR/media relations, event planning, brand management.",
         experience:
@@ -127,7 +127,7 @@ const THEMES = [
       {
         title: "Data & Analytics Lead",
         description:
-          "Builds and maintains the VMT/emissions reporting dashboard and analytics infrastructure that feeds DOT's quarterly reports and Nāvahine compliance metrics.",
+          "Builds and maintains the VMT/emissions reporting dashboard and analytics infrastructure that feeds quarterly reports and Nāvahine compliance metrics.",
         skills:
           "Data analysis, dashboard/BI tools, transportation or environmental metrics (VMT, emissions), report writing.",
         experience:
@@ -159,7 +159,7 @@ const THEMES = [
       {
         title: "Island Launch Coordinator (×4 — Oʻahu, Maui, Big Island, Kauaʻi)",
         description:
-          "Runs the on-the-ground launch for one island — community launch events, ambassador recruitment/activation, driver sign-ups — targeting 200+ users within 30 days of launch.",
+          "Runs the on-the-ground launch for one island — community launch events, ambassador recruitment/activation, driver sign-ups — targeting strong local sign-ups after launch.",
         skills:
           "Event coordination, grassroots organizing, local network building, project management.",
         experience:
