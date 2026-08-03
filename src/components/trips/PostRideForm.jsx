@@ -18,6 +18,7 @@ import MessageRiderModal from "./MessageRiderModal";
 import RecurringTripModal from "./RecurringTripModal";
 import RecurringAutoPostModal from "./RecurringAutoPostModal";
 import RiderProfileModal from "./RiderProfileModal";
+import ProfileIncompleteModal from "./ProfileIncompleteModal";
 import { useDraftSave, loadDraft, clearDraft } from "@/hooks/useDraftSave";
 
 export default function PostRideForm({ island = "Kauai" }) {
@@ -46,6 +47,8 @@ export default function PostRideForm({ island = "Kauai" }) {
   const [postedRide, setPostedRide] = useState(null);
   const [pricingSuggestion, setPricingSuggestion] = useState(null);
   const [priceCapWarning, setPriceCapWarning] = useState(null);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [missingProfileItems, setMissingProfileItems] = useState([]);
 
   const DRAFT_KEY = 'draft_post_ride';
   const _savedDraft = loadDraft(DRAFT_KEY);
@@ -138,40 +141,18 @@ export default function PostRideForm({ island = "Kauai" }) {
         const schedules = await base44.entities.RecurringSchedule.filter({ user_id: user.id });
         setRecurringSchedules(schedules);
         
-        if (!user.profile_picture_url) {
-          setError("Please upload a profile picture before posting rides. Go to Account page.");
-          return;
-        }
+        const missing = [];
+        if (!user.profile_picture_url) missing.push("upload a profile photo");
+        if (!user.profile_complete) missing.push("complete your profile (username, bio, age, gender)");
+        if (!user.terms_accepted || !user.privacy_policy_accepted || !user.community_agreement_accepted) missing.push("accept the legal agreements");
+        if (!user.drivers_license_verified) missing.push("verify your driver's license");
+        if (!user.vehicle_verified) missing.push("verify your vehicle details");
+        if (user.user_type !== 'driver' && user.role !== 'admin') missing.push("get verified as a driver");
+        if (user.pending_ratings && user.pending_ratings.length > 0) missing.push("complete your pending trip ratings in the Inbox");
 
-        if (!user.profile_complete) {
-          setError("Please complete your profile (username, bio, age, gender) before posting rides. Go to Account page.");
-          return;
-        }
-
-        if (!user.terms_accepted || !user.privacy_policy_accepted || !user.community_agreement_accepted) {
-          setError("Please accept all legal agreements before posting rides. Go to Account page.");
-          return;
-        }
-
-        if (user.pending_ratings && user.pending_ratings.length > 0) {
-          setError("Please complete your pending trip ratings in the Inbox before posting new rides.");
-          return;
-        }
-
-        if (!user.drivers_license_verified) {
-          setError("You must verify your driver's license before posting rides. Please complete verification in your Account page.");
-          return;
-        }
-
-        if (!user.vehicle_verified) {
-          setError("You must verify your vehicle before posting rides. Please complete vehicle details in your Account page.");
-          return;
-        }
-
-
-
-        if (user.user_type !== 'driver' && user.role !== 'admin') {
-          setError("You must be verified as a driver to post rides. Please complete all driver requirements in your Account page.");
+        if (missing.length > 0) {
+          setMissingProfileItems(missing);
+          setShowProfileModal(true);
           return;
         }
 
@@ -337,45 +318,23 @@ export default function PostRideForm({ island = "Kauai" }) {
       return;
     }
 
-    if (!currentUser.profile_picture_url) {
-      setError("Please upload a profile picture before posting rides.");
-      return;
-    }
+    const missing = [];
+    if (!currentUser.profile_picture_url) missing.push("upload a profile photo");
+    if (!currentUser.profile_complete) missing.push("complete your profile (username, bio, age, gender)");
+    if (!currentUser.terms_accepted || !currentUser.privacy_policy_accepted || !currentUser.community_agreement_accepted) missing.push("accept the legal agreements");
+    if (!currentUser.drivers_license_verified) missing.push("verify your driver's license");
+    if (!currentUser.vehicle_verified) missing.push("verify your vehicle details");
+    if (currentUser.user_type !== 'driver' && currentUser.role !== 'admin') missing.push("get verified as a driver");
+    if (currentUser.pending_ratings && currentUser.pending_ratings.length > 0) missing.push("complete your pending trip ratings in the Inbox");
 
-    if (!currentUser.profile_complete) {
-      setError("Please complete your profile before posting rides.");
-      return;
-    }
-
-    if (!currentUser.terms_accepted || !currentUser.privacy_policy_accepted || !currentUser.community_agreement_accepted) {
-      setError("Please accept all legal agreements before posting rides.");
+    if (missing.length > 0) {
+      setMissingProfileItems(missing);
+      setShowProfileModal(true);
       return;
     }
 
     if (!rideData.departure_location || !rideData.destination || !rideData.departure_date || !rideData.departure_time.replace(/\s*(AM|PM)$/i, '').trim()) {
       setError("Please fill in all required fields: coming from, going to, departure date, and departure time.");
-      return;
-    }
-    
-    if (currentUser.pending_ratings && currentUser.pending_ratings.length > 0) {
-      setError("Please complete your pending trip ratings before posting new rides.");
-      return;
-    }
-
-    if (!currentUser.drivers_license_verified) {
-      setError("You must verify your driver's license before posting rides.");
-      return;
-    }
-
-    if (!currentUser.vehicle_verified) {
-      setError("You must verify your vehicle before posting rides.");
-      return;
-    }
-
-
-
-    if (currentUser.user_type !== 'driver' && currentUser.role !== 'admin') {
-      setError("You must be verified as a driver to post rides.");
       return;
     }
     
@@ -1183,6 +1142,13 @@ export default function PostRideForm({ island = "Kauai" }) {
         }}
         trip={autoPostTrip}
         existingSchedule={recurringSchedules.find(s => s.recurring_trip_id === autoPostTrip?.id)}
+      />
+
+      <ProfileIncompleteModal
+        isOpen={showProfileModal}
+        missingItems={missingProfileItems}
+        action="post a ride"
+        onClose={() => setShowProfileModal(false)}
       />
     </div>
   );

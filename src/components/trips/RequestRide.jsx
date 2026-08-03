@@ -15,6 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Checkbox } from "@/components/ui/checkbox";
 import HaenaInfoView from "./HaenaInfoView";
 import HaenaWarningCard from "./HaenaWarningCard";
+import ProfileIncompleteModal from "./ProfileIncompleteModal";
 
 const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
@@ -29,6 +30,8 @@ export default function RequestRide({ island = "Kauai" }) {
   const [recurringDays, setRecurringDays] = useState([]);
   const [myRecurring, setMyRecurring] = useState([]);
   const [showHaenaInfo, setShowHaenaInfo] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [missingProfileItems, setMissingProfileItems] = useState([]);
   const [requestData, setRequestData] = useState({
     departure_location: '',
     destination: '',
@@ -46,18 +49,15 @@ export default function RequestRide({ island = "Kauai" }) {
         const user = await base44.auth.me();
         setCurrentUser(user);
 
-        if (!user.profile_picture_url) {
-          setError("Please upload a profile picture before requesting rides. Go to Account page.");
-          return;
-        }
+        const missing = [];
+        if (!user.profile_picture_url) missing.push("upload a profile photo");
+        if (!user.profile_complete) missing.push("complete your profile (username, bio, age, gender)");
+        if (!user.terms_accepted || !user.privacy_policy_accepted || !user.community_agreement_accepted) missing.push("accept the legal agreements");
+        if (!user.drivers_license_verified) missing.push("verify your driver's license");
 
-        if (!user.profile_complete) {
-          setError("Please complete your profile (username, bio, age, gender) before requesting rides. Go to Account page.");
-          return;
-        }
-
-        if (!user.terms_accepted || !user.privacy_policy_accepted || !user.community_agreement_accepted) {
-          setError("Please accept all legal agreements before requesting rides. Go to Account page.");
+        if (missing.length > 0) {
+          setMissingProfileItems(missing);
+          setShowProfileModal(true);
           return;
         }
 
@@ -91,6 +91,18 @@ export default function RequestRide({ island = "Kauai" }) {
     
     if (!currentUser) {
       setError("You must be logged in to request a ride.");
+      return;
+    }
+
+    const missing = [];
+    if (!currentUser.profile_picture_url) missing.push("upload a profile photo");
+    if (!currentUser.profile_complete) missing.push("complete your profile (username, bio, age, gender)");
+    if (!currentUser.terms_accepted || !currentUser.privacy_policy_accepted || !currentUser.community_agreement_accepted) missing.push("accept the legal agreements");
+    if (!currentUser.drivers_license_verified) missing.push("verify your driver's license");
+
+    if (missing.length > 0) {
+      setMissingProfileItems(missing);
+      setShowProfileModal(true);
       return;
     }
 
@@ -558,6 +570,13 @@ export default function RequestRide({ island = "Kauai" }) {
           </div>
         </DialogContent>
       </Dialog>
+
+      <ProfileIncompleteModal
+        isOpen={showProfileModal}
+        missingItems={missingProfileItems}
+        action="request a ride"
+        onClose={() => setShowProfileModal(false)}
+      />
     </div>
   );
 }
