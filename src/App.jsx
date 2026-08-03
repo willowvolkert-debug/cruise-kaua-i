@@ -21,7 +21,7 @@ import CommunityHowToVisit from './pages/CommunityHowToVisit';
 import CommunityJobs from './pages/CommunityJobs';
 import { base44 } from '@/api/base44Client';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
-import Welcome from './pages/Welcome';
+import Home from './pages/Home';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import BookingSuccess from './pages/BookingSuccess';
@@ -61,8 +61,8 @@ const AuthenticatedApp = () => {
           && !user.has_completed_profile_quiz
           && (!user.user_type || user.user_type === 'new');
 
-        if (window.location.pathname === '/') {
-          window.location.replace(needsOnboarding ? '/join' : '/home');
+        if (window.location.pathname === '/' && needsOnboarding) {
+          window.location.replace('/join');
           return;
         }
 
@@ -131,8 +131,8 @@ const AuthenticatedApp = () => {
   // Render the main app
   return (
     <Routes>
-      <Route path="/" element={<Welcome />} />
-      <Route path="/welcome" element={<Welcome />} />
+      <Route path="/" element={<LayoutWrapper currentPageName="Home"><Home /></LayoutWrapper>} />
+      <Route path="/welcome" element={<LayoutWrapper currentPageName="Home"><Home /></LayoutWrapper>} />
       <Route path="/termsofservice" element={<TermsOfService />} />
       <Route path="/privacypolicy" element={<PrivacyPolicy />} />
       <Route path="/bookingsuccess" element={<BookingSuccess />} />

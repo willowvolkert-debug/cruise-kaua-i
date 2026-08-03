@@ -489,6 +489,22 @@ export default function JoinPage() {
                 <li className="flex gap-2"><span>4️⃣</span><span>once approved, you can book or post rides!</span></li>
               </ul>
             </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 space-y-3">
+              <p className="font-semibold text-blue-900 text-base">📋 to post a ride, you'll need:</p>
+              <ul className="space-y-2 text-sm text-blue-800">
+                <li className="flex gap-2"><span>📸</span><span><strong>profile info</strong> — photo, bio, age &amp; username</span></li>
+                <li className="flex gap-2"><span>🚗</span><span><strong>vehicle details</strong> — year, make, model &amp; seats available</span></li>
+                <li className="flex gap-2"><span>🪪</span><span><strong>driver's license</strong> — photo for verification</span></li>
+                <li className="flex gap-2"><span>🛡️</span><span><strong>insurance info</strong> — active auto insurance</span></li>
+                <li className="flex gap-2"><span>✍️</span><span><strong>driver agreement</strong> — quick sign-off on community standards</span></li>
+                <li className="flex gap-2"><span>💳</span><span><strong>bank account</strong> — for receiving ride payouts</span></li>
+                <li className="flex gap-2"><span>⏳</span><span><strong>admin approval</strong> — usually within 24 hours</span></li>
+              </ul>
+              <p className="text-xs text-blue-600 pt-1">
+                riders only need a profile to book — these requirements are for posting rides as a driver.
+              </p>
+            </div>
           </div>
         )}
 

@@ -3,13 +3,30 @@ import { Link } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
+import SignupPromptModal from "@/components/SignupPromptModal";
 
 export default function Home() {
   const [user, setUser] = React.useState(null);
+  const [authChecked, setAuthChecked] = React.useState(false);
+  const [showSignupPrompt, setShowSignupPrompt] = React.useState(false);
 
   React.useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => {});
+    base44.auth.me()
+      .then(setUser)
+      .catch(() => {})
+      .finally(() => setAuthChecked(true));
   }, []);
+
+  React.useEffect(() => {
+    if (authChecked && !user) {
+      try {
+        const dismissed = localStorage.getItem("cruise_signup_prompt_dismissed");
+        if (!dismissed) {
+          setShowSignupPrompt(true);
+        }
+      } catch (e) {}
+    }
+  }, [authChecked, user]);
 
   const sections = [
     { emoji: "🚗", label: "trips", desc: "Browse available rides, post a ride you're already making, or request one for a specific trip.", to: createPageUrl("Trips") },
@@ -35,8 +52,13 @@ export default function Home() {
     <div className="p-3 md:p-8 bg-white overflow-x-hidden min-h-screen">
       <div className="max-w-2xl mx-auto">
         <div className="mb-5">
-          <h1 className="text-2xl md:text-3xl font-bold text-secondary">home</h1>
-          <p className="text-gray-500 text-sm mt-1 leading-relaxed">Aloha! Welcome to our new flow for Cruise Kauaʻi. Get back to this home page at any time by pressing on our logo in the top right. Check out our community page for more updates on business &amp; community development</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-secondary">cruise kauaʻi</h1>
+          <p className="text-gray-500 text-sm mt-1 leading-relaxed">
+            Our mission is to provide accessible &amp; affordable transportation
+            across the islands, and divert more money back into our local
+            economy. Get back to this home page at any time by pressing on our
+            logo in the top right.
+          </p>
         </div>
         <div className="space-y-4">
           {sections.map(({ emoji, label, desc, to }) => (
@@ -55,6 +77,11 @@ export default function Home() {
           ))}
         </div>
       </div>
+
+      <SignupPromptModal
+        isOpen={showSignupPrompt}
+        onClose={() => setShowSignupPrompt(false)}
+      />
     </div>
   );
 }
