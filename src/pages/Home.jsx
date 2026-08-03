@@ -30,11 +30,11 @@ export default function Home() {
 
   const sections = [
     { emoji: "🚗", label: "trips", desc: "Browse available rides, post a ride you're already making, or request one for a specific trip.", to: createPageUrl("Trips") },
+    { emoji: "👤", label: "account", desc: "Edit your profile, verify your license & vehicle, and manage payouts and settings.", to: createPageUrl("Account") },
     { emoji: "🌺", label: "community", desc: "Stories, updates, and photos from the Cruise Hawaiʻi community.", to: createPageUrl("Community") },
     { emoji: "ℹ️", label: "FAQ + about us", desc: "Learn about our mission to make getting around Hawaiʻi more affordable.", to: createPageUrl("AboutUs") },
     { emoji: "💬", label: "inbox", desc: "Manage your ride bookings, chat with drivers & riders, and review incoming requests.", to: createPageUrl("Inbox") },
     { emoji: "✅", label: "confirmed rides", desc: "See your upcoming confirmed trips and their details in one place.", to: createPageUrl("ConfirmedRides") },
-    { emoji: "👤", label: "account", desc: "Edit your profile, verify your license & vehicle, and manage payouts and settings.", to: createPageUrl("Account") },
     { emoji: "✉️", label: "contact us", desc: "Questions, feedback, or need a hand? Reach out and we'll get back to you.", to: createPageUrl("ContactUs") },
   ];
 
@@ -54,10 +54,13 @@ export default function Home() {
         <div className="mb-5">
           <h1 className="text-2xl md:text-3xl font-bold text-secondary">cruise kauaʻi</h1>
           <p className="text-gray-500 text-sm mt-1 leading-relaxed">
-            Our mission is to provide accessible &amp; affordable transportation
-            across the islands, and divert more money back into our local
-            economy. Get back to this home page at any time by pressing on our
-            logo in the top right.
+            Welcome! Cruise Kauaʻi was started by a local who saw how hard it
+            is to get around without a car — whether you're a kamaʻāina
+            commuting to work or a visitor exploring the island. Our mission is
+            to provide accessible &amp; affordable transportation across the
+            islands, divert more money back into our local economy, and build a
+            community where everyone can get where they need to go. Get back to
+            this home page at any time by pressing on our logo in the top right.
           </p>
         </div>
         <div className="space-y-4">
