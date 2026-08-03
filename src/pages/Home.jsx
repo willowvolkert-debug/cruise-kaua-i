@@ -54,13 +54,14 @@ export default function Home() {
         <div className="mb-5">
           <h1 className="text-2xl md:text-3xl font-bold text-secondary">cruise kauaʻi</h1>
           <p className="text-gray-500 text-sm mt-1 leading-relaxed">
-            Welcome! Cruise Kauaʻi was started by a local who saw how hard it
-            is to get around without a car — whether you're a kamaʻāina
-            commuting to work or a visitor exploring the island. Our mission is
-            to provide accessible &amp; affordable transportation across the
-            islands, divert more money back into our local economy, and build a
-            community where everyone can get where they need to go. Get back to
-            this home page at any time by pressing on our logo in the top right.
+            Welcome! Cruise Kauaʻi was started by a Kauaʻi resident who saw
+            how hard it is to get around without a car — whether you're a
+            resident whose car has broken down, or a visitor exploring the
+            island. Our mission is to provide accessible &amp; affordable
+            transportation across the islands, divert money into our local
+            economy, and build a community support network where everyone can
+            get to where they need to go. Get back to this home page at any
+            time by pressing on our logo in the top right.
           </p>
         </div>
         <div className="space-y-4">
