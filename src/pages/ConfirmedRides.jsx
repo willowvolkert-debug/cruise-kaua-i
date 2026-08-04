@@ -12,6 +12,7 @@ import RiderCancelModal from "../components/inbox/RiderCancelModal";
 import DriverRideModal from "../components/inbox/DriverRideModal";
 import { sendBookingEmail } from "../functions/sendBookingEmail";
 import PendingTripsCard from "../components/inbox/PendingTripsCard";
+import MyRideRequestsCard from "../components/inbox/MyRideRequestsCard";
 import { getHawaiiNow, parseRideDateTimeHST, parseDateString, formatTime12Hour } from "@/lib/hstHelpers";
 
 export default function ConfirmedRidesPage() {
@@ -36,6 +37,7 @@ export default function ConfirmedRidesPage() {
     const [currentReviewUser, setCurrentReviewUser] = useState(null);
     const [currentReviewRide, setCurrentReviewRide] = useState(null);
     const [myPendingBookings, setMyPendingBookings] = useState([]);
+    const [myRideRequests, setMyRideRequests] = useState([]);
 
     useEffect(() => { loadData(); }, []);
 
@@ -159,10 +161,41 @@ export default function ConfirmedRidesPage() {
             );
             setPastRides(myPastRides);
 
+            // Load my ride requests (active and future only)
+            const allRideRequests = await base44.entities.RidePost.filter({
+                rider_id: currentUser.id,
+                status: 'active'
+            });
+
+            const futureRequests = allRideRequests.filter(request => {
+                if (!request.departure_date || !request.departure_time) return false;
+                const rideDateTime = parseRideDateTimeHST(request.departure_date, request.departure_time);
+                return rideDateTime.toComparable() > hawaiiNow.toComparable();
+            });
+
+            setMyRideRequests(futureRequests);
+
         } catch (e) {
             console.error(e);
         }
         setIsLoading(false);
+    };
+
+    const handleRideRequestUpdate = async (request, action) => {
+        if (action === 'cancel') {
+            try {
+                await base44.entities.RidePost.update(request.id, {
+                    status: 'cancelled'
+                });
+                alert('Ride request cancelled successfully!');
+                loadData();
+            } catch (error) {
+                console.error('Error cancelling request:', error);
+                alert('Failed to cancel ride request. Please try again.');
+            }
+        } else {
+            loadData();
+        }
     };
 
     const handleCancelPendingRequest = async (booking) => {
@@ -344,6 +377,12 @@ export default function ConfirmedRidesPage() {
                         </CardContent>
                     </Card>
                 )}
+
+                {/* My Ride Requests */}
+                <MyRideRequestsCard
+                    myRequests={myRideRequests}
+                    onRequestUpdated={handleRideRequestUpdate}
+                />
 
                 {/* Pending Trips Card for Riders */}
                 <PendingTripsCard

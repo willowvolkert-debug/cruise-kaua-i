@@ -17,7 +17,7 @@ import RejectionAlert from "../components/inbox/RejectionAlert";
 import RiderCancelModal from "../components/inbox/RiderCancelModal";
 import AdminMessageCard from "../components/inbox/AdminMessageCard";
 import DriverRideModal from "../components/inbox/DriverRideModal";
-import MyRideRequestsCard from "../components/inbox/MyRideRequestsCard";
+
 import { Link as RouterLink } from "react-router-dom";
 
 import { format } from "date-fns";
@@ -59,7 +59,6 @@ export default function InboxPage() {
     const [adminMessages, setAdminMessages] = useState([]);
     const [showDriverRideModal, setShowDriverRideModal] = useState(false);
     const [selectedDriverRide, setSelectedDriverRide] = useState(null);
-    const [myRideRequests, setMyRideRequests] = useState([]);
 
     useEffect(() => {
         loadData();
@@ -288,21 +287,6 @@ export default function InboxPage() {
             const allAdminMessages = await base44.entities.AdminMessage.list('-created_date');
             const myAdminMessages = allAdminMessages.filter(m => m.recipient_id === currentUser.id);
             setAdminMessages(myAdminMessages);
-
-            // Load my ride requests (active and future only)
-            const allRideRequests = await base44.entities.RidePost.filter({ 
-                rider_id: currentUser.id, 
-                status: 'active' 
-            });
-            
-            // Filter to only show future requests
-            const futureRequests = allRideRequests.filter(request => {
-                if (!request.departure_date || !request.departure_time) return false;
-                const rideDateTime = parseRideDateTimeHST(request.departure_date, request.departure_time);
-                return rideDateTime.toComparable() > hawaiiNow.toComparable();
-            });
-            
-            setMyRideRequests(futureRequests);
 
         } catch (e) {
             console.error(e);
@@ -666,24 +650,6 @@ Please process the refund manually via Stripe.
         return allUsers.find(u => u.id === userId);
     };
 
-    const handleRideRequestUpdate = async (request, action) => {
-        if (action === 'cancel') {
-            try {
-                await base44.entities.RidePost.update(request.id, {
-                    status: 'cancelled'
-                });
-                alert('Ride request cancelled successfully!');
-                loadData();
-            } catch (error) {
-                console.error('Error cancelling request:', error);
-                alert('Failed to cancel ride request. Please try again.');
-            }
-        } else {
-            // Reload data after edit
-            loadData();
-        }
-    };
-
     // Include pending paid bookings too so chat appears immediately after payment (for both rider and driver)
     const allChattableBookings = [
         ...activeBookings,
@@ -791,12 +757,6 @@ Please process the refund manually via Stripe.
                         </CardContent>
                     </Card>
                 )}
-
-                {/* My Ride Requests */}
-                <MyRideRequestsCard
-                    myRequests={myRideRequests}
-                    onRequestUpdated={handleRideRequestUpdate}
-                />
 
                 {/* Rejection Alert */}
                 <RejectionAlert 
