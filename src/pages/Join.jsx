@@ -66,11 +66,14 @@ export default function JoinPage() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const next = params.get("next");
+    const isLogin = params.get("login") === "true";
     if (next) {
       setNextUrl(next);
-      setStep(4);
+      // Only jump to the signup step if NOT arriving in login mode —
+      // otherwise the user sees "step 5 of 5" which is confusing
+      if (!isLogin) setStep(4);
     }
-    if (params.get("login") === "true") {
+    if (isLogin) {
       setLoginMode(true);
     }
   }, []);
@@ -276,7 +279,7 @@ export default function JoinPage() {
             className="w-9 h-9 rounded-xl object-cover"
           />
           <button
-            onClick={() => setLoginMode(false)}
+            onClick={() => { setLoginMode(false); setStep(0); }}
             className="text-sm text-gray-400 hover:text-gray-700 transition-colors underline underline-offset-2"
           >
             don't have an account? sign up

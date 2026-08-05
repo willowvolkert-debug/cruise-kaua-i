@@ -56,7 +56,8 @@ export default function Layout({ children, currentPageName }) {
           const publicPaths = ['/', '/welcome', '/joinus', '/join', '/home', '/trips'];
           if (!publicPaths.includes(location.pathname.toLowerCase())) {
             const next = encodeURIComponent(window.location.pathname + window.location.search);
-            window.location.href = `/join?next=${next}`;
+            // login=true so the Join page shows the login view (not step 5 of the signup wizard)
+            window.location.href = `/join?login=true&next=${next}`;
           }
         }
       }
@@ -92,14 +93,24 @@ export default function Layout({ children, currentPageName }) {
       <div className="min-h-screen flex flex-col w-full bg-background">
         <header className="bg-white border-b border-gray-200 h-14 px-4 flex items-center justify-between gap-3 sticky top-0 z-30">
           <span className="text-xs text-gray-500 truncate flex-1 min-w-0">press on logo to return to home screen/navigate</span>
-          <Link to="/home" className="flex items-center gap-2 shrink-0">
-            <img
-              src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
-              alt="Cruise Kauaʻi"
-              className="w-9 h-9 rounded-xl object-cover"
-            />
-            <span className="font-bold text-primary text-lg tracking-wide hidden sm:block">cruise kauaʻi</span>
-          </Link>
+          <div className="flex items-center gap-3 shrink-0">
+            {!currentUser && (
+              <Link
+                to="/join?login=true"
+                className="text-sm font-bold text-primary border border-primary rounded-full px-4 py-1.5 hover:bg-primary/5 transition-colors"
+              >
+                log in
+              </Link>
+            )}
+            <Link to="/home" className="flex items-center gap-2">
+              <img
+                src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
+                alt="Cruise Kauaʻi"
+                className="w-9 h-9 rounded-xl object-cover"
+              />
+              <span className="font-bold text-primary text-lg tracking-wide hidden sm:block">cruise kauaʻi</span>
+            </Link>
+          </div>
         </header>
         <div className="flex-1 bg-white" style={{ WebkitOverflowScrolling: 'touch', overflowX: 'hidden' }}>
           {children}

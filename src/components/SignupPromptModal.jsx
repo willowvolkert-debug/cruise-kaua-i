@@ -17,6 +17,12 @@ export default function SignupPromptModal({ isOpen, onClose }) {
     onClose();
   };
 
+  // X / "maybe later" — dismiss and stay on home
+  const handleDismissToHome = () => {
+    handleDismiss();
+    navigate("/");
+  };
+
   const handleSignup = () => {
     handleDismiss();
     navigate("/join");
@@ -31,7 +37,7 @@ export default function SignupPromptModal({ isOpen, onClose }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
       <div className="relative bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-5">
         <button
-          onClick={handleDismiss}
+          onClick={handleDismissToHome}
           className="absolute top-4 right-4 text-gray-300 hover:text-gray-600 transition-colors"
         >
           <X className="w-5 h-5" />
@@ -78,7 +84,7 @@ export default function SignupPromptModal({ isOpen, onClose }) {
             browse rides without signing up →
           </button>
           <button
-            onClick={handleDismiss}
+            onClick={handleDismissToHome}
             className="w-full text-xs text-gray-400 hover:text-gray-500 transition-colors pt-1"
           >
             maybe later
