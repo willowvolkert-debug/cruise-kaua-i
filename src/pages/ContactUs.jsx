@@ -94,6 +94,12 @@ export default function ContactUsPage() {
         <div>
           <h1 className="text-3xl font-bold text-secondary">contact us</h1>
           <p className="text-gray-600">we're here to help! send us a message</p>
+          <p className="text-sm text-gray-500 mt-2">
+            Form not working? Email us at{" "}
+            <a href="mailto:cruisekauai@gmail.com" className="text-primary underline font-medium">cruisekauai@gmail.com</a>
+            {" "}or text at{" "}
+            <a href="sms:8087209854" className="text-primary underline font-medium">808-720-9854</a>
+          </p>
         </div>
 
         {submitted ? (

@@ -53,7 +53,7 @@ export default function Layout({ children, currentPageName }) {
         // Only redirect to login on a definitive 401, not network/transient errors
         const is401 = e?.status === 401 || e?.response?.status === 401;
         if (is401) {
-          const publicPaths = ['/', '/welcome', '/joinus', '/join', '/home', '/trips'];
+          const publicPaths = ['/', '/welcome', '/joinus', '/join', '/home', '/trips', '/contactus', '/contact-us', '/aboutus', '/about-us', '/sms-opt-in', '/termsofservice', '/privacypolicy'];
           if (!publicPaths.includes(location.pathname.toLowerCase())) {
             const next = encodeURIComponent(window.location.pathname + window.location.search);
             // login=true so the Join page shows the login view (not step 5 of the signup wizard)
