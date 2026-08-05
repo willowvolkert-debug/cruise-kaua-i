@@ -383,7 +383,7 @@ Deno.serve(async (req) => {
 
     // Get all users who haven't received onboarding email yet
     const allUsers = await base44.asServiceRole.entities.User.list();
-    const usersToSend = allUsers.filter(u => !u.onboarding_email_sent && u.email);
+    const usersToSend = allUsers.filter(u => !u.onboarding_email_sent && u.email && u.email_update_frequency !== 'never');
 
     let sentCount = 0;
     let skippedCount = 0;

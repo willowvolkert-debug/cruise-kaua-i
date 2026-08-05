@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
   const driverIds = new Set(allRides.map(r => r.driver_id).filter(Boolean));
   const riderIds = new Set(allRequests.map(r => r.rider_id).filter(Boolean));
   const activeIds = new Set([...driverIds, ...riderIds]);
-  const recipients = allUsers.filter(u => u.email && activeIds.has(u.id));
+  const recipients = allUsers.filter(u => u.email && activeIds.has(u.id) && u.email_update_frequency !== 'never');
   const activeRides = allRides.length;
   const activeRiders = allRequests.length;
   // Calculate potential savings: if each driver got just 1 rider, how much would be saved in gas?

@@ -19,12 +19,13 @@ Deno.serve(async (req) => {
         }
 
         await base44.asServiceRole.entities.User.update(user_id, {
-            setup_reminders_unsubscribed: true
+            setup_reminders_unsubscribed: true,
+            email_update_frequency: 'never'
         });
 
         return Response.json({ 
             success: true,
-            message: 'Successfully unsubscribed from setup reminders'
+            message: 'Successfully unsubscribed from all automated emails'
         });
     } catch (error) {
         return Response.json({ error: error.message }, { status: 500 });

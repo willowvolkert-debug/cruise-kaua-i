@@ -23,8 +23,10 @@ Deno.serve(async (req) => {
         const unsubscribed = allUsers.filter(u => u.setup_reminders_unsubscribed).length;
         
         const incompleteUsers = allUsers.filter(u => {
-            // Skip if unsubscribed
+            // Skip if unsubscribed from setup reminders
             if (u.setup_reminders_unsubscribed) return false;
+            // Skip if user opted out of all automated emails
+            if (u.email_update_frequency === 'never') return false;
             
             // Send to anyone who is NOT a driver or rider
             return u.user_type !== 'driver' && u.user_type !== 'rider';

@@ -24,7 +24,7 @@ export default function UnsubscribePage() {
         
         if (data.success) {
           setStatus('success');
-          setMessage('You have been unsubscribed from setup reminder emails.');
+          setMessage('You have been unsubscribed from all automated emails.');
         } else {
           setStatus('error');
           setMessage('Failed to unsubscribe. Please try again or contact support.');
@@ -44,7 +44,7 @@ export default function UnsubscribePage() {
       <Card className="max-w-md w-full shadow-xl border-gray-200 rounded-3xl bg-white">
         <CardHeader>
           <CardTitle className="text-2xl text-secondary text-center">
-            Unsubscribe from Reminders
+            Unsubscribe from Automated Emails
           </CardTitle>
         </CardHeader>
         <CardContent className="text-center space-y-4 p-8">
@@ -60,10 +60,10 @@ export default function UnsubscribePage() {
               <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
               <p className="text-lg text-gray-700 mb-4">{message}</p>
               <p className="text-sm text-gray-600">
-                You will no longer receive setup reminder emails from Cruise Kauaʻi.
+                You will no longer receive automated emails from Cruise Kauaʻi (daily ride updates, setup reminders, and community blasts).
               </p>
               <p className="text-sm text-gray-600 mt-2">
-                You can still complete your account setup anytime by logging in.
+                You can update your email preferences anytime on your Account page.
               </p>
             </div>
           )}
