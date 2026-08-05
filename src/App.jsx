@@ -63,7 +63,7 @@ const AuthenticatedApp = () => {
           && (!user.user_type || user.user_type === 'new');
 
         if (window.location.pathname === '/' && needsOnboarding) {
-          window.location.replace('/join');
+          window.location.replace('/account?setup=true');
           return;
         }
 
@@ -84,7 +84,7 @@ const AuthenticatedApp = () => {
         );
 
         if (needsOnboarding && !isOnboardingOrPublic) {
-          window.location.replace('/join');
+          window.location.replace('/account?setup=true');
         }
       } catch (e) {
         // Not authenticated - stay on current page

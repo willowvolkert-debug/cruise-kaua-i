@@ -18,7 +18,7 @@ export default function Layout({ children, currentPageName }) {
           && !user.has_completed_profile_quiz
           && (!user.user_type || user.user_type === 'new');
         if (needsOnboarding && window.location.pathname.toLowerCase() !== '/account') {
-          window.location.replace('/join');
+          window.location.replace('/account?setup=true');
           return;
         }
 
