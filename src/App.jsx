@@ -22,6 +22,7 @@ import CommunityJobs from './pages/CommunityJobs';
 import { base44 } from '@/api/base44Client';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Home from './pages/Home';
+import ContactUs from './pages/ContactUs';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import BookingSuccess from './pages/BookingSuccess';
@@ -140,6 +141,8 @@ const AuthenticatedApp = () => {
       <Route path="/opiosignup" element={<OpioSignup />} />
       <Route path="/kupunasignup" element={<KupunaSignup />} />
       <Route path="/driver-verification" element={<DriverVerificationChart />} />
+      <Route path="/contactus" element={<LayoutWrapper currentPageName="Contact Us"><ContactUs /></LayoutWrapper>} />
+      <Route path="/contact-us" element={<LayoutWrapper currentPageName="Contact Us"><ContactUs /></LayoutWrapper>} />
 
       {Object.entries(Pages).map(([path, Page]) => (
         <Route
