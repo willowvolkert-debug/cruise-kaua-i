@@ -114,110 +114,112 @@ export default function ContactUsPage() {
               <CardTitle className="text-xl text-secondary">send us a message</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {!currentUser && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="name">your name *</Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      placeholder="Your full name"
-                      className="rounded-2xl"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">your email *</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      placeholder="you@example.com"
-                      className="rounded-2xl"
-                    />
-                  </div>
-                </>
-              )}
-              <div className="space-y-2">
-                <Label htmlFor="subject">subject *</Label>
-                <Input
-                  id="subject"
-                  value={formData.subject}
-                  onChange={(e) => setFormData({...formData, subject: e.target.value})}
-                  placeholder="What can we help you with?"
-                  required
-                  className="rounded-2xl"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="priority">priority</Label>
-                <Select
-                  value={formData.priority}
-                  onValueChange={(value) => setFormData({...formData, priority: value})}
-                >
-                  <SelectTrigger className="rounded-2xl">
-                    <SelectValue placeholder="Select priority" />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-2xl">
-                    <SelectItem value="low">low</SelectItem>
-                    <SelectItem value="medium">medium</SelectItem>
-                    <SelectItem value="high">high</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="message">message *</Label>
-                <Textarea
-                  id="message"
-                  value={formData.message}
-                  onChange={(e) => setFormData({...formData, message: e.target.value})}
-                  placeholder="Tell us more about your inquiry..."
-                  className="h-32 rounded-2xl"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label>screenshots / files (optional)</Label>
-                <p className="text-xs text-gray-500">Attach screenshots or documents (images, PDF, Word, Excel).</p>
-                <label className="flex items-center gap-2 cursor-pointer border border-dashed border-gray-300 rounded-2xl px-4 py-3 hover:bg-gray-50 transition-colors">
-                  <Paperclip className="w-4 h-4 text-gray-400" />
-                  <span className="text-sm text-gray-500">attach files</span>
-                  <input
-                    type="file"
-                    accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt"
-                    multiple
-                    className="hidden"
-                    onChange={(e) => {
-                      const files = Array.from(e.target.files);
-                      setScreenshots(prev => [...prev, ...files].slice(0, 5));
-                    }}
-                  />
-                </label>
-                {screenshots.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {screenshots.map((file, i) => (
-                      <div key={i} className="flex items-center gap-1 bg-gray-100 rounded-full px-3 py-1 text-xs text-gray-600">
-                        <span className="truncate max-w-32">{file.name}</span>
-                        <button onClick={() => setScreenshots(prev => prev.filter((_, idx) => idx !== i))}>
-                          <X className="w-3 h-3 text-gray-400 hover:text-red-500" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {!currentUser && (
+                  <>
+                    <div className="space-y-2">
+                      <Label htmlFor="name">your name *</Label>
+                      <Input
+                        id="name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        placeholder="Your full name"
+                        className="rounded-2xl"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">your email *</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        placeholder="you@example.com"
+                        className="rounded-2xl"
+                      />
+                    </div>
+                  </>
                 )}
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="subject">subject *</Label>
+                  <Input
+                    id="subject"
+                    value={formData.subject}
+                    onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                    placeholder="What can we help you with?"
+                    required
+                    className="rounded-2xl"
+                  />
+                </div>
 
-              <Button
-                onClick={handleSubmit}
-                disabled={isSubmitting || isUploading || !formData.subject?.trim() || !formData.message?.trim()}
-                className="w-full bg-primary hover:bg-primary/90 rounded-2xl"
-              >
-                {isUploading ? 'uploading screenshots...' : isSubmitting ? 'sending...' : 'send message'}
-              </Button>
+                <div className="space-y-2">
+                  <Label htmlFor="priority">priority</Label>
+                  <Select
+                    value={formData.priority}
+                    onValueChange={(value) => setFormData({...formData, priority: value})}
+                  >
+                    <SelectTrigger className="rounded-2xl">
+                      <SelectValue placeholder="Select priority" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-2xl">
+                      <SelectItem value="low">low</SelectItem>
+                      <SelectItem value="medium">medium</SelectItem>
+                      <SelectItem value="high">high</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="message">message *</Label>
+                  <Textarea
+                    id="message"
+                    value={formData.message}
+                    onChange={(e) => setFormData({...formData, message: e.target.value})}
+                    placeholder="Tell us more about your inquiry..."
+                    className="h-32 rounded-2xl"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>screenshots / files (optional)</Label>
+                  <p className="text-xs text-gray-500">Attach screenshots or documents (images, PDF, Word, Excel).</p>
+                  <label className="flex items-center gap-2 cursor-pointer border border-dashed border-gray-300 rounded-2xl px-4 py-3 hover:bg-gray-50 transition-colors">
+                    <Paperclip className="w-4 h-4 text-gray-400" />
+                    <span className="text-sm text-gray-500">attach files</span>
+                    <input
+                      type="file"
+                      accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt"
+                      multiple
+                      className="hidden"
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files);
+                        setScreenshots(prev => [...prev, ...files].slice(0, 5));
+                      }}
+                    />
+                  </label>
+                  {screenshots.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {screenshots.map((file, i) => (
+                        <div key={i} className="flex items-center gap-1 bg-gray-100 rounded-full px-3 py-1 text-xs text-gray-600">
+                          <span className="truncate max-w-32">{file.name}</span>
+                          <button type="button" onClick={() => setScreenshots(prev => prev.filter((_, idx) => idx !== i))}>
+                            <X className="w-3 h-3 text-gray-400 hover:text-red-500" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || isUploading || !formData.subject?.trim() || !formData.message?.trim()}
+                  className="w-full bg-primary hover:bg-primary/90 rounded-2xl"
+                >
+                  {isUploading ? 'uploading screenshots...' : isSubmitting ? 'sending...' : 'send message'}
+                </Button>
+              </form>
             </CardContent>
           </Card>
         )}
