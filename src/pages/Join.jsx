@@ -171,8 +171,15 @@ export default function JoinPage() {
     setOtpError("");
     try {
       await base44.auth.resendOtp(email);
+      setOtpError("");
     } catch (e) {
-      setOtpError("couldn't resend. please try again.");
+      // Surface the real platform error so we can diagnose why the resend fails
+      const msg = e?.response?.data?.message || e?.message || "";
+      setOtpError(
+        msg
+          ? `couldn't resend: ${msg}`
+          : "couldn't resend. please try again in a moment."
+      );
     }
     setOtpResending(false);
   };
