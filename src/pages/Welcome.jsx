@@ -54,7 +54,7 @@ export default function WelcomePage() {
   }, {});
 
   const handleSignUp = () => navigate("/join");
-  const handleExplore = () => navigate(createPageUrl("Trips") + "?explore=true");
+  const handleExplore = () => navigate(createPageUrl("Trips") + "?explore=true&view=view_week");
   const handleDriverSignup = () => navigate("/join");
   const handleRiderSignup = () => navigate("/join");
 
