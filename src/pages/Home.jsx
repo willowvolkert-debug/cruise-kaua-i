@@ -3,33 +3,18 @@ import { Link } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import SignupPromptModal from "@/components/SignupPromptModal";
 
 export default function Home() {
   const [user, setUser] = React.useState(null);
-  const [authChecked, setAuthChecked] = React.useState(false);
-  const [showSignupPrompt, setShowSignupPrompt] = React.useState(false);
 
   React.useEffect(() => {
     base44.auth.me()
       .then(setUser)
-      .catch(() => {})
-      .finally(() => setAuthChecked(true));
+      .catch(() => {});
   }, []);
 
-  React.useEffect(() => {
-    if (authChecked && !user) {
-      try {
-        const dismissed = localStorage.getItem("cruise_signup_prompt_dismissed");
-        if (!dismissed) {
-          setShowSignupPrompt(true);
-        }
-      } catch (e) {}
-    }
-  }, [authChecked, user]);
-
   const sections = [
-    { emoji: "🚗", label: "trips", desc: "Browse available rides, post a ride you're already making, or request one for a specific trip.", to: createPageUrl("Trips") },
+    { emoji: "🚗", label: "browse rides", desc: "Browse all available rides, post a ride you're already making, or request one for a specific trip.", to: createPageUrl("Trips") + "?view=view_week" },
     { emoji: "👤", label: "account", desc: "Edit your profile, verify your license & vehicle, and manage payouts and settings.", to: createPageUrl("Account") },
     { emoji: "🌺", label: "community", desc: "Stories, updates, and photos from the Cruise Hawaiʻi community.", to: createPageUrl("Community") },
     { emoji: "ℹ️", label: "FAQ + about us", desc: "Learn about our mission to make getting around Hawaiʻi more affordable.", to: createPageUrl("AboutUs") },
@@ -81,11 +66,6 @@ export default function Home() {
           ))}
         </div>
       </div>
-
-      <SignupPromptModal
-        isOpen={showSignupPrompt}
-        onClose={() => setShowSignupPrompt(false)}
-      />
     </div>
   );
 }

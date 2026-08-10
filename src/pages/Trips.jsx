@@ -31,6 +31,8 @@ export default function TripsPage() {
   React.useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     setIsExploreMode(urlParams.get('explore') === 'true');
+    const viewParam = urlParams.get('view');
+    if (viewParam) setView(viewParam);
 
     const domainIsland = getIslandFromDomain();
     base44.auth.me().then(user => {
