@@ -57,16 +57,6 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
           window.history.replaceState({}, '', window.location.pathname);
         }
 
-        // Set booking-specific errors for logged-in users
-        if (!user.profile_picture_url) {
-          setBookingError("Please upload a profile picture before booking rides. Go to Account page.");
-        } else if (!user.profile_complete) {
-          setBookingError("Please complete your profile before booking rides. Go to Account page.");
-        } else if (!user.terms_accepted || !user.privacy_policy_accepted || !user.community_agreement_accepted) {
-          setBookingError("Please accept all legal agreements before booking rides. Go to Account page.");
-        } else if (user.pending_ratings && user.pending_ratings.length > 0) {
-          setBookingError("Please complete your pending trip ratings in the Inbox before booking new rides.");
-        }
       } catch (e) {
         // Not logged in — view-only mode
       }

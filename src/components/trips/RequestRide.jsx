@@ -49,23 +49,13 @@ export default function RequestRide({ island = "Kauai" }) {
         const user = await base44.auth.me();
         setCurrentUser(user);
 
-        const missing = [];
-        if (!user.profile_picture_url) missing.push("upload a profile photo");
-        if (!user.profile_complete) missing.push("complete your profile (username, bio, age, gender)");
-        if (!user.terms_accepted || !user.privacy_policy_accepted || !user.community_agreement_accepted) missing.push("accept the legal agreements");
-
-        if (missing.length > 0) {
-          setMissingProfileItems(missing);
-          setShowProfileModal(true);
-          return;
-        }
-
         // Load recurring ride requests
         const recurring = await base44.entities.RecurringRideRequest.filter({ user_id: user.id });
         setMyRecurring(recurring);
 
       } catch (e) {
-        setError("You must be logged in to request a ride.");
+        const next = encodeURIComponent(window.location.pathname + window.location.search);
+        window.location.href = `/join?login=true&next=${next}`;
       }
     };
     fetchUser();
@@ -89,7 +79,8 @@ export default function RequestRide({ island = "Kauai" }) {
     setError(null);
     
     if (!currentUser) {
-      setError("You must be logged in to request a ride.");
+      const next = encodeURIComponent(window.location.pathname + window.location.search);
+      window.location.href = `/join?login=true&next=${next}`;
       return;
     }
 
