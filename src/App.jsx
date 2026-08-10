@@ -52,11 +52,42 @@ const AuthenticatedApp = () => {
         return;
       }
       try {
-        await base44.auth.me();
-        // User is authenticated — let them browse freely regardless of onboarding status.
-        // They'll be prompted to complete their profile only when booking a ride.
+        const user = await base44.auth.me();
+        // User is authenticated
+        // user_type may be undefined for users who signed up via the platform's
+        // built-in signup (it doesn't set custom entity fields like user_type),
+        // so also treat onboarding as done for admins or anyone who already
+        // finished the profile quiz — otherwise they get stuck in a /join loop.
+        const needsOnboarding = user.role !== 'admin'
+          && !user.has_completed_profile_quiz
+          && (!user.user_type || user.user_type === 'new');
+
+        if (window.location.pathname === '/' && needsOnboarding) {
+          window.location.replace('/account?setup=true');
+          return;
+        }
+
+        // Catch users who landed on any authenticated page without completing onboarding
+        // (e.g., signed up through the platform login's "Sign up" link, which redirects
+        // to /trips and bypasses the Join wizard)
+        const onboardingOrPublicPaths = [
+          '/join', '/account', '/welcome', '/joinus',
+          '/driversignupflow', '/ridersignupflow',
+          '/opiosignup', '/kupunasignup',
+          '/termsofservice', '/privacypolicy', '/sms-opt-in',
+          '/aboutus', '/about-us', '/contactus', '/contact-us',
+          '/driver-verification', '/unsubscrib'
+        ];
+        const currentPath = window.location.pathname.toLowerCase();
+        const isOnboardingOrPublic = onboardingOrPublicPaths.some(
+          p => currentPath === p || currentPath.startsWith(p)
+        );
+
+        if (needsOnboarding && !isOnboardingOrPublic) {
+          window.location.replace('/account?setup=true');
+        }
       } catch (e) {
-        // Not authenticated - stay on current page (guest browsing)
+        // Not authenticated - stay on current page
       }
       setIsCheckingAuth(false);
     };
@@ -84,10 +115,18 @@ const AuthenticatedApp = () => {
   if (authError) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
+    } else if (authError.type === 'auth_required') {
+      // Only redirect to login if not on a public page (Welcome, JoinUs, etc.)
+      const publicPaths = ['/', '/welcome', '/joinus', '/join', '/trips', '/aboutus', '/about-us', '/contactus', '/contact-us', '/sms-opt-in'];
+      const isPublicPath = publicPaths.some(p => window.location.pathname.toLowerCase() === p);
+      if (!isPublicPath) {
+        navigateToLogin();
+        return null;
+      }
+      // For public pages, fall through and render the app normally
+    } else if (authError.type === 'unknown') {
+      // Network/load error — still render the app, pages handle their own auth
     }
-    // auth_required or unknown — render the app; pages handle their own auth.
-    // Guests can browse freely; they're only prompted to sign up on first visit
-    // (via the SignupPromptModal) and when they try to book a ride.
   }
 
   // Render the main app

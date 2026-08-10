@@ -108,14 +108,6 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
   };
 
   const handleBookRide = (ride) => {
-    if (!currentUser) {
-      window.location.href = '/join';
-      return;
-    }
-    if (!currentUser.has_completed_profile_quiz || !currentUser.profile_complete) {
-      window.location.href = '/account?setup=true';
-      return;
-    }
     setSelectedRide(ride);
     setShowDriverProfile(false);
     setShowBookingModal(true);
@@ -148,7 +140,7 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
       {!currentUser && (
         <Alert className="rounded-2xl border-blue-200 bg-blue-50">
           <AlertDescription className="text-blue-800">
-            <button onClick={() => window.location.href = '/join'} className="underline font-semibold">Sign up or log in</button> to book a ride.
+            <button onClick={() => base44.auth.redirectToLogin()} className="underline font-semibold">Sign up or log in</button> to book a ride.
           </AlertDescription>
         </Alert>
       )}

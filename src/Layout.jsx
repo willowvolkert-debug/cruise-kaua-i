@@ -12,6 +12,16 @@ export default function Layout({ children, currentPageName }) {
         const user = await base44.auth.me();
         setCurrentUser(user);
 
+        // Safety net: authenticated users who haven't completed onboarding
+        // are sent to the Join flow (skip /account, which is part of onboarding).
+        const needsOnboarding = user.role !== 'admin'
+          && !user.has_completed_profile_quiz
+          && (!user.user_type || user.user_type === 'new');
+        if (needsOnboarding && window.location.pathname.toLowerCase() !== '/account') {
+          window.location.replace('/account?setup=true');
+          return;
+        }
+
         // Track last activity date (throttled to once per ~6 hours)
         try {
           const now = new Date();
@@ -40,7 +50,16 @@ export default function Layout({ children, currentPageName }) {
           }).catch(() => {});
         }
       } catch (e) {
-        // Guest user or transient error — let them browse freely
+        // Only redirect to login on a definitive 401, not network/transient errors
+        const is401 = e?.status === 401 || e?.response?.status === 401;
+        if (is401) {
+          const publicPaths = ['/', '/welcome', '/joinus', '/join', '/home', '/trips', '/contactus', '/contact-us', '/aboutus', '/about-us', '/sms-opt-in', '/termsofservice', '/privacypolicy'];
+          if (!publicPaths.includes(location.pathname.toLowerCase())) {
+            const next = encodeURIComponent(window.location.pathname + window.location.search);
+            // login=true so the Join page shows the login view (not step 5 of the signup wizard)
+            window.location.href = `/join?login=true&next=${next}`;
+          }
+        }
       }
     };
 
@@ -77,10 +96,10 @@ export default function Layout({ children, currentPageName }) {
           <div className="flex items-center gap-3 shrink-0">
             {!currentUser && (
               <Link
-                to="/join"
+                to="/join?login=true"
                 className="text-sm font-bold text-primary border border-primary rounded-full px-4 py-1.5 hover:bg-primary/5 transition-colors"
               >
-                sign up
+                log in
               </Link>
             )}
             <Link to="/home" className="flex items-center gap-2">
