@@ -28,7 +28,7 @@ const BASE_STEPS = [
   { id: "profile_picture", title: "Add a profile photo", subtitle: "A clear photo of your face helps build trust in our community.", type: "photo", field: "profile_picture_url" },
   { id: "terms_of_service", title: "Terms of Service", subtitle: "Please read and agree to our Terms of Service before continuing.", type: "terms_of_service", field: "terms_of_service" },
   { id: "privacy_policy", title: "Privacy Policy", subtitle: "Please read and agree to our Privacy Policy before continuing.", type: "privacy_policy", field: "privacy_policy" },
-  { id: "license", title: "Verify your driver's license", subtitle: "Upload both sides of your license so our team can verify your identity. Required to book or post rides.", type: "license", field: "license" },
+  { id: "license", title: "Verify your driver's license", subtitle: "Upload both sides of your license so our team can verify your identity. You can skip this for now and upload it later from your account — you'll need it verified before your first ride.", type: "license", field: "license" },
   { id: "driver_choice", title: "Are you interested in driving?", subtitle: "Drivers earn money by sharing rides they're already making. Riders book seats on posted trips.", type: "driver_choice", field: "driver_choice" },
 ];
 
@@ -162,7 +162,8 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     } else if (current.type === "photo") {
       if (!photoFile && !user?.profile_picture_url) { setError("Oops! You have to complete this step before moving on."); return false; }
     } else if (current.type === "license") {
-      if (!licenseFront || !licenseBack) { setError("Please upload both sides of your license."); return false; }
+      // License is optional during onboarding — user can upload later from account page
+      return true;
     } else if (current.type === "driver_choice") {
       return true;
     } else if (current.type === "vehicle_info") {
@@ -657,6 +658,12 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
                 <ul className="space-y-0.5"><li>• A valid driver's license</li><li>• Clear, well-lit photos of both sides</li><li>• All text must be readable</li></ul>
               </div>
               <p className="text-xs text-gray-400 text-center">🔒 Encrypted and secure.</p>
+              <button
+                onClick={() => { setError(""); setStep(safeStep + 1); }}
+                className="w-full text-center text-sm text-gray-400 hover:text-primary font-medium underline underline-offset-2 transition-colors pt-1"
+              >
+                skip for now — i'll upload it later →
+              </button>
             </div>
           )}
 

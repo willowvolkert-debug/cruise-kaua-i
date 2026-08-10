@@ -154,7 +154,7 @@ export default function AccountPage() {
                 } else if (!currentUser.has_dismissed_welcome_modal && !forceQuiz) {
                     setShowTutorial(true);
                 } else {
-                    setShowProfileQuiz(prev => prev === false ? false : true);
+                    setShowProfileQuiz(true);
                 }
             }
             setEditData({
@@ -1312,7 +1312,7 @@ export default function AccountPage() {
             {showProfileQuiz && user && (
                 <ProfileSetupQuiz
                     user={user}
-                    initialStep={profileQuizSavedStep > 0 ? profileQuizSavedStep : 3}
+                    initialStep={profileQuizSavedStep > 0 ? profileQuizSavedStep : 0}
                     onComplete={async () => {
                         setShowProfileQuiz(false);
                         setProfileQuizSavedStep(0);
