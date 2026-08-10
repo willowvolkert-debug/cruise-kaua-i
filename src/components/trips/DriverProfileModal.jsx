@@ -204,7 +204,7 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
                 <p className="text-blue-800 font-semibold mb-1">Create an account to book this ride</p>
                 <p className="text-blue-700 text-sm mb-3">Join Cruise Hawaiʻi to connect with drivers and book rides.</p>
                 <Button
-                  onClick={() => base44.auth.redirectToLogin()}
+                  onClick={() => window.location.href = '/join'}
                   className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6"
                 >
                   Sign Up / Log In

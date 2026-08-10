@@ -53,7 +53,6 @@ export default function RequestRide({ island = "Kauai" }) {
         if (!user.profile_picture_url) missing.push("upload a profile photo");
         if (!user.profile_complete) missing.push("complete your profile (username, bio, age, gender)");
         if (!user.terms_accepted || !user.privacy_policy_accepted || !user.community_agreement_accepted) missing.push("accept the legal agreements");
-        if (!user.drivers_license_verified) missing.push("verify your driver's license");
 
         if (missing.length > 0) {
           setMissingProfileItems(missing);
@@ -98,7 +97,6 @@ export default function RequestRide({ island = "Kauai" }) {
     if (!currentUser.profile_picture_url) missing.push("upload a profile photo");
     if (!currentUser.profile_complete) missing.push("complete your profile (username, bio, age, gender)");
     if (!currentUser.terms_accepted || !currentUser.privacy_policy_accepted || !currentUser.community_agreement_accepted) missing.push("accept the legal agreements");
-    if (!currentUser.drivers_license_verified) missing.push("verify your driver's license");
 
     if (missing.length > 0) {
       setMissingProfileItems(missing);
@@ -561,7 +559,15 @@ export default function RequestRide({ island = "Kauai" }) {
             <p className="text-gray-600">
               we will also message you if we find a ride that matches your request.
             </p>
-            <Button 
+            {!currentUser?.drivers_license_verified && (
+              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3">
+                <p className="text-sm text-amber-800">
+                  🪪 before you can ride, you'll need to upload your driver's license.{" "}
+                  <a href="/account" className="font-semibold underline underline-offset-2">go to your account to upload it →</a>
+                </p>
+              </div>
+            )}
+            <Button
               onClick={() => setShowSuccessModal(false)}
               className="w-full bg-primary hover:bg-primary/90 rounded-2xl"
             >
