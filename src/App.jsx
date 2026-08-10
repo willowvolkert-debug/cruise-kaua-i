@@ -62,16 +62,11 @@ const AuthenticatedApp = () => {
           && !user.has_completed_profile_quiz
           && (!user.user_type || user.user_type === 'new');
 
-        if (window.location.pathname === '/' && needsOnboarding) {
-          window.location.replace('/account?setup=true');
-          return;
-        }
-
         // Catch users who landed on any authenticated page without completing onboarding
         // (e.g., signed up through the platform login's "Sign up" link, which redirects
         // to /trips and bypasses the Join wizard)
         const onboardingOrPublicPaths = [
-          '/join', '/account', '/welcome', '/joinus',
+          '/', '/join', '/account', '/welcome', '/joinus',
           '/driversignupflow', '/ridersignupflow',
           '/opiosignup', '/kupunasignup',
           '/termsofservice', '/privacypolicy', '/sms-opt-in',

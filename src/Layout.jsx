@@ -13,11 +13,13 @@ export default function Layout({ children, currentPageName }) {
         setCurrentUser(user);
 
         // Safety net: authenticated users who haven't completed onboarding
-        // are sent to the Join flow (skip /account, which is part of onboarding).
+        // are sent to setup — but only from app pages, not from the landing
+        // page or public/info pages they should be able to browse.
         const needsOnboarding = user.role !== 'admin'
           && !user.has_completed_profile_quiz
           && (!user.user_type || user.user_type === 'new');
-        if (needsOnboarding && window.location.pathname.toLowerCase() !== '/account') {
+        const publicBrowsePaths = ['/', '/welcome', '/joinus', '/join', '/home', '/aboutus', '/about-us', '/contactus', '/contact-us', '/sms-opt-in', '/termsofservice', '/privacypolicy'];
+        if (needsOnboarding && !publicBrowsePaths.includes(location.pathname.toLowerCase())) {
           window.location.replace('/account?setup=true');
           return;
         }
