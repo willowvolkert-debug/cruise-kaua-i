@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { appParams } from "@/lib/app-params";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -144,9 +145,18 @@ export default function JoinPage() {
     setOtpLoading(true);
     try {
       await base44.auth.verifyOtp({ email, otpCode });
-      // Try to auto-login (works for new registrations where we have the password)
+      // Try to auto-login via direct fetch (avoids SDK logout() redirect on 401)
       try {
-        await base44.auth.loginViaEmailPassword(email, password);
+        const otpLoginRes = await fetch(`${appParams.serverUrl}/api/apps/${appParams.appId}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-App-Id": appParams.appId },
+          body: JSON.stringify({ email, password }),
+        });
+        if (!otpLoginRes.ok) throw new Error("login failed");
+        const otpLoginData = await otpLoginRes.json();
+        if (otpLoginData.access_token) {
+          base44.auth.setToken(otpLoginData.access_token);
+        }
         // Mark that the user completed OTP verification through the Join flow
         await base44.auth.updateMe({ has_verified_otp: true });
         if (nextUrl) {
@@ -195,8 +205,28 @@ export default function JoinPage() {
     }
     setLoginRetryLoading(true);
     try {
-      await base44.auth.loginViaEmailPassword(email, loginRetryPassword);
-      await base44.auth.updateMe({ has_verified_otp: true });
+      // Direct fetch — same reason as handleLogin (avoids SDK logout() redirect on 401)
+      const retryRes = await fetch(`${appParams.serverUrl}/api/apps/${appParams.appId}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-App-Id": appParams.appId },
+        body: JSON.stringify({ email, password: loginRetryPassword }),
+      });
+      if (!retryRes.ok) {
+        const errData = await retryRes.json().catch(() => ({}));
+        const msg = errData?.message || errData?.detail || "";
+        if (msg.toLowerCase().includes("password") || msg.toLowerCase().includes("credential")) {
+          setLoginRetryError("that password didn't match. try again, or use \"forgot password\" below.");
+        } else {
+          setLoginRetryError("couldn't log in. try again, or go to cruisekauai.org and log in directly.");
+        }
+        setLoginRetryLoading(false);
+        return;
+      }
+      const retryData = await retryRes.json();
+      if (retryData.access_token) {
+        base44.auth.setToken(retryData.access_token);
+      }
+      try { await base44.auth.updateMe({ has_verified_otp: true }); } catch (e) {}
       await new Promise(r => setTimeout(r, 500));
       if (nextUrl) {
         window.location.href = nextUrl;
@@ -226,22 +256,38 @@ export default function JoinPage() {
     }
     setLoginLoading(true);
     try {
-      await base44.auth.loginViaEmailPassword(email, loginPassword);
+      // Call the login API directly via fetch instead of base44.auth.loginViaEmailPassword,
+      // because the SDK's loginViaEmailPassword calls this.logout() on 401, which redirects
+      // the page (window.location.href = logoutUrl) before our catch block can run —
+      // causing an infinite reload loop when credentials are wrong.
+      const res = await fetch(`${appParams.serverUrl}/api/apps/${appParams.appId}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-App-Id": appParams.appId },
+        body: JSON.stringify({ email, password: loginPassword }),
+      });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        const msg = errData?.message || errData?.detail || "";
+        const lower = (msg || "").toLowerCase();
+        if (lower.includes("password") || lower.includes("credential") || lower.includes("invalid") || lower.includes("not found")) {
+          setLoginError("that email or password didn't match. try again or reset your password.");
+        } else {
+          setLoginError(msg || "couldn't log in. please try again.");
+        }
+        setLoginLoading(false);
+        return;
+      }
+      const data = await res.json();
+      if (data.access_token) {
+        base44.auth.setToken(data.access_token);
+      }
       try { await base44.auth.updateMe({ has_verified_otp: true }); } catch (e) {}
-      // Brief delay to let the token fully propagate to localStorage + axios headers
-      // before the page reload, preventing a 401 race on the destination page.
       await new Promise(r => setTimeout(r, 500));
       const params = new URLSearchParams(window.location.search);
       const next = params.get("next");
       window.location.href = next ? decodeURIComponent(next) : "/home";
     } catch (e) {
-      const msg = e?.response?.data?.message || e?.message || "";
-      const lower = msg.toLowerCase();
-      if (lower.includes("password") || lower.includes("credential") || lower.includes("invalid") || lower.includes("not found")) {
-        setLoginError("that email or password didn't match. try again or reset your password.");
-      } else {
-        setLoginError(msg || "couldn't log in. please try again.");
-      }
+      setLoginError("couldn't log in. please try again.");
     }
     setLoginLoading(false);
   };
