@@ -299,15 +299,6 @@ export default function JoinPage() {
     setLoginLoading(false);
   };
 
-  // Google sign-in still goes through the platform OAuth flow (the only Google
-  // path available, since the platform owns user auth).
-  const handleGoogleLogin = () => {
-    const params = new URLSearchParams(window.location.search);
-    const next = params.get("next");
-    const target = next ? decodeURIComponent(next) : "/home";
-    base44.auth.redirectToLogin(`${window.location.origin}${target}`);
-  };
-
   const handleContinue = () => {
     if (step === 0) {
       if (ageGroup === "opio") {
@@ -345,25 +336,6 @@ export default function JoinPage() {
         <div className="flex-1 flex flex-col max-w-md mx-auto w-full px-6 py-8">
           <h1 className="text-3xl font-extrabold text-gray-900 mb-1">welcome back 🤙</h1>
           <p className="text-gray-500 text-base mb-6">log in to your cruise kauaʻi account.</p>
-
-          <button
-            onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-3 border-2 border-gray-200 rounded-full py-4 font-bold text-gray-700 hover:bg-gray-50 transition-colors mb-3"
-          >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09a6.6 6.6 0 0 1 0-4.18V7.07H2.18a11 11 0 0 0 0 9.86l3.66-2.84z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.07l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z"/>
-            </svg>
-            continue with google
-          </button>
-
-          <div className="flex items-center gap-3 my-4">
-            <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-xs text-gray-400">or</span>
-            <div className="flex-1 h-px bg-gray-200" />
-          </div>
 
           <div className="space-y-3">
             <div>
