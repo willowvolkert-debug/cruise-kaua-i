@@ -18,7 +18,7 @@ export default function Layout({ children, currentPageName }) {
         const needsOnboarding = user.role !== 'admin'
           && !user.has_completed_profile_quiz
           && (!user.user_type || user.user_type === 'new');
-        const publicBrowsePaths = ['/', '/welcome', '/joinus', '/join', '/home', '/aboutus', '/about-us', '/contactus', '/contact-us', '/sms-opt-in', '/termsofservice', '/privacypolicy'];
+        const publicBrowsePaths = ['/', '/welcome', '/joinus', '/join', '/home', '/account', '/aboutus', '/about-us', '/contactus', '/contact-us', '/sms-opt-in', '/termsofservice', '/privacypolicy'];
         if (needsOnboarding && !publicBrowsePaths.includes(location.pathname.toLowerCase())) {
           window.location.replace('/account?setup=true');
           return;
