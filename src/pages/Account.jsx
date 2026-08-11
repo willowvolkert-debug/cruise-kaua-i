@@ -249,11 +249,26 @@ export default function AccountPage() {
             console.error(e);
             const is401 = e?.status === 401 || e?.response?.status === 401;
             if (is401) {
+                // Check if a token exists — if so, the 401 is likely a SDK client
+                // initialization race (token in localStorage/URL but not picked up
+                // by the client at module-init). Reload ONCE to re-init the client.
+                // Use sessionStorage to prevent infinite reload loops.
+                const hasToken = !!(localStorage.getItem('base44_access_token') || localStorage.getItem('token'));
+                const urlToken = new URLSearchParams(window.location.search).get('access_token');
+                const reloadKey = 'account_401_reload';
+                const alreadyReloaded = sessionStorage.getItem(reloadKey);
+                if ((hasToken || urlToken) && !alreadyReloaded) {
+                    sessionStorage.setItem(reloadKey, '1');
+                    window.location.reload();
+                    return;
+                }
+                sessionStorage.removeItem(reloadKey);
                 const next = encodeURIComponent(window.location.pathname + window.location.search);
                 window.location.href = `/join?login=true&next=${next}`;
                 return;
             }
         }
+        sessionStorage.removeItem('account_401_reload');
         setIsLoading(false);
     };
 

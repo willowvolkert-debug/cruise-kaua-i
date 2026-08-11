@@ -266,20 +266,24 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
 
     // Final step — save everything
     setSaving(true);
-    await saveProfileAndLicense();
-    if (isDriverPath) {
-      await saveVehicle();
-      await saveDriverAgreement();
+    try {
+      await saveProfileAndLicense();
+      if (isDriverPath) {
+        await saveVehicle();
+        await saveDriverAgreement();
+      }
+      // Fire onboarding email once (non-blocking)
+      sendOnboardingEmail({}).catch(() => null);
+      base44.analytics.track({
+        eventName: "profile_setup_completed",
+        properties: { path: isDriverPath ? "driver" : "rider", island: answers.preferred_island || "Kauai" }
+      });
+      setDone(true);
+      setTimeout(() => onComplete(), 1800);
+    } catch (saveErr) {
+      setError("couldn't save your profile — please check your connection and try again. if the problem continues, use the contact us form.");
     }
     setSaving(false);
-    // Fire onboarding email once (non-blocking)
-    sendOnboardingEmail({}).catch(() => null);
-    base44.analytics.track({
-      eventName: "profile_setup_completed",
-      properties: { path: isDriverPath ? "driver" : "rider", island: answers.preferred_island || "Kauai" }
-    });
-    setDone(true);
-    setTimeout(() => onComplete(), 1800);
   };
 
   const handleDriverChoice = async (wantsDriver) => {
@@ -290,9 +294,13 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     } else {
       // Save profile/license first, then show tips card
       setSaving(true);
-      await saveProfileAndLicense();
+      try {
+        await saveProfileAndLicense();
+        setShowRiderTips(true);
+      } catch (saveErr) {
+        setError("couldn't save your profile — please check your connection and try again.");
+      }
       setSaving(false);
-      setShowRiderTips(true);
     }
   };
 

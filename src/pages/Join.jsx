@@ -155,6 +155,7 @@ export default function JoinPage() {
         if (!otpLoginRes.ok) throw new Error("login failed");
         const otpLoginData = await otpLoginRes.json();
         if (otpLoginData.access_token) {
+          localStorage.setItem('base44_access_token', otpLoginData.access_token);
           base44.auth.setToken(otpLoginData.access_token);
         }
         // Mark that the user completed OTP verification through the Join flow
@@ -227,6 +228,7 @@ export default function JoinPage() {
       }
       const retryData = await retryRes.json();
       if (retryData.access_token) {
+        localStorage.setItem('base44_access_token', retryData.access_token);
         base44.auth.setToken(retryData.access_token);
       }
       try { await base44.auth.updateMe({ has_verified_otp: true }); } catch (e) {}
@@ -282,6 +284,7 @@ export default function JoinPage() {
       }
       const data = await res.json();
       if (data.access_token) {
+        localStorage.setItem('base44_access_token', data.access_token);
         base44.auth.setToken(data.access_token);
       }
       try { await base44.auth.updateMe({ has_verified_otp: true }); } catch (e) {}
@@ -708,6 +711,18 @@ export default function JoinPage() {
             {otpError && (
               <p className="text-red-500 text-sm font-medium">{otpError}</p>
             )}
+            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+              <p className="text-sm text-amber-800">
+                didn't get the email? check your spam folder, or{" "}
+                <button
+                  onClick={() => { setLoginMode(true); resetOtp(); }}
+                  className="underline font-semibold hover:text-amber-600"
+                >
+                  try logging in instead
+                </button>{" "}
+                if you already have an account.
+              </p>
+            </div>
           </div>
         )}
 
