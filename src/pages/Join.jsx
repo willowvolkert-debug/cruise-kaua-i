@@ -155,6 +155,7 @@ export default function JoinPage() {
         if (!otpLoginRes.ok) throw new Error("login failed");
         const otpLoginData = await otpLoginRes.json();
         if (otpLoginData.access_token) {
+          localStorage.setItem('base44_access_token', otpLoginData.access_token);
           base44.auth.setToken(otpLoginData.access_token);
         }
         // Mark that the user completed OTP verification through the Join flow
@@ -224,6 +225,7 @@ export default function JoinPage() {
       }
       const retryData = await retryRes.json();
       if (retryData.access_token) {
+        localStorage.setItem('base44_access_token', retryData.access_token);
         base44.auth.setToken(retryData.access_token);
       }
       try { await base44.auth.updateMe({ has_verified_otp: true }); } catch (e) {}
@@ -279,6 +281,7 @@ export default function JoinPage() {
       }
       const data = await res.json();
       if (data.access_token) {
+        localStorage.setItem('base44_access_token', data.access_token);
         base44.auth.setToken(data.access_token);
       }
       try { await base44.auth.updateMe({ has_verified_otp: true }); } catch (e) {}
