@@ -134,7 +134,9 @@ export default function AccountPage() {
         try {
             const isAuthenticated = await base44.auth.isAuthenticated();
             if (!isAuthenticated) {
-                base44.auth.redirectToLogin(window.location.href);
+                const next = encodeURIComponent(window.location.pathname + window.location.search);
+                window.location.href = `/join?login=true&next=${next}`;
+                setIsLoading(false);
                 return;
             }
             
