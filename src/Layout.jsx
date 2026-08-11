@@ -12,18 +12,6 @@ export default function Layout({ children, currentPageName }) {
         const user = await base44.auth.me();
         setCurrentUser(user);
 
-        // Safety net: authenticated users who haven't completed onboarding
-        // are sent to setup — but only from app pages, not from the landing
-        // page or public/info pages they should be able to browse.
-        const needsOnboarding = user.role !== 'admin'
-          && !user.has_completed_profile_quiz
-          && (!user.user_type || user.user_type === 'new');
-        const publicBrowsePaths = ['/', '/welcome', '/joinus', '/join', '/home', '/account', '/trips', '/aboutus', '/about-us', '/contactus', '/contact-us', '/sms-opt-in', '/termsofservice', '/privacypolicy'];
-        if (needsOnboarding && !publicBrowsePaths.includes(location.pathname.toLowerCase())) {
-          window.location.replace('/account?setup=true');
-          return;
-        }
-
         // Track last activity date (throttled to once per ~6 hours)
         try {
           const now = new Date();
