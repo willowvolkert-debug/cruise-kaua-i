@@ -197,6 +197,7 @@ export default function JoinPage() {
     try {
       await base44.auth.loginViaEmailPassword(email, loginRetryPassword);
       await base44.auth.updateMe({ has_verified_otp: true });
+      await new Promise(r => setTimeout(r, 500));
       if (nextUrl) {
         window.location.href = nextUrl;
         return;
@@ -227,6 +228,9 @@ export default function JoinPage() {
     try {
       await base44.auth.loginViaEmailPassword(email, loginPassword);
       try { await base44.auth.updateMe({ has_verified_otp: true }); } catch (e) {}
+      // Brief delay to let the token fully propagate to localStorage + axios headers
+      // before the page reload, preventing a 401 race on the destination page.
+      await new Promise(r => setTimeout(r, 500));
       const params = new URLSearchParams(window.location.search);
       const next = params.get("next");
       window.location.href = next ? decodeURIComponent(next) : "/home";

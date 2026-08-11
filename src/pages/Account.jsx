@@ -132,7 +132,16 @@ export default function AccountPage() {
     const loadData = async () => {
         setIsLoading(true);
         try {
-            const currentUser = await base44.auth.me();
+            let currentUser;
+            try {
+                currentUser = await base44.auth.me();
+            } catch (firstAttempt) {
+                // Token race condition: right after loginViaEmailPassword + page reload,
+                // the first me() call can fail with 401 before the token fully propagates
+                // to the axios client. Wait briefly and retry once before giving up.
+                await new Promise(r => setTimeout(r, 1500));
+                currentUser = await base44.auth.me();
+            }
             setUser(currentUser);
             setProfileQuizSavedStep(currentUser.profile_quiz_saved_step || 0);
             // Show quiz if user hasn't completed it, or if forced via URL param
