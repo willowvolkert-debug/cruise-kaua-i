@@ -155,17 +155,19 @@ export default function JoinPage() {
         if (!otpLoginRes.ok) throw new Error("login failed");
         const otpLoginData = await otpLoginRes.json();
         if (otpLoginData.access_token) {
-          localStorage.setItem('base44_access_token', otpLoginData.access_token);
           base44.auth.setToken(otpLoginData.access_token);
         }
         // Mark that the user completed OTP verification through the Join flow
-        await base44.auth.updateMe({ has_verified_otp: true });
+        try { await base44.auth.updateMe({ has_verified_otp: true }); } catch (e) {}
+        // Pass token in URL so appParams picks it up on the next page load,
+        // guaranteeing the SDK client has it at module-init time.
         if (nextUrl) {
-          window.location.href = nextUrl;
+          const sep = nextUrl.includes('?') ? '&' : '?';
+          window.location.href = nextUrl + (otpLoginData.access_token ? `${sep}access_token=${otpLoginData.access_token}` : '');
           return;
         }
         const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
-        window.location.href = `/account?setup=true&role=${driverRole}&island=${island}`;
+        window.location.href = `/account?setup=true&role=${driverRole}&island=${island}${otpLoginData.access_token ? `&access_token=${otpLoginData.access_token}` : ''}`;
         return;
       } catch (loginErr) {
         // Auto-login failed — show inline login retry instead of redirecting
@@ -225,17 +227,16 @@ export default function JoinPage() {
       }
       const retryData = await retryRes.json();
       if (retryData.access_token) {
-        localStorage.setItem('base44_access_token', retryData.access_token);
         base44.auth.setToken(retryData.access_token);
       }
       try { await base44.auth.updateMe({ has_verified_otp: true }); } catch (e) {}
-      await new Promise(r => setTimeout(r, 500));
       if (nextUrl) {
-        window.location.href = nextUrl;
+        const sep = nextUrl.includes('?') ? '&' : '?';
+        window.location.href = nextUrl + (retryData.access_token ? `${sep}access_token=${retryData.access_token}` : '');
         return;
       }
       const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
-      window.location.href = `/account?setup=true&role=${driverRole}&island=${island}`;
+      window.location.href = `/account?setup=true&role=${driverRole}&island=${island}${retryData.access_token ? `&access_token=${retryData.access_token}` : ''}`;
     } catch (e) {
       const msg = e?.response?.data?.message || e?.message || "";
       if (msg.toLowerCase().includes("password") || msg.toLowerCase().includes("credential")) {
@@ -281,14 +282,14 @@ export default function JoinPage() {
       }
       const data = await res.json();
       if (data.access_token) {
-        localStorage.setItem('base44_access_token', data.access_token);
         base44.auth.setToken(data.access_token);
       }
       try { await base44.auth.updateMe({ has_verified_otp: true }); } catch (e) {}
-      await new Promise(r => setTimeout(r, 500));
       const params = new URLSearchParams(window.location.search);
       const next = params.get("next");
-      window.location.href = next ? decodeURIComponent(next) : "/home";
+      const target = next ? decodeURIComponent(next) : "/home";
+      const sep = target.includes('?') ? '&' : '?';
+      window.location.href = target + (data.access_token ? `${sep}access_token=${data.access_token}` : '');
     } catch (e) {
       setLoginError("couldn't log in. please try again.");
     }

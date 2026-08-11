@@ -136,11 +136,23 @@ export default function AccountPage() {
             try {
                 currentUser = await base44.auth.me();
             } catch (firstAttempt) {
-                // Token race condition: right after loginViaEmailPassword + page reload,
+                // Token race condition: right after login + page reload,
                 // the first me() call can fail with 401 before the token fully propagates
-                // to the axios client. Wait briefly and retry once before giving up.
-                await new Promise(r => setTimeout(r, 1500));
-                currentUser = await base44.auth.me();
+                // to the axios client. Retry with increasing delays.
+                const hasToken = !!(localStorage.getItem('base44_access_token') || localStorage.getItem('token'));
+                if (!hasToken) throw firstAttempt; // No token at all — genuine auth failure
+                // Token exists but me() failed — likely a propagation delay. Retry up to 3 times.
+                let lastErr = firstAttempt;
+                for (let i = 0; i < 3; i++) {
+                    await new Promise(r => setTimeout(r, 1500));
+                    try {
+                        currentUser = await base44.auth.me();
+                        break;
+                    } catch (retryErr) {
+                        lastErr = retryErr;
+                    }
+                }
+                if (!currentUser) throw lastErr;
             }
             setUser(currentUser);
             setProfileQuizSavedStep(currentUser.profile_quiz_saved_step || 0);
