@@ -132,14 +132,6 @@ export default function AccountPage() {
     const loadData = async () => {
         setIsLoading(true);
         try {
-            const isAuthenticated = await base44.auth.isAuthenticated();
-            if (!isAuthenticated) {
-                const next = encodeURIComponent(window.location.pathname + window.location.search);
-                window.location.href = `/join?login=true&next=${next}`;
-                setIsLoading(false);
-                return;
-            }
-            
             const currentUser = await base44.auth.me();
             setUser(currentUser);
             setProfileQuizSavedStep(currentUser.profile_quiz_saved_step || 0);
@@ -232,7 +224,15 @@ export default function AccountPage() {
                 }
             }
 
-        } catch (e) { console.error(e); }
+        } catch (e) {
+            console.error(e);
+            const is401 = e?.status === 401 || e?.response?.status === 401;
+            if (is401) {
+                const next = encodeURIComponent(window.location.pathname + window.location.search);
+                window.location.href = `/join?login=true&next=${next}`;
+                return;
+            }
+        }
         setIsLoading(false);
     };
 
