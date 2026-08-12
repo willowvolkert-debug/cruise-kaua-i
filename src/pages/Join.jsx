@@ -395,12 +395,12 @@ export default function JoinPage() {
             )}
             <p className="text-sm text-gray-400">
               forgot your password?{" "}
-              <button
-                onClick={() => base44.auth.redirectToLogin(`${window.location.origin}/join?login=true`)}
+              <a
+                href={`/forgot-password${email ? `?email=${encodeURIComponent(email)}` : ''}`}
                 className="text-primary underline font-medium hover:text-primary/80"
               >
                 reset it here
-              </button>
+              </a>
             </p>
           </div>
 
