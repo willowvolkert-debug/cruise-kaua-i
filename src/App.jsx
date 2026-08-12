@@ -31,6 +31,8 @@ import SmsOptIn from './pages/SmsOptIn';
 import OpioSignup from './pages/OpioSignup';
 import KupunaSignup from './pages/KupunaSignup';
 import DriverVerificationChart from './pages/DriverVerificationChart';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -156,6 +158,8 @@ const AuthenticatedApp = () => {
       <Route path="/RiderSignupFlow" element={<RiderSignupFlow />} />
       <Route path="/joinus" element={<JoinUs />} />
       <Route path="/join" element={<JoinPage />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/communityforum" element={<LayoutWrapper currentPageName="Community Forum"><CommunityForum /></LayoutWrapper>} />
       <Route path="/communityinstagram" element={<LayoutWrapper currentPageName="Community Instagram"><CommunityInstagram /></LayoutWrapper>} />
       <Route path="/communityrecommendations" element={<LayoutWrapper currentPageName="Community Recommendations"><CommunityRecommendations /></LayoutWrapper>} />
