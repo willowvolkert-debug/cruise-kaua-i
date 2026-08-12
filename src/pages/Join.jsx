@@ -119,15 +119,12 @@ export default function JoinPage() {
     } catch (e) {
       const msg = e?.response?.data?.message || e?.message || "";
       if (msg.toLowerCase().includes("already") || msg.toLowerCase().includes("exists")) {
-        // Account exists — send a new OTP so they can verify their existing account
-        try {
-          await base44.auth.resendOtp(email);
-        } catch (resendErr) {
-          // resendOtp failed, but still show OTP screen so user can try manually
-        }
-        setSignupError("");
-        setOtpError("this email is already registered. we sent a new verification code — enter it below.");
-        setOtpState("sent");
+        // Account already exists. If the email is already verified, sending an
+        // OTP does nothing (the platform won't re-verify a verified account) and
+        // the user gets stuck waiting for a code that never arrives. Switch to
+        // login mode so they can sign in with their password and continue setup.
+        setSignupError("this email is already registered. log in with your password below 👇");
+        setLoginMode(true);
       } else {
         // Unknown error — stay on signup form and show the error
         setSignupError(msg || "something went wrong. please try again.");
@@ -336,6 +333,12 @@ export default function JoinPage() {
         <div className="flex-1 flex flex-col max-w-md mx-auto w-full px-6 py-8">
           <h1 className="text-3xl font-extrabold text-gray-900 mb-1">welcome back 🤙</h1>
           <p className="text-gray-500 text-base mb-6">log in to your cruise kauaʻi account.</p>
+
+          {signupError && (
+            <div className="mb-4 bg-primary/10 border border-primary/20 rounded-xl px-4 py-3">
+              <p className="text-sm text-primary font-medium">{signupError}</p>
+            </div>
+          )}
 
           <div className="space-y-3">
             <div>
