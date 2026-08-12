@@ -112,6 +112,47 @@ export default function JoinPage() {
       return;
     }
     setSignupLoading(true);
+
+    // Pre-check: try logging in with the entered credentials first. If the
+    // account already exists (email already registered/verified), we skip the
+    // OTP step entirely — either logging the user straight in (correct password)
+    // or switching to the login view (wrong password). Only when the email is
+    // genuinely new do we call register() and send a verification code.
+    try {
+      const probeRes = await fetch(`${appParams.serverUrl}/api/apps/${appParams.appId}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-App-Id": appParams.appId },
+        body: JSON.stringify({ email, password }),
+      });
+      if (probeRes.ok) {
+        // Account exists and the password matched — log them in directly.
+        const data = await probeRes.json();
+        if (data.access_token) {
+          localStorage.setItem('base44_access_token', data.access_token);
+          base44.auth.setToken(data.access_token);
+        }
+        try { await base44.auth.updateMe({ has_verified_otp: true }); } catch (e) {}
+        const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
+        window.location.href = `/account?setup=true&role=${driverRole}&island=${island}${data.access_token ? `&access_token=${data.access_token}` : ''}`;
+        return;
+      }
+      const probeErr = await probeRes.json().catch(() => ({}));
+      const probeMsg = (probeErr?.message || probeErr?.detail || "").toLowerCase();
+      // A credential/password error means the account exists but the password
+      // is wrong → prompt login. A "not found" / "unverified" error means the
+      // email is new (or not yet fully set up) → proceed to register().
+      if (probeMsg.includes("password") || probeMsg.includes("credential") || probeMsg.includes("invalid")) {
+        setSignupError("this email is already registered. log in with your password below 👇");
+        setLoginPassword(password);
+        setLoginMode(true);
+        setSignupLoading(false);
+        return;
+      }
+    } catch (e) {
+      // Network error during probe — fall through to register() as a best effort
+    }
+
+    // Email is new (or probe was inconclusive) — create the account and send OTP
     try {
       await base44.auth.register({ email, password });
       setOtpState("sent");
@@ -119,10 +160,9 @@ export default function JoinPage() {
     } catch (e) {
       const msg = e?.response?.data?.message || e?.message || "";
       if (msg.toLowerCase().includes("already") || msg.toLowerCase().includes("exists")) {
-        // Account already exists. If the email is already verified, sending an
-        // OTP does nothing (the platform won't re-verify a verified account) and
-        // the user gets stuck waiting for a code that never arrives. Switch to
-        // login mode so they can sign in with their password and continue setup.
+        // Account already exists. Sending an OTP to an already-verified account
+        // does nothing — the user gets stuck waiting for a code that never
+        // arrives. Switch to login mode so they can sign in with their password.
         setSignupError("this email is already registered. log in with your password below 👇");
         setLoginMode(true);
       } else {
