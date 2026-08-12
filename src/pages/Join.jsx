@@ -335,8 +335,8 @@ export default function JoinPage() {
           <p className="text-gray-500 text-base mb-6">log in to your cruise kauaʻi account.</p>
 
           {signupError && (
-            <div className="mb-4 bg-primary/10 border border-primary/20 rounded-xl px-4 py-3">
-              <p className="text-sm text-primary font-medium">{signupError}</p>
+            <div className="mb-4 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+              <p className="text-sm text-red-600 font-medium">{signupError}</p>
             </div>
           )}
 
