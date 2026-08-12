@@ -5,6 +5,7 @@ import { appParams } from "@/lib/app-params";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChevronLeft, ChevronRight, Eye, EyeOff, Mail } from "lucide-react";
+import { checkEmailExists } from "@/functions/checkEmailExists";
 
 const ISLANDS = [
   { value: "Kauai", label: "Kauaʻi", emoji: "🌿", status: "fully launched!" },
@@ -113,35 +114,14 @@ export default function JoinPage() {
     }
     setSignupLoading(true);
 
-    // Pre-check: try logging in with the entered credentials first. If the
-    // account already exists (email already registered/verified), we skip the
-    // OTP step entirely — either logging the user straight in (correct password)
-    // or switching to the login view (wrong password). Only when the email is
-    // genuinely new do we call register() and send a verification code.
+    // Source of truth: query the actual Users list (admin-managed). An email
+    // that's still in the Users list → "already registered" → prompt login.
+    // An email NOT in the Users list → brand new OR admin-deleted → allow a
+    // fresh registration. This matches the platform model: deleting a user
+    // from the Users list removes their record, freeing the email to re-register.
     try {
-      const probeRes = await fetch(`${appParams.serverUrl}/api/apps/${appParams.appId}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-App-Id": appParams.appId },
-        body: JSON.stringify({ email, password }),
-      });
-      if (probeRes.ok) {
-        // Account exists and the password matched — log them in directly.
-        const data = await probeRes.json();
-        if (data.access_token) {
-          localStorage.setItem('base44_access_token', data.access_token);
-          base44.auth.setToken(data.access_token);
-        }
-        try { await base44.auth.updateMe({ has_verified_otp: true }); } catch (e) {}
-        const driverRole = role === "driver" || role === "both" ? "driver" : "rider";
-        window.location.href = `/account?setup=true&role=${driverRole}&island=${island}${data.access_token ? `&access_token=${data.access_token}` : ''}`;
-        return;
-      }
-      const probeErr = await probeRes.json().catch(() => ({}));
-      const probeMsg = (probeErr?.message || probeErr?.detail || "").toLowerCase();
-      // A credential/password error means the account exists but the password
-      // is wrong → prompt login. A "not found" / "unverified" error means the
-      // email is new (or not yet fully set up) → proceed to register().
-      if (probeMsg.includes("password") || probeMsg.includes("credential") || probeMsg.includes("invalid")) {
+      const check = await checkEmailExists({ email });
+      if (check?.exists) {
         setSignupError("this email is already registered. log in with your password below 👇");
         setLoginPassword(password);
         setLoginMode(true);
@@ -149,10 +129,11 @@ export default function JoinPage() {
         return;
       }
     } catch (e) {
-      // Network error during probe — fall through to register() as a best effort
+      // If the check fails (network), fall through to register() — register()
+      // itself will reject a duplicate, so we still surface "already registered".
     }
 
-    // Email is new (or probe was inconclusive) — create the account and send OTP
+    // Email is new (or admin-deleted) — create the account and send OTP
     try {
       await base44.auth.register({ email, password });
       setOtpState("sent");
@@ -160,13 +141,11 @@ export default function JoinPage() {
     } catch (e) {
       const msg = e?.response?.data?.message || e?.message || "";
       if (msg.toLowerCase().includes("already") || msg.toLowerCase().includes("exists")) {
-        // Account already exists. Sending an OTP to an already-verified account
-        // does nothing — the user gets stuck waiting for a code that never
-        // arrives. Switch to login mode so they can sign in with their password.
+        // Stale auth record without a User entry (rare edge case). The Users
+        // list said the email is free, but the auth layer still has it.
         setSignupError("this email is already registered. log in with your password below 👇");
         setLoginMode(true);
       } else {
-        // Unknown error — stay on signup form and show the error
         setSignupError(msg || "something went wrong. please try again.");
       }
     }
