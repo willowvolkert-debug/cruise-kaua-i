@@ -14,7 +14,7 @@ export default function Home() {
   }, []);
 
   const sections = [
-    { emoji: "🚗", label: "browse rides", desc: "Browse all available rides, post a ride you're already making, or request one for a specific trip.", to: createPageUrl("Trips") + "?view=view_week" },
+    { emoji: "🚗", label: "trips", desc: "Browse all available rides, post a ride you're already making, or request one for a specific trip.", to: createPageUrl("Trips") + "?view=view_week" },
     { emoji: "👤", label: "account", desc: "Edit your profile, verify your license & vehicle, and manage payouts and settings.", to: createPageUrl("Account") },
     { emoji: "🌺", label: "community", desc: "Stories, updates, and photos from the Cruise Hawaiʻi community.", to: createPageUrl("Community") },
     { emoji: "ℹ️", label: "FAQ + about us", desc: "Learn about our mission to make getting around Hawaiʻi more affordable.", to: createPageUrl("AboutUs") },
