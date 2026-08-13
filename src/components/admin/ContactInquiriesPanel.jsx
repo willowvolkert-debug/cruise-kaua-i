@@ -11,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import InquiryMessageBody from "@/components/admin/InquiryMessageBody";
 
 export default function ContactInquiriesPanel({ inquiries, onRefresh }) {
   const [inquiryFilter, setInquiryFilter] = useState('pending');
@@ -163,7 +164,9 @@ export default function ContactInquiriesPanel({ inquiries, onRefresh }) {
                 <p className="font-semibold text-secondary mb-2">Original Inquiry:</p>
                 <p className="text-sm text-gray-600 mb-1"><strong>From:</strong> {selectedInquiry.user_name} ({selectedInquiry.user_email})</p>
                 <p className="text-sm text-gray-600 mb-1"><strong>Subject:</strong> {selectedInquiry.subject}</p>
-                <p className="text-sm text-gray-700 mt-2 p-3 bg-white rounded-lg whitespace-pre-wrap">{selectedInquiry.message}</p>
+                <div className="mt-2 p-3 bg-white rounded-lg">
+                  <InquiryMessageBody message={selectedInquiry.message} />
+                </div>
               </div>
               <div className="space-y-2">
                 <label className="font-semibold text-secondary">Your Response:</label>
