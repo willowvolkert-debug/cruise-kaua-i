@@ -158,7 +158,7 @@ export default function ContactInquiriesPanel({ inquiries, onRefresh }) {
             <DialogTitle className="text-2xl font-bold text-secondary">respond to inquiry</DialogTitle>
           </DialogHeader>
           {selectedInquiry && (
-            <div className="space-y-4 py-4">
+            <div className="space-y-4 py-4 min-w-0">
               <div className="p-4 bg-gray-50 rounded-2xl border border-gray-200">
                 <p className="font-semibold text-secondary mb-2">Original Inquiry:</p>
                 <p className="text-sm text-gray-600 mb-1"><strong>From:</strong> {selectedInquiry.user_name} ({selectedInquiry.user_email})</p>
@@ -171,7 +171,7 @@ export default function ContactInquiriesPanel({ inquiries, onRefresh }) {
                   value={responseMessage}
                   onChange={(e) => setResponseMessage(e.target.value)}
                   placeholder="Type your response here..."
-                  className="h-40 rounded-2xl"
+                  className="h-40 rounded-2xl resize-y w-full max-w-full"
                 />
                 <p className="text-xs text-gray-500">This will be sent via email and appear in the user's inbox.</p>
               </div>
