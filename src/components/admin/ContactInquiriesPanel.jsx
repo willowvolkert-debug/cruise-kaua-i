@@ -76,7 +76,7 @@ export default function ContactInquiriesPanel({ inquiries, onRefresh }) {
               contact inquiries ({inquiries.length})
             </div>
             <div className="flex gap-1 flex-wrap">
-              {['pending', 'reviewed'].map(s => (
+              {['all', 'pending', 'reviewed', 'resolved'].map(s => (
                 <button
                   key={s}
                   onClick={() => setInquiryFilter(s)}
