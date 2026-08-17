@@ -142,6 +142,38 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
   }, [step]);
 
+  // On open, skip past steps the user has already completed so we never
+  // re-ask for info (profile, license, agreements, vehicle) they've already
+  // provided. This is what stops a returning user from being told to re-upload
+  // a license or re-enter a bio they already saved.
+  useEffect(() => {
+    const list = isDriverPath ? [...BASE_STEPS, ...DRIVER_STEPS] : BASE_STEPS;
+    for (let i = 0; i < list.length; i++) {
+      const s = list[i];
+      let complete = false;
+      if (s.type === 'text' && s.field === 'username' && user?.username) complete = true;
+      else if (s.type === 'number' && s.field === 'age' && user?.age) complete = true;
+      else if (s.type === 'select' && s.field === 'gender' && user?.gender) complete = true;
+      else if (s.type === 'textarea' && s.field === 'bio' && user?.bio) complete = true;
+      else if (s.type === 'phone' && user?.phone_number) complete = true;
+      else if (s.type === 'push_notifications') complete = true;
+      else if (s.type === 'photo' && user?.profile_picture_url) complete = true;
+      else if (s.type === 'terms_of_service' && user?.terms_accepted) complete = true;
+      else if (s.type === 'privacy_policy' && user?.privacy_policy_accepted) complete = true;
+      else if (s.type === 'license' && (user?.drivers_license_front_url || user?.drivers_license_verified)) complete = true;
+      else if (s.type === 'driver_choice' && isDriverPath) complete = true;
+      else if (s.type === 'vehicle_info' && user?.vehicle_make && user?.vehicle_model) complete = true;
+      else if (s.type === 'vehicle_photos' && user?.vehicle_exterior_photo_url) complete = true;
+      else if (s.type === 'driver_agreement' && user?.driver_agreement_accepted) complete = true;
+      if (!complete) { setStep(i); setStarted(true); return; }
+    }
+    // Every step was already completed — land on the last step so the user
+    // can just hit "finish & save" and mark the quiz done.
+    setStep(list.length - 1);
+    setStarted(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) { setPhotoFile(file); setPhotoPreview(URL.createObjectURL(file)); setAnswers(a => ({ ...a, profile_picture_url: "pending" })); setError(""); }
