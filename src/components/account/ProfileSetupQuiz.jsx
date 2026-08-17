@@ -82,6 +82,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
   const [showFoundersScreen, setShowFoundersScreen] = useState(false);
   const [done, setDone] = useState(false);
   const [vehicleSaved, setVehicleSaved] = useState(false);
+  const [licenseSaved, setLicenseSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -171,9 +172,11 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     } else if (current.type === "vehicle_info") {
       if (!vehicleInfo.make || !vehicleInfo.model || !vehicleInfo.year || !vehicleInfo.color || !vehicleInfo.license_plate) { setError("Please fill in all vehicle fields."); return false; }
     } else if (current.type === "vehicle_photos") {
-      if (!vehicleExterior) { setError("Please upload a photo of the outside of your vehicle."); return false; }
-      if (vehicleInterior.length === 0) { setError("Please upload at least one interior photo."); return false; }
-      if (!insurancePhoto) { setError("Please upload your insurance card photo."); return false; }
+      // A returning user who already saved vehicle photos (resume) can proceed without re-uploading.
+      const hasSavedPhotos = !!user?.vehicle_exterior_photo_url;
+      if (!vehicleExterior && !hasSavedPhotos) { setError("Please upload a photo of the outside of your vehicle."); return false; }
+      if (vehicleInterior.length === 0 && !hasSavedPhotos) { setError("Please upload at least one interior photo."); return false; }
+      if (!insurancePhoto && !hasSavedPhotos) { setError("Please upload your insurance card photo."); return false; }
     } else if (current.type === "driver_agreement") {
       if (!allAgreementChecked) { setError("Please check all boxes and the final agreement checkbox to continue."); return false; }
     } else if (!val || String(val).trim() === "") {
@@ -201,7 +204,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
       terms_accepted: true,
       privacy_policy_accepted: true,
     });
-    if (licenseFront && licenseBack) {
+    if (licenseFront && licenseBack && !licenseSaved) {
       const [fr, br] = await Promise.all([
         base44.integrations.Core.UploadFile({ file: licenseFront }),
         base44.integrations.Core.UploadFile({ file: licenseBack }),
@@ -210,6 +213,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
       await base44.auth.updateMe({ drivers_license_front_url: fr.file_url, drivers_license_back_url: br.file_url, drivers_license_pending_review: true, license_submitted_date: new Date().toISOString() });
       await base44.entities.UserEdit.create({ user_id: u.id, user_name: u.full_name, user_email: u.email, change_type: "license", change_description: "Uploaded driver's license via profile setup quiz", old_values: {}, new_values: { license_front_url: fr.file_url, license_back_url: br.file_url } });
       await base44.entities.AdminMessage.create({ recipient_id: 'admin', recipient_name: 'Admin', subject: `License Pending Review: ${u.full_name}`, message: `${u.full_name} (${u.email}) uploaded their license via the setup quiz.`, message_type: 'action_required' });
+      setLicenseSaved(true);
       // Send license submitted email
       sendUserLifecycleEmail({ emailType: 'license_submitted' }).catch(() => null);
     }
@@ -269,7 +273,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     // vehicle + insurance photos, ALL of that data was lost and the quiz asked
     // for it again. Saving here guarantees the docs reach the admin even if the
     // user never finishes the quiz.
-    if (current.type === "vehicle_photos") {
+    if (current.type === "vehicle_photos" && vehicleExterior && !vehicleSaved) {
       setSaving(true);
       try {
         await saveVehicle();
@@ -290,7 +294,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     try {
       await saveProfileAndLicense();
       if (isDriverPath) {
-        if (!vehicleSaved) await saveVehicle();
+        if (vehicleExterior && !vehicleSaved) await saveVehicle();
         await saveDriverAgreement();
       }
       // Fire onboarding email once (non-blocking)
@@ -433,6 +437,12 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
   const handleSaveAndComeBack = async () => {
     setSaving(true);
     try {
+      // Upload a new profile picture if one was selected
+      let profilePicUrl = user?.profile_picture_url || "";
+      if (photoFile) {
+        const result = await base44.integrations.Core.UploadFile({ file: photoFile });
+        profilePicUrl = result.file_url;
+      }
       // Save whatever profile data has been entered so far
       await base44.auth.updateMe({
         username: answers.username || user?.username || '',
@@ -440,6 +450,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
         gender: answers.gender || user?.gender || '',
         bio: answers.bio || user?.bio || '',
         phone_number: answers.phone_number || user?.phone_number || '',
+        profile_picture_url: profilePicUrl,
         profile_quiz_saved_step: step,
         // Preserve vehicle info text so it isn't lost when coming back later (driver path)
         ...(isDriverPath && vehicleInfo.make ? {
@@ -451,6 +462,17 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
           seats_available: parseInt(vehicleInfo.seats_available) || 4,
         } : {}),
       });
+      // Persist license photos if selected, so they're never lost on save & exit
+      if (licenseFront && licenseBack && !licenseSaved) {
+        const [fr, br] = await Promise.all([
+          base44.integrations.Core.UploadFile({ file: licenseFront }),
+          base44.integrations.Core.UploadFile({ file: licenseBack }),
+        ]);
+        const u = await base44.auth.me();
+        await base44.auth.updateMe({ drivers_license_front_url: fr.file_url, drivers_license_back_url: br.file_url, drivers_license_pending_review: true, license_submitted_date: new Date().toISOString() });
+        await base44.entities.AdminMessage.create({ recipient_id: 'admin', recipient_name: 'Admin', subject: `License Pending Review: ${u.full_name}`, message: `${u.full_name} (${u.email}) uploaded their license via the setup quiz.`, message_type: 'action_required' });
+        setLicenseSaved(true);
+      }
       // If on driver path and photos were selected, persist them too
       if (isDriverPath && vehicleExterior && !vehicleSaved) {
         await saveVehicle();
