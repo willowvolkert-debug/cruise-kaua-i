@@ -171,6 +171,11 @@ export default function AccountPage() {
                 } else {
                     setShowProfileQuiz(true);
                 }
+            } else if (currentUser.vehicle_make || currentUser.vehicle_exterior_photo_url) {
+                // Already completed onboarding AND submitted a vehicle — don't reopen the quiz.
+                // ?setup=true in the URL can force it open, which would show empty vehicle fields
+                // and risk overwriting their saved driver documents.
+                setShowProfileQuiz(false);
             }
             setEditData({
                 email: currentUser.email || '',

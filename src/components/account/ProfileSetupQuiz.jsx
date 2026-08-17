@@ -81,6 +81,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
   const [showRiderTips, setShowRiderTips] = useState(false);
   const [showFoundersScreen, setShowFoundersScreen] = useState(false);
   const [done, setDone] = useState(false);
+  const [vehicleSaved, setVehicleSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -96,8 +97,9 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
   const licenseFrontRef = useRef();
   const licenseBackRef = useRef();
 
-  // Vehicle info
-  const [vehicleInfo, setVehicleInfo] = useState({ make: "", model: "", year: "", color: "", license_plate: "", seats_available: "4" });
+  // Vehicle info — pre-fill from any previously saved data so a returning user
+  // doesn't lose what they already entered/submitted.
+  const [vehicleInfo, setVehicleInfo] = useState({ make: user?.vehicle_make || "", model: user?.vehicle_model || "", year: user?.vehicle_year || "", color: user?.vehicle_color || "", license_plate: user?.license_plate || "", seats_available: String(user?.seats_available || 4) });
 
   // Vehicle photos
   const [vehicleExterior, setVehicleExterior] = useState(null);
@@ -261,6 +263,25 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     // Driver choice step
     if (current.type === "driver_choice") return; // handled by buttons
 
+    // Persist vehicle data the moment the user clears the vehicle_photos step.
+    // Previously this only saved on the final "finish & save", so if a user
+    // abandoned the quiz (or the final save failed) after uploading their
+    // vehicle + insurance photos, ALL of that data was lost and the quiz asked
+    // for it again. Saving here guarantees the docs reach the admin even if the
+    // user never finishes the quiz.
+    if (current.type === "vehicle_photos") {
+      setSaving(true);
+      try {
+        await saveVehicle();
+        setVehicleSaved(true);
+      } catch (e) {
+        setError("couldn't save your vehicle photos — please check your connection and try again.");
+        setSaving(false);
+        return; // stay on this step so they can retry
+      }
+      setSaving(false);
+    }
+
     const isLastStep = safeStep === steps.length - 1;
     if (!isLastStep) { setStep(safeStep + 1); return; }
 
@@ -269,7 +290,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     try {
       await saveProfileAndLicense();
       if (isDriverPath) {
-        await saveVehicle();
+        if (!vehicleSaved) await saveVehicle();
         await saveDriverAgreement();
       }
       // Fire onboarding email once (non-blocking)
@@ -410,15 +431,37 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
   }
 
   const handleSaveAndComeBack = async () => {
-    // Save whatever profile data has been entered so far
-    await base44.auth.updateMe({
-      username: answers.username || user?.username || '',
-      age: answers.age ? Number(answers.age) : (user?.age || undefined),
-      gender: answers.gender || user?.gender || '',
-      bio: answers.bio || user?.bio || '',
-      phone_number: answers.phone_number || user?.phone_number || '',
-      profile_quiz_saved_step: step,
-    });
+    setSaving(true);
+    try {
+      // Save whatever profile data has been entered so far
+      await base44.auth.updateMe({
+        username: answers.username || user?.username || '',
+        age: answers.age ? Number(answers.age) : (user?.age || undefined),
+        gender: answers.gender || user?.gender || '',
+        bio: answers.bio || user?.bio || '',
+        phone_number: answers.phone_number || user?.phone_number || '',
+        profile_quiz_saved_step: step,
+        // Preserve vehicle info text so it isn't lost when coming back later (driver path)
+        ...(isDriverPath && vehicleInfo.make ? {
+          vehicle_make: vehicleInfo.make,
+          vehicle_model: vehicleInfo.model,
+          vehicle_year: vehicleInfo.year,
+          vehicle_color: vehicleInfo.color,
+          license_plate: vehicleInfo.license_plate,
+          seats_available: parseInt(vehicleInfo.seats_available) || 4,
+        } : {}),
+      });
+      // If on driver path and photos were selected, persist them too
+      if (isDriverPath && vehicleExterior && !vehicleSaved) {
+        await saveVehicle();
+        setVehicleSaved(true);
+      }
+    } catch (e) {
+      setError("couldn't save your progress — please try again.");
+      setSaving(false);
+      return;
+    }
+    setSaving(false);
     // Fire onboarding email once (non-blocking)
     sendOnboardingEmail({}).catch(() => null);
     onComplete();
