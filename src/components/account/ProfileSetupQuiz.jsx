@@ -221,18 +221,22 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
 
   const saveVehicle = async () => {
     const u = await base44.auth.me();
-    const [extResult, ...intResults] = await Promise.all([
-      base44.integrations.Core.UploadFile({ file: vehicleExterior }),
-      ...vehicleInterior.map(f => base44.integrations.Core.UploadFile({ file: f })),
+    // Upload only newly-selected photos; fall back to already-persisted URLs so a
+    // returning user who changes just one photo doesn't lose the others, and we
+    // never try to upload a null file (which would throw and break the save).
+    const uploadIfPresent = (file) => file ? base44.integrations.Core.UploadFile({ file }).then(r => r.file_url) : Promise.resolve(null);
+    const [extUrl, ...intUrls] = await Promise.all([
+      uploadIfPresent(vehicleExterior),
+      ...vehicleInterior.map(f => uploadIfPresent(f)),
     ]);
-    const insResult = await base44.integrations.Core.UploadFile({ file: insurancePhoto });
+    const insUrl = await uploadIfPresent(insurancePhoto);
     await base44.auth.updateMe({
       vehicle_make: vehicleInfo.make, vehicle_model: vehicleInfo.model, vehicle_year: vehicleInfo.year,
       vehicle_color: vehicleInfo.color, license_plate: vehicleInfo.license_plate,
       seats_available: parseInt(vehicleInfo.seats_available),
-      vehicle_exterior_photo_url: extResult.file_url,
-      vehicle_interior_photo_urls: intResults.map(r => r.file_url),
-      auto_policy_photo_url: insResult.file_url,
+      vehicle_exterior_photo_url: extUrl || u.vehicle_exterior_photo_url || "",
+      vehicle_interior_photo_urls: intUrls.length ? intUrls : (u.vehicle_interior_photo_urls || []),
+      auto_policy_photo_url: insUrl || u.auto_policy_photo_url || "",
       insurance_submitted_date: new Date().toISOString(),
       vehicle_pending_review: true, vehicle_verified: false,
     });
@@ -443,7 +447,35 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
         const result = await base44.integrations.Core.UploadFile({ file: photoFile });
         profilePicUrl = result.file_url;
       }
-      // Save whatever profile data has been entered so far
+      // Upload license photos only if BOTH are selected (a partial license isn't useful)
+      let licensePatch = {};
+      if (licenseFront && licenseBack && !licenseSaved) {
+        const [fr, br] = await Promise.all([
+          base44.integrations.Core.UploadFile({ file: licenseFront }),
+          base44.integrations.Core.UploadFile({ file: licenseBack }),
+        ]);
+        licensePatch = { drivers_license_front_url: fr.file_url, drivers_license_back_url: br.file_url, drivers_license_pending_review: true, license_submitted_date: new Date().toISOString() };
+        setLicenseSaved(true);
+        const u = await base44.auth.me();
+        await base44.entities.AdminMessage.create({ recipient_id: 'admin', recipient_name: 'Admin', subject: `License Pending Review: ${u.full_name}`, message: `${u.full_name} (${u.email}) uploaded their license via the setup quiz.`, message_type: 'action_required' }).catch(() => null);
+      }
+      // Upload whichever vehicle photos are present, individually. This never crashes
+      // on a partial set — previously calling saveVehicle() here threw if the driver
+      // had uploaded the exterior but not yet the insurance/interior photos.
+      const uploadIfPresent = (file) => file ? base44.integrations.Core.UploadFile({ file }).then(r => r.file_url) : Promise.resolve(null);
+      const [extUrl, ...intUrls] = await Promise.all([
+        uploadIfPresent(vehicleExterior),
+        ...vehicleInterior.map(f => uploadIfPresent(f)),
+      ]);
+      const insUrl = await uploadIfPresent(insurancePhoto);
+      const vehiclePatch = {};
+      if (isDriverPath) {
+        if (extUrl) vehiclePatch.vehicle_exterior_photo_url = extUrl;
+        if (intUrls.length) vehiclePatch.vehicle_interior_photo_urls = intUrls;
+        if (insUrl) vehiclePatch.auto_policy_photo_url = insUrl;
+      }
+      // Persist everything entered so far — profile text, license, and any vehicle
+      // photos/info — so nothing is lost when the user saves and comes back later.
       await base44.auth.updateMe({
         username: answers.username || user?.username || '',
         age: answers.age ? Number(answers.age) : (user?.age || undefined),
@@ -452,7 +484,6 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
         phone_number: answers.phone_number || user?.phone_number || '',
         profile_picture_url: profilePicUrl,
         profile_quiz_saved_step: step,
-        // Preserve vehicle info text so it isn't lost when coming back later (driver path)
         ...(isDriverPath && vehicleInfo.make ? {
           vehicle_make: vehicleInfo.make,
           vehicle_model: vehicleInfo.model,
@@ -461,23 +492,9 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
           license_plate: vehicleInfo.license_plate,
           seats_available: parseInt(vehicleInfo.seats_available) || 4,
         } : {}),
+        ...licensePatch,
+        ...vehiclePatch,
       });
-      // Persist license photos if selected, so they're never lost on save & exit
-      if (licenseFront && licenseBack && !licenseSaved) {
-        const [fr, br] = await Promise.all([
-          base44.integrations.Core.UploadFile({ file: licenseFront }),
-          base44.integrations.Core.UploadFile({ file: licenseBack }),
-        ]);
-        const u = await base44.auth.me();
-        await base44.auth.updateMe({ drivers_license_front_url: fr.file_url, drivers_license_back_url: br.file_url, drivers_license_pending_review: true, license_submitted_date: new Date().toISOString() });
-        await base44.entities.AdminMessage.create({ recipient_id: 'admin', recipient_name: 'Admin', subject: `License Pending Review: ${u.full_name}`, message: `${u.full_name} (${u.email}) uploaded their license via the setup quiz.`, message_type: 'action_required' });
-        setLicenseSaved(true);
-      }
-      // If on driver path and photos were selected, persist them too
-      if (isDriverPath && vehicleExterior && !vehicleSaved) {
-        await saveVehicle();
-        setVehicleSaved(true);
-      }
     } catch (e) {
       setError("couldn't save your progress — please try again.");
       setSaving(false);
@@ -706,16 +723,22 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
           {/* LICENSE */}
           {current.type === "license" && (
             <div className="space-y-4">
-              {[{ label: "Front of license *", file: licenseFront, ref: licenseFrontRef, set: setLicenseFront }, { label: "Back of license *", file: licenseBack, ref: licenseBackRef, set: setLicenseBack }].map(({ label, file, ref, set }) => (
+              {[{ label: "Front of license *", file: licenseFront, ref: licenseFrontRef, set: setLicenseFront, saved: user?.drivers_license_front_url }, { label: "Back of license *", file: licenseBack, ref: licenseBackRef, set: setLicenseBack, saved: user?.drivers_license_back_url }].map(({ label, file, ref, set, saved }) => (
                 <div key={label} className="space-y-1">
                   <p className="text-sm font-medium text-gray-700">{label}</p>
-                  <div onClick={() => ref.current?.click()} className={`border-2 border-dashed rounded-2xl p-5 text-center cursor-pointer transition-colors ${file ? 'border-green-400 bg-green-50' : 'border-gray-300 hover:border-primary/50'}`}>
+                  <div onClick={() => ref.current?.click()} className={`border-2 border-dashed rounded-2xl p-5 text-center cursor-pointer transition-colors ${file ? 'border-green-400 bg-green-50' : saved ? 'border-green-300 bg-green-50/50' : 'border-gray-300 hover:border-primary/50'}`}>
                     <input ref={ref} type="file" accept="image/*" onChange={(e) => { set(e.target.files[0]); setError(""); }} className="hidden" />
                     {file ? (
                       <div className="flex flex-col items-center gap-1">
                         <CheckCircle className="w-6 h-6 text-green-500 mx-auto" />
                         <span className="text-sm text-green-700 font-semibold">uploaded: {file.name}</span>
                         <span className="text-xs text-green-500">tap to change</span>
+                      </div>
+                    ) : saved ? (
+                      <div className="flex flex-col items-center gap-1">
+                        <CheckCircle className="w-6 h-6 text-green-500 mx-auto" />
+                        <span className="text-sm text-green-700 font-semibold">✓ already uploaded</span>
+                        <span className="text-xs text-green-500">tap to replace</span>
                       </div>
                     ) : (
                       <>
@@ -785,19 +808,25 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
           {current.type === "vehicle_photos" && (
             <div className="space-y-4">
               {[
-                { label: "Outside of vehicle *", file: vehicleExterior, ref: vehicleExtRef, set: setVehicleExterior, multiple: false },
-                { label: "Inside of vehicle * (select multiple)", file: vehicleInterior.length > 0 ? { name: `${vehicleInterior.length} photo(s) selected` } : null, ref: vehicleIntRef, set: (files) => setVehicleInterior(Array.from(files)), multiple: true },
-                { label: "Insurance card * (front & back)", file: insurancePhoto, ref: insuranceRef, set: setInsurancePhoto, multiple: false },
-              ].map(({ label, file, ref, set, multiple }) => (
+                { label: "Outside of vehicle *", file: vehicleExterior, ref: vehicleExtRef, set: setVehicleExterior, multiple: false, saved: user?.vehicle_exterior_photo_url },
+                { label: "Inside of vehicle * (select multiple)", file: vehicleInterior.length > 0 ? { name: `${vehicleInterior.length} photo(s) selected` } : null, ref: vehicleIntRef, set: (files) => setVehicleInterior(Array.from(files)), multiple: true, saved: user?.vehicle_interior_photo_urls?.length ? `${user.vehicle_interior_photo_urls.length} photo(s) saved` : null },
+                { label: "Insurance card * (front & back)", file: insurancePhoto, ref: insuranceRef, set: setInsurancePhoto, multiple: false, saved: user?.auto_policy_photo_url },
+              ].map(({ label, file, ref, set, multiple, saved }) => (
                 <div key={label} className="space-y-1">
                   <p className="text-sm font-medium text-gray-700">{label}</p>
-                  <div onClick={() => ref.current?.click()} className={`border-2 border-dashed rounded-2xl p-4 text-center cursor-pointer transition-colors ${file ? 'border-green-400 bg-green-50' : 'border-gray-300 hover:border-primary/50'}`}>
+                  <div onClick={() => ref.current?.click()} className={`border-2 border-dashed rounded-2xl p-4 text-center cursor-pointer transition-colors ${file ? 'border-green-400 bg-green-50' : saved ? 'border-green-300 bg-green-50/50' : 'border-gray-300 hover:border-primary/50'}`}>
                     <input ref={ref} type="file" accept="image/*" multiple={multiple} onChange={(e) => { multiple ? set(e.target.files) : set(e.target.files[0]); setError(""); }} className="hidden" />
                     {file ? (
                       <div className="flex flex-col items-center gap-1">
                         <CheckCircle className="w-6 h-6 text-green-500 mx-auto" />
                         <span className="text-sm text-green-700 font-semibold">✓ {file.name}</span>
                         <span className="text-xs text-green-500">tap to change</span>
+                      </div>
+                    ) : saved ? (
+                      <div className="flex flex-col items-center gap-1">
+                        <CheckCircle className="w-6 h-6 text-green-500 mx-auto" />
+                        <span className="text-sm text-green-700 font-semibold">✓ already uploaded</span>
+                        <span className="text-xs text-green-500">tap to replace</span>
                       </div>
                     ) : (
                       <>
