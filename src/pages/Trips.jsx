@@ -27,6 +27,7 @@ export default function TripsPage() {
   const [islandSelectorVisible, setIslandSelectorVisible] = React.useState(false);
   const [view, setView] = React.useState("menu");
   const [specificDate, setSpecificDate] = React.useState(format(new Date(), 'yyyy-MM-dd'));
+  const [appliedDate, setAppliedDate] = React.useState(format(new Date(), 'yyyy-MM-dd'));
 
   React.useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -229,8 +230,21 @@ export default function TripsPage() {
                 />
               </PopoverContent>
             </Popover>
-            {specificDate && (
-              <FindRide island={selectedIsland} initialStartDate={specificDate} initialEndDate={specificDate} hideDateFilter />
+            <Button
+              onClick={() => setAppliedDate(specificDate)}
+              disabled={!specificDate}
+              className="w-full bg-primary hover:bg-primary/90 text-white rounded-2xl h-12 text-base font-bold"
+            >
+              find rides for this date 🔍
+            </Button>
+            {appliedDate && (
+              <FindRide
+                key={appliedDate}
+                island={selectedIsland}
+                initialStartDate={appliedDate}
+                initialEndDate={appliedDate}
+                hideDateFilter
+              />
             )}
           </div>
         )}
