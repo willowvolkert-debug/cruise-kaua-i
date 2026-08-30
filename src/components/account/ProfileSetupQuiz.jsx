@@ -440,7 +440,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
           </div>
           <div className="p-6 flex-1 overflow-y-auto">
             <p className="text-gray-700 text-base leading-relaxed mb-6">
-              {islandName === "Oahu" ? "Oʻahu" : islandName} will be launching mid-summer, and Maui + Big Island shortly after. In the meantime, you can finish signing up as a driver and will be a part of our founder's group for your island. We will reach out to you shortly to build the service on your island with you!
+              You can finish signing up as a driver and will be a part of our founder's group for {islandName === "Oahu" ? "Oʻahu" : islandName}. We will reach out to you shortly to build the service on your island with you!
             </p>
             <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6">
               <p className="text-amber-800 text-sm font-semibold mb-1">🏆 You're a founder!</p>
