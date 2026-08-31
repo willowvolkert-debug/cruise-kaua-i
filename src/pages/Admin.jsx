@@ -172,11 +172,32 @@ export default function AdminPage() {
       setPendingCommunityPosts(pendingPosts);
 
       // Find users with expired docs
+      // Expiry dates are entered as free text (MM/YYYY, MM/DD/YYYY, MM/DD/YY).
+      // Appending "T00:00:00" only works for ISO dates; for these formats it
+      // returns Invalid Date, so we parse the parts explicitly.
+      const parseExpiryDate = (str) => {
+        if (!str) return null;
+        const parts = str.trim().split('/');
+        if (parts.length === 2) {
+          let [mm, yyyy] = parts.map(Number);
+          if (yyyy < 100) yyyy += 2000;
+          return new Date(yyyy, mm - 1, 1);
+        }
+        if (parts.length === 3) {
+          let [mm, dd, yyyy] = parts.map(Number);
+          if (yyyy < 100) yyyy += 2000;
+          return new Date(yyyy, mm - 1, dd);
+        }
+        const d = new Date(str);
+        return isNaN(d) ? null : d;
+      };
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const expired = allUsers.filter(u => {
-        const licExpired = u.drivers_license_verified && u.license_expiry_date && new Date(u.license_expiry_date + 'T00:00:00') <= today;
-        const insExpired = u.vehicle_verified && u.insurance_expiry_date && new Date(u.insurance_expiry_date + 'T00:00:00') <= today;
+        const licExpiry = parseExpiryDate(u.license_expiry_date);
+        const insExpiry = parseExpiryDate(u.insurance_expiry_date);
+        const licExpired = u.drivers_license_verified && licExpiry && licExpiry <= today;
+        const insExpired = u.vehicle_verified && insExpiry && insExpiry <= today;
         return licExpired || insExpired;
       });
       setExpiredDocUsers(expired);
@@ -711,8 +732,15 @@ export default function AdminPage() {
               </p>
               <div className="space-y-3">
                 {expiredDocUsers.map(u => {
-                  const licExpired = u.drivers_license_verified && u.license_expiry_date && new Date(u.license_expiry_date + 'T00:00:00') <= new Date();
-                  const insExpired = u.vehicle_verified && u.insurance_expiry_date && new Date(u.insurance_expiry_date + 'T00:00:00') <= new Date();
+                  const parseExpiry = (str) => {
+                    if (!str) return null;
+                    const parts = str.trim().split('/');
+                    if (parts.length === 2) { let [mm, yyyy] = parts.map(Number); if (yyyy < 100) yyyy += 2000; return new Date(yyyy, mm - 1, 1); }
+                    if (parts.length === 3) { let [mm, dd, yyyy] = parts.map(Number); if (yyyy < 100) yyyy += 2000; return new Date(yyyy, mm - 1, dd); }
+                    const d = new Date(str); return isNaN(d) ? null : d;
+                  };
+                  const licExpired = u.drivers_license_verified && parseExpiry(u.license_expiry_date) && parseExpiry(u.license_expiry_date) <= new Date();
+                  const insExpired = u.vehicle_verified && parseExpiry(u.insurance_expiry_date) && parseExpiry(u.insurance_expiry_date) <= new Date();
                   return (
                     <div key={u.id} className="bg-white rounded-lg p-4 border border-orange-200">
                       <div className="flex items-center justify-between">

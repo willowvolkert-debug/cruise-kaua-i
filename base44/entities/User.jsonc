@@ -107,6 +107,10 @@
     "license_submitted_date": {
       "type": "string"
     },
+    "license_expiry_date": {
+      "type": "string",
+      "description": "Driver's license expiry date (free-text from admin review, e.g. MM/YYYY or MM/DD/YYYY)"
+    },
     "vehicle_verified": {
       "type": "boolean",
       "default": false
@@ -166,6 +170,10 @@
     "insurance_submitted_date": {
       "type": "string",
       "description": "ISO timestamp of when insurance was submitted"
+    },
+    "insurance_expiry_date": {
+      "type": "string",
+      "description": "Insurance policy expiry date (free-text from admin review, e.g. MM/YYYY or MM/DD/YYYY)"
     },
     "terms_accepted": {
       "type": "boolean",

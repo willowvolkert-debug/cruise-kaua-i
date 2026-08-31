@@ -10,17 +10,38 @@ Deno.serve(async (req) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    // Parse expiry dates entered as free text by the admin. Common formats:
+    // "MM/YYYY", "M/YYYY", "MM/DD/YYYY", "M/D/YYYY", "MM/DD/YY".
+    // The previous code appended "T00:00:00" to these, which produced Invalid
+    // Date for every non-ISO format — so no user was ever flagged as expired.
+    const parseExpiryDate = (str) => {
+      if (!str) return null;
+      const parts = str.trim().split('/');
+      if (parts.length === 2) {
+        let [mm, yyyy] = parts.map(Number);
+        if (yyyy < 100) yyyy += 2000;
+        return new Date(yyyy, mm - 1, 1);
+      }
+      if (parts.length === 3) {
+        let [mm, dd, yyyy] = parts.map(Number);
+        if (yyyy < 100) yyyy += 2000;
+        return new Date(yyyy, mm - 1, dd);
+      }
+      const d = new Date(str);
+      return isNaN(d) ? null : d;
+    };
+
     const expiredLicenseUsers = [];
     const expiredInsuranceUsers = [];
 
     for (const u of allUsers) {
       if (u.drivers_license_verified && u.license_expiry_date) {
-        const expiry = new Date(u.license_expiry_date + 'T00:00:00');
-        if (expiry <= today) expiredLicenseUsers.push(u);
+        const expiry = parseExpiryDate(u.license_expiry_date);
+        if (expiry && expiry <= today) expiredLicenseUsers.push(u);
       }
       if (u.vehicle_verified && u.insurance_expiry_date) {
-        const expiry = new Date(u.insurance_expiry_date + 'T00:00:00');
-        if (expiry <= today) expiredInsuranceUsers.push(u);
+        const expiry = parseExpiryDate(u.insurance_expiry_date);
+        if (expiry && expiry <= today) expiredInsuranceUsers.push(u);
       }
     }
 
