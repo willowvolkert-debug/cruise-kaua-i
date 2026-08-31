@@ -707,10 +707,10 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
           {current.type === "island" && (
             <div className="grid grid-cols-2 gap-3">
               {[
-                { value: "Kauai", label: "Kauaʻi", emoji: "🌿", available: true },
-                { value: "Oahu", label: "Oʻahu", emoji: "🌺", available: false },
-                { value: "Maui", label: "Maui", emoji: "🌊", available: false },
-                { value: "Big Island", label: "Big Island", emoji: "🌋", available: false },
+                { value: "Kauai", label: "Kauaʻi", emoji: "🌿" },
+                { value: "Oahu", label: "Oʻahu", emoji: "🌺" },
+                { value: "Maui", label: "Maui", emoji: "🌊" },
+                { value: "Big Island", label: "Big Island", emoji: "🌋" },
               ].map((opt) => (
                 <button
                   key={opt.value}
@@ -719,7 +719,6 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
                 >
                   <span className="text-2xl">{opt.emoji}</span>
                   <span>{opt.label}</span>
-                  {!opt.available && <span className="text-xs text-gray-400 font-normal">coming soon</span>}
                 </button>
               ))}
             </div>
