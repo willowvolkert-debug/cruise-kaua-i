@@ -8,10 +8,10 @@ import { ChevronLeft, ChevronRight, Eye, EyeOff, Mail } from "lucide-react";
 import { checkEmailExists } from "@/functions/checkEmailExists";
 
 const ISLANDS = [
-  { value: "Kauai", label: "Kauaʻi", emoji: "🌿", status: "fully launched!" },
-  { value: "Oahu", label: "Oʻahu", emoji: "🌺", status: "launching mid-summer" },
-  { value: "Maui", label: "Maui", emoji: "🌊", status: "launching August" },
-  { value: "Big Island", label: "Hawaiʻi Island", emoji: "🌋", status: "launching September" },
+  { value: "Kauai", label: "Kauaʻi", emoji: "🌿" },
+  { value: "Oahu", label: "Oʻahu", emoji: "🌺" },
+  { value: "Maui", label: "Maui", emoji: "🌊" },
+  { value: "Big Island", label: "Hawaiʻi Island", emoji: "🌋" },
 ];
 
 const ROLES = [
@@ -589,7 +589,6 @@ export default function JoinPage() {
                 >
                   <span className="text-3xl">{opt.emoji}</span>
                   <span className="font-bold">{opt.label}</span>
-                  <span className="text-xs text-gray-400 font-normal text-center leading-tight">{opt.status}</span>
                   {island === opt.value && (
                     <span className="w-5 h-5 rounded-full bg-primary flex items-center justify-center mt-1">
                       <span className="text-white text-xs font-bold">✓</span>
