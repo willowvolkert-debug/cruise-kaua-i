@@ -130,7 +130,7 @@ const AuthenticatedApp = () => {
   // Render the main app
   return (
     <Routes>
-      <Route path="/" element={<LayoutWrapper currentPageName="Home"><Home /></LayoutWrapper>} />
+      <Route path="/" element={isAuthenticated ? <LayoutWrapper currentPageName="Home"><Home /></LayoutWrapper> : <Welcome />} />
       <Route path="/welcome" element={<Welcome />} />
       <Route path="/home" element={<LayoutWrapper currentPageName="Home"><Home /></LayoutWrapper>} />
       <Route path="/termsofservice" element={<TermsOfService />} />
