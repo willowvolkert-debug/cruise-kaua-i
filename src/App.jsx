@@ -115,7 +115,7 @@ const AuthenticatedApp = () => {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
       // Only redirect to login if not on a public page (Welcome, JoinUs, etc.)
-      const publicPaths = ['/', '/welcome', '/joinus', '/join', '/account', '/trips', '/aboutus', '/about-us', '/contactus', '/contact-us', '/sms-opt-in'];
+      const publicPaths = ['/', '/welcome', '/joinus', '/join', '/account', '/trips', '/aboutus', '/about-us', '/contactus', '/contact-us', '/sms-opt-in', '/forgot-password', '/reset-password'];
       const isPublicPath = publicPaths.some(p => window.location.pathname.toLowerCase() === p);
       if (!isPublicPath) {
         navigateToLogin();
