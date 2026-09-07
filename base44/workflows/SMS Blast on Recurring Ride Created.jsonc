@@ -1,0 +1,37 @@
+{
+  "name": "SMS Blast on Recurring Ride Created",
+  "description": "When a driver creates a new recurring ride schedule, send a one-time SMS blast to all opted-in riders with the schedule details (days, time, route).",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create"
+      ],
+      "entity_name": "RecurringSchedule"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "sms_blast_on_recurring_ride_created",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "smsNotifyRecurringRideCreated",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "smsNotifyRecurringRideCreated"
+  }
+}
