@@ -25,12 +25,12 @@ export default function Layout({ children, currentPageName }) {
           base44.auth.updateMe({ has_seen_welcome: true });
         }
 
-        // Send welcome email on first load if not yet sent
-        if (!user.onboarding_email_sent) {
-          import('@/functions/sendWelcomeEmail').then(({ sendWelcomeEmail }) => {
-            sendWelcomeEmail({});
-          }).catch(() => {});
-        }
+        // EMAIL HALT: Welcome email disabled per admin request
+        // if (!user.onboarding_email_sent) {
+        //   import('@/functions/sendWelcomeEmail').then(({ sendWelcomeEmail }) => {
+        //     sendWelcomeEmail({});
+        //   }).catch(() => {});
+        // }
 
         // Check for admin-posted ride requests to claim (once per session)
         if (!sessionStorage.getItem('ride_posts_checked')) {
