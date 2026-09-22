@@ -33,6 +33,7 @@ import KupunaSignup from './pages/KupunaSignup';
 import DriverVerificationChart from './pages/DriverVerificationChart';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import LaunchAnnouncementPopup from './components/LaunchAnnouncementPopup';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -191,6 +192,7 @@ function App() {
           <NavigationTracker />
           {showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}
           <AuthenticatedApp />
+          <LaunchAnnouncementPopup />
         </Router>
         <Toaster />
         <VisualEditAgent />
