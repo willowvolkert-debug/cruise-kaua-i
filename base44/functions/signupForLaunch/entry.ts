@@ -9,15 +9,9 @@ export default async function(req) {
       return Response.json({ error: 'Valid email required' }, { status: 400 });
     }
 
-    // Save to LaunchSignup for tracking
-    try {
-      await base44.asServiceRole.entities.LaunchSignup.create({ email, name: name || undefined });
-    } catch (e) { /* non-critical - might be duplicate */ }
-
-    // Invite as user so they're in the user database for future newsletters
-    try {
-      await base44.asServiceRole.users.inviteUser(email, 'user');
-    } catch (e) { /* might already exist or unsupported on service role */ }
+    // Save to LaunchSignup — these emails are included in newsletter blasts
+    // via getNewsletterRecipients() shared helper used by blast functions
+    await base44.asServiceRole.entities.LaunchSignup.create({ email, name: name || undefined });
 
     return Response.json({ ok: true });
   } catch (error) {

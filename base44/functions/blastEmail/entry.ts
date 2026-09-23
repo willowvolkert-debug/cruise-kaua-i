@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+import { getNewsletterRecipients } from '../../shared/newsletterRecipients.ts';
 
 const S = "New look + price offer feature on Cruise Kauaʻi";
 const AU = "https://cruisekauai.org";
@@ -16,8 +17,7 @@ Deno.serve(async (req) => {
       return Response.json({ ok: true, mode: 'preview' });
     }
     if (blast) {
-      const users = await base44.asServiceRole.entities.User.list();
-      const eligible = users.filter(u => u.email && u.email_update_frequency !== 'never');
+      const eligible = await getNewsletterRecipients(base44);
       let sent = 0, errors = 0;
       for (const u of eligible) {
         try {

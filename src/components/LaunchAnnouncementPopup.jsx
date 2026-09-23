@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Mail, Sparkles } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import { signupForLaunch } from "@/functions/signupForLaunch";
 
 export default function LaunchAnnouncementPopup() {
   const [visible, setVisible] = useState(false);
@@ -33,7 +34,7 @@ export default function LaunchAnnouncementPopup() {
     setSubmitting(true);
     setError("");
     try {
-      await base44.entities.LaunchSignup.create({ email, name: name || undefined });
+      await signupForLaunch({ email, name: name || undefined });
       setSubmitted(true);
       setTimeout(() => handleDismiss(), 4000);
     } catch (err) {
