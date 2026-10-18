@@ -7,8 +7,10 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Bot, MessageSquare, Star, Bell, Clock, AlertTriangle, ChevronRight, UserPlus, MapPin, Calendar, RefreshCw } from "lucide-react";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import TripReviewModal from "@/components/rating/TripReviewModal";
+import useTripReviewPrompt from "@/components/rating/useTripReviewPrompt";
+import getPendingTripReviews from "@/components/rating/getPendingTripReviews";
 import ReportModal from "../components/inbox/ReportModal";
 import ChatModal from "../components/inbox/ChatModal";
 import RiderRequestModal from "../components/inbox/RiderRequestModal";
@@ -50,11 +52,7 @@ export default function InboxPage() {
     const [riderBookingToCancel, setRiderBookingToCancel] = useState(null);
     const [rejectedBookings, setRejectedBookings] = useState([]);
     const [dismissedRejections, setDismissedRejections] = useState([]);
-    const [showReviewModal, setShowReviewModal] = useState(false);
     const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-    const [reviewData, setReviewData] = useState({ rating: 0, comment: '' });
-    const [currentReviewUser, setCurrentReviewUser] = useState(null);
-    const [currentReviewRide, setCurrentReviewRide] = useState(null);
     const [allUsers, setAllUsers] = useState([]);
     const [allRidesData, setAllRidesData] = useState([]);
     const [adminMessages, setAdminMessages] = useState([]);
@@ -185,78 +183,16 @@ export default function InboxPage() {
                 return (isPassenger || isDriver) && isConfirmed && (isPaid || isRideRequestReply);
             });
 
-            const needsReview = [];
-            const stillActive = [];
-
-            // Get only ratings given by the current user (for review-checking)
-            const allRatings = await base44.entities.Rating.filter({ rated_by_user_id: currentUser.id });
-
-            // Get current Hawaii time for comparison
             const hawaiiNow = getHawaiiNow();
-
-            for (const booking of userActiveBookings) {
+            const needsReview = await getPendingTripReviews(allBookings, allRides, currentUser.id);
+            const stillActive = userActiveBookings.filter(booking => {
                 const ride = allRides.find(r => String(r.id) === String(booking.ride_id));
-
-                if (ride) {
-                    // Parse ride date/time as Hawaii local time
-                    const rideDateTime = parseRideDateTimeHST(ride.departure_date, ride.departure_time);
-                    // Add 4 hours buffer after departure time before requiring review
-                    const reviewThreshold = rideDateTime.addHours(4);
-
-                    const nowComparable = hawaiiNow.toComparable();
-                    const thresholdComparable = reviewThreshold.toComparable();
-
-                    if (nowComparable > thresholdComparable) {
-                        // Check if current user needs to review the OTHER person in this booking
-                        const isDriver = String(ride.driver_id) === String(currentUser.id);
-                        const otherUserId = isDriver ? booking.passenger_id : ride.driver_id;
-
-                        const userRating = allRatings.find(r => 
-                            String(r.ride_id) === String(ride.id) && 
-                            String(r.rated_by_user_id) === String(currentUser.id) &&
-                            String(r.rated_user_id) === String(otherUserId)
-                        );
-
-                        if (!userRating) {
-                            needsReview.push({ booking, ride });
-                        }
-                    } else {
-                        stillActive.push(booking);
-                    }
-                } else {
-                    // Ride not found but booking exists - still show it as active
-                    stillActive.push(booking);
-                }
-            }
-            
+                if (!ride) return true;
+                return ride.status !== 'completed' && hawaiiNow.toComparable() <=
+                    parseRideDateTimeHST(ride.departure_date, ride.departure_time).addHours(4).toComparable();
+            });
             setRidesNeedingReview(needsReview);
             setActiveBookings(stillActive);
-
-            if (needsReview.length > 0 && !showReviewModal) {
-                const { booking, ride } = needsReview[0];
-                const isDriver = String(ride.driver_id) === String(currentUser.id);
-                const otherUserId = isDriver ? booking.passenger_id : ride.driver_id;
-
-                // Fetch user info for the review modal
-                let otherUsername = isDriver 
-                    ? (booking.passenger_username || booking.passenger_name) 
-                    : (booking.driver_username || ride.driver_name);
-
-                // Try to get actual username from user list if available
-                if (allUsersList.length > 0) {
-                    const otherUser = allUsersList.find(u => String(u.id) === String(otherUserId));
-                    if (otherUser?.username) {
-                        otherUsername = otherUser.username;
-                    }
-                }
-
-                setCurrentReviewUser({ 
-                    username: otherUsername, 
-                    id: otherUserId 
-                });
-                setCurrentReviewRide(ride);
-                setShowReviewModal(true);
-            }
 
             const nowComparable = hawaiiNow.toComparable();
             
@@ -302,28 +238,7 @@ export default function InboxPage() {
         setIsLoading(false);
     };
 
-    const handleSubmitReview = async () => {
-        if (reviewData.rating === 0) {
-            alert("Please select a rating before submitting.");
-            return;
-        }
-
-        const isDriver = currentReviewRide.driver_id === user.id;
-        
-        await base44.entities.Rating.create({
-            ride_id: currentReviewRide.id,
-            rated_by_user_id: user.id,
-            rated_user_id: currentReviewUser.id,
-            rating_value: reviewData.rating,
-            comment: reviewData.comment,
-            trip_role: isDriver ? 'passenger' : 'driver'
-        });
-
-        alert("Review submitted! Thank you for building the Cruise Kauaʻi community!");
-        setShowReviewModal(false);
-        setReviewData({ rating: 0, comment: '' });
-        loadData();
-    };
+    const { review, openReview, closeReview } = useTripReviewPrompt(ridesNeedingReview, user?.id, loadData);
 
     const handleOpenChat = (booking, otherPartyName, otherPartyPicture) => {
         setSelectedBooking(booking);
@@ -747,7 +662,6 @@ Please process the refund manually via Stripe.
                                 const otherUsername = isDriver
                                     ? (booking.passenger_username || booking.passenger_name)
                                     : (booking.driver_username || ride.driver_name);
-                                const otherUserId = isDriver ? booking.passenger_id : ride.driver_id;
                                 return (
                                     <div key={booking.id} className="bg-white rounded-xl p-4 border border-orange-200">
                                         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-600 mb-1">
@@ -759,11 +673,7 @@ Please process the refund manually via Stripe.
                                         </div>
                                         <p className="text-sm text-gray-600 mb-3">trip with @{otherUsername}</p>
                                         <Button
-                                            onClick={() => {
-                                                setCurrentReviewUser({ username: otherUsername, id: otherUserId });
-                                                setCurrentReviewRide(ride);
-                                                setShowReviewModal(true);
-                                            }}
+                                            onClick={() => openReview(booking, ride)}
                                             className="w-full bg-primary hover:bg-primary/90 rounded-2xl"
                                         >
                                             <Star className="w-4 h-4 mr-1" /> leave review for @{otherUsername}
@@ -971,56 +881,7 @@ Please process the refund manually via Stripe.
                     </Dialog>
                 )}
 
-                <Dialog open={showReviewModal} onOpenChange={setShowReviewModal}>
-                    <DialogContent className="sm:max-w-md bg-white rounded-3xl">
-                        <DialogHeader>
-                            <DialogTitle className="text-2xl font-bold text-secondary">
-                                how was your trip with @{currentReviewUser?.username}?
-                            </DialogTitle>
-                            <p className="text-sm text-gray-600">leave a review to build the cruise kauaʻi community!</p>
-                        </DialogHeader>
-
-                        <div className="space-y-6 py-4">
-                            <div className="flex justify-center gap-2">
-                                {[1, 2, 3, 4, 5].map((star) => (
-                                    <button
-                                        key={star}
-                                        onClick={() => setReviewData({ ...reviewData, rating: star })}
-                                        className="transition-transform hover:scale-110"
-                                    >
-                                        <Star
-                                            className={`w-12 h-12 ${
-                                                star <= reviewData.rating
-                                                    ? 'text-amber-400 fill-amber-400'
-                                                    : 'text-gray-300'
-                                            }`}
-                                        />
-                                    </button>
-                                ))}
-                            </div>
-
-                            <div className="space-y-2">
-                                <p className="font-medium text-gray-700">
-                                    leave comments here about cleanliness, punctuality, sociability, and more
-                                </p>
-                                <Textarea
-                                    value={reviewData.comment}
-                                    onChange={(e) => setReviewData({ ...reviewData, comment: e.target.value })}
-                                    placeholder="Share your experience..."
-                                    className="h-32 rounded-2xl"
-                                />
-                            </div>
-
-                            <Button
-                                onClick={handleSubmitReview}
-                                className="w-full bg-primary hover:bg-primary/90 rounded-2xl"
-                                disabled={reviewData.rating === 0}
-                            >
-                                submit review
-                            </Button>
-                        </div>
-                    </DialogContent>
-                </Dialog>
+                <TripReviewModal review={review} userId={user?.id} onClose={closeReview} onSaved={loadData} />
             </div>
         </div>
     );

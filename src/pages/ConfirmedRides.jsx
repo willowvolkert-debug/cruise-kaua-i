@@ -3,8 +3,9 @@ import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
+import TripReviewModal from "@/components/rating/TripReviewModal";
+import useTripReviewPrompt from "@/components/rating/useTripReviewPrompt";
+import getPendingTripReviews from "@/components/rating/getPendingTripReviews";
 import { MapPin, Calendar, Clock, ChevronRight, ChevronDown, MessageSquare, Star } from "lucide-react";
 import { format } from "date-fns";
 import ChatModal from "../components/inbox/ChatModal";
@@ -32,10 +33,7 @@ export default function ConfirmedRidesPage() {
     const [riderBookingToCancel, setRiderBookingToCancel] = useState(null);
     const [showDriverRideModal, setShowDriverRideModal] = useState(false);
     const [selectedDriverRide, setSelectedDriverRide] = useState(null);
-    const [showReviewModal, setShowReviewModal] = useState(false);
-    const [reviewData, setReviewData] = useState({ rating: 0, comment: '' });
-    const [currentReviewUser, setCurrentReviewUser] = useState(null);
-    const [currentReviewRide, setCurrentReviewRide] = useState(null);
+
     const [myPendingBookings, setMyPendingBookings] = useState([]);
     const [myRideRequests, setMyRideRequests] = useState([]);
 
@@ -47,10 +45,7 @@ export default function ConfirmedRidesPage() {
             const currentUser = await base44.auth.me();
             setUser(currentUser);
 
-            const [allBookings, allRatings] = await Promise.all([
-                base44.entities.RideBooking.list('-created_date', 500),
-                base44.entities.Rating.list('-created_date', 500)
-            ]);
+            const allBookings = await base44.entities.RideBooking.list('-created_date', 500);
 
             // Collect ride IDs from bookings we're involved in
             const myBookingRideIds = allBookings
@@ -90,30 +85,7 @@ export default function ConfirmedRidesPage() {
             const hawaiiNow = getHawaiiNow();
             const nowComparable = hawaiiNow.toComparable();
 
-            // Split into needs-review vs still active
-            const needsReview = [];
-            const stillActive = [];
-            for (const booking of confirmedBookings) {
-                const ride = allRides.find(r => String(r.id) === String(booking.ride_id));
-                if (ride) {
-                    const rideDateTime = parseRideDateTimeHST(ride.departure_date, ride.departure_time);
-                    const reviewThreshold = rideDateTime.addHours(4);
-                    if (nowComparable > reviewThreshold.toComparable()) {
-                        const isDriver = String(ride.driver_id) === String(currentUser.id);
-                        const otherUserId = isDriver ? booking.passenger_id : ride.driver_id;
-                        const userRating = allRatings.find(r =>
-                            String(r.ride_id) === String(ride.id) &&
-                            String(r.rated_by_user_id) === String(currentUser.id) &&
-                            String(r.rated_user_id) === String(otherUserId)
-                        );
-                        if (!userRating) needsReview.push({ booking, ride });
-                    } else {
-                        stillActive.push(booking);
-                    }
-                } else {
-                    stillActive.push(booking);
-                }
-            }
+            const needsReview = await getPendingTripReviews(allBookings, allRides, currentUser.id);
             setRidesNeedingReview(needsReview);
 
             // Upcoming rides (driver)
@@ -306,27 +278,7 @@ export default function ConfirmedRidesPage() {
         }
     };
 
-    const handleSubmitReview = async () => {
-        if (reviewData.rating === 0) { alert("Please select a rating."); return; }
-        const isDriver = currentReviewRide.driver_id === user.id;
-        try {
-            await base44.entities.Rating.create({
-                ride_id: currentReviewRide.id,
-                rated_by_user_id: user.id,
-                rated_user_id: currentReviewUser.id,
-                rating_value: reviewData.rating,
-                comment: reviewData.comment,
-                trip_role: isDriver ? 'passenger' : 'driver'
-            });
-            alert("Review submitted! Thank you!");
-            setShowReviewModal(false);
-            setReviewData({ rating: 0, comment: '' });
-            loadData();
-        } catch (error) {
-            console.error("Error submitting review:", error);
-            alert("Could not submit your review. Please try again.");
-        }
-    };
+    const { review, openReview, closeReview } = useTripReviewPrompt(ridesNeedingReview, user?.id, loadData);
 
     if (isLoading) return <div className="p-8 text-center">Loading your rides...</div>;
 
@@ -354,7 +306,6 @@ export default function ConfirmedRidesPage() {
                                 const otherUsername = isDriver
                                     ? (booking.passenger_username || booking.passenger_name)
                                     : (booking.driver_username || ride.driver_name);
-                                const otherUserId = isDriver ? booking.passenger_id : ride.driver_id;
                                 return (
                                     <div key={booking.id} className="bg-white rounded-lg p-4 border border-orange-200">
                                         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-600 mb-1">
@@ -367,11 +318,7 @@ export default function ConfirmedRidesPage() {
                                         </div>
                                         <p className="text-sm text-gray-600 mb-2">Trip with @{otherUsername}</p>
                                         <Button
-                                            onClick={() => {
-                                                setCurrentReviewUser({ username: otherUsername, id: otherUserId });
-                                                setCurrentReviewRide(ride);
-                                                setShowReviewModal(true);
-                                            }}
+                                            onClick={() => openReview(booking, ride)}
                                             className="w-full bg-primary hover:bg-primary/90 rounded-2xl"
                                         >
                                             leave review
@@ -606,34 +553,7 @@ export default function ConfirmedRidesPage() {
                     onRideUpdated={loadData}
                 />
 
-                {/* Review Modal */}
-                <Dialog open={showReviewModal} onOpenChange={setShowReviewModal}>
-                    <DialogContent className="sm:max-w-md bg-white rounded-3xl">
-                        <DialogHeader>
-                            <DialogTitle className="text-2xl font-bold text-secondary">
-                                how was your trip with @{currentReviewUser?.username}?
-                            </DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-6 py-4">
-                            <div className="flex justify-center gap-2">
-                                {[1, 2, 3, 4, 5].map((star) => (
-                                    <button key={star} onClick={() => setReviewData({ ...reviewData, rating: star })} className="transition-transform hover:scale-110">
-                                        <Star className={`w-12 h-12 ${star <= reviewData.rating ? 'text-amber-400 fill-amber-400' : 'text-gray-300'}`} />
-                                    </button>
-                                ))}
-                            </div>
-                            <Textarea
-                                value={reviewData.comment}
-                                onChange={(e) => setReviewData({ ...reviewData, comment: e.target.value })}
-                                placeholder="Share your experience..."
-                                className="h-32 rounded-2xl"
-                            />
-                            <Button onClick={handleSubmitReview} className="w-full bg-primary hover:bg-primary/90 rounded-2xl" disabled={reviewData.rating === 0}>
-                                submit review
-                            </Button>
-                        </div>
-                    </DialogContent>
-                </Dialog>
+                <TripReviewModal review={review} userId={user?.id} onClose={closeReview} onSaved={loadData} />
             </div>
         </div>
     );
