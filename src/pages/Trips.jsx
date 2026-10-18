@@ -281,7 +281,7 @@ export default function TripsPage() {
         )}
 
         {/* ── VIEW ROUTE ── */}
-        {view === "view_route" && <RouteSearch island={selectedIsland} />}
+        {view === "view_route" && <RouteSearch island={selectedIsland} onRequestRide={() => setView("request")} />}
 
         {/* ── REQUEST ── */}
         {view === "request" && <RequestRide island={selectedIsland} />}

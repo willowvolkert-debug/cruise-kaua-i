@@ -11,42 +11,29 @@ import { format, addDays, parseISO } from "date-fns";
 import DatePickerButton from "@/components/shared/DatePickerButton";
 import DriverProfileModal from "./DriverProfileModal";
 import BookingModal from "../rides/BookingModal";
-
-function normalize(str) {
-  return (str || "").toLowerCase().trim();
-}
-
-function matchesLocation(rideLocation, query) {
-  if (!query) return false;
-  const q = normalize(query);
-  return normalize(rideLocation).includes(q);
-}
+import { locationsMatch } from "@/lib/locationMatching";
 
 function rideMatchesRoute(ride, from, to) {
-  const fromQ = normalize(from);
-  const toQ = normalize(to);
-
   const allLocations = [
     ride.departure_location,
     ride.destination,
     ...(ride.stops || []),
   ];
 
-  const fromMatch = allLocations.some(loc => normalize(loc).includes(fromQ));
-  const toMatch = allLocations.some(loc => normalize(loc).includes(toQ));
+  const fromMatch = allLocations.some(loc => locationsMatch(loc, from));
+  const toMatch = allLocations.some(loc => locationsMatch(loc, to));
 
   // Direct route match: both from and to appear in the ride's locations/stops
   if (fromMatch && toMatch) return true;
 
   // Midpoint pickup: driver offers pickup/dropoff along the way, so match if
   // either the "from" or "to" location appears anywhere in the ride's route.
-  // e.g. a Lihue→Hanalei driver with midpoint pickup matches a "Lihue→Kilauea" search.
   if (ride.offers_midpoint_pickup && (fromMatch || toMatch)) return true;
 
   return false;
 }
 
-export default function RouteSearch({ island }) {
+export default function RouteSearch({ island, onRequestRide }) {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [date, setDate] = useState("");
@@ -136,12 +123,17 @@ export default function RouteSearch({ island }) {
         <div className="space-y-4">
           {Object.keys(grouped).length === 0 ? (
             <Card className="rounded-2xl border-gray-200">
-              <CardContent className="p-8 text-center">
+              <CardContent className="p-8 text-center space-y-3">
                 <MapPin className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                <h3 className="text-base font-semibold text-secondary mb-1">no matching rides found</h3>
+                <h3 className="text-base font-semibold text-secondary">no rides posted yet for this route</h3>
                 <p className="text-sm text-gray-500">
-                  No rides pass through {from} → {to}{date ? ` on ${format(parseISO(date), 'MMM d')}` : ""}. Try different locations or leave the date blank.
+                  No rides pass through {from} → {to}{date ? ` on ${format(parseISO(date), 'MMM d')}` : ""} yet.
                 </p>
+                {onRequestRide && (
+                  <Button onClick={onRequestRide} className="bg-primary hover:bg-primary/90 text-white rounded-full px-6 py-3 font-bold">
+                    🙋 post a ride request
+                  </Button>
+                )}
               </CardContent>
             </Card>
           ) : (

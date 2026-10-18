@@ -14,6 +14,7 @@ import { createRideCheckout } from "@/functions/createRideCheckout";
 import { sendSmsNotification } from "@/functions/sendSmsNotification";
 import { format } from "date-fns";
 import { suggestPrice } from "@/components/trips/pricingUtils";
+import { toast } from "@/components/ui/use-toast";
 
 export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }) {
   const [bookingData, setBookingData] = useState({ 
@@ -91,7 +92,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
     if (!currentUser) return;
 
     if (!bookingData.description) {
-      alert("Please tell the driver why you need a ride.");
+      toast({ variant: "destructive", title: "tell the driver why you need a ride", description: "a short reason is required so the driver knows who's joining.", duration: 4000 });
       return;
     }
 
@@ -120,7 +121,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         booking_status: { $in: ['pending', 'confirmed'] }
       });
       if (existing && existing.length > 0) {
-        alert("You already have a booking request for this ride. Check your inbox for the status.");
+        toast({ title: "you already have a booking for this ride ✓", description: "check your inbox for the status.", duration: 4000 });
         setIsSubmitting(false);
         return;
       }
@@ -231,7 +232,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
       window.location.href = data.checkout_url;
     } catch (error) {
       console.error("Error creating checkout:", error);
-      alert("Error creating payment: " + error.message);
+      toast({ variant: "destructive", title: "couldn't process payment", description: error.message || "please try again.", duration: 5000 });
       setIsSubmitting(false);
     }
   };
