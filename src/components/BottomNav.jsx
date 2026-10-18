@@ -4,7 +4,7 @@ import { MapPin, CheckCircle, MessageSquare, User } from "lucide-react";
 
 const TABS = [
   { path: "/trips", label: "Trips", icon: MapPin },
-  { path: "/confirmedrides", label: "Confirmed", icon: CheckCircle },
+  { path: "/confirmedrides", label: "My Rides", icon: CheckCircle },
   { path: "/inbox", label: "Inbox", icon: MessageSquare },
   { path: "/account", label: "Account", icon: User },
 ];

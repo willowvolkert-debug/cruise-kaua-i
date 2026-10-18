@@ -374,8 +374,8 @@ export default function WelcomeTutorialModal({ isOpen, onClose, onComplete }) {
             </Button>
           </div>
 
-          {/* Back navigation */}
-          {((currentPage === "install_app" && !confusedDone) || currentPage === "more_questions") && (
+          {/* Back navigation — available on all pages except the first */}
+          {pageIndex > 0 && !(currentPage === "install_app" && confusedDone) && (
             <button
               onClick={() => setPageIndex(p => p - 1)}
               className="w-full text-center text-xs text-gray-400 hover:text-gray-600 transition-colors"

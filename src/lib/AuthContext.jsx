@@ -124,10 +124,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const navigateToLogin = () => {
-    // Redirect to the app's own Join page with the destination as a next param,
-    // instead of the platform login page (which causes "Login Session Expired" on iOS)
+    // Redirect to the app's own Join page in login mode (not the signup wizard)
+    // with the destination as a next param, instead of the platform login page
+    // (which causes "Login Session Expired" on iOS)
     const next = encodeURIComponent(window.location.pathname + window.location.search);
-    window.location.href = `/join?next=${next}`;
+    window.location.href = `/join?login=true&next=${next}`;
   };
 
   return (

@@ -104,6 +104,12 @@ export default function JoinPage() {
       setSignupError("please fill in all fields.");
       return;
     }
+    // Validate email format before submitting to the platform
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setSignupError("please enter a valid email address.");
+      return;
+    }
     if (password.length < 8) {
       setSignupError("password must be at least 8 characters.");
       return;
@@ -273,6 +279,11 @@ export default function JoinPage() {
     setLoginError("");
     if (!email || !loginPassword) {
       setLoginError("please enter your email and password.");
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setLoginError("please enter a valid email address.");
       return;
     }
     setLoginLoading(true);

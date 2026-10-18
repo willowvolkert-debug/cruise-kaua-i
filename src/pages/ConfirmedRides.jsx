@@ -309,18 +309,23 @@ export default function ConfirmedRidesPage() {
     const handleSubmitReview = async () => {
         if (reviewData.rating === 0) { alert("Please select a rating."); return; }
         const isDriver = currentReviewRide.driver_id === user.id;
-        await base44.entities.Rating.create({
-            ride_id: currentReviewRide.id,
-            rated_by_user_id: user.id,
-            rated_user_id: currentReviewUser.id,
-            rating_value: reviewData.rating,
-            comment: reviewData.comment,
-            trip_role: isDriver ? 'passenger' : 'driver'
-        });
-        alert("Review submitted! Thank you!");
-        setShowReviewModal(false);
-        setReviewData({ rating: 0, comment: '' });
-        loadData();
+        try {
+            await base44.entities.Rating.create({
+                ride_id: currentReviewRide.id,
+                rated_by_user_id: user.id,
+                rated_user_id: currentReviewUser.id,
+                rating_value: reviewData.rating,
+                comment: reviewData.comment,
+                trip_role: isDriver ? 'passenger' : 'driver'
+            });
+            alert("Review submitted! Thank you!");
+            setShowReviewModal(false);
+            setReviewData({ rating: 0, comment: '' });
+            loadData();
+        } catch (error) {
+            console.error("Error submitting review:", error);
+            alert("Could not submit your review. Please try again.");
+        }
     };
 
     if (isLoading) return <div className="p-8 text-center">Loading your rides...</div>;
@@ -329,7 +334,7 @@ export default function ConfirmedRidesPage() {
         <div className="p-4 md:p-8 bg-white">
             <div className="max-w-4xl mx-auto space-y-6">
                 <div>
-                    <h1 className="text-2xl font-bold text-secondary">confirmed rides & requests</h1>
+                    <h1 className="text-2xl font-bold text-secondary">my rides</h1>
                     <p className="text-gray-500 text-sm mt-0.5">view + edit your rides & ride requests</p>
                 </div>
 

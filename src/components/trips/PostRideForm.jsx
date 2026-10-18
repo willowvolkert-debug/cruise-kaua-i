@@ -805,6 +805,22 @@ export default function PostRideForm({ island = "Kauai" }) {
                         const period = rideData.departure_time.match(/\s*(AM|PM)$/i)?.[1] || 'AM';
                         handleInputChange('departure_time', e.target.value + ' ' + period);
                       }}
+                      onBlur={(e) => {
+                        // Auto-format: "500" → "5:00", "12" → "12:00"
+                        const period = rideData.departure_time.match(/\s*(AM|PM)$/i)?.[1] || 'AM';
+                        const raw = e.target.value.replace(/[^0-9:]/g, '');
+                        let formatted = raw;
+                        if (raw && !raw.includes(':')) {
+                          if (raw.length <= 2) {
+                            formatted = raw + ':00';
+                          } else if (raw.length === 3) {
+                            formatted = raw[0] + ':' + raw.slice(1);
+                          } else if (raw.length === 4) {
+                            formatted = raw.slice(0, 2) + ':' + raw.slice(2);
+                          }
+                        }
+                        handleInputChange('departure_time', formatted + ' ' + period);
+                      }}
                       required
                       className="rounded-2xl flex-1"
                     />
