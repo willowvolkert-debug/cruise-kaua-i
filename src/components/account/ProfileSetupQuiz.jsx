@@ -28,7 +28,7 @@ const BASE_STEPS = [
   { id: "profile_picture", title: "Add a profile photo", subtitle: "A clear photo of your face helps build trust in our community.", type: "photo", field: "profile_picture_url" },
   { id: "terms_of_service", title: "Terms of Service", subtitle: "Please read and agree to our Terms of Service before continuing.", type: "terms_of_service", field: "terms_of_service" },
   { id: "privacy_policy", title: "Privacy Policy", subtitle: "Please read and agree to our Privacy Policy before continuing.", type: "privacy_policy", field: "privacy_policy" },
-  { id: "license", title: "Verify your driver's license", subtitle: "Upload both sides of your license so our team can verify your identity. You can skip this for now and upload it later from your account — you'll need it verified before your first ride.", type: "license", field: "license" },
+  { id: "license", title: "Verify your ID or license", subtitle: "Upload both sides of your driver's license or a government-issued ID so our team can verify your identity. Don't have a license? A state ID or passport works too. You can skip this for now and upload it later from your account — you'll need it verified before your first ride.", type: "license", field: "license" },
   { id: "driver_choice", title: "Are you interested in driving?", subtitle: "Drivers earn money by sharing rides they're already making. Riders book seats on posted trips.", type: "driver_choice", field: "driver_choice" },
 ];
 
@@ -765,7 +765,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
           {/* LICENSE */}
           {current.type === "license" && (
             <div className="space-y-4">
-              {[{ label: "Front of license *", file: licenseFront, ref: licenseFrontRef, set: setLicenseFront, saved: user?.drivers_license_front_url }, { label: "Back of license *", file: licenseBack, ref: licenseBackRef, set: setLicenseBack, saved: user?.drivers_license_back_url }].map(({ label, file, ref, set, saved }) => (
+              {[{ label: "Front of license / ID *", file: licenseFront, ref: licenseFrontRef, set: setLicenseFront, saved: user?.drivers_license_front_url }, { label: "Back of license / ID *", file: licenseBack, ref: licenseBackRef, set: setLicenseBack, saved: user?.drivers_license_back_url }].map(({ label, file, ref, set, saved }) => (
                 <div key={label} className="space-y-1">
                   <p className="text-sm font-medium text-gray-700">{label}</p>
                   <div onClick={() => ref.current?.click()} className={`border-2 border-dashed rounded-2xl p-5 text-center cursor-pointer transition-colors ${file ? 'border-green-400 bg-green-50' : saved ? 'border-green-300 bg-green-50/50' : 'border-gray-300 hover:border-primary/50'}`}>
@@ -793,7 +793,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
               ))}
               <div className="bg-blue-50 border border-blue-200 rounded-2xl p-3 text-xs text-blue-800">
                 <p className="font-semibold mb-1">What you'll need:</p>
-                <ul className="space-y-0.5"><li>• A valid driver's license</li><li>• Clear, well-lit photos of both sides</li><li>• All text must be readable</li></ul>
+                <ul className="space-y-0.5"><li>• A valid driver's license or government-issued ID</li><li>• Clear, well-lit photos of both sides</li><li>• All text must be readable</li></ul>
               </div>
               <p className="text-xs text-gray-400 text-center">🔒 Encrypted and secure.</p>
               <button

@@ -84,15 +84,15 @@ export default function LicenseVerificationModal({ isOpen, onClose, onSuccess })
         </button>
 
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-secondary pr-8">verify license</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-secondary pr-8">verify ID or license</DialogTitle>
           <DialogDescription className="text-gray-600">
-            Upload clear photos of both sides of your driver's license. Your submission will be reviewed by our team.
+            Upload clear photos of both sides of your driver's license or a government-issued ID. Don't have a license? A state ID or passport works too. Your submission will be reviewed by our team.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-5 py-4">
           <div className="space-y-2">
-            <Label htmlFor="license-front">Front of License *</Label>
+            <Label htmlFor="license-front">Front of License / ID *</Label>
             <div className="border-2 border-dashed border-gray-300 rounded-2xl p-4 text-center hover:border-primary/40 transition-colors">
               <input
                 id="license-front"
@@ -111,7 +111,7 @@ export default function LicenseVerificationModal({ isOpen, onClose, onSuccess })
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="license-back">Back of License *</Label>
+            <Label htmlFor="license-back">Back of License / ID *</Label>
             <div className="border-2 border-dashed border-gray-300 rounded-2xl p-4 text-center hover:border-primary/40 transition-colors">
               <input
                 id="license-back"
@@ -148,7 +148,7 @@ export default function LicenseVerificationModal({ isOpen, onClose, onSuccess })
           <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
             <h4 className="font-semibold text-blue-900 mb-2">What you'll need:</h4>
             <ul className="text-sm text-blue-800 space-y-1">
-              <li>• A valid driver's license</li>
+              <li>• A valid driver's license or government-issued ID</li>
               <li>• Clear, well-lit photos of both sides</li>
               <li>• All information must be readable</li>
             </ul>
