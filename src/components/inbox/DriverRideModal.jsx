@@ -29,6 +29,7 @@ export default function DriverRideModal({ isOpen, onClose, ride, bookings = [], 
     const [isSaving, setIsSaving] = useState(false);
     const [isCancelling, setIsCancelling] = useState(false);
     const [editData, setEditData] = useState({});
+    const [pickupPoints, setPickupPoints] = useState({});
 
     const confirmedBookings = bookings.filter(b => 
         b.ride_id === ride?.id && b.booking_status === 'confirmed'
@@ -37,6 +38,12 @@ export default function DriverRideModal({ isOpen, onClose, ride, bookings = [], 
 
     useEffect(() => {
         if (ride) {
+            // Initialize pickup points from existing booking data
+            const points = {};
+            bookings.filter(b => b.ride_id === ride?.id && b.booking_status === 'confirmed').forEach(b => {
+                points[b.id] = b.pickup_point || '';
+            });
+            setPickupPoints(points);
             setEditData({
                 departure_location: ride.departure_location || '',
                 destination: ride.destination || '',
@@ -345,11 +352,31 @@ Please process full refunds for all affected riders.
                                 {confirmedBookings.length > 0 && (
                                     <div className="p-4 bg-green-50 border border-green-200 rounded-2xl">
                                         <p className="font-semibold text-green-800 mb-2">Confirmed Riders ({confirmedBookings.length})</p>
-                                        <div className="space-y-1">
+                                        <div className="space-y-3">
                                             {confirmedBookings.map(b => (
-                                                <p key={b.id} className="text-sm text-green-700">
-                                                    • {b.passenger_name} ({b.seats_booked} seat{b.seats_booked > 1 ? 's' : ''})
-                                                </p>
+                                                <div key={b.id} className="space-y-1.5">
+                                                    <p className="text-sm text-green-700 font-medium">
+                                                        • {b.passenger_name} ({b.seats_booked} seat{b.seats_booked > 1 ? 's' : ''})
+                                                    </p>
+                                                    <div className="flex items-center gap-2 pl-4">
+                                                        <MapPin className="w-3.5 h-3.5 text-green-600 shrink-0" />
+                                                        <Input
+                                                            type="text"
+                                                            placeholder="set pickup point (e.g., 'front of Lihue Airport')"
+                                                            value={pickupPoints[b.id] || ''}
+                                                            onChange={(e) => setPickupPoints(prev => ({ ...prev, [b.id]: e.target.value }))}
+                                                            onBlur={async () => {
+                                                                try {
+                                                                    await base44.entities.RideBooking.update(b.id, { pickup_point: pickupPoints[b.id] || '' });
+                                                                    toast({ title: "pickup point saved ✓", duration: 3000 });
+                                                                } catch (err) {
+                                                                    toast({ variant: "destructive", title: "couldn't save pickup point", duration: 3000 });
+                                                                }
+                                                            }}
+                                                            className="rounded-xl h-9 text-xs"
+                                                        />
+                                                    </div>
+                                                </div>
                                             ))}
                                         </div>
                                     </div>

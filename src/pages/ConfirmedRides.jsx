@@ -378,6 +378,21 @@ export default function ConfirmedRidesPage() {
                                                 <MapPin className="w-4 h-4 text-primary" />
                                                 <span className="font-semibold text-secondary">{ride.departure_location} → {ride.destination}</span>
                                             </div>
+                                            {!isDriver && (() => {
+                                                const myBooking = activeBookings.find(b => b.ride_id === ride.id && String(b.passenger_id) === String(user?.id));
+                                                if (myBooking?.pickup_point) {
+                                                    return (
+                                                        <div className="flex items-start gap-2 mb-1 bg-green-50 border border-green-200 rounded-xl p-2">
+                                                            <MapPin className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
+                                                            <div>
+                                                                <p className="text-xs font-semibold text-green-700">pickup point</p>
+                                                                <p className="text-sm text-green-800">{myBooking.pickup_point}</p>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }
+                                                return null;
+                                            })()}
                                             <div className="flex gap-2 flex-wrap">
                                                 <Badge variant="outline" className={`text-xs ${isDriver ? 'bg-green-50 text-green-700 border-green-300' : 'bg-blue-50 text-blue-700 border-blue-300'}`}>
                                                     {isDriver ? 'you\'re driving' : 'you\'re riding'}

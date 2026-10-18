@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
-import { ShieldCheck, Star, Edit, Save, MessageCircle, Wind, Upload, Clock, FileText, Shield, HandHeart, Camera, ChevronRight, ChevronDown, DollarSign, LogOut, UserPlus, MapPin, Calendar, PartyPopper, Music } from "lucide-react";
+import { ShieldCheck, Star, Edit, Save, MessageCircle, Wind, Upload, Clock, FileText, Shield, HandHeart, Camera, ChevronRight, ChevronDown, DollarSign, LogOut, UserPlus, MapPin, Calendar, PartyPopper, Music, Car } from "lucide-react";
 import { Link as RouterLink } from "react-router-dom";
 import { format } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
@@ -114,6 +114,7 @@ export default function AccountPage() {
     const [showPostSignupCard, setShowPostSignupCard] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [showDriverOnboarding, setShowDriverOnboarding] = useState(false);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -936,6 +937,32 @@ export default function AccountPage() {
                     </CardContent>
                 </Card>
 
+                {/* Become a Driver CTA — shown when user is not yet a verified driver */}
+                {user.user_type !== 'driver' && !user.vehicle_verified && (
+                    <Card className="shadow-md border-primary/30 bg-gradient-to-br from-primary/5 to-green-50 rounded-3xl">
+                        <CardContent className="p-6 text-center space-y-3">
+                            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
+                                <Car className="w-7 h-7 text-primary" />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold text-secondary">become a driver 🚗</h3>
+                                <p className="text-sm text-gray-500 mt-1 leading-relaxed">
+                                    Earn money by sharing rides you're already making. Verify your vehicle, upload insurance, and sign the driver agreement to get started.
+                                </p>
+                            </div>
+                            <Button
+                                onClick={() => {
+                                    setShowDriverOnboarding(true);
+                                    setShowProfileQuiz(true);
+                                }}
+                                className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 py-3 font-bold"
+                            >
+                                get started →
+                            </Button>
+                        </CardContent>
+                    </Card>
+                )}
+
                 <div className="grid md:grid-cols-3 gap-8">
                     <div className="md:col-span-2 space-y-8">
 
@@ -1368,9 +1395,11 @@ export default function AccountPage() {
                 <ProfileSetupQuiz
                     user={user}
                     initialStep={profileQuizSavedStep > 0 ? profileQuizSavedStep : 0}
+                    driverMode={showDriverOnboarding}
                     onComplete={async () => {
                         setShowProfileQuiz(false);
                         setProfileQuizSavedStep(0);
+                        setShowDriverOnboarding(false);
                         await loadData();
                     }}
                 />

@@ -22,14 +22,13 @@ const BASE_STEPS = [
     { value: "non-binary", label: "Non-binary" },
     { value: "prefer_not_to_say", label: "Prefer not to say" },
   ]},
-  { id: "bio", title: "Tell us a little about yourself", subtitle: "A sentence or two about who you are and why you're using Cruise Kauaʻi.", type: "textarea", placeholder: "e.g. Local Kauaʻi resident, love hiking and beach days!", field: "bio" },
+  { id: "bio", title: "Tell us about yourself", subtitle: "Share where you're from, how long you've lived on the island, and what you do — this helps build trust with the people you ride with.", type: "textarea", placeholder: "e.g. Born and raised on Kauaʻi, love hiking the Na Pali Coast and meeting new people!", field: "bio" },
   { id: "phone", title: "What's your phone number?", subtitle: "Optional. We'll text you when someone messages you or books your ride. We'll never send promotions.", type: "phone", field: "phone_number" },
   { id: "push_notifications", title: "Enable push notifications", subtitle: "Get notified when a rider books your ride, a driver accepts your request, or someone sends you a message.", type: "push_notifications", field: "push_notifications" },
   { id: "profile_picture", title: "Add a profile photo", subtitle: "A clear photo of your face helps build trust in our community.", type: "photo", field: "profile_picture_url" },
   { id: "terms_of_service", title: "Terms of Service", subtitle: "Please read and agree to our Terms of Service before continuing.", type: "terms_of_service", field: "terms_of_service" },
   { id: "privacy_policy", title: "Privacy Policy", subtitle: "Please read and agree to our Privacy Policy before continuing.", type: "privacy_policy", field: "privacy_policy" },
   { id: "license", title: "Verify your ID or license", subtitle: "Upload both sides of your driver's license or a government-issued ID so our team can verify your identity. Don't have a license? A state ID or passport works too. You can skip this for now and upload it later from your account — you'll need it verified before your first ride.", type: "license", field: "license" },
-  { id: "driver_choice", title: "Are you interested in driving?", subtitle: "Drivers earn money by sharing rides they're already making. Riders book seats on posted trips.", type: "driver_choice", field: "driver_choice" },
 ];
 
 const DRIVER_STEPS = [
@@ -65,7 +64,7 @@ const AGREEMENT_BOXES = [
   { key: 'voluntaryParticipation', label: 'I voluntarily agree to participate' },
 ];
 
-export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) {
+export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, driverMode = false }) {
   const navigate = useNavigate();
 
   // Read island + role from URL params (set by JoinUs signup flow)
@@ -77,7 +76,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
   const [step, setStep] = useState(initialStep);
   // Show founders screen for non-Kauai islands pre-filled from signup flow
   const [foundersChecked, setFoundersChecked] = useState(false);
-  const [isDriverPath, setIsDriverPath] = useState(_prefilledRole === 'driver' || user?.user_type === 'driver' || (!!user?.vehicle_make && !!user?.vehicle_model));
+  const [isDriverPath, setIsDriverPath] = useState(driverMode || _prefilledRole === 'driver' || user?.user_type === 'driver' || (!!user?.vehicle_make && !!user?.vehicle_model));
   const [showRiderTips, setShowRiderTips] = useState(false);
   const [showFoundersScreen, setShowFoundersScreen] = useState(false);
   const [done, setDone] = useState(false);
@@ -300,9 +299,6 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     setError("");
     if (!validate()) return;
 
-    // Driver choice step
-    if (current.type === "driver_choice") return; // handled by buttons
-
     // Persist vehicle data the moment the user clears the vehicle_photos step.
     // Previously this only saved on the final "finish & save", so if a user
     // abandoned the quiz (or the final save failed) after uploading their
@@ -332,15 +328,17 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
       if (isDriverPath) {
         if (vehicleExterior && !vehicleSaved) await saveVehicle();
         await saveDriverAgreement();
+        sendOnboardingEmail({}).catch(() => null);
+        base44.analytics.track({
+          eventName: "profile_setup_completed",
+          properties: { path: "driver", island: answers.preferred_island || "Kauai" }
+        });
+        setDone(true);
+        setTimeout(() => onComplete(), 1800);
+      } else {
+        // Rider — show tips card, then complete
+        setShowRiderTips(true);
       }
-      // Fire onboarding email once (non-blocking)
-      sendOnboardingEmail({}).catch(() => null);
-      base44.analytics.track({
-        eventName: "profile_setup_completed",
-        properties: { path: isDriverPath ? "driver" : "rider", island: answers.preferred_island || "Kauai" }
-      });
-      setDone(true);
-      setTimeout(() => onComplete(), 1800);
     } catch (saveErr) {
       setError("couldn't save your profile — please check your connection and try again. if the problem continues, use the contact us form.");
     }

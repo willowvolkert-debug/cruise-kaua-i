@@ -11,6 +11,7 @@ import { MapPin, X, Plus, AlertCircle, Clock, Repeat, RefreshCw } from "lucide-r
 import { createRideRequest } from "@/functions/createRideRequest";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import LocationAutocomplete from "../shared/LocationAutocomplete";
+import TimeInput from "../shared/TimeInput";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import HaenaInfoView from "./HaenaInfoView";
@@ -334,53 +335,15 @@ export default function RequestRide({ island = "Kauai" }) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="time">departure time *</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="time"
-                      type="text"
-                      placeholder="e.g., 9:00"
-                      value={requestData.departure_time.replace(/\s*(AM|PM)$/i, '')}
-                      onChange={(e) => {
-                        const period = requestData.departure_time.match(/\s*(AM|PM)$/i)?.[1] || 'AM';
-                        handleInputChange('departure_time', e.target.value + ' ' + period);
-                      }}
-                      onBlur={(e) => {
-                        // Auto-format: "500" → "5:00", "12" → "12:00"
-                        const period = requestData.departure_time.match(/\s*(AM|PM)$/i)?.[1] || 'AM';
-                        const raw = e.target.value.replace(/[^0-9:]/g, '');
-                        let formatted = raw;
-                        if (raw && !raw.includes(':')) {
-                          if (raw.length <= 2) {
-                            formatted = raw + ':00';
-                          } else if (raw.length === 3) {
-                            formatted = raw[0] + ':' + raw.slice(1);
-                          } else if (raw.length === 4) {
-                            formatted = raw.slice(0, 2) + ':' + raw.slice(2);
-                          }
-                        }
-                        handleInputChange('departure_time', formatted + ' ' + period);
-                      }}
-                      required
-                      className="rounded-2xl flex-1"
-                    />
-                    <Select
-                      value={requestData.departure_time.match(/\s*(AM|PM)$/i)?.[1]?.toUpperCase() || 'AM'}
-                      onValueChange={(period) => {
-                        const timeWithoutPeriod = requestData.departure_time.replace(/\s*(AM|PM)$/i, '').trim();
-                        handleInputChange('departure_time', timeWithoutPeriod + ' ' + period);
-                      }}
-                    >
-                      <SelectTrigger className="rounded-2xl w-24">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-2xl">
-                        <SelectItem value="AM">AM</SelectItem>
-                        <SelectItem value="PM">PM</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
+                   <Label htmlFor="time">departure time *</Label>
+                   <TimeInput
+                     id="time"
+                     value={requestData.departure_time}
+                     onChange={(v) => handleInputChange('departure_time', v)}
+                     required
+                     className="rounded-2xl w-full"
+                   />
+                 </div>
               </div>
 
               <div className="flex items-center justify-between">

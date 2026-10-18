@@ -120,6 +120,10 @@
     "cancellation_date": {
       "type": "string"
     },
+    "pickup_point": {
+      "type": "string",
+      "description": "Specific pickup location set by the driver after booking confirmation (text description or landmark)"
+    },
     "messages": {
       "type": "array",
       "items": {
