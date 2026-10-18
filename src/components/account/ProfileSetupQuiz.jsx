@@ -809,17 +809,17 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
           {current.type === "driver_choice" && (
             <div className="space-y-4">
               <div className="grid gap-3">
-                <button onClick={() => handleDriverChoice(true)} className="flex items-start gap-4 p-5 rounded-2xl border-2 border-gray-200 hover:border-primary/60 hover:bg-primary/5 transition-all text-left">
+                <button onClick={() => handleDriverChoice(true)} className="flex items-start gap-4 p-5 rounded-2xl border-2 border-primary bg-primary/5 hover:bg-primary/10 transition-all text-left">
                   <Car className="w-8 h-8 text-primary mt-0.5 shrink-0" />
                   <div>
-                    <p className="font-bold text-secondary text-base">yes, help me set up my driver account</p>
+                    <p className="font-bold text-primary text-base">yes, help me set up my driver account</p>
                     <p className="text-gray-500 text-sm mt-0.5">Upload your vehicle info, insurance, and sign the driver agreement. Earn money on trips you're already making.</p>
                   </div>
                 </button>
-                <button onClick={() => handleDriverChoice(false)} className="flex items-start gap-4 p-5 rounded-2xl border-2 border-gray-200 hover:border-primary/60 hover:bg-primary/5 transition-all text-left">
-                  <MapPin className="w-8 h-8 text-secondary mt-0.5 shrink-0" />
+                <button onClick={() => handleDriverChoice(false)} className="flex items-start gap-4 p-5 rounded-2xl border-2 border-blue-500 bg-blue-50 hover:bg-blue-100/60 transition-all text-left">
+                  <MapPin className="w-8 h-8 text-blue-500 mt-0.5 shrink-0" />
                   <div>
-                    <p className="font-bold text-secondary text-base">no, take me to view all rides</p>
+                    <p className="font-bold text-blue-600 text-base">no, take me to view all rides</p>
                     <p className="text-gray-500 text-sm mt-0.5">I just want to find rides for now. I can always set up as a driver later from my account.</p>
                   </div>
                 </button>
