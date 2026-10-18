@@ -22,6 +22,7 @@ export default function JoinPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [signupError, setSignupError] = useState("");
   const [signupLoading, setSignupLoading] = useState(false);
+  const [tosAgreed, setTosAgreed] = useState(false);
 
   // OTP state
   const [otpState, setOtpState] = useState(null); // null | "sent"
@@ -83,6 +84,10 @@ export default function JoinPage() {
     }
     if (password !== confirmPassword) {
       setSignupError("passwords don't match.");
+      return;
+    }
+    if (!tosAgreed) {
+      setSignupError("please agree to the Terms of Service to continue.");
       return;
     }
     setSignupLoading(true);
@@ -515,6 +520,20 @@ export default function JoinPage() {
               {signupError && (
                 <p className="text-red-500 text-sm font-medium">{signupError}</p>
               )}
+              <label className="flex items-start gap-3 cursor-pointer select-none pt-1">
+                <input
+                  type="checkbox"
+                  checked={tosAgreed}
+                  onChange={(e) => setTosAgreed(e.target.checked)}
+                  className="mt-0.5 w-5 h-5 rounded border-2 border-gray-300 text-primary focus:ring-primary shrink-0"
+                />
+                <span className="text-xs text-gray-500 leading-relaxed">
+                  I agree to the{" "}
+                  <a href="/termsofservice" target="_blank" className="text-primary underline font-medium">Terms of Service</a>{" "}
+                  and{" "}
+                  <a href="/privacypolicy" target="_blank" className="text-primary underline font-medium">Privacy Policy</a>.
+                </span>
+              </label>
               <p className="text-sm text-gray-400 pt-2">
                 forgot your password?{" "}
                 <a href="/forgot-password" className="text-primary underline font-medium hover:text-primary/80">
@@ -630,7 +649,7 @@ export default function JoinPage() {
           {!otpState && !loginRetry && (
             <Button
               onClick={handleSignup}
-              disabled={signupLoading}
+              disabled={signupLoading || !tosAgreed}
               className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-full font-bold py-5 text-base disabled:opacity-40"
             >
               {signupLoading ? "creating account..." : "create my account →"}

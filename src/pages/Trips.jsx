@@ -263,6 +263,7 @@ export default function TripsPage() {
                 initialStartDate={appliedDate}
                 initialEndDate={appliedDate}
                 hideDateFilter
+                onRequestRide={() => setView("request")}
               />
             )}
           </div>
@@ -275,6 +276,7 @@ export default function TripsPage() {
             island={selectedIsland}
             initialStartDate={format(new Date(), 'yyyy-MM-dd')}
             initialEndDate={format(addDays(new Date(), 7), 'yyyy-MM-dd')}
+            onRequestRide={() => setView("request")}
           />
         )}
 

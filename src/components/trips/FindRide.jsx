@@ -15,7 +15,7 @@ import BookingModal from "../rides/BookingModal";
 import FindRideTutorial from "../tutorial/FindRideTutorial";
 import { handlePaymentSuccess } from "@/functions/handlePaymentSuccess";
 
-export default function FindRide({ island = "Kauai", initialStartDate, initialEndDate, hideDateFilter = false }) {
+export default function FindRide({ island = "Kauai", initialStartDate, initialEndDate, hideDateFilter = false, onRequestRide }) {
   const today = new Date();
   const todayStr = format(today, 'yyyy-MM-dd');
   const nextWeekStr = format(addDays(today, 7), 'yyyy-MM-dd');
@@ -322,7 +322,12 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
         <div className="rounded-3xl border-2 border-gray-200 bg-gray-50 p-10 text-center">
           <p className="text-4xl mb-3">🚗</p>
           <h3 className="text-lg font-bold text-secondary mb-2">no rides posted yet</h3>
-          <p className="text-gray-500">No rides for this date range — try adjusting the dates or check back later.</p>
+          <p className="text-gray-500 mb-4">No rides for this route yet — try adjusting the dates, or post a ride request and we'll notify you when a driver is heading your way.</p>
+          {onRequestRide && (
+            <Button onClick={onRequestRide} className="bg-primary hover:bg-primary/90 text-white rounded-full px-6 py-3 font-bold">
+              🙋 post a ride request
+            </Button>
+          )}
         </div>
       )}
 

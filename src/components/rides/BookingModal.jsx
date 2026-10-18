@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
-import { CreditCard, Navigation, Star, Loader2, MessageCircle, Wind, MapPin, ShieldAlert, HeartHandshake } from "lucide-react";
+import { CreditCard, Navigation, Star, Loader2, MessageCircle, Wind, MapPin, ShieldAlert, HeartHandshake, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { createRideCheckout } from "@/functions/createRideCheckout";
@@ -497,24 +497,24 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                 </div>
               )}
               <div className="flex justify-between text-sm">
-                <span className="text-gray-700">Connect fee ({Math.round(connectFeeRate * 100)}%):</span>
+                <span className="text-gray-700 flex items-center gap-1">Connect fee ({Math.round(connectFeeRate * 100)}%) <Info className="w-3 h-3 text-gray-400 cursor-help" title="Platform fee Cruise Kauaʻi charges to maintain the app and process payments" /></span>
                 <span className="font-medium">${connectFee.toFixed(2)}</span>
               </div>
 
               {isFirstBooking && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-700">License verification fee:</span>
+                  <span className="text-gray-700 flex items-center gap-1">License verification fee <Info className="w-3 h-3 text-gray-400 cursor-help" title="One-time fee to cover the cost of verifying your driver's license or ID" /></span>
                   <span className="font-medium">$1.50</span>
                 </div>
               )}
               {smsFee > 0 && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-700">SMS notification fee:</span>
+                  <span className="text-gray-700 flex items-center gap-1">SMS notification fee <Info className="w-3 h-3 text-gray-400 cursor-help" title="Covers text message notifications for ride updates and booking alerts" /></span>
                   <span className="font-medium">$0.50</span>
                 </div>
               )}
               <div className="flex justify-between text-sm">
-                <span className="text-gray-700">Credit card fee (3%):</span>
+                <span className="text-gray-700 flex items-center gap-1">Credit card fee (3%) <Info className="w-3 h-3 text-gray-400 cursor-help" title="Processing fee charged by Stripe, our payment provider" /></span>
                 <span className="font-medium">${creditCardFee.toFixed(2)}</span>
               </div>
               <div className="border-t border-gray-200 pt-2 flex justify-between">

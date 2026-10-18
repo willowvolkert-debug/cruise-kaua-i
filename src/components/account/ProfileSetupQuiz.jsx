@@ -14,7 +14,7 @@ import { Camera, ChevronRight, CheckCircle, Upload, Car, MapPin, X, FileText, Sh
 import { requestNotificationPermission } from "@/components/utils/notifications";
 
 const BASE_STEPS = [
-  { id: "username", title: "What should we call you?", subtitle: "Choose a username others will see on the platform (no spaces).", type: "text", placeholder: "e.g. kaleo_808", field: "username" },
+  { id: "username", title: "What should we call you?", subtitle: "Choose a username others will see on the platform (no spaces). 💡 The name on your account should match your driver's license or ID for verification.", type: "text", placeholder: "e.g. kaleo_808", field: "username" },
   { id: "age", title: "How old are you?", subtitle: "Riders and drivers can see your age to feel comfortable sharing a ride.", type: "number", placeholder: "e.g. 28", field: "age", min: 18 },
   { id: "gender", title: "What's your gender?", subtitle: "This helps people feel safe knowing who they're riding with.", type: "select", field: "gender", options: [
     { value: "male", label: "Male" },
