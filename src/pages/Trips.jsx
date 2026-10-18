@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarPicker } from "@/components/ui/calendar";
 import RouteSearch from "../components/trips/RouteSearch";
+import BrowseRideRequests from "../components/trips/BrowseRideRequests";
 import HaenaWarningCard from "../components/trips/HaenaWarningCard";
 import HaenaInfoView from "../components/trips/HaenaInfoView";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
@@ -30,6 +31,7 @@ export default function TripsPage() {
   const [specificDate, setSpecificDate] = React.useState(format(new Date(), 'yyyy-MM-dd'));
   const [appliedDate, setAppliedDate] = React.useState(format(new Date(), 'yyyy-MM-dd'));
   const [refreshKey, setRefreshKey] = React.useState(0);
+  const [prefillRequest, setPrefillRequest] = React.useState(null);
 
   const { pullDistance, isRefreshing } = usePullToRefresh({
     onRefresh: async () => {
@@ -72,7 +74,7 @@ export default function TripsPage() {
 
   const goBack = () => {
     if (view === "haena_info") setView("view_sub");
-    else if (view === "view_sub" || view === "request" || view === "post") setView("menu");
+    else if (view === "view_sub" || view === "request" || view === "post" || view === "browse_requests") setView("menu");
     else if (view === "view_week" || view === "view_date" || view === "view_route") setView("view_sub");
   };
 
@@ -154,6 +156,7 @@ export default function TripsPage() {
             {[
               { id: "view_sub", emoji: "🔍", label: "get a ride", desc: "Browse available rides to see how you could get around when your schedule is flexible" },
               { id: "post", emoji: "🚗", label: "post a ride", desc: "Offer seats on the trips you're already making — whether it's your commute, an errand run, or going camping. By offering seats, you can save ~$1000 per year on vehicle costs." },
+              { id: "browse_requests", emoji: "📋", label: "see ride requests", desc: "Browse open ride requests from riders looking for a ride. Message them or post a matching ride to help someone out." },
               { id: "request", emoji: "🙋", label: "request a ride", desc: "Post a ride request so drivers know you need one. Best for airport runs & doctor's appts — schedule at least 24 hrs in advance for the best chance someone can give you a ride." },
             ].map(({ id, emoji, label, desc }) => (
               <button
@@ -283,11 +286,22 @@ export default function TripsPage() {
         {/* ── VIEW ROUTE ── */}
         {view === "view_route" && <RouteSearch island={selectedIsland} onRequestRide={() => setView("request")} />}
 
+        {/* ── BROWSE RIDE REQUESTS ── */}
+        {view === "browse_requests" && (
+          <BrowseRideRequests
+            island={selectedIsland}
+            onRespondWithRide={(request) => {
+              setPrefillRequest(request);
+              setView("post");
+            }}
+          />
+        )}
+
         {/* ── REQUEST ── */}
         {view === "request" && <RequestRide island={selectedIsland} />}
 
         {/* ── POST ── */}
-        {view === "post" && <PostRideForm island={selectedIsland} />}
+        {view === "post" && <PostRideForm island={selectedIsland} initialRespondingToRequest={prefillRequest} />}
 
         <footer className="mt-12 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
           © {new Date().getFullYear()} Cruise Hawaiʻi. Specializing in carpooling and ridesharing across Hawaiʻi.

@@ -22,7 +22,7 @@ import RiderProfileModal from "./RiderProfileModal";
 import ProfileIncompleteModal from "./ProfileIncompleteModal";
 import { useDraftSave, loadDraft, clearDraft } from "@/hooks/useDraftSave";
 
-export default function PostRideForm({ island = "Kauai" }) {
+export default function PostRideForm({ island = "Kauai", initialRespondingToRequest = null }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [error, setError] = useState(null);
@@ -73,6 +73,13 @@ export default function PostRideForm({ island = "Kauai" }) {
 
   // Auto-save draft on every change
   useDraftSave(DRAFT_KEY, rideData);
+
+  // Pre-fill from a ride request passed in from BrowseRideRequests
+  useEffect(() => {
+    if (initialRespondingToRequest) {
+      handleRespondWithRide(initialRespondingToRequest);
+    }
+  }, [initialRespondingToRequest]);
 
   useEffect(() => {
     const fetchUser = async () => {
