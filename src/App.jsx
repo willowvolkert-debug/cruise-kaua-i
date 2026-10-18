@@ -178,6 +178,17 @@ if (window.location.hostname === 'preview--ride-connect-b7a57d59.base44.app') {
 }
 
 function App() {
+  // Auto dark mode: detect prefers-color-scheme and toggle the 'dark' class
+  React.useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const apply = () => {
+      document.documentElement.classList.toggle('dark', mq.matches);
+    };
+    apply();
+    mq.addEventListener('change', apply);
+    return () => mq.removeEventListener('change', apply);
+  }, []);
+
   const [showSplash, setShowSplash] = React.useState(() => {
     // Only show splash once per session
     if (sessionStorage.getItem('splash_shown')) return false;

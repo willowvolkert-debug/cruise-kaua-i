@@ -27,6 +27,8 @@ import SignupInfoCard from "../components/account/SignupInfoCard";
 import PostSignupCard from "../components/account/PostSignupCard";
 import SmsSettingsCard from "../components/account/SmsSettingsCard";
 import SmsLocationPreferences from "../components/account/SmsLocationPreferences";
+import { deleteAccount } from "../functions/deleteAccount";
+import { Trash2, AlertTriangle } from "lucide-react";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -110,6 +112,8 @@ export default function AccountPage() {
     const [showTutorial, setShowTutorial] = useState(false);
     const [showSignupInfoCard, setShowSignupInfoCard] = useState(false);
     const [showPostSignupCard, setShowPostSignupCard] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -1336,14 +1340,22 @@ export default function AccountPage() {
                 )}
 
                 {/* Logout Button */}
-                <div className="pt-4">
+                <div className="pt-4 space-y-3">
                     <Button
                         onClick={() => base44.auth.logout()}
                         variant="outline"
-                        className="w-full border-red-300 text-red-600 hover:bg-red-50 rounded-2xl"
+                        className="w-full border-red-300 text-red-600 hover:bg-red-50 rounded-2xl select-none"
                     >
                         <LogOut className="w-4 h-4 mr-2" />
                         log out
+                    </Button>
+                    <Button
+                        onClick={() => setShowDeleteModal(true)}
+                        variant="outline"
+                        className="w-full border-gray-200 text-gray-400 hover:bg-gray-50 rounded-2xl select-none text-sm"
+                    >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        delete my account
                     </Button>
                 </div>
 
@@ -1466,6 +1478,60 @@ export default function AccountPage() {
 
 
 
+            {/* Delete Account Confirmation Modal */}
+            <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+                <DialogContent className="sm:max-w-md bg-white rounded-3xl">
+                    <DialogHeader>
+                        <DialogTitle className="text-2xl font-bold text-red-600 flex items-center gap-2">
+                            <AlertTriangle className="w-6 h-6" />
+                            delete account?
+                        </DialogTitle>
+                        <DialogDescription className="text-gray-600 pt-2">
+                            This will permanently delete all your data — rides, bookings, ratings, messages, vehicle info, and profile. This cannot be undone.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-3 py-2">
+                        <div className="p-3 bg-red-50 border border-red-200 rounded-2xl text-sm text-red-800">
+                            <p className="font-semibold mb-1">All of the following will be deleted:</p>
+                            <ul className="space-y-0.5 text-xs">
+                                <li>• Your profile, bio, and profile photo</li>
+                                <li>• All active rides you've posted</li>
+                                <li>• All active bookings you've made</li>
+                                <li>• Your ratings, messages, and recurring trips</li>
+                                <li>• Your driver's license and vehicle verification data</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="flex gap-3 pt-2">
+                        <Button
+                            variant="outline"
+                            onClick={() => setShowDeleteModal(false)}
+                            className="flex-1 rounded-2xl select-none"
+                        >
+                            cancel
+                        </Button>
+                        <Button
+                            onClick={async () => {
+                                setIsDeleting(true);
+                                try {
+                                    await deleteAccount();
+                                    await base44.auth.logout('/');
+                                } catch (e) {
+                                    alert("Error deleting account: " + (e.message || "please try again or contact support"));
+                                    setIsDeleting(false);
+                                }
+                            }}
+                            disabled={isDeleting}
+                            className="flex-1 bg-red-600 hover:bg-red-700 text-white rounded-2xl select-none"
+                        >
+                            {isDeleting ? "deleting..." : "yes, delete everything"}
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
             </div>
+
             );
+
             }

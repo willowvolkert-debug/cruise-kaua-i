@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Bot, MessageSquare, Star, Bell, Clock, AlertTriangle, ChevronRight, UserPlus, MapPin, Calendar } from "lucide-react";
+import { Bot, MessageSquare, Star, Bell, Clock, AlertTriangle, ChevronRight, UserPlus, MapPin, Calendar, RefreshCw } from "lucide-react";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import ReportModal from "../components/inbox/ReportModal";
@@ -59,6 +60,14 @@ export default function InboxPage() {
     const [adminMessages, setAdminMessages] = useState([]);
     const [showDriverRideModal, setShowDriverRideModal] = useState(false);
     const [selectedDriverRide, setSelectedDriverRide] = useState(null);
+
+    // Wrap loadData in useCallback so the pull-to-refresh hook can use it
+    // as a stable dependency without re-subscribing on every render.
+    const refreshFn = useCallback(async () => {
+        await loadData();
+    }, []);
+
+    const { pullDistance, isRefreshing } = usePullToRefresh({ onRefresh: refreshFn });
 
     useEffect(() => {
         loadData();
@@ -179,8 +188,8 @@ export default function InboxPage() {
             const needsReview = [];
             const stillActive = [];
 
-            // Get ratings once for efficiency
-            const allRatings = await base44.entities.Rating.list();
+            // Get only ratings given by the current user (for review-checking)
+            const allRatings = await base44.entities.Rating.filter({ rated_by_user_id: currentUser.id });
 
             // Get current Hawaii time for comparison
             const hawaiiNow = getHawaiiNow();
@@ -283,9 +292,8 @@ export default function InboxPage() {
 
             setUpcomingRides(sortedUpcomingRides);
 
-            // Load admin messages for this user
-            const allAdminMessages = await base44.entities.AdminMessage.list('-created_date');
-            const myAdminMessages = allAdminMessages.filter(m => m.recipient_id === currentUser.id);
+            // Load admin messages for this user (filtered server-side)
+            const myAdminMessages = await base44.entities.AdminMessage.filter({ recipient_id: currentUser.id }, '-created_date');
             setAdminMessages(myAdminMessages);
 
         } catch (e) {
@@ -696,6 +704,15 @@ Please process the refund manually via Stripe.
 
     return (
         <div className="p-4 md:p-8 bg-white">
+            {/* Pull-to-refresh indicator */}
+            {(pullDistance > 0 || isRefreshing) && (
+                <div
+                    className="flex items-center justify-center text-primary transition-opacity"
+                    style={{ height: `${pullDistance}px`, opacity: pullDistance > 0 ? 1 : 0 }}
+                >
+                    <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
+                </div>
+            )}
             <div className="max-w-4xl mx-auto space-y-6">
                 <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">

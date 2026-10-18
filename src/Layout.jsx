@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
+import BottomNav from "@/components/BottomNav";
 
 export default function Layout({ children, currentPageName }) {
   const location = useLocation();
@@ -81,7 +82,7 @@ export default function Layout({ children, currentPageName }) {
         `}
       </style>
       <div className="min-h-screen flex flex-col w-full bg-background">
-        <header className="bg-white border-b border-gray-200 h-14 px-4 flex items-center justify-between gap-3 sticky top-0 z-30">
+        <header className="bg-white border-b border-gray-200 h-14 px-4 pt-[env(safe-area-inset-top)] flex items-center justify-between gap-3 sticky top-0 z-30 select-none">
           <span className="text-xs text-gray-500 truncate flex-1 min-w-0">press on logo to return to home screen/navigate</span>
           <div className="flex items-center gap-3 shrink-0">
             {!currentUser && (
@@ -102,9 +103,10 @@ export default function Layout({ children, currentPageName }) {
             </Link>
           </div>
         </header>
-        <div className="flex-1 bg-white" style={{ WebkitOverflowScrolling: 'touch', overflowX: 'hidden' }}>
+        <div className="flex-1 bg-white pb-16 md:pb-0" style={{ WebkitOverflowScrolling: 'touch', overflowX: 'hidden' }}>
           {children}
         </div>
+        <BottomNav />
       </div>
     </>
   );

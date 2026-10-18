@@ -156,6 +156,8 @@ button:focus-visible {
   body {
     @apply bg-background text-foreground;
     overflow-x: hidden;
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
   }
 
   /* Mobile: keep root font-size at 16px (browser default) to prevent

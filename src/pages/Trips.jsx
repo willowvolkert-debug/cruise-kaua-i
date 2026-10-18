@@ -1,5 +1,5 @@
 import React from "react";
-import { MapPin, ChevronLeft, Calendar, ChevronDown } from "lucide-react";
+import { MapPin, ChevronLeft, Calendar, ChevronDown, RefreshCw } from "lucide-react";
 import FindRide from "../components/trips/FindRide";
 import RequestRide from "../components/trips/RequestRide";
 import PostRideForm from "../components/trips/PostRideForm";
@@ -14,6 +14,7 @@ import { Calendar as CalendarPicker } from "@/components/ui/calendar";
 import RouteSearch from "../components/trips/RouteSearch";
 import HaenaWarningCard from "../components/trips/HaenaWarningCard";
 import HaenaInfoView from "../components/trips/HaenaInfoView";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 
 const ISLANDS = ["Kauai", "Oahu", "Maui", "Big Island"];
 
@@ -28,6 +29,15 @@ export default function TripsPage() {
   const [view, setView] = React.useState("menu");
   const [specificDate, setSpecificDate] = React.useState(format(new Date(), 'yyyy-MM-dd'));
   const [appliedDate, setAppliedDate] = React.useState(format(new Date(), 'yyyy-MM-dd'));
+  const [refreshKey, setRefreshKey] = React.useState(0);
+
+  const { pullDistance, isRefreshing } = usePullToRefresh({
+    onRefresh: async () => {
+      setRefreshKey(k => k + 1);
+      // Wait a beat for components to re-mount with new key
+      await new Promise(r => setTimeout(r, 600));
+    }
+  });
 
   React.useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -70,6 +80,15 @@ export default function TripsPage() {
 
   return (
     <div className="p-3 md:p-8 bg-white overflow-x-hidden min-h-screen">
+      {/* Pull-to-refresh indicator */}
+      {(pullDistance > 0 || isRefreshing) && (
+        <div
+          className="flex items-center justify-center text-primary transition-opacity"
+          style={{ height: `${pullDistance}px`, opacity: pullDistance > 0 ? 1 : 0 }}
+        >
+          <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
+        </div>
+      )}
       <div className="max-w-2xl mx-auto">
 
         {/* Header */}
@@ -252,6 +271,7 @@ export default function TripsPage() {
         {/* ── VIEW THIS WEEK ── */}
         {view === "view_week" && (
           <FindRide
+            key={`week-${refreshKey}`}
             island={selectedIsland}
             initialStartDate={format(new Date(), 'yyyy-MM-dd')}
             initialEndDate={format(addDays(new Date(), 7), 'yyyy-MM-dd')}
