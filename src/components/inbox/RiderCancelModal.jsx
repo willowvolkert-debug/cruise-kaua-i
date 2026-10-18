@@ -8,6 +8,7 @@ import { AlertTriangle } from "lucide-react";
 export default function RiderCancelModal({ isOpen, onClose, booking, ride, onConfirmCancel }) {
   const [reason, setReason] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [cancelled, setCancelled] = useState(false);
 
   // Calculate hours until ride using Hawaii time
   const getHoursUntilRide = () => {
@@ -118,7 +119,8 @@ export default function RiderCancelModal({ isOpen, onClose, booking, ride, onCon
     await onConfirmCancel(booking, reason, refundInfo.percentage);
     setIsSubmitting(false);
     setReason('');
-    onClose();
+    setCancelled(true);
+    setTimeout(() => { setCancelled(false); onClose(); }, 1800);
   };
 
   return (
@@ -132,6 +134,16 @@ export default function RiderCancelModal({ isOpen, onClose, booking, ride, onCon
         </DialogHeader>
 
         <div className="space-y-4 py-4">
+          {cancelled ? (
+            <div className="flex flex-col items-center gap-3 py-8">
+              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+                <span className="text-3xl text-green-600">✓</span>
+              </div>
+              <p className="text-lg font-bold text-green-700">cancellation confirmed</p>
+              <p className="text-sm text-gray-500 text-center">your ride has been cancelled and any refund is being processed.</p>
+            </div>
+          ) : (
+            <>
           <p className="text-gray-600">
             Are you sure you want to cancel this ride? Please review the refund policy below.
           </p>
@@ -198,6 +210,8 @@ export default function RiderCancelModal({ isOpen, onClose, booking, ride, onCon
               {isSubmitting ? 'cancelling...' : 'continue to cancel'}
             </Button>
           </div>
+            </>
+          )}
         </div>
       </DialogContent>
     </Dialog>

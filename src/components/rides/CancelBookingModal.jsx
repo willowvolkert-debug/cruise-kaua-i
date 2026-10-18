@@ -8,6 +8,7 @@ import { AlertTriangle } from "lucide-react";
 export default function CancelBookingModal({ isOpen, onClose, booking, onConfirmCancel }) {
   const [reason, setReason] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [cancelled, setCancelled] = useState(false);
 
   const handleSubmit = async () => {
     if (!reason.trim()) {
@@ -19,6 +20,8 @@ export default function CancelBookingModal({ isOpen, onClose, booking, onConfirm
     await onConfirmCancel(booking, reason);
     setIsSubmitting(false);
     setReason('');
+    setCancelled(true);
+    setTimeout(() => { setCancelled(false); onClose(); }, 1800);
   };
 
   return (
@@ -32,6 +35,16 @@ export default function CancelBookingModal({ isOpen, onClose, booking, onConfirm
         </DialogHeader>
 
         <div className="space-y-4 py-4">
+          {cancelled ? (
+            <div className="flex flex-col items-center gap-3 py-8">
+              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+                <span className="text-3xl text-green-600">✓</span>
+              </div>
+              <p className="text-lg font-bold text-green-700">cancellation confirmed</p>
+              <p className="text-sm text-gray-500 text-center">your booking has been cancelled and any refund is being processed.</p>
+            </div>
+          ) : (
+            <>
           <p className="text-gray-600">
             Are you sure you want to cancel this booking? This action cannot be undone.
           </p>
@@ -72,6 +85,8 @@ export default function CancelBookingModal({ isOpen, onClose, booking, onConfirm
               {isSubmitting ? 'cancelling...' : 'confirm cancellation'}
             </Button>
           </div>
+            </>
+          )}
         </div>
       </DialogContent>
     </Dialog>
