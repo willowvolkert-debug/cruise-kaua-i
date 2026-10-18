@@ -677,7 +677,12 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
                   <Button onClick={handleEnableNotifications} className="w-full bg-primary hover:bg-primary/90 rounded-2xl py-5 font-bold">
                     <Bell className="w-4 h-4 mr-2" /> enable notifications
                   </Button>
-                  <p className="text-xs text-gray-400 text-center">optional — you can skip this</p>
+                  <button
+                    onClick={() => { setError(""); setStep(safeStep + 1); }}
+                    className="w-full text-center text-sm text-gray-400 hover:text-primary font-medium underline underline-offset-2 transition-colors"
+                  >
+                    skip for now →
+                  </button>
                 </div>
               )}
             </div>
@@ -694,7 +699,12 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
                 className="rounded-2xl text-base py-5"
                 autoFocus
               />
-              <p className="text-xs text-gray-400 text-center">optional — you can skip this</p>
+              <button
+                onClick={() => { setError(""); setStep(safeStep + 1); }}
+                className="w-full text-center text-sm text-gray-400 hover:text-primary font-medium underline underline-offset-2 transition-colors"
+              >
+                skip for now — i'll add it later →
+              </button>
             </div>
           )}
 
