@@ -64,6 +64,7 @@ const AuthenticatedApp = () => {
         // finished the profile quiz — otherwise they get stuck in a /join loop.
         const needsOnboarding = user.role !== 'admin'
           && !user.has_completed_profile_quiz
+          && !user.has_completed_signup
           && (!user.user_type || user.user_type === 'new');
 
         // Catch users who landed on any authenticated page without completing onboarding
