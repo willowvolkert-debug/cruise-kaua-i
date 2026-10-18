@@ -11,6 +11,7 @@ import { Calendar, Clock, MapPin, Users, DollarSign, Edit, X, AlertTriangle } fr
 import { format } from "date-fns";
 import { base44 } from "@/api/base44Client";
 import { sendBookingEmail } from "@/functions/sendBookingEmail";
+import { toast } from "@/components/ui/use-toast";
 
 // Helper to convert 24-hour time to 12-hour format with AM/PM
 const formatTime12Hour = (timeStr) => {
@@ -126,16 +127,13 @@ Please process full refunds for all affected riders.
                 console.error("Error sending cancellation confirmation email to driver:", emailError);
             }
 
-            alert(hasRiders
-                ? "Ride cancelled. Riders have been notified and refunds will be processed."
-                : "Ride cancelled successfully."
-            );
+            toast({ title: "ride cancelled ✓", description: hasRiders ? "Riders have been notified and refunds will be processed." : "Your ride has been cancelled.", duration: 5000 });
             setShowCancelConfirm(false);
             onClose();
             if (onRideUpdated) onRideUpdated();
         } catch (error) {
             console.error("Error cancelling ride:", error);
-            alert("Error cancelling ride. Please try again.");
+            toast({ variant: "destructive", title: "couldn't cancel", description: "Something went wrong. Please try again.", duration: 5000 });
         }
         setIsCancelling(false);
     };

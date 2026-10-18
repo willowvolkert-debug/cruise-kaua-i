@@ -28,6 +28,7 @@ import { formatHST } from "@/lib/formatHST";
 import { sendNotification } from "../components/utils/notifications";
 import { sendBookingEmail } from "../functions/sendBookingEmail";
 import { getHawaiiNow, parseRideDateTimeHST, parseDateString, formatTime12Hour } from "@/lib/hstHelpers";
+import { toast } from "@/components/ui/use-toast";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -300,7 +301,7 @@ export default function InboxPage() {
                 `${booking.passenger_name} can now join your trip.`
             );
 
-            alert(`Request accepted! The rider has already paid and will be notified.`);
+            toast({ title: "booking confirmed ✓", description: `${booking.passenger_name} has been notified and can now join your trip.`, duration: 5000 });
             loadData();
         } catch (error) {
             console.error("Error accepting request:", error);
@@ -332,7 +333,7 @@ export default function InboxPage() {
             'A rider request has been declined.'
         );
 
-        alert("Request rejected. The rider has been notified.");
+        toast({ title: "request declined", description: `${booking.passenger_name} has been notified and will receive a refund.`, duration: 5000 });
         setShowRiderRequestModal(false);
         loadData();
     } catch (error) {
@@ -370,7 +371,7 @@ export default function InboxPage() {
             // Browser notification
             sendNotification('Price Offer Response', 'The driver is requesting the original price.');
 
-            alert("Rider notified that you want the full price.");
+            toast({ title: "rider notified ✓", description: `Asked ${booking.passenger_name} to pay the full price instead of their offer.`, duration: 5000 });
             setShowRiderRequestModal(false);
             loadData();
         } catch (error) {
@@ -415,11 +416,11 @@ export default function InboxPage() {
                 console.error("Error sending cancellation confirmation email to rider:", emailError);
             }
 
-            alert("Ride request cancelled successfully. Your payment will be refunded.");
+            toast({ title: "request cancelled ✓", description: "Your ride request was cancelled and your payment will be refunded.", duration: 5000 });
             loadData();
         } catch (error) {
             console.error("Error cancelling request:", error);
-            alert("Error cancelling request. Please try again.");
+            toast({ variant: "destructive", title: "couldn't cancel", description: "Something went wrong. Please try again.", duration: 5000 });
         }
     };
 
@@ -502,13 +503,13 @@ Please process the refund manually via Stripe.
                 console.error("Error sending cancellation confirmation email to rider:", emailError);
             }
 
-            alert(`Booking cancelled. A ${refundPercentage} refund will be processed by our team.`);
+            toast({ title: "cancellation confirmed ✓", description: `A ${refundPercentage} refund will be processed by our team.`, duration: 5000 });
             setShowRiderCancelModal(false);
             setRiderBookingToCancel(null);
             loadData();
         } catch (error) {
             console.error("Error cancelling booking:", error);
-            alert("Error cancelling booking. Please try again.");
+            toast({ variant: "destructive", title: "couldn't cancel", description: "Something went wrong. Please try again.", duration: 5000 });
         }
     };
 
@@ -560,12 +561,12 @@ Please process the refund manually via Stripe.
                 });
             }
 
-            alert(`Booking cancelled. ${refundPercentage === 1 ? 'Full refund' : refundPercentage === 0.5 ? '50% refund' : 'No refund'} processed.`);
+            toast({ title: "booking cancelled ✓", description: `${refundPercentage === 1 ? 'Full refund' : refundPercentage === 0.5 ? '50% refund' : 'No refund'} processed.`, duration: 5000 });
             setShowCancelModal(false);
             loadData();
         } catch (error) {
             console.error("Error cancelling booking:", error);
-            alert("Error cancelling booking. Please try again.");
+            toast({ variant: "destructive", title: "couldn't cancel", description: "Something went wrong. Please try again.", duration: 5000 });
         }
     };
 

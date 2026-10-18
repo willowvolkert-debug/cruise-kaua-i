@@ -15,6 +15,7 @@ import { sendBookingEmail } from "../functions/sendBookingEmail";
 import PendingTripsCard from "../components/inbox/PendingTripsCard";
 import MyRideRequestsCard from "../components/inbox/MyRideRequestsCard";
 import { getHawaiiNow, parseRideDateTimeHST, parseDateString, formatTime12Hour } from "@/lib/hstHelpers";
+import { toast } from "@/components/ui/use-toast";
 
 export default function ConfirmedRidesPage() {
     const [user, setUser] = useState(null);
@@ -159,11 +160,11 @@ export default function ConfirmedRidesPage() {
                 await base44.entities.RidePost.update(request.id, {
                     status: 'cancelled'
                 });
-                alert('Ride request cancelled successfully!');
+                toast({ title: "request cancelled ✓", description: "Your ride request has been removed.", duration: 5000 });
                 loadData();
             } catch (error) {
                 console.error('Error cancelling request:', error);
-                alert('Failed to cancel ride request. Please try again.');
+                toast({ variant: "destructive", title: "couldn't cancel", description: "Failed to cancel ride request. Please try again.", duration: 5000 });
             }
         } else {
             loadData();
@@ -195,11 +196,11 @@ export default function ConfirmedRidesPage() {
                     body: `Aloha,\n\n${booking.passenger_name} has cancelled their ride request before you accepted it.\n\nNo action is needed on your end.\n\nMahalo,\nCruise Kauaʻi Team`
                 });
             } catch (e) { console.error(e); }
-            alert("Ride request cancelled successfully. Your payment will be refunded.");
+            toast({ title: "request cancelled ✓", description: "Your payment will be refunded.", duration: 5000 });
             loadData();
         } catch (error) {
             console.error("Error cancelling request:", error);
-            alert("Error cancelling request. Please try again.");
+            toast({ variant: "destructive", title: "couldn't cancel", description: "Something went wrong. Please try again.", duration: 5000 });
         }
     };
 
@@ -268,13 +269,13 @@ export default function ConfirmedRidesPage() {
                     body: `Aloha ${booking.passenger_name},\n\nYour booking for the ride from ${ride?.departure_location} → ${ride?.destination} on ${ride?.departure_date} at ${ride?.departure_time} has been cancelled.\n\nReason: ${reason}\n\nRefund: ${refundPercentage} of your payment will be processed.\n\nMahalo,\nCruise Kauaʻi Team`
                 });
             } catch (e) { console.error(e); }
-            alert(`Booking cancelled. A ${refundPercentage} refund will be processed.`);
+            toast({ title: "cancellation confirmed ✓", description: `A ${refundPercentage} refund will be processed.`, duration: 5000 });
             setShowRiderCancelModal(false);
             setRiderBookingToCancel(null);
             loadData();
         } catch (error) {
             console.error(error);
-            alert("Error cancelling booking. Please try again.");
+            toast({ variant: "destructive", title: "couldn't cancel", description: "Something went wrong. Please try again.", duration: 5000 });
         }
     };
 
