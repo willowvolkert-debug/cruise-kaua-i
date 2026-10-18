@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { MapPin, Calendar, Users, AlertCircle, HelpCircle, Star, CheckCircle, RefreshCw } from "lucide-react";
+import { MapPin, Calendar, Users, AlertCircle, HelpCircle, Star, CheckCircle, RefreshCw, X } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { format, addDays, parseISO } from "date-fns";
@@ -32,6 +32,7 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
   const [showTutorial, setShowTutorial] = useState(false);
   const [driverRatings, setDriverRatings] = useState({});
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const init = async () => {
@@ -76,13 +77,19 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
       const filtered = allRides.filter(r => !currentUser || currentUser.role === 'admin' || r.driver_id !== currentUser.id);
       setRides(filtered);
 
-      const allRatings = currentUser ? await base44.entities.Rating.list().catch(() => []) : [];
+      // Fetch ratings only for the drivers in the current ride list,
+      // not every rating in the database.
+      const driverIds = [...new Set(filtered.map(r => r.driver_id).filter(Boolean))];
       const ratings = {};
-      filtered.forEach(ride => {
-        ratings[ride.driver_id] = allRatings.filter(r =>
-          String(r.rated_user_id) === String(ride.driver_id) && r.trip_role === 'driver'
-        );
-      });
+      if (currentUser && driverIds.length > 0) {
+        const rideRatings = await base44.entities.Rating.filter({
+          rated_user_id: { $in: driverIds },
+          trip_role: 'driver'
+        }).catch(() => []);
+        driverIds.forEach(did => {
+          ratings[did] = (rideRatings || []).filter(r => String(r.rated_user_id) === String(did));
+        });
+      }
       setDriverRatings(ratings);
     } catch (err) {
       console.error("Error loading rides:", err);
@@ -103,7 +110,20 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
     setShowBookingModal(true);
   };
 
-  const ridesByDate = rides.reduce((acc, ride) => {
+  // Filter rides by search query — matches departure, destination, or stops.
+  // Uses simple includes() so "Lihue" matches "Lihue Airport", "Watumull Plaza, Lihue", etc.
+  const filteredRides = searchQuery.trim()
+    ? rides.filter(r => {
+        const q = searchQuery.toLowerCase().trim();
+        const dep = (r.departure_location || '').toLowerCase();
+        const dest = (r.destination || '').toLowerCase();
+        const stops = (r.stops || []).join(' ').toLowerCase();
+        return dep.includes(q) || dest.includes(q) || stops.includes(q) ||
+               q.includes(dep) || q.includes(dest);
+      })
+    : rides;
+
+  const ridesByDate = filteredRides.reduce((acc, ride) => {
     if (!acc[ride.departure_date]) acc[ride.departure_date] = [];
     acc[ride.departure_date].push(ride);
     return acc;
@@ -167,6 +187,28 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
               <HelpCircle className="w-5 h-5" />
             </Button>
           </div>
+        </div>
+      )}
+
+      {/* Location Search */}
+      {rides.length > 0 && (
+        <div className="relative">
+          <Input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="search by location — e.g., 'Lihue', 'Hanalei', 'airport'..."
+            className="rounded-2xl h-12 pl-10 border-2 border-gray-200 focus:border-primary"
+          />
+          <MapPin className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
         </div>
       )}
 

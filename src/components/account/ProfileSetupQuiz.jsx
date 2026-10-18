@@ -238,11 +238,11 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     });
     if (licenseFront && licenseBack && !licenseSaved) {
       const [fr, br] = await Promise.all([
-        base44.integrations.Core.UploadFile({ file: licenseFront }),
-        base44.integrations.Core.UploadFile({ file: licenseBack }),
+        base44.integrations.Core.UploadPrivateFile({ file: licenseFront }),
+        base44.integrations.Core.UploadPrivateFile({ file: licenseBack }),
       ]);
       const u = await base44.auth.me();
-      await base44.auth.updateMe({ drivers_license_front_url: fr.file_url, drivers_license_back_url: br.file_url, drivers_license_pending_review: true, license_submitted_date: new Date().toISOString() });
+      await base44.auth.updateMe({ drivers_license_front_url: fr.file_uri, drivers_license_back_url: br.file_uri, drivers_license_pending_review: true, license_submitted_date: new Date().toISOString() });
       await base44.entities.UserEdit.create({ user_id: u.id, user_name: u.full_name, user_email: u.email, change_type: "license", change_description: "Uploaded driver's license via profile setup quiz", old_values: {}, new_values: { license_front_url: fr.file_url, license_back_url: br.file_url } });
       await base44.entities.AdminMessage.create({ recipient_id: 'admin', recipient_name: 'Admin', subject: `License Pending Review: ${u.full_name}`, message: `${u.full_name} (${u.email}) uploaded their license via the setup quiz.`, message_type: 'action_required' });
       setLicenseSaved(true);
@@ -256,7 +256,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
     // Upload only newly-selected photos; fall back to already-persisted URLs so a
     // returning user who changes just one photo doesn't lose the others, and we
     // never try to upload a null file (which would throw and break the save).
-    const uploadIfPresent = (file) => file ? base44.integrations.Core.UploadFile({ file }).then(r => r.file_url) : Promise.resolve(null);
+    const uploadIfPresent = (file) => file ? base44.integrations.Core.UploadPrivateFile({ file }).then(r => r.file_uri) : Promise.resolve(null);
     const [extUrl, ...intUrls] = await Promise.all([
       uploadIfPresent(vehicleExterior),
       ...vehicleInterior.map(f => uploadIfPresent(f)),
@@ -483,10 +483,10 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
       let licensePatch = {};
       if (licenseFront && licenseBack && !licenseSaved) {
         const [fr, br] = await Promise.all([
-          base44.integrations.Core.UploadFile({ file: licenseFront }),
-          base44.integrations.Core.UploadFile({ file: licenseBack }),
+          base44.integrations.Core.UploadPrivateFile({ file: licenseFront }),
+          base44.integrations.Core.UploadPrivateFile({ file: licenseBack }),
         ]);
-        licensePatch = { drivers_license_front_url: fr.file_url, drivers_license_back_url: br.file_url, drivers_license_pending_review: true, license_submitted_date: new Date().toISOString() };
+        licensePatch = { drivers_license_front_url: fr.file_uri, drivers_license_back_url: br.file_uri, drivers_license_pending_review: true, license_submitted_date: new Date().toISOString() };
         setLicenseSaved(true);
         const u = await base44.auth.me();
         await base44.entities.AdminMessage.create({ recipient_id: 'admin', recipient_name: 'Admin', subject: `License Pending Review: ${u.full_name}`, message: `${u.full_name} (${u.email}) uploaded their license via the setup quiz.`, message_type: 'action_required' }).catch(() => null);
@@ -494,7 +494,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
       // Upload whichever vehicle photos are present, individually. This never crashes
       // on a partial set — previously calling saveVehicle() here threw if the driver
       // had uploaded the exterior but not yet the insurance/interior photos.
-      const uploadIfPresent = (file) => file ? base44.integrations.Core.UploadFile({ file }).then(r => r.file_url) : Promise.resolve(null);
+      const uploadIfPresent = (file) => file ? base44.integrations.Core.UploadPrivateFile({ file }).then(r => r.file_uri) : Promise.resolve(null);
       const [extUrl, ...intUrls] = await Promise.all([
         uploadIfPresent(vehicleExterior),
         ...vehicleInterior.map(f => uploadIfPresent(f)),
@@ -516,6 +516,16 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
         phone_number: answers.phone_number || user?.phone_number || '',
         profile_picture_url: profilePicUrl,
         profile_quiz_saved_step: step,
+        // Mark the quiz as completed so the user isn't permanently blocked
+        // from booking/requesting rides by the "complete your profile" check.
+        // This was the root cause of the "I did everything but still get told
+        // to complete my profile" bug — the save-and-come-back path never
+        // set has_completed_profile_quiz, so users who saved progress were
+        // stuck in an infinite loop.
+        has_completed_profile_quiz: true,
+        profile_complete: !!(answers.username && answers.age && answers.gender && answers.bio && profilePicUrl),
+        terms_accepted: true,
+        privacy_policy_accepted: true,
         ...(isDriverPath && vehicleInfo.make ? {
           vehicle_make: vehicleInfo.make,
           vehicle_model: vehicleInfo.model,

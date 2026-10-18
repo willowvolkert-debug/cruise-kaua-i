@@ -67,19 +67,19 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
       setCurrentUser(user);
 
       if (ride?.driver_id) {
-        const allRatings = await base44.entities.Rating.list();
-        const driverRatingsFiltered = allRatings.filter(r => 
-          String(r.rated_user_id) === String(ride.driver_id) && r.trip_role === 'driver'
-        );
-        setDriverRatings(driverRatingsFiltered || []);
+        const driverRatings = await base44.entities.Rating.filter({
+          rated_user_id: ride.driver_id,
+          trip_role: 'driver'
+        });
+        setDriverRatings(driverRatings || []);
       }
 
       // Check if this is the user's first paid booking (to show the $1.50 license verification fee)
-      const existingBookings = await base44.entities.RideBooking.list();
-      const hasCompletedPayments = existingBookings.some(b => 
-        String(b.passenger_id) === String(user.id) && b.payment_status === 'paid'
-      );
-      setIsFirstBooking(!hasCompletedPayments);
+      const myBookings = await base44.entities.RideBooking.filter({
+        passenger_id: user.id,
+        payment_status: 'paid'
+      });
+      setIsFirstBooking(!myBookings || myBookings.length === 0);
     } catch (error) {
       // silently handle
     }
@@ -110,6 +110,21 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
     setIsSubmitting(true);
     
     try {
+      // Prevent duplicate bookings: if the user already has a pending/confirmed
+      // booking for this ride, block the new attempt instead of creating a
+      // second booking (which happened when a Stripe payment failed and was
+      // retried — the retry created a duplicate booking).
+      const existing = await base44.entities.RideBooking.filter({
+        ride_id: ride.id,
+        passenger_id: currentUser.id,
+        booking_status: { $in: ['pending', 'confirmed'] }
+      });
+      if (existing && existing.length > 0) {
+        alert("You already have a booking request for this ride. Check your inbox for the status.");
+        setIsSubmitting(false);
+        return;
+      }
+
       const detourFee = bookingData.wants_detour_service ? 5 : 0;
       const isLocal = currentUser?.has_hawaii_id === true;
       const fullPricePerSeatSubmit = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);

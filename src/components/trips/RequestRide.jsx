@@ -102,15 +102,15 @@ export default function RequestRide({ island = "Kauai" }) {
     
     setIsSubmitting(true);
     try {
-      const localDate = new Date(requestData.departure_date + 'T00:00:00');
-      const hawaiiDate = new Date(localDate.getTime() - (localDate.getTimezoneOffset() * 60000));
-      const hawaiiDateString = hawaiiDate.toISOString().split('T')[0];
-
+      // The <input type="date"> already gives a clean yyyy-MM-dd calendar date
+      // string with no timezone. Previous code did convoluted timezone math
+      // (new Date + getTimezoneOffset) that could shift the date by a day for
+      // users not in HST — the "showing a different date than I chose" bug.
       const riderDisplayName = currentUser.full_name || currentUser.username || currentUser.email?.split('@')[0] || 'Cruise member';
 
       const requestPayload = {
         ...requestData,
-        departure_date: hawaiiDateString,
+        departure_date: requestData.departure_date,
         rider_id: currentUser.id,
         rider_name: riderDisplayName,
         rider_username: currentUser.username || null,
