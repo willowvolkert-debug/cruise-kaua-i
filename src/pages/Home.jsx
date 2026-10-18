@@ -49,6 +49,26 @@ export default function Home() {
             time by pressing on our logo in the top right.
           </p>
         </div>
+
+        {/* Primary CTAs: demand-first + supply-first */}
+        <div className="grid grid-cols-2 gap-3 mb-5">
+          <Link
+            to="/trips?view=request"
+            className="flex flex-col items-center gap-2 p-5 rounded-3xl bg-primary text-white hover:bg-primary/90 transition-all select-none"
+          >
+            <span className="text-3xl">🙋</span>
+            <span className="font-bold text-base">request a ride</span>
+            <span className="text-xs text-primary-foreground/80 text-center">post where you need to go — we'll notify drivers</span>
+          </Link>
+          <Link
+            to="/trips"
+            className="flex flex-col items-center gap-2 p-5 rounded-3xl border-2 border-primary bg-primary/5 hover:bg-primary/10 transition-all select-none"
+          >
+            <span className="text-3xl">🚗</span>
+            <span className="font-bold text-base text-primary">find a ride</span>
+            <span className="text-xs text-gray-500 text-center">browse rides drivers have already posted</span>
+          </Link>
+        </div>
         <div className="space-y-4">
           {sections.map(({ emoji, label, desc, to }) => (
             <Link

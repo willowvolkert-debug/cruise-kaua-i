@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
-import { CreditCard, Navigation, Star, Loader2, MessageCircle, Wind, MapPin, ShieldAlert, HeartHandshake, Info } from "lucide-react";
+import { CreditCard, Navigation, Star, Loader2, MessageCircle, Wind, MapPin, ShieldAlert, HeartHandshake, Info, CheckCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { createRideCheckout } from "@/functions/createRideCheckout";
@@ -35,6 +35,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   const [driverRatings, setDriverRatings] = useState([]);
   const [offerError, setOfferError] = useState('');
   const [isFirstBooking, setIsFirstBooking] = useState(false);
+  const [driverCompletedRides, setDriverCompletedRides] = useState(0);
 
   const scrollRef = useRef(null);
 
@@ -73,6 +74,15 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
           trip_role: 'driver'
         });
         setDriverRatings(driverRatings || []);
+
+        // Fetch completed ride count for the driver
+        try {
+          const completedCount = await base44.entities.Ride.count({
+            driver_id: ride.driver_id,
+            status: 'completed'
+          });
+          setDriverCompletedRides(completedCount);
+        } catch (e) { /* non-critical */ }
       }
 
       // Check if this is the user's first paid booking (to show the $1.50 license verification fee)
@@ -324,6 +334,12 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                           </span>
                           <span className="text-xs text-gray-400">({driverRatings.length})</span>
                         </div>
+                        {driverCompletedRides > 0 && (
+                          <div className="flex items-center gap-1">
+                            <CheckCircle className="w-3.5 h-3.5 text-green-500" />
+                            <span className="text-xs font-semibold text-gray-600">{driverCompletedRides} completed ride{driverCompletedRides !== 1 ? 's' : ''}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -486,7 +502,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               </div>
             )}
 
-            <div className="bg-gray-50 rounded-lg p-4 space-y-2 border border-gray-200">
+            <div className="bg-gray-50 rounded-lg p-4 space-y-3 border border-gray-200">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-700">{bookingData.is_price_offer && bookingData.offered_price !== '' ? 'Ride cost (your offer):' : 'Price request:'}</span>
                 <span className="font-medium">${((bookingData.seats_booked || 0) * pricePerSeat).toFixed(2)}</span>
@@ -497,34 +513,44 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                   <span className="font-medium">${detourFee.toFixed(2)}</span>
                 </div>
               )}
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-700 flex items-center gap-1">Connect fee ({Math.round(connectFeeRate * 100)}%) <Info className="w-3 h-3 text-gray-400 cursor-help" title="Platform fee Cruise Kauaʻi charges to maintain the app and process payments" /></span>
-                <span className="font-medium">${connectFee.toFixed(2)}</span>
+              <div className="space-y-0.5">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-700">Connect fee ({Math.round(connectFeeRate * 100)}%)</span>
+                  <span className="font-medium">${connectFee.toFixed(2)}</span>
+                </div>
+                <p className="text-xs text-gray-400 pl-0">Platform fee Cruise Kauaʻi charges to maintain the app and process payments</p>
               </div>
 
               {isFirstBooking && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-700 flex items-center gap-1">License verification fee <Info className="w-3 h-3 text-gray-400 cursor-help" title="One-time fee to cover the cost of verifying your driver's license or ID" /></span>
-                  <span className="font-medium">$1.50</span>
+                <div className="space-y-0.5">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-700">License verification fee</span>
+                    <span className="font-medium">$1.50</span>
+                  </div>
+                  <p className="text-xs text-gray-400">One-time fee to cover the cost of verifying your driver's license or ID</p>
                 </div>
               )}
               {smsFee > 0 && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-700 flex items-center gap-1">SMS notification fee <Info className="w-3 h-3 text-gray-400 cursor-help" title="Covers text message notifications for ride updates and booking alerts" /></span>
-                  <span className="font-medium">$0.50</span>
+                <div className="space-y-0.5">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-700">SMS notification fee</span>
+                    <span className="font-medium">$0.50</span>
+                  </div>
+                  <p className="text-xs text-gray-400">Covers text message notifications for ride updates and booking alerts</p>
                 </div>
               )}
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-700 flex items-center gap-1">Credit card fee (3%) <Info className="w-3 h-3 text-gray-400 cursor-help" title="Processing fee charged by Stripe, our payment provider" /></span>
-                <span className="font-medium">${creditCardFee.toFixed(2)}</span>
-              </div>
-              <div className="border-t border-gray-200 pt-2 flex justify-between">
-                <span className="font-semibold text-secondary">Total:</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-xl font-bold text-primary">
-                    ${totalAmount.toFixed(2)}
-                  </span>
+              <div className="space-y-0.5">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-700">Credit card fee (3%)</span>
+                  <span className="font-medium">${creditCardFee.toFixed(2)}</span>
                 </div>
+                <p className="text-xs text-gray-400">Processing fee charged by Stripe, our payment provider</p>
+              </div>
+              <div className="border-t-2 border-gray-300 pt-3 flex justify-between items-center">
+                <span className="font-bold text-secondary text-base">Total</span>
+                <span className="text-2xl font-bold text-primary">
+                  ${totalAmount.toFixed(2)}
+                </span>
               </div>
             </div>
 
