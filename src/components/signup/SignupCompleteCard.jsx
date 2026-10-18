@@ -1,12 +1,18 @@
 import React from "react";
-import { ArrowRight, AlertTriangle, User } from "lucide-react";
+import { ArrowRight, AlertTriangle, User, CheckCircle2, Circle } from "lucide-react";
 
 /**
  * "You're all set!" completion card — shown after phone number capture.
- * Gives the user two paths: start browsing rides or finish their profile.
- * Styled per the Figma design with a dark green header and yellow alert.
+ * Includes a post-signup checklist and gives the user two paths:
+ * start browsing rides or finish their profile.
  */
 export default function SignupCompleteCard({ onBrowse, onFinishProfile }) {
+  const checklist = [
+    { done: true, label: "Account created" },
+    { done: false, label: "Complete your profile" },
+    { done: false, label: "Find your first ride" },
+  ];
+
   return (
     <div className="w-full max-w-sm mx-auto">
       <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
@@ -26,6 +32,22 @@ export default function SignupCompleteCard({ onBrowse, onFinishProfile }) {
             Great! That's all we need for now. If you're in a rush for a ride, go
             ahead and start booking. If not, finish your profile here.
           </p>
+
+          {/* Post-signup checklist */}
+          <div className="space-y-2.5">
+            {checklist.map((item) => (
+              <div key={item.label} className="flex items-center gap-3">
+                {item.done ? (
+                  <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0" />
+                ) : (
+                  <Circle className="w-5 h-5 text-gray-300 shrink-0" />
+                )}
+                <span className={`text-sm font-medium ${item.done ? "text-green-700" : "text-gray-600"}`}>
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
 
           {/* Yellow warning alert */}
           <div className="bg-[#FFF3E0] border border-[#F59F00] rounded-2xl p-4 flex items-start gap-3">

@@ -91,6 +91,15 @@ export default function LicenseVerificationModal({ isOpen, onClose, onSuccess })
         </DialogHeader>
 
         <div className="space-y-5 py-4">
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
+            <h4 className="font-semibold text-blue-900 mb-2">What you'll need:</h4>
+            <ul className="text-sm text-blue-800 space-y-1">
+              <li>• A valid driver's license or government-issued ID</li>
+              <li>• Clear, well-lit photos of both sides</li>
+              <li>• All information must be readable</li>
+            </ul>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="license-front">Front of License / ID *</Label>
             <div className="border-2 border-dashed border-gray-300 rounded-2xl p-4 text-center hover:border-primary/40 transition-colors">
@@ -133,6 +142,11 @@ export default function LicenseVerificationModal({ isOpen, onClose, onSuccess })
             <div className="bg-red-50 border border-red-200 rounded-2xl p-3 text-sm text-red-700">{error}</div>
           )}
 
+          <p className="text-xs text-gray-500 text-center">Your information is encrypted and secure.</p>
+        </div>
+
+        {/* Sticky submit button — always visible at the bottom on mobile */}
+        <div className="sticky bottom-0 bg-white border-t border-gray-100 px-6 py-4 -mx-6 -mb-6 rounded-b-3xl">
           <Button
             onClick={handleSubmit}
             disabled={isUploading || !licenseFrontFile || !licenseBackFile}
@@ -144,17 +158,6 @@ export default function LicenseVerificationModal({ isOpen, onClose, onSuccess })
               <><ShieldCheck className="w-4 h-4 mr-2" />submit license</>
             )}
           </Button>
-
-          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
-            <h4 className="font-semibold text-blue-900 mb-2">What you'll need:</h4>
-            <ul className="text-sm text-blue-800 space-y-1">
-              <li>• A valid driver's license or government-issued ID</li>
-              <li>• Clear, well-lit photos of both sides</li>
-              <li>• All information must be readable</li>
-            </ul>
-          </div>
-
-          <p className="text-xs text-gray-500 text-center">Your information is encrypted and secure.</p>
         </div>
       </DialogContent>
     </Dialog>
