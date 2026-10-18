@@ -10,11 +10,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Camera, ChevronRight, CheckCircle, Upload, Car, MapPin, X, FileText, Shield, Bell } from "lucide-react";
+import { Camera, ChevronRight, CheckCircle, Upload, Car, MapPin, X, FileText, Shield, Bell, Info } from "lucide-react";
 import { requestNotificationPermission } from "@/components/utils/notifications";
 
 const BASE_STEPS = [
-  { id: "username", title: "What should we call you?", subtitle: "Choose a username others will see on the platform (no spaces). 💡 The name on your account should match your driver's license or ID for verification.", type: "text", placeholder: "e.g. kaleo_808", field: "username" },
+  { id: "username", title: "What should we call you?", subtitle: "Choose a username others will see on the platform (no spaces).", type: "text", placeholder: "e.g. kaleo_808", field: "username" },
   { id: "age", title: "How old are you?", subtitle: "Riders and drivers can see your age to feel comfortable sharing a ride.", type: "number", placeholder: "e.g. 28", field: "age", min: 18 },
   { id: "gender", title: "What's your gender?", subtitle: "This helps people feel safe knowing who they're riding with.", type: "select", field: "gender", options: [
     { value: "male", label: "Male" },
@@ -700,7 +700,17 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0 }) 
 
           {/* TEXT */}
           {current.type === "text" && (
-            <Input value={answers[current.field]} onChange={(e) => setAnswers({ ...answers, [current.field]: e.target.value })} placeholder={current.placeholder} className="rounded-2xl text-base py-5" autoFocus />
+            <div className="space-y-2">
+              <Input value={answers[current.field]} onChange={(e) => setAnswers({ ...answers, [current.field]: e.target.value })} placeholder={current.placeholder} className="rounded-2xl text-base py-5" autoFocus />
+              {current.field === "username" && (
+                <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-2xl">
+                  <Info className="w-4 h-4 text-amber-600 mt-0.5 shrink-0 cursor-help" title="Your username and account name must match the name printed on your driver's license, state ID, or insurance card so our team can verify your identity. Mismatched names cause verification to fail and delay your first ride." />
+                  <p className="text-xs text-amber-800 leading-relaxed">
+                    <span className="font-semibold">Match your ID.</span> Enter your name <span className="font-semibold">exactly as it appears on your insurance card</span> or driver's license. We verify your identity later — mismatched names fail verification and block your first ride.
+                  </p>
+                </div>
+              )}
+            </div>
           )}
 
           {/* NUMBER */}
