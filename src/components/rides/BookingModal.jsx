@@ -127,7 +127,13 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
 
       const detourFee = bookingData.wants_detour_service ? 5 : 0;
       const isLocal = currentUser?.has_hawaii_id === true;
-      const fullPricePerSeatSubmit = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);
+      // Distinguish "price not set" (null) from "free ride" (explicit 0).
+      // Falling back with || 0 treats a missing price as $0, which incorrectly
+      // triggers the free-ride path for rides where the driver never set a
+      // local/tourist price but did set the generic price_per_seat.
+      const localPrice = ride.price_per_seat_local != null ? ride.price_per_seat_local : ride.price_per_seat;
+      const touristPrice = ride.price_per_seat_tourist != null ? ride.price_per_seat_tourist : ride.price_per_seat;
+      const fullPricePerSeatSubmit = isLocal ? (localPrice ?? 0) : (touristPrice ?? 0);
       let submitPricePerSeat = bookingData.is_price_offer && bookingData.offered_price !== ''
         ? parseFloat(bookingData.offered_price)
         : fullPricePerSeatSubmit;
@@ -234,7 +240,10 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
   
   const detourFee = bookingData.wants_detour_service ? 5 : 0;
   const isLocal = currentUser?.has_hawaii_id === true;
-  const fullPricePerSeat = isLocal ? (ride.price_per_seat_local || 0) : (ride.price_per_seat_tourist || 0);
+  // Same null-vs-zero fix as the submit path — see handleRequestToBook for details.
+  const localPriceDisplay = ride.price_per_seat_local != null ? ride.price_per_seat_local : ride.price_per_seat;
+  const touristPriceDisplay = ride.price_per_seat_tourist != null ? ride.price_per_seat_tourist : ride.price_per_seat;
+  const fullPricePerSeat = isLocal ? (localPriceDisplay ?? 0) : (touristPriceDisplay ?? 0);
   const effectivePricePerSeat = bookingData.is_price_offer && bookingData.offered_price !== '' ? parseFloat(bookingData.offered_price) : fullPricePerSeat;
 
   // Calculate partial ride price ratio based on distance

@@ -290,6 +290,24 @@ export default function JoinPage() {
         const errData = await res.json().catch(() => ({}));
         const msg = errData?.message || errData?.detail || "";
         const lower = (msg || "").toLowerCase();
+        // Email verification trap: if the user registered but closed the tab
+        // during OTP, their email is unverified. When they try to log in, the
+        // platform rejects with a "not verified" error. Instead of showing a
+        // generic error, resend the OTP and switch to the verification UI so
+        // they can complete the flow they started.
+        if (lower.includes("verif") || lower.includes("not confirmed") || lower.includes("unconfirmed")) {
+          try {
+            await base44.auth.resendOtp(email);
+            setOtpState("sent");
+            setLoginMode(false);
+            setOtpError("");
+            setSignupError("");
+            setLoginLoading(false);
+            return;
+          } catch (e) {
+            // Fall through to generic error if resend fails
+          }
+        }
         if (lower.includes("password") || lower.includes("credential") || lower.includes("invalid") || lower.includes("not found")) {
           setLoginError("that email or password didn't match. try again or reset your password.");
         } else {
@@ -303,7 +321,26 @@ export default function JoinPage() {
         localStorage.setItem('base44_access_token', data.access_token);
         base44.auth.setToken(data.access_token);
       }
-      try { await base44.auth.updateMe({ has_verified_otp: true }); } catch (e) {}
+      // Check if the user completed OTP verification. If they registered but
+      // closed the tab during OTP, has_verified_otp will be false — resend the
+      // code and re-prompt for verification instead of letting them through.
+      try {
+        const me = await base44.auth.me();
+        if (me && !me.has_verified_otp) {
+          try {
+            await base44.auth.resendOtp(email);
+            setOtpState("sent");
+            setLoginMode(false);
+            setOtpError("");
+            setSignupError("");
+            setLoginLoading(false);
+            return;
+          } catch (e) {
+            // If resend fails, continue with login
+          }
+        }
+        await base44.auth.updateMe({ has_verified_otp: true });
+      } catch (e) {}
       const params = new URLSearchParams(window.location.search);
       const next = params.get("next");
       const target = next ? decodeURIComponent(next) : "/home";

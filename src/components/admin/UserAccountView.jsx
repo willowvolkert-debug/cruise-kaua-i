@@ -6,8 +6,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ShieldCheck, Star, MessageCircle, Wind, Clock, FileText, Shield, HandHeart, MapPin, ChevronDown } from "lucide-react";
+import { ShieldCheck, Star, MessageCircle, Wind, Clock, FileText, Shield, HandHeart, MapPin, ChevronDown, Car, IdCard } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import PrivateDocumentImage from "@/components/admin/PrivateDocumentImage";
 
 const getInitials = (name = "") => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -70,18 +71,31 @@ export default function UserAccountView({ isOpen, onClose, userId }) {
     const loadUserData = async () => {
         setIsLoading(true);
         try {
+            // User.list() is the only way to fetch a specific user (User has no
+            // filter/get-by-id in the SDK), but rides, bookings, and ratings can
+            // be filtered server-side — no need to load every record.
             const allUsers = await base44.entities.User.list();
             const currentUser = allUsers.find(u => u.id === userId);
             setUser(currentUser);
 
-            const allRides = await base44.entities.Ride.list();
-            const allBookings = await base44.entities.RideBooking.list();
-            const allRatings = await base44.entities.Rating.list();
+            if (currentUser) {
+                const [myRides, myBookings, myRatings] = await Promise.all([
+                    base44.entities.Ride.filter({ driver_id: currentUser.id }),
+                    base44.entities.RideBooking.filter({ passenger_id: currentUser.id }),
+                    base44.entities.Rating.filter({ rated_user_id: currentUser.id }),
+                ]);
 
-            setRidesGiven(allRides.filter(r => r.driver_id === currentUser.id));
-            const takenRideIds = allBookings.filter(b => b.passenger_id === currentUser.id).map(b => b.ride_id);
-            setRidesTaken(allRides.filter(r => takenRideIds.includes(r.id)));
-            setRatings(allRatings.filter(r => r.rated_user_id === currentUser.id));
+                setRidesGiven(myRides || []);
+                const takenRideIds = (myBookings || []).map(b => b.ride_id);
+                // Rides taken as passenger: fetch by the ride IDs from bookings
+                if (takenRideIds.length > 0) {
+                    const takenRides = await base44.entities.Ride.filter({ id: { $in: takenRideIds } });
+                    setRidesTaken(takenRides || []);
+                } else {
+                    setRidesTaken([]);
+                }
+                setRatings(myRatings || []);
+            }
         } catch (e) { 
             console.error(e); 
         }
@@ -237,6 +251,63 @@ export default function UserAccountView({ isOpen, onClose, userId }) {
                                 </div>
                             </CardContent>
                         </Card>
+
+                        {/* Private documents — displayed via signed URLs */}
+                        {(user.drivers_license_front_url || user.drivers_license_back_url || user.vehicle_exterior_photo_url || (user.vehicle_interior_photo_urls?.length > 0) || user.auto_policy_photo_url) && (
+                            <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
+                                <CardHeader>
+                                    <CardTitle className="text-xl text-secondary flex items-center gap-2">
+                                        <IdCard className="w-5 h-5 text-gray-500" />documents
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    {(user.drivers_license_front_url || user.drivers_license_back_url) && (
+                                        <div className="space-y-2">
+                                            <p className="text-sm font-medium text-gray-700 flex items-center gap-1"><IdCard className="w-4 h-4 text-gray-400" />driver's license</p>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                {user.drivers_license_front_url && (
+                                                    <div className="space-y-1">
+                                                        <PrivateDocumentImage fileUri={user.drivers_license_front_url} label="license front" className="w-full h-32" />
+                                                        <p className="text-xs text-gray-400 text-center">front</p>
+                                                    </div>
+                                                )}
+                                                {user.drivers_license_back_url && (
+                                                    <div className="space-y-1">
+                                                        <PrivateDocumentImage fileUri={user.drivers_license_back_url} label="license back" className="w-full h-32" />
+                                                        <p className="text-xs text-gray-400 text-center">back</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                    {user.auto_policy_photo_url && (
+                                        <div className="space-y-2">
+                                            <p className="text-sm font-medium text-gray-700 flex items-center gap-1"><Shield className="w-4 h-4 text-gray-400" />insurance policy</p>
+                                            <PrivateDocumentImage fileUri={user.auto_policy_photo_url} label="insurance card" className="w-full h-40" />
+                                        </div>
+                                    )}
+                                    {(user.vehicle_exterior_photo_url || user.vehicle_interior_photo_urls?.length > 0) && (
+                                        <div className="space-y-2">
+                                            <p className="text-sm font-medium text-gray-700 flex items-center gap-1"><Car className="w-4 h-4 text-gray-400" />vehicle photos</p>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                {user.vehicle_exterior_photo_url && (
+                                                    <div className="space-y-1">
+                                                        <PrivateDocumentImage fileUri={user.vehicle_exterior_photo_url} label="vehicle exterior" className="w-full h-32" />
+                                                        <p className="text-xs text-gray-400 text-center">exterior</p>
+                                                    </div>
+                                                )}
+                                                {user.vehicle_interior_photo_urls?.map((url, i) => (
+                                                    <div key={i} className="space-y-1">
+                                                        <PrivateDocumentImage fileUri={url} label={`interior ${i + 1}`} className="w-full h-32" />
+                                                        <p className="text-xs text-gray-400 text-center">interior {i + 1}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        )}
 
                         {(user.terms_accepted && user.privacy_policy_accepted && user.community_agreement_accepted) && (
                             <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
