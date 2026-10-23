@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@500;600&display=swap');
-@font-face { font-family: 'Bobby Jones'; src: url('https://base44.app/api/apps/68d33be0c396daf5b7a57d59/files/mp/public/68d33be0c396daf5b7a57d59/9d81357b9_BobbyJones.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Bobby Jones'; src: url('https://media.base44.com/files/public/68d33be0c396daf5b7a57d59/9d81357b9_BobbyJones.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
