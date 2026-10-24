@@ -31,12 +31,16 @@ export default function WelcomeHero({ onLogin, onSignUp, onExplore }) {
       </div>
 
       {/* Illustration: feathered edges so it blends into the page */}
-      <div className="relative max-w-3xl mx-auto mt-4">
+      <div className="relative max-w-4xl mx-auto mt-10 md:mt-14">
         <img
           src={ISLAND_TRUCK_URL}
           alt="Cruise truck with surfboards driving along the coast"
-          style={{ WebkitMaskImage: "radial-gradient(ellipse 46% 40% at 50% 50%, #000 62%, transparent 100%)", maskImage: "radial-gradient(ellipse 46% 40% at 50% 50%, #000 62%, transparent 100%)" }}
-          className="w-full -my-4 md:-my-10 select-none mix-blend-multiply" />
+          style={{ WebkitMaskImage: "radial-gradient(ellipse 50% 44% at 50% 50%, #000 40%, transparent 98%)", maskImage: "radial-gradient(ellipse 50% 44% at 50% 50%, #000 40%, transparent 98%)" }}
+          className="relative z-10 w-full -mt-6 -mb-14 md:-mt-12 md:-mb-28 select-none mix-blend-multiply" />
+      </div>
+      {/* Road */}
+      <div className="relative -mx-6 h-14 md:h-20 bg-[#2b2b2b]">
+        <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-1.5 opacity-90" style={{ backgroundImage: "repeating-linear-gradient(90deg, #F1EDE1 0 64px, transparent 64px 144px)" }} />
       </div>
     </header>
   );
