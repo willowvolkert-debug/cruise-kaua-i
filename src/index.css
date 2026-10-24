@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@500;600&display=swap');
-@font-face { font-family: 'Bobby Jones'; src: url('/fonts/BobbyJones.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Bobby Jones'; src: url('./assets/fonts/BobbyJones.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
