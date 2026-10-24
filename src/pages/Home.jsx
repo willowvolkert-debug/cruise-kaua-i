@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
+import { useSkies } from "@/lib/skies";
+import GreySkies from "@/components/relief/GreySkies";
 
 export default function Home() {
   const [user, setUser] = React.useState(null);
@@ -12,6 +14,8 @@ export default function Home() {
       .then(setUser)
       .catch(() => {});
   }, []);
+
+  const skies = useSkies();
 
   const sections = [
     { emoji: "👤", label: "account", desc: "Edit your profile, verify your license & vehicle, and manage payouts and settings.", to: createPageUrl("Account") },
@@ -31,6 +35,8 @@ export default function Home() {
   if (adminEmails.includes((user?.email || "").toLowerCase())) {
     sections.push({ emoji: "🛡️", label: "admin", desc: "Manage users, bookings, transactions, and platform-wide messages.", to: createPageUrl("Admin") });
   }
+
+  if (skies === "grey") return <GreySkies user={user} />;
 
   return (
     <div className="p-3 md:p-8 bg-background overflow-x-hidden min-h-screen">

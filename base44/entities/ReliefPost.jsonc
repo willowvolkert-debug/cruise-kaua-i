@@ -1,0 +1,89 @@
+{
+  "name": "ReliefPost",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "enum": [
+        "need",
+        "resource"
+      ],
+      "description": "Whether this is a need or a resource"
+    },
+    "title": {
+      "type": "string"
+    },
+    "details": {
+      "type": "string"
+    },
+    "location_text": {
+      "type": "string",
+      "description": "Area / place name"
+    },
+    "lat": {
+      "type": "number"
+    },
+    "lng": {
+      "type": "number"
+    },
+    "owner_id": {
+      "type": "string"
+    },
+    "owner_name": {
+      "type": "string"
+    },
+    "owner_username": {
+      "type": "string"
+    },
+    "owner_profile_picture_url": {
+      "type": "string"
+    },
+    "owner_bio": {
+      "type": "string"
+    },
+    "owner_age": {
+      "type": "integer"
+    },
+    "owner_gender": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "kind",
+    "title",
+    "lat",
+    "lng",
+    "owner_id",
+    "owner_name"
+  ],
+  "rls": {
+    "create": {
+      "data.owner_id": "{{user.id}}"
+    },
+    "read": true,
+    "update": {
+      "$or": [
+        {
+          "data.owner_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.owner_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

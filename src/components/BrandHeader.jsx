@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
+import SkiesToggle from "@/components/relief/SkiesToggle";
 import { TRUCK_URL, ISLAND_TRUCK_URL } from "@/components/welcome/WelcomeHero";
 
 export default function BrandHeader({ right = null }) {
@@ -25,6 +26,7 @@ export default function BrandHeader({ right = null }) {
             <ChevronLeft className="w-5 h-5" /> back
           </button>
         )}
+        {isHome && <SkiesToggle />}
       </div>
       <Link to="/home" aria-label="Cruise Kauaʻi home" className="flex items-center justify-center">
         <img src={TRUCK_URL} alt="Cruise Kauaʻi" className="h-12 w-auto object-contain" />
