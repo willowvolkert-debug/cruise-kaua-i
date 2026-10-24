@@ -157,18 +157,12 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
       {/* Date Range Filter */}
       {!hideDateFilter && (
         <div className="rounded-3xl border-2 border-gray-200 bg-gray-50 p-5 space-y-4">
-          <p className="text-base font-bold text-gray-700">📅 pick your dates</p>
-          <div className="flex flex-col sm:flex-row items-stretch gap-3">
-            <div className="space-y-1.5 flex-1">
-              <Label className="text-sm font-semibold text-gray-500 uppercase tracking-wide">from</Label>
-              <DatePickerButton value={startDate} onChange={setStartDate} placeholder="start date" />
-            </div>
-            <div className="hidden sm:flex items-end pb-3 text-gray-400 text-xl font-light">→</div>
-            <div className="space-y-1.5 flex-1">
-              <Label className="text-sm font-semibold text-gray-500 uppercase tracking-wide">to</Label>
-              <DatePickerButton value={endDate} onChange={setEndDate} placeholder="end date" />
-            </div>
-          </div>
+          <p className="text-base font-bold text-gray-700">📅 pick your date</p>
+          <DatePickerButton
+            value={startDate}
+            onChange={(d) => { setStartDate(d); setEndDate(d); }}
+            placeholder="select a date"
+          />
           <p className="text-base font-bold text-gray-700">📍 pick your route <span className="font-normal text-gray-400">(optional)</span></p>
           <div className="flex flex-col sm:flex-row items-stretch gap-3">
             <Input

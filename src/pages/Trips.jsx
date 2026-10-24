@@ -255,7 +255,7 @@ export default function TripsPage() {
             <div>
               <h2 className="text-2xl font-bold text-secondary">view all rides posted this week</h2>
               <p className="text-lg text-gray-700 mt-2 leading-snug">
-                Use the <strong>date filter</strong> to pick a day or a range (set "from" and "to", then tap find rides), and the <strong>route filter</strong> to type where you're starting and where you're headed. Leave the route blank to see everything.
+                Use the <strong>date filter</strong> to pick a day (then tap find rides), and the <strong>route filter</strong> to type where you're starting and where you're headed. Leave the route blank to see everything.
               </p>
               <p className="text-xl font-semibold text-gray-800 mt-4">Don't see a ride that fits your plans?</p>
               <Button
