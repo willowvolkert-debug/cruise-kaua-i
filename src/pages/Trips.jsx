@@ -99,7 +99,7 @@ export default function TripsPage() {
           <div className="flex items-start justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-3">
               {showBack && (
-                <button onClick={goBack} className="flex items-center gap-1 text-primary hover:text-primary/80 transition-colors font-medium text-sm">
+                <button onClick={goBack} className="flex items-center gap-1 text-primary-foreground bg-primary hover:bg-primary/90 transition-colors font-bold text-base rounded-full pl-2 pr-4 py-2 select-none">
                   <ChevronLeft className="w-5 h-5" /> back
                 </button>
               )}
