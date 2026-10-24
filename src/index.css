@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@500;600&display=swap');
-@font-face { font-family: 'Bobby Jones'; src: url('./assets/fonts/BobbyJones.woff') format('woff'); font-weight: normal; font-style: normal; font-display: swap; }
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@500;600&family=Londrina+Solid:wght@400;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-.cruise-head { font-family: 'Bobby Jones', 'Bebas Neue', Impact, sans-serif; text-transform: uppercase; letter-spacing: 0.02em; }
-.cruise-body { font-family: 'Bobby Jones Condensed Soft', 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 500; }
+.cruise-head { font-family: 'Londrina Solid', 'Bebas Neue', Impact, sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: 0.02em; }
+.cruise-body { font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 500; }
 @keyframes cruise-bob { 0%,100% { transform: translate(-50%, 2rem) rotate(0deg); } 50% { transform: translate(-50%, 1.7rem) rotate(-0.8deg); } }
 .cruise-truck { animation: cruise-bob 2.4s ease-in-out infinite; }
 
