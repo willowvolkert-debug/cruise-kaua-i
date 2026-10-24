@@ -377,11 +377,11 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
   if (!started) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-        <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 flex flex-col items-center gap-6 text-center">
+        <div className="bg-card rounded-3xl shadow-2xl border-2 border-foreground/10 max-w-md w-full p-8 flex flex-col items-center gap-6 text-center">
           <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" className="w-20 h-20 rounded-2xl object-cover shadow-md" />
           <div>
             <h2 className="text-2xl font-bold text-secondary mb-2">let's build your profile 🌺</h2>
-            <p className="text-gray-500 text-sm leading-relaxed">It only takes 2 minutes. We'll ask you a few quick questions so drivers and riders know who you are.</p>
+            <p className="text-muted-foreground text-sm leading-relaxed">It only takes 2 minutes. We'll ask you a few quick questions so drivers and riders know who you are.</p>
           </div>
           <Button onClick={() => setStarted(true)} className="bg-primary hover:bg-primary/90 text-white rounded-full px-10 py-6 text-lg font-bold shadow-lg">go →</Button>
         </div>
@@ -392,11 +392,11 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
   if (showRiderTips) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-        <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden max-h-[90vh] flex flex-col">
-          <div className="bg-gradient-to-br from-primary to-green-400 p-6 text-white text-center">
+        <div className="bg-card rounded-3xl shadow-2xl border-2 border-foreground/10 max-w-md w-full overflow-hidden max-h-[90vh] flex flex-col">
+          <div className="bg-primary p-6 text-white text-center">
             <div className="text-4xl mb-2">🌺</div>
             <h2 className="text-xl font-bold">here's how cruise kauaʻi works!</h2>
-            <p className="text-green-100 text-sm mt-1">if you ever forget, you can rewatch the welcome tutorial in your account.</p>
+            <p className="text-white/80 text-sm mt-1">if you ever forget, you can rewatch the welcome tutorial in your account.</p>
           </div>
           <div className="overflow-y-auto flex-1 p-6 space-y-4">
             {[
@@ -412,7 +412,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                 <span className="text-2xl shrink-0">{icon}</span>
                 <div>
                   <p className="font-bold text-secondary text-sm">{title}</p>
-                  <p className="text-gray-600 text-xs mt-0.5 leading-relaxed">{desc}</p>
+                  <p className="text-muted-foreground text-xs mt-0.5 leading-relaxed">{desc}</p>
                 </div>
               </div>
             ))}
@@ -431,18 +431,18 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
     const islandName = answers.preferred_island;
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-        <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden max-h-[90vh] flex flex-col">
-          <div className="bg-gradient-to-br from-secondary to-blue-400 p-8 text-white text-center">
+        <div className="bg-card rounded-3xl shadow-2xl border-2 border-foreground/10 max-w-md w-full overflow-hidden max-h-[90vh] flex flex-col">
+          <div className="bg-secondary p-8 text-white text-center">
             <div className="text-5xl mb-3">🌺</div>
             <h2 className="text-2xl font-bold">right on, {islandName}!</h2>
           </div>
           <div className="p-6 flex-1 overflow-y-auto">
-            <p className="text-gray-700 text-base leading-relaxed mb-6">
+            <p className="text-foreground text-base leading-relaxed mb-6">
               You can finish signing up as a driver and will be a part of our founder's group for {islandName === "Oahu" ? "Oʻahu" : islandName}. We will reach out to you shortly to build the service on your island with you!
             </p>
-            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6">
-              <p className="text-amber-800 text-sm font-semibold mb-1">🏆 You're a founder!</p>
-              <p className="text-amber-700 text-sm">As a founding member, you'll help shape how Cruise works on {islandName === "Oahu" ? "Oʻahu" : islandName}. We'll be in touch soon.</p>
+            <div className="bg-muted border border-border rounded-2xl p-4 mb-6">
+              <p className="text-foreground text-sm font-semibold mb-1">🏆 You're a founder!</p>
+              <p className="text-foreground text-sm">As a founding member, you'll help shape how Cruise works on {islandName === "Oahu" ? "Oʻahu" : islandName}. We'll be in touch soon.</p>
             </div>
             <Button
               onClick={() => { setShowFoundersScreen(false); setStep(step + 1); }}
@@ -459,10 +459,10 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
   if (done) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-        <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 flex flex-col items-center gap-4 text-center">
+        <div className="bg-card rounded-3xl shadow-2xl border-2 border-foreground/10 max-w-md w-full p-8 flex flex-col items-center gap-4 text-center">
           <CheckCircle className="w-16 h-16 text-primary" />
           <h2 className="text-2xl font-bold text-secondary">profile complete! 🎉</h2>
-          <p className="text-gray-500 text-sm">{isDriverPath ? "Mahalo! Your vehicle & agreement are submitted for review. You'll hear from us soon." : "Mahalo! You're ready to start booking rides."}</p>
+          <p className="text-muted-foreground text-sm">{isDriverPath ? "Mahalo! Your vehicle & agreement are submitted for review. You'll hear from us soon." : "Mahalo! You're ready to start booking rides."}</p>
         </div>
       </div>
     );
@@ -550,9 +550,9 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden max-h-[90vh] flex flex-col">
+      <div className="bg-card rounded-3xl shadow-2xl border-2 border-foreground/10 max-w-md w-full overflow-hidden max-h-[90vh] flex flex-col">
         {/* Progress bar */}
-        <div className="h-1.5 bg-gray-100 shrink-0">
+        <div className="h-1.5 bg-border shrink-0">
           <div className="h-full bg-primary transition-all duration-500" style={{ width: `${progress}%` }} />
         </div>
 
@@ -561,13 +561,13 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
             <p className="text-xs font-bold tracking-widest uppercase text-primary">step {safeStep + 1} of {steps.length}</p>
             <button
               onClick={handleSaveAndComeBack}
-              className="text-xs text-blue-500 hover:text-blue-700 font-medium underline underline-offset-2 transition-colors"
+              className="text-xs text-secondary hover:text-secondary/80 font-medium underline underline-offset-2 transition-colors"
             >
               save & come back later
             </button>
           </div>
-          <h2 className="text-xl font-bold text-secondary mb-1">{current.title}</h2>
-          <p className="text-sm text-gray-500 mb-5 leading-relaxed">{current.subtitle}</p>
+          <h2 className="cruise-head text-2xl text-secondary mb-1">{current.title}</h2>
+          <p className="text-sm text-muted-foreground mb-5 leading-relaxed">{current.subtitle}</p>
 
           {/* TERMS OF SERVICE */}
           {current.type === "terms_of_service" && (
@@ -576,7 +576,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                 <FileText className="w-5 h-5 text-primary" />
                 <span className="font-semibold text-sm">Cruise Kauaʻi Terms of Service</span>
               </div>
-              <ScrollArea className="h-56 w-full rounded-2xl border border-gray-200 bg-gray-50 p-4 text-xs text-gray-700 space-y-3">
+              <ScrollArea className="h-56 w-full rounded-2xl border border-border bg-muted p-4 text-xs text-foreground space-y-3">
                 <div className="space-y-3 pr-2">
                   {[
                     ["1. Acceptance of Terms", "By accessing or using Cruise Kauaʻi, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service. If you do not agree, you must not access or use the platform."],
@@ -596,12 +596,12 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                       <p className="leading-relaxed mt-0.5">{body}</p>
                     </div>
                   ))}
-                  <p className="italic text-gray-400 pt-2">Last Updated: {new Date().toLocaleDateString()}</p>
+                  <p className="italic text-muted-foreground pt-2">Last Updated: {new Date().toLocaleDateString()}</p>
                 </div>
               </ScrollArea>
-              <div className="flex items-start gap-2 p-3 bg-green-50 border border-green-200 rounded-2xl">
+              <div className="flex items-start gap-2 p-3 bg-muted border border-border rounded-2xl">
                 <Checkbox id="termsAgreed" checked={termsAgreed} onCheckedChange={() => { setTermsAgreed(v => !v); setError(""); }} className="mt-0.5 shrink-0" />
-                <Label htmlFor="termsAgreed" className="cursor-pointer text-sm font-semibold text-green-800 leading-tight">I have read and agree to the Terms of Service</Label>
+                <Label htmlFor="termsAgreed" className="cursor-pointer text-sm font-semibold text-foreground leading-tight">I have read and agree to the Terms of Service</Label>
               </div>
             </div>
           )}
@@ -613,7 +613,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                 <Shield className="w-5 h-5 text-primary" />
                 <span className="font-semibold text-sm">Cruise Kauaʻi Privacy Policy</span>
               </div>
-              <ScrollArea className="h-56 w-full rounded-2xl border border-gray-200 bg-gray-50 p-4 text-xs text-gray-700">
+              <ScrollArea className="h-56 w-full rounded-2xl border border-border bg-muted p-4 text-xs text-foreground">
                 <div className="space-y-3 pr-2">
                   {[
                     ["1. Information We Collect", "We collect: account info (name, email, age, gender, username), verification documents (license, vehicle, insurance), payment info (via Stripe), trip details, messages, and usage data."],
@@ -630,12 +630,12 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                       <p className="leading-relaxed mt-0.5">{body}</p>
                     </div>
                   ))}
-                  <p className="italic text-gray-400 pt-2">Last Updated: {new Date().toLocaleDateString()}</p>
+                  <p className="italic text-muted-foreground pt-2">Last Updated: {new Date().toLocaleDateString()}</p>
                 </div>
               </ScrollArea>
-              <div className="flex items-start gap-2 p-3 bg-green-50 border border-green-200 rounded-2xl">
+              <div className="flex items-start gap-2 p-3 bg-muted border border-border rounded-2xl">
                 <Checkbox id="privacyAgreed" checked={privacyAgreed} onCheckedChange={() => { setPrivacyAgreed(v => !v); setError(""); }} className="mt-0.5 shrink-0" />
-                <Label htmlFor="privacyAgreed" className="cursor-pointer text-sm font-semibold text-green-800 leading-tight">I have read and agree to the Privacy Policy</Label>
+                <Label htmlFor="privacyAgreed" className="cursor-pointer text-sm font-semibold text-foreground leading-tight">I have read and agree to the Privacy Policy</Label>
               </div>
             </div>
           )}
@@ -649,16 +649,16 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                     <CheckCircle className="w-8 h-8 text-green-500" />
                   </div>
                   <p className="font-semibold text-green-700">Push notifications enabled!</p>
-                  <p className="text-sm text-gray-500">You'll be notified about bookings and messages.</p>
+                  <p className="text-sm text-muted-foreground">You'll be notified about bookings and messages.</p>
                 </div>
               ) : notifStatus === 'denied' ? (
                 <div className="space-y-3">
                   <div className="flex flex-col items-center gap-3 py-4 text-center">
-                    <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
-                      <Bell className="w-8 h-8 text-gray-400" />
+                    <div className="w-16 h-16 rounded-full bg-border flex items-center justify-center">
+                      <Bell className="w-8 h-8 text-muted-foreground" />
                     </div>
-                    <p className="font-semibold text-gray-700">Notifications blocked</p>
-                    <p className="text-sm text-gray-500">You can enable them later in your browser settings or from your account page.</p>
+                    <p className="font-semibold text-foreground">Notifications blocked</p>
+                    <p className="text-sm text-muted-foreground">You can enable them later in your browser settings or from your account page.</p>
                   </div>
                 </div>
               ) : (
@@ -669,7 +669,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                     </div>
                     <div className="space-y-1">
                       <p className="font-semibold text-secondary">Stay in the loop</p>
-                      <p className="text-sm text-gray-500 leading-relaxed">Enable notifications so you never miss a ride request, booking confirmation, or message from another member.</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed">Enable notifications so you never miss a ride request, booking confirmation, or message from another member.</p>
                     </div>
                   </div>
                   <Button onClick={handleEnableNotifications} className="w-full bg-primary hover:bg-primary/90 rounded-2xl py-5 font-bold">
@@ -677,7 +677,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                   </Button>
                   <button
                     onClick={() => { setError(""); setStep(safeStep + 1); }}
-                    className="w-full text-center text-sm text-gray-400 hover:text-primary font-medium underline underline-offset-2 transition-colors"
+                    className="w-full text-center text-sm text-muted-foreground hover:text-primary font-medium underline underline-offset-2 transition-colors"
                   >
                     skip for now →
                   </button>
@@ -699,7 +699,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
               />
               <button
                 onClick={() => { setError(""); setStep(safeStep + 1); }}
-                className="w-full text-center text-sm text-gray-400 hover:text-primary font-medium underline underline-offset-2 transition-colors"
+                className="w-full text-center text-sm text-muted-foreground hover:text-primary font-medium underline underline-offset-2 transition-colors"
               >
                 skip for now — i'll add it later →
               </button>
@@ -711,9 +711,9 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
             <div className="space-y-2">
               <Input value={answers[current.field]} onChange={(e) => setAnswers({ ...answers, [current.field]: e.target.value })} placeholder={current.placeholder} className="rounded-2xl text-base py-5" autoFocus />
               {current.field === "username" && (
-                <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-2xl">
+                <div className="flex items-start gap-2 p-3 bg-muted border border-border rounded-2xl">
                   <Info className="w-4 h-4 text-amber-600 mt-0.5 shrink-0 cursor-help" title="Your username and account name must match the name printed on your driver's license, state ID, or insurance card so our team can verify your identity. Mismatched names cause verification to fail and delay your first ride." />
-                  <p className="text-xs text-amber-800 leading-relaxed">
+                  <p className="text-xs text-foreground leading-relaxed">
                     <span className="font-semibold">Match your ID.</span> Enter your name <span className="font-semibold">exactly as it appears on your insurance card</span> or driver's license. We verify your identity later — mismatched names fail verification and block your first ride.
                   </p>
                 </div>
@@ -743,11 +743,11 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                 <button
                   key={opt.value}
                   onClick={() => setAnswers({ ...answers, preferred_island: opt.value })}
-                  className={`py-4 px-4 rounded-2xl border-2 text-sm font-medium transition-all flex flex-col items-center gap-1 ${answers.preferred_island === opt.value ? "border-primary bg-primary/10 text-primary" : "border-gray-200 bg-gray-50 text-gray-700 hover:border-primary/50"}`}
+                  className={`py-4 px-4 rounded-2xl border-2 text-sm font-medium transition-all flex flex-col items-center gap-1 ${answers.preferred_island === opt.value ? "border-primary bg-primary/10 text-primary" : "border-border bg-muted text-foreground hover:border-primary/50"}`}
                 >
                   <span className="text-2xl">{opt.emoji}</span>
                   <span>{opt.label}</span>
-                  {!opt.available && <span className="text-xs text-gray-400 font-normal">coming soon</span>}
+                  {!opt.available && <span className="text-xs text-muted-foreground font-normal">coming soon</span>}
                 </button>
               ))}
             </div>
@@ -757,7 +757,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
           {current.type === "select" && (
             <div className="grid grid-cols-2 gap-3">
               {current.options.map((opt) => (
-                <button key={opt.value} onClick={() => setAnswers({ ...answers, [current.field]: opt.value })} className={`py-3 px-4 rounded-2xl border-2 text-sm font-medium transition-all ${answers[current.field] === opt.value ? "border-primary bg-primary/10 text-primary" : "border-gray-200 bg-gray-50 text-gray-700 hover:border-primary/50"}`}>{opt.label}</button>
+                <button key={opt.value} onClick={() => setAnswers({ ...answers, [current.field]: opt.value })} className={`py-3 px-4 rounded-2xl border-2 text-sm font-medium transition-all ${answers[current.field] === opt.value ? "border-primary bg-primary/10 text-primary" : "border-border bg-muted text-foreground hover:border-primary/50"}`}>{opt.label}</button>
               ))}
             </div>
           )}
@@ -768,7 +768,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
               <div className="relative">
                 <Avatar className="w-28 h-28">
                   <AvatarImage src={photoPreview} />
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-green-400 text-white text-3xl font-bold">{(user?.full_name || "?")[0]}</AvatarFallback>
+                  <AvatarFallback className="bg-primary text-white text-3xl font-bold">{(user?.full_name || "?")[0]}</AvatarFallback>
                 </Avatar>
                 <button onClick={() => fileInputRef.current?.click()} className="absolute bottom-0 right-0 bg-primary text-white rounded-full p-2 shadow-lg hover:bg-primary/90"><Camera className="w-4 h-4" /></button>
                 <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
@@ -776,7 +776,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
               <Button variant="outline" onClick={() => fileInputRef.current?.click()} className="rounded-2xl border-primary text-primary hover:bg-primary/10">
                 <Camera className="w-4 h-4 mr-2" />{photoFile ? "change photo" : "choose photo"}
               </Button>
-              {photoFile && <p className="text-xs text-gray-500">📎 {photoFile.name}</p>}
+              {photoFile && <p className="text-xs text-muted-foreground">📎 {photoFile.name}</p>}
             </div>
           )}
 
@@ -785,8 +785,8 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
             <div className="space-y-4">
               {[{ label: "Front of license / ID *", file: licenseFront, ref: licenseFrontRef, set: setLicenseFront, saved: user?.drivers_license_front_url }, { label: "Back of license / ID *", file: licenseBack, ref: licenseBackRef, set: setLicenseBack, saved: user?.drivers_license_back_url }].map(({ label, file, ref, set, saved }) => (
                 <div key={label} className="space-y-1">
-                  <p className="text-sm font-medium text-gray-700">{label}</p>
-                  <div onClick={() => ref.current?.click()} className={`border-2 border-dashed rounded-2xl p-5 text-center cursor-pointer transition-colors ${file ? 'border-green-400 bg-green-50' : saved ? 'border-green-300 bg-green-50/50' : 'border-gray-300 hover:border-primary/50'}`}>
+                  <p className="text-sm font-medium text-foreground">{label}</p>
+                  <div onClick={() => ref.current?.click()} className={`border-2 border-dashed rounded-2xl p-5 text-center cursor-pointer transition-colors ${file ? 'border-green-400 bg-green-50' : saved ? 'border-green-300 bg-green-50/50' : 'border-border hover:border-primary/50'}`}>
                     <input ref={ref} type="file" accept="image/*" onChange={(e) => { set(e.target.files[0]); setError(""); }} className="hidden" />
                     {file ? (
                       <div className="flex flex-col items-center gap-1">
@@ -802,21 +802,21 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                       </div>
                     ) : (
                       <>
-                        <Upload className="w-6 h-6 text-gray-400 mx-auto mb-1" />
-                        <span className="text-sm text-gray-500">tap to upload</span>
+                        <Upload className="w-6 h-6 text-muted-foreground mx-auto mb-1" />
+                        <span className="text-sm text-muted-foreground">tap to upload</span>
                       </>
                     )}
                   </div>
                 </div>
               ))}
-              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-3 text-xs text-blue-800">
+              <div className="bg-muted border border-border rounded-2xl p-3 text-xs text-foreground">
                 <p className="font-semibold mb-1">What you'll need:</p>
                 <ul className="space-y-0.5"><li>• A valid driver's license or government-issued ID</li><li>• Clear, well-lit photos of both sides</li><li>• All text must be readable</li></ul>
               </div>
-              <p className="text-xs text-gray-400 text-center">🔒 Encrypted and secure.</p>
+              <p className="text-xs text-muted-foreground text-center">🔒 Encrypted and secure.</p>
               <button
                 onClick={() => { setError(""); setStep(safeStep + 1); }}
-                className="w-full text-center text-sm text-gray-400 hover:text-primary font-medium underline underline-offset-2 transition-colors pt-1"
+                className="w-full text-center text-sm text-muted-foreground hover:text-primary font-medium underline underline-offset-2 transition-colors pt-1"
               >
                 skip for now — i'll upload it later →
               </button>
@@ -831,18 +831,18 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                   <Car className="w-8 h-8 text-primary mt-0.5 shrink-0" />
                   <div>
                     <p className="font-bold text-primary text-base">yes, help me set up my driver account</p>
-                    <p className="text-gray-500 text-sm mt-0.5">Upload your vehicle info, insurance, and sign the driver agreement. Earn money on trips you're already making.</p>
+                    <p className="text-muted-foreground text-sm mt-0.5">Upload your vehicle info, insurance, and sign the driver agreement. Earn money on trips you're already making.</p>
                   </div>
                 </button>
                 <button onClick={() => handleDriverChoice(false)} className="flex items-start gap-4 p-5 rounded-2xl border-2 border-blue-500 bg-blue-50 hover:bg-blue-100/60 transition-all text-left">
                   <MapPin className="w-8 h-8 text-blue-500 mt-0.5 shrink-0" />
                   <div>
                     <p className="font-bold text-blue-600 text-base">no, take me to view all rides</p>
-                    <p className="text-gray-500 text-sm mt-0.5">I just want to find rides for now. I can always set up as a driver later from my account.</p>
+                    <p className="text-muted-foreground text-sm mt-0.5">I just want to find rides for now. I can always set up as a driver later from my account.</p>
                   </div>
                 </button>
               </div>
-              {saving && <p className="text-center text-sm text-gray-400">saving your profile...</p>}
+              {saving && <p className="text-center text-sm text-muted-foreground">saving your profile...</p>}
             </div>
           )}
 
@@ -857,7 +857,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                 { field: "license_plate", label: "License Plate", placeholder: "e.g. ABC-123" },
               ].map(({ field, label, placeholder }) => (
                 <div key={field} className="space-y-1">
-                  <p className="text-sm font-medium text-gray-700">{label}</p>
+                  <p className="text-sm font-medium text-foreground">{label}</p>
                   <Input value={vehicleInfo[field]} onChange={(e) => setVehicleInfo(v => ({ ...v, [field]: e.target.value }))} placeholder={placeholder} className="rounded-2xl" />
                 </div>
               ))}
@@ -873,8 +873,8 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                 { label: "Insurance card * (front & back)", file: insurancePhoto, ref: insuranceRef, set: setInsurancePhoto, multiple: false, saved: user?.auto_policy_photo_url },
               ].map(({ label, file, ref, set, multiple, saved }) => (
                 <div key={label} className="space-y-1">
-                  <p className="text-sm font-medium text-gray-700">{label}</p>
-                  <div onClick={() => ref.current?.click()} className={`border-2 border-dashed rounded-2xl p-4 text-center cursor-pointer transition-colors ${file ? 'border-green-400 bg-green-50' : saved ? 'border-green-300 bg-green-50/50' : 'border-gray-300 hover:border-primary/50'}`}>
+                  <p className="text-sm font-medium text-foreground">{label}</p>
+                  <div onClick={() => ref.current?.click()} className={`border-2 border-dashed rounded-2xl p-4 text-center cursor-pointer transition-colors ${file ? 'border-green-400 bg-green-50' : saved ? 'border-green-300 bg-green-50/50' : 'border-border hover:border-primary/50'}`}>
                     <input ref={ref} type="file" accept="image/*" multiple={multiple} onChange={(e) => { multiple ? set(e.target.files) : set(e.target.files[0]); setError(""); }} className="hidden" />
                     {file ? (
                       <div className="flex flex-col items-center gap-1">
@@ -890,8 +890,8 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                       </div>
                     ) : (
                       <>
-                        <Upload className="w-6 h-6 text-gray-400 mx-auto mb-1" />
-                        <span className="text-sm text-gray-500">tap to upload</span>
+                        <Upload className="w-6 h-6 text-muted-foreground mx-auto mb-1" />
+                        <span className="text-sm text-muted-foreground">tap to upload</span>
                       </>
                     )}
                   </div>
@@ -903,7 +903,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
           {/* DRIVER AGREEMENT */}
           {current.type === "driver_agreement" && (
             <div className="space-y-4">
-              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-sm text-amber-800">
+              <div className="bg-muted border border-border rounded-2xl p-4 text-sm text-foreground">
                 <p className="font-semibold mb-1">📋 Summary of what you're agreeing to:</p>
                 <ul className="space-y-1 text-xs">
                   <li>• You're an independent driver, not an employee</li>
@@ -913,17 +913,17 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                   <li>• You assume all risks of driving and passenger transport</li>
                 </ul>
               </div>
-              <div className="space-y-2 max-h-48 overflow-y-auto bg-gray-50 rounded-2xl p-4 border border-gray-200">
+              <div className="space-y-2 max-h-48 overflow-y-auto bg-muted rounded-2xl p-4 border border-border">
                 {AGREEMENT_BOXES.map(({ key, label }) => (
                   <div key={key} className="flex items-start gap-2">
                     <Checkbox id={key} checked={agreementBoxes[key]} onCheckedChange={() => { setAgreementBoxes(prev => ({ ...prev, [key]: !prev[key] })); setError(""); }} className="mt-0.5 shrink-0" />
-                    <Label htmlFor={key} className="cursor-pointer text-xs leading-tight text-gray-700">{label}</Label>
+                    <Label htmlFor={key} className="cursor-pointer text-xs leading-tight text-foreground">{label}</Label>
                   </div>
                 ))}
               </div>
-              <div className="flex items-start gap-2 p-3 bg-green-50 border border-green-200 rounded-2xl">
+              <div className="flex items-start gap-2 p-3 bg-muted border border-border rounded-2xl">
                 <Checkbox id="agreedFinal" checked={agreedFinal} onCheckedChange={() => { setAgreedFinal(v => !v); setError(""); }} className="mt-0.5 shrink-0" />
-                <Label htmlFor="agreedFinal" className="cursor-pointer text-sm font-semibold text-green-800 leading-tight">I have read and agree to the full Driver Agreement</Label>
+                <Label htmlFor="agreedFinal" className="cursor-pointer text-sm font-semibold text-foreground leading-tight">I have read and agree to the full Driver Agreement</Label>
               </div>
             </div>
           )}
@@ -934,7 +934,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
 
           <div className={`flex gap-3 mt-5 ${current.type === "driver_choice" ? "justify-start" : ""}`}>
             {safeStep > 0 && (
-              <Button variant="outline" onClick={() => { setError(""); setStep(safeStep - 1); }} className="rounded-full px-6 py-6 font-bold border-gray-300 text-gray-600">
+              <Button variant="outline" onClick={() => { setError(""); setStep(safeStep - 1); }} className="rounded-full px-6 py-6 font-bold border-border text-muted-foreground">
                 ← back
               </Button>
             )}

@@ -11,19 +11,19 @@ const STEPS = [
     title: "Create your profile",
     content: (island) => (
       <div className="space-y-4">
-        <p className="text-gray-700 text-base leading-relaxed">
+        <p className="text-foreground text-base leading-relaxed">
           Name, photo, and a little about yourself — drivers appreciate knowing who's riding.
         </p>
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 space-y-2">
-          <p className="font-bold text-amber-800">The problems riders face:</p>
-          <ul className="text-amber-700 text-sm space-y-1">
+        <div className="bg-muted border border-border rounded-2xl p-4 space-y-2">
+          <p className="font-bold text-foreground">The problems riders face:</p>
+          <ul className="text-muted-foreground text-sm space-y-1">
             <li>🚗 Rental cars cost $80–$200/day</li>
             <li>🚌 Bus routes are limited and slow</li>
             <li>🚕 Rideshare apps charge surge pricing</li>
             <li>😓 Relying on friends isn't always an option</li>
           </ul>
         </div>
-        <p className="text-gray-700 text-sm">
+        <p className="text-foreground text-sm">
           By becoming a rider on Cruise {island}, you get <strong>affordable rides from locals</strong> who know the island — and you support the community at the same time.
         </p>
       </div>
@@ -34,7 +34,7 @@ const STEPS = [
     title: "Where do you need to go?",
     content: (island) => (
       <div className="space-y-4">
-        <p className="text-gray-700 text-base leading-relaxed">Search rides by route or destination. Filter by time and availability.</p>
+        <p className="text-foreground text-base leading-relaxed">Search rides by route or destination. Filter by time and availability.</p>
         <div className="grid grid-cols-1 gap-3">
           {[
             { icon: <DollarSign className="w-5 h-5 text-green-600" />, label: "affordable rides", desc: "Typical rides cost $5–$30, way cheaper than rentals or rideshare apps." },
@@ -42,17 +42,17 @@ const STEPS = [
             { icon: <MapPin className="w-5 h-5 text-blue-600" />, label: "island routes", desc: "Rides across the whole island — not just tourist areas." },
             { icon: <Clock className="w-5 h-5 text-purple-600" />, label: "flexible timing", desc: "Browse rides by date and book in advance or last-minute." },
           ].map(({ icon, label, desc }) => (
-            <div key={label} className="flex items-start gap-3 bg-gray-50 border border-gray-200 rounded-2xl p-3">
-              <div className="w-9 h-9 rounded-xl bg-white border border-gray-200 flex items-center justify-center shrink-0 shadow-sm">{icon}</div>
+            <div key={label} className="flex items-start gap-3 bg-muted border border-border rounded-2xl p-3">
+              <div className="w-9 h-9 rounded-xl bg-white border border-border flex items-center justify-center shrink-0 shadow-sm">{icon}</div>
               <div>
-                <p className="font-bold text-gray-800 text-sm">{label}</p>
-                <p className="text-gray-500 text-xs mt-0.5">{desc}</p>
+                <p className="font-bold text-foreground text-sm">{label}</p>
+                <p className="text-muted-foreground text-xs mt-0.5">{desc}</p>
               </div>
             </div>
           ))}
         </div>
-        <div className="bg-gray-100 border border-gray-300 rounded-2xl p-3">
-          <p className="text-xs text-gray-600 leading-relaxed"><strong>💡 Fee note:</strong> Cruise {island} adds a 10% connect fee on top of the driver's listed price — that's what you pay. For example, a $20 ride costs you $22. The driver receives exactly what they posted.</p>
+        <div className="bg-muted border border-border rounded-2xl p-3">
+          <p className="text-xs text-muted-foreground leading-relaxed"><strong>💡 Fee note:</strong> Cruise {island} adds a 10% connect fee on top of the driver's listed price — that's what you pay. For example, a $20 ride costs you $22. The driver receives exactly what they posted.</p>
         </div>
       </div>
     ),
@@ -62,7 +62,7 @@ const STEPS = [
     title: "Request a ride",
     content: () => (
       <div className="space-y-4">
-        <p className="text-gray-700 text-base leading-relaxed">Send a quick request to a driver. Most respond within the hour.</p>
+        <p className="text-foreground text-base leading-relaxed">Send a quick request to a driver. Most respond within the hour.</p>
         <div className="grid grid-cols-1 gap-3">
           {[
             { step: "1", icon: "👤", title: "Complete your profile", desc: "Add your photo, bio, and a little about yourself so drivers feel comfortable." },
@@ -70,18 +70,18 @@ const STEPS = [
             { step: "3", icon: "📲", title: "Request a seat", desc: "Send a booking request with a quick note about your trip." },
             { step: "4", icon: "✅", title: "Get confirmed & pay", desc: "Driver approves, you pay securely in the app. That's it!" },
           ].map(({ step, icon, title, desc }) => (
-            <div key={step} className="flex items-start gap-3 bg-gray-50 rounded-2xl p-3">
+            <div key={step} className="flex items-start gap-3 bg-muted rounded-2xl p-3">
               <div className="w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center text-sm font-bold shrink-0">{step}</div>
               <div>
-                <p className="font-bold text-gray-800 text-sm">{icon} {title}</p>
-                <p className="text-gray-600 text-xs mt-0.5">{desc}</p>
+                <p className="font-bold text-foreground text-sm">{icon} {title}</p>
+                <p className="text-muted-foreground text-xs mt-0.5">{desc}</p>
               </div>
             </div>
           ))}
         </div>
-        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-3">
-          <p className="text-blue-800 text-sm font-bold">💡 pro tip</p>
-          <p className="text-blue-700 text-xs mt-1">A complete profile (photo + bio) gets accepted faster. Drivers like knowing who they're riding with!</p>
+        <div className="bg-muted border border-border rounded-2xl p-3">
+          <p className="text-foreground text-sm font-bold">💡 pro tip</p>
+          <p className="text-muted-foreground text-xs mt-1">A complete profile (photo + bio) gets accepted faster. Drivers like knowing who they're riding with!</p>
         </div>
       </div>
     ),
@@ -91,7 +91,7 @@ const STEPS = [
     title: "Confirm & go",
     content: () => (
       <div className="space-y-4">
-        <p className="text-gray-700 text-base leading-relaxed">
+        <p className="text-foreground text-base leading-relaxed">
           Once confirmed, you'll get driver details and pickup info.
         </p>
         <div className="space-y-2">
@@ -101,16 +101,16 @@ const STEPS = [
             { icon: "🎂", field: "Age & gender", why: "Helps drivers match their rider preferences." },
             { icon: "📱", field: "Username", why: "Your handle on the platform — keep it friendly!" },
           ].map(({ icon, field, why }) => (
-            <div key={field} className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-2xl p-3">
+            <div key={field} className="flex items-start gap-3 bg-muted border border-border rounded-2xl p-3">
               <span className="text-xl shrink-0">{icon}</span>
               <div>
-                <p className="font-bold text-gray-800 text-sm">{field}</p>
-                <p className="text-gray-500 text-xs">{why}</p>
+                <p className="font-bold text-foreground text-sm">{field}</p>
+                <p className="text-muted-foreground text-xs">{why}</p>
               </div>
             </div>
           ))}
         </div>
-        <p className="text-xs text-gray-500 text-center">After signing up, you'll land on your Account page — fill these in first!</p>
+        <p className="text-xs text-muted-foreground text-center">After signing up, you'll land on your Account page — fill these in first!</p>
       </div>
     ),
   },
@@ -120,7 +120,7 @@ const STEPS = [
     content: (island) => (
       <div className="space-y-4 text-center">
         <div className="text-6xl">🌺</div>
-        <p className="text-gray-700 text-base leading-relaxed">
+        <p className="text-foreground text-base leading-relaxed">
           Mahalo for joining Cruise {island}! You're about to experience the island the way locals do.
         </p>
         <div className="grid grid-cols-3 gap-3 text-center">
@@ -129,13 +129,13 @@ const STEPS = [
             { emoji: "🌿", label: "go green" },
             { emoji: "🤝", label: "meet locals" },
           ].map(({ emoji, label }) => (
-            <div key={label} className="bg-gray-50 border border-gray-200 rounded-2xl p-3 flex flex-col items-center gap-2">
+            <div key={label} className="bg-muted border border-border rounded-2xl p-3 flex flex-col items-center gap-2">
               <span className="text-2xl">{emoji}</span>
-              <span className="text-xs text-gray-600 font-medium">{label}</span>
+              <span className="text-xs text-muted-foreground font-medium">{label}</span>
             </div>
           ))}
         </div>
-        <p className="text-sm text-gray-500">Click below to create your account. You'll be taken straight to your profile to get set up!</p>
+        <p className="text-sm text-muted-foreground">Click below to create your account. You'll be taken straight to your profile to get set up!</p>
       </div>
     ),
   },
@@ -170,12 +170,12 @@ export default function RiderSignupFlow() {
       <style>{`[data-sidebar="trigger"] { display: none !important; }`}</style>
 
       {/* Header */}
-      <div className="bg-gradient-to-b from-amber-700 to-amber-500 text-white px-6 py-8 text-center">
+      <div className="bg-primary text-white px-6 py-8 text-center">
         <div className="flex items-center justify-center gap-3 mb-2">
           <span className="text-3xl">🙋</span>
-          <h1 className="text-2xl font-extrabold tracking-tight">Get Around {islandKey} for Less</h1>
+          <h1 className="cruise-head text-4xl">Get Around {islandKey} for Less</h1>
         </div>
-        <p className="text-amber-100 text-sm">Skip the rental car stress. Find a local driver heading your way and ride affordably across {islandKey}.</p>
+        <p className="text-white/85 text-base">Skip the rental car stress. Find a local driver heading your way and ride affordably across {islandKey}.</p>
       </div>
 
       {/* Progress bar */}
@@ -183,7 +183,7 @@ export default function RiderSignupFlow() {
         {STEPS.map((s, i) => (
           <div
             key={s.id}
-            className={`flex-1 h-2 rounded-full transition-all ${i <= step ? 'bg-secondary' : 'bg-gray-200'}`}
+            className={`flex-1 h-2 rounded-full transition-all ${i <= step ? 'bg-secondary' : 'bg-border'}`}
           />
         ))}
       </div>
@@ -191,7 +191,7 @@ export default function RiderSignupFlow() {
       {/* Step content */}
       <div className="max-w-lg mx-auto px-6 pb-8">
         <div className="mb-6">
-          <h2 className="text-xl font-extrabold text-secondary mb-4">{currentStep.title}</h2>
+          <h2 className="cruise-head text-3xl text-secondary mb-4">{currentStep.title}</h2>
           {currentStep.content(islandKey)}
         </div>
 
@@ -201,7 +201,7 @@ export default function RiderSignupFlow() {
             <Button
               variant="outline"
               onClick={() => setStep(s => s - 1)}
-              className="flex-1 rounded-2xl border-gray-300"
+              className="flex-1 rounded-2xl border-border"
             >
               <ChevronLeft className="w-4 h-4 mr-1" /> back
             </Button>
@@ -225,17 +225,17 @@ export default function RiderSignupFlow() {
 
         {isLast && (
           <div className="mt-3 space-y-2">
-            <p className="text-center text-xs text-gray-400">Community-verified drivers. Transparent pricing. Built for {islandKey} locals and long-term visitors.</p>
+            <p className="text-center text-xs text-muted-foreground">Community-verified drivers. Transparent pricing. Built for {islandKey} locals and long-term visitors.</p>
             <button
               onClick={handleExplore}
-              className="w-full text-sm text-gray-500 hover:text-gray-700 underline underline-offset-2"
+              className="w-full text-sm text-muted-foreground hover:text-foreground underline underline-offset-2"
             >
               explore the app first →
             </button>
           </div>
         )}
 
-        <p className="text-center text-xs text-gray-400 mt-4">step {step + 1} of {STEPS.length}</p>
+        <p className="text-center text-xs text-muted-foreground mt-4">step {step + 1} of {STEPS.length}</p>
       </div>
     </div>
   );

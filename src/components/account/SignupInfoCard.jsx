@@ -44,17 +44,14 @@ export default function SignupInfoCard({ user, onComplete }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden my-4">
+      <div className="bg-card rounded-3xl shadow-2xl border-2 border-foreground/10 max-w-md w-full overflow-hidden my-4">
         {/* Header */}
-        <div
-          className="px-6 pt-10 pb-6 text-center text-white"
-          style={{ background: "linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)" }}
-        >
+        <div className="px-6 pt-10 pb-6 text-center text-white bg-primary">
           <div className="text-4xl mb-2">📱</div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-white">
+          <h1 className="cruise-head text-4xl text-white">
             what's your number?
           </h1>
-          <p className="text-green-200 text-sm mt-1">we'll text you ride updates & reminders</p>
+          <p className="text-white/80 text-base mt-1">we'll text you ride updates & reminders</p>
         </div>
 
         {/* Form */}
@@ -73,14 +70,14 @@ export default function SignupInfoCard({ user, onComplete }) {
           </div>
 
           {/* SMS Consent */}
-          <div className="flex items-start gap-2 p-3 bg-green-50 border border-green-200 rounded-2xl">
+          <div className="flex items-start gap-2 p-3 bg-muted border border-border rounded-2xl">
             <Checkbox
               id="sms-consent"
               checked={smsConsent}
               onCheckedChange={() => { setSmsConsent(v => !v); setError(""); }}
               className="mt-0.5 shrink-0"
             />
-            <Label htmlFor="sms-consent" className="cursor-pointer text-xs text-green-800 leading-relaxed">
+            <Label htmlFor="sms-consent" className="cursor-pointer text-xs text-foreground leading-relaxed">
               I agree to receive automated transactional SMS messages from <strong>Cruise Kauaʻi</strong> (ride confirmations, reminders, booking notifications). Message &amp; data rates may apply. Reply <strong>STOP</strong> to unsubscribe. <a href="/sms-opt-in" className="text-green-700 underline" target="_blank">SMS Terms</a>.
             </Label>
           </div>

@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { base44 } from "@/api/base44Client";
 import { sendSmsNotification } from "@/functions/sendSmsNotification";
 import { sendAdminMessage } from "@/functions/sendAdminMessage";
+import SkiesCard from "@/components/welcome/SkiesCard";
 
 export default function WelcomeNewUserModal({ user, onStartQuiz, onDismiss }) {
   const [step, setStep] = useState("welcome"); // "welcome" | "add_to_home" | "remind"
@@ -52,6 +53,16 @@ export default function WelcomeNewUserModal({ user, onStartQuiz, onDismiss }) {
     onDismiss();
   };
 
+  if (step === "skies") {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-y-auto">
+        <div className="bg-card rounded-3xl shadow-2xl border-2 border-foreground/10 max-w-sm w-full p-6 my-4">
+          <SkiesCard onContinue={() => setStep("add_to_home")} />
+        </div>
+      </div>
+    );
+  }
+
   if (step === "add_to_home") {
     return (
       <AddToHomeScreen
@@ -66,18 +77,18 @@ export default function WelcomeNewUserModal({ user, onStartQuiz, onDismiss }) {
   if (step === "remind") {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-        <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-8 flex flex-col items-center gap-5 text-center">
+        <div className="bg-card rounded-3xl shadow-2xl border-2 border-foreground/10 max-w-sm w-full p-8 flex flex-col items-center gap-5 text-center">
           {sent ? (
             <>
               <div className="text-4xl">✅</div>
               <h2 className="text-xl font-bold text-secondary">reminder sent!</h2>
-              <p className="text-gray-500 text-sm">We'll text you this evening. Mahalo! 🤙</p>
+              <p className="text-muted-foreground text-sm">We'll text you this evening. Mahalo! 🤙</p>
             </>
           ) : (
             <>
               <div className="text-3xl">📱</div>
               <h2 className="text-xl font-bold text-secondary">we'll text you tonight!</h2>
-              <p className="text-gray-500 text-sm leading-relaxed">
+              <p className="text-muted-foreground text-sm leading-relaxed">
                 Enter your phone number and Cruise Kauaʻi will send you a reminder this evening to finish your profile.
               </p>
               <Input
@@ -96,7 +107,7 @@ export default function WelcomeNewUserModal({ user, onStartQuiz, onDismiss }) {
               </Button>
               <button
                 onClick={handleSkipReminder}
-                className="text-sm text-gray-400 hover:text-gray-600 underline underline-offset-2"
+                className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-2"
               >
                 no thanks, skip for now
               </button>
@@ -109,20 +120,17 @@ export default function WelcomeNewUserModal({ user, onStartQuiz, onDismiss }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden my-4">
+      <div className="bg-card rounded-3xl shadow-2xl border-2 border-foreground/10 max-w-sm w-full overflow-hidden my-4">
         {/* Header */}
-        <div
-          className="px-6 pt-14 pb-6 text-center text-white"
-          style={{ background: "linear-gradient(135deg, #3a7d5a 0%, #4e9e78 100%)" }}
-        >
-          <h1 className="text-2xl font-extrabold tracking-tight text-white">
+        <div className="px-6 pt-14 pb-6 text-center text-white bg-primary">
+          <h1 className="cruise-head text-4xl text-white">
             welcome to cruise kauaʻi
           </h1>
         </div>
 
         {/* How it works */}
         <div className="px-6 py-5 space-y-4">
-          <p className="text-gray-700 text-sm font-semibold text-center">here's how it works</p>
+          <p className="text-foreground text-sm font-semibold text-center">here's how it works</p>
 
           <div className="space-y-3">
             {[
@@ -135,18 +143,18 @@ export default function WelcomeNewUserModal({ user, onStartQuiz, onDismiss }) {
                 <span className="text-2xl shrink-0 mt-0.5">{icon}</span>
                 <div>
                   <p className="font-bold text-secondary text-sm">{title}</p>
-                  <p className="text-gray-500 text-xs mt-0.5 leading-relaxed">{desc}</p>
+                  <p className="text-muted-foreground text-xs mt-0.5 leading-relaxed">{desc}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="h-px bg-gray-100 my-2" />
+          <div className="h-px bg-border my-2" />
 
-          <p className="text-center text-gray-700 text-sm font-semibold">
+          <p className="text-center text-foreground text-sm font-semibold">
             ready to fill out your profile?
           </p>
-          <p className="text-center text-gray-400 text-xs leading-relaxed">
+          <p className="text-center text-muted-foreground text-xs leading-relaxed">
             It only takes ~2 minutes and is required before you can book or post rides.
           </p>
         </div>
@@ -154,14 +162,14 @@ export default function WelcomeNewUserModal({ user, onStartQuiz, onDismiss }) {
         {/* CTAs */}
         <div className="px-6 pb-6 space-y-3">
           <Button
-            onClick={() => setStep("add_to_home")}
+            onClick={() => setStep("skies")}
             className="w-full bg-primary hover:bg-primary/90 text-white rounded-full py-5 text-base font-bold shadow-lg"
           >
             let's do it! →
           </Button>
           <button
             onClick={handleRemindLater}
-            className="w-full text-sm text-gray-400 hover:text-gray-600 underline underline-offset-2 transition-colors"
+            className="w-full text-sm text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors"
           >
             remind me later
           </button>
@@ -174,14 +182,11 @@ export default function WelcomeNewUserModal({ user, onStartQuiz, onDismiss }) {
 function AddToHomeScreen({ onAmazing, onNeedsHelp, helpSent, sendingHelp }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden my-4">
-        <div
-          className="px-6 pt-7 pb-5 text-center text-white"
-          style={{ background: "linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)" }}
-        >
+      <div className="bg-card rounded-3xl shadow-2xl border-2 border-foreground/10 max-w-sm w-full overflow-hidden my-4">
+        <div className="px-6 pt-7 pb-5 text-center text-white bg-secondary">
           <div className="text-3xl mb-2">📲</div>
-          <h2 className="text-xl font-extrabold tracking-tight">add cruise kauaʻi to your home screen</h2>
-          <p className="text-green-200 text-xs mt-1">no app store needed — ever!</p>
+          <h2 className="cruise-head text-3xl">add cruise kauaʻi to your home screen</h2>
+          <p className="text-white/80 text-sm mt-1">no app store needed — ever!</p>
         </div>
 
         <div className="px-6 py-6 flex flex-col items-center gap-5">
@@ -190,10 +195,10 @@ function AddToHomeScreen({ onAmazing, onNeedsHelp, helpSent, sendingHelp }) {
             <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
-            <span className="text-xs text-gray-400 font-medium">look at the bottom of your browser</span>
+            <span className="text-xs text-muted-foreground font-medium">look at the bottom of your browser</span>
           </div>
 
-          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 w-full space-y-3 text-sm text-gray-700 leading-relaxed">
+          <div className="bg-muted border border-border rounded-2xl p-4 w-full space-y-3 text-sm text-foreground leading-relaxed">
             <p>
               Press the{" "}
               <span className="font-semibold text-secondary">share icon</span>{" "}
@@ -231,7 +236,7 @@ function AddToHomeScreen({ onAmazing, onNeedsHelp, helpSent, sendingHelp }) {
                 variant="outline"
                 onClick={onNeedsHelp}
                 disabled={sendingHelp}
-                className="flex-1 rounded-full border-gray-300 text-gray-600 text-xs py-5"
+                className="flex-1 rounded-full border-border text-muted-foreground text-xs py-5"
               >
                 {sendingHelp ? "sending..." : "I'm confused and need help!"}
               </Button>

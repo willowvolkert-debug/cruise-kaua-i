@@ -23,21 +23,18 @@ export default function PostSignupCard({ user, onFinishProfile }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden my-4">
+      <div className="bg-card rounded-3xl shadow-2xl border-2 border-foreground/10 max-w-md w-full overflow-hidden my-4">
         {/* Header */}
-        <div
-          className="px-6 pt-10 pb-6 text-center text-white"
-          style={{ background: "linear-gradient(135deg, #1a4a2e 0%, #2d6a4f 100%)" }}
-        >
+        <div className="px-6 pt-10 pb-6 text-center text-white bg-primary">
           <div className="text-4xl mb-2">🎉</div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-white">
+          <h1 className="cruise-head text-4xl text-white">
             you're all set!
           </h1>
         </div>
 
         {/* Content */}
         <div className="px-6 py-6 space-y-5">
-          <p className="text-gray-700 text-base leading-relaxed text-center">
+          <p className="text-foreground text-base leading-relaxed text-center">
             Great! That's all we need for now. If you're in a rush for a ride, go
             ahead and start booking. If not, finish your profile here.
           </p>
@@ -63,7 +60,7 @@ export default function PostSignupCard({ user, onFinishProfile }) {
           <Button
             onClick={handleFinishProfile}
             variant="outline"
-            className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full py-5 text-base font-bold"
+            className="w-full border-border text-foreground hover:bg-muted rounded-full py-5 text-base font-bold"
           >
             <UserCheck className="w-4 h-4 mr-2" />
             finish my profile
