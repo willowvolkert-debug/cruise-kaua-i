@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { MapPin, ChevronLeft, Calendar, ChevronDown, RefreshCw } from "lucide-react";
 import FindRide from "../components/trips/FindRide";
 import RequestRide from "../components/trips/RequestRide";
@@ -22,6 +23,7 @@ const ISLANDS = ["Kauai", "Oahu", "Maui", "Big Island"];
 // view: null | "menu" | "request" | "post" | "view_sub" | "view_week" | "view_date" | "view_route"
 
 export default function TripsPage() {
+  const navigate = useNavigate();
   const [showTutorial, setShowTutorial] = React.useState(false);
   const [isExploreMode, setIsExploreMode] = React.useState(false);
   const [selectedIsland, setSelectedIsland] = React.useState(getIslandFromDomain());
@@ -46,6 +48,7 @@ export default function TripsPage() {
     setIsExploreMode(urlParams.get('explore') === 'true');
     const viewParam = urlParams.get('view');
     if (viewParam) setView(viewParam);
+    else navigate("/home", { replace: true });
 
     const domainIsland = getIslandFromDomain();
     base44.auth.me().then(user => {
@@ -74,9 +77,7 @@ export default function TripsPage() {
 
   const goBack = () => {
     if (view === "haena_info") setView("view_sub");
-    else if (view === "view_sub" || view === "request" || view === "post" || view === "browse_requests") setView("menu");
-    else if (view === "view_week") setView("menu");
-    else if (view === "view_date" || view === "view_route") setView("view_sub");
+    else navigate("/home");
   };
 
   const showBack = view !== "menu";
