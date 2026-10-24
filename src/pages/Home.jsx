@@ -52,12 +52,12 @@ export default function Home() {
         {/* Primary CTAs: demand-first + supply-first */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
           <Link
-            to="/trips?view=request"
+            to="/trips?view=view_week"
             className="flex flex-col items-center gap-1.5 p-6 rounded-3xl bg-primary text-primary-foreground hover:bg-primary/90 transition-all select-none text-center"
           >
-            <span className="text-4xl">🙋</span>
-            <span className="font-heading text-2xl uppercase">request a ride</span>
-            <span className="text-sm opacity-90">post where you need to go and we'll notify drivers</span>
+            <span className="text-4xl">🔍</span>
+            <span className="font-heading text-2xl uppercase">get a ride</span>
+            <span className="text-sm opacity-90">browse rides this week by date and route</span>
           </Link>
           <Link
             to="/trips?view=post"

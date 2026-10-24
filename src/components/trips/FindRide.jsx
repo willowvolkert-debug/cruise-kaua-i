@@ -33,7 +33,8 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
   const [showTutorial, setShowTutorial] = useState(false);
   const [driverRatings, setDriverRatings] = useState({});
   const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [fromQuery, setFromQuery] = useState('');
+  const [toQuery, setToQuery] = useState('');
 
   useEffect(() => {
     const init = async () => {
@@ -113,16 +114,13 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
 
   // Filter rides by search query using zone-based fuzzy matching.
   // "Lihue" matches "Lihue Airport", "Nawiliwili" (same zone), etc.
-  const filteredRides = searchQuery.trim()
-    ? rides.filter(r => {
-        const q = searchQuery.trim();
-        const dep = r.departure_location || '';
-        const dest = r.destination || '';
-        const stops = r.stops || [];
-        return locationsMatch(dep, q) || locationsMatch(dest, q) ||
-               stops.some(s => locationsMatch(s, q));
-      })
-    : rides;
+  const matchesPlace = (ride, q, primary) => {
+    if (!q.trim()) return true;
+    return locationsMatch(primary || '', q.trim()) || (ride.stops || []).some(st => locationsMatch(st, q.trim()));
+  };
+  const filteredRides = rides.filter(r =>
+    matchesPlace(r, fromQuery, r.departure_location) && matchesPlace(r, toQuery, r.destination)
+  );
 
   const ridesByDate = filteredRides.reduce((acc, ride) => {
     if (!acc[ride.departure_date]) acc[ride.departure_date] = [];
@@ -171,6 +169,21 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
               <DatePickerButton value={endDate} onChange={setEndDate} placeholder="end date" />
             </div>
           </div>
+          <p className="text-base font-bold text-gray-700">📍 pick your route <span className="font-normal text-gray-400">(optional)</span></p>
+          <div className="flex flex-col sm:flex-row items-stretch gap-3">
+            <Input
+              value={fromQuery}
+              onChange={(e) => setFromQuery(e.target.value)}
+              placeholder="from — e.g., Lihue"
+              className="rounded-2xl h-12 border-2 border-gray-200 focus:border-primary flex-1"
+            />
+            <Input
+              value={toQuery}
+              onChange={(e) => setToQuery(e.target.value)}
+              placeholder="to — e.g., Hanalei"
+              className="rounded-2xl h-12 border-2 border-gray-200 focus:border-primary flex-1"
+            />
+          </div>
           <div className="flex gap-2">
             <Button
               onClick={handleRefresh}
@@ -188,28 +201,6 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
               <HelpCircle className="w-5 h-5" />
             </Button>
           </div>
-        </div>
-      )}
-
-      {/* Location Search */}
-      {rides.length > 0 && (
-        <div className="relative">
-          <Input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="search by location — e.g., 'Lihue', 'Hanalei', 'airport'..."
-            className="rounded-2xl h-12 pl-10 border-2 border-gray-200 focus:border-primary"
-          />
-          <MapPin className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
         </div>
       )}
 
