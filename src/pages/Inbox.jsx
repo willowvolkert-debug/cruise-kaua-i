@@ -630,6 +630,9 @@ Please process the refund manually via Stripe.
                 </div>
             )}
             <div className="max-w-4xl mx-auto space-y-6">
+                <a href="/home" className="inline-flex items-center gap-1 text-primary-foreground bg-primary hover:bg-primary/90 font-bold text-base rounded-full pl-2 pr-4 py-2 select-none">
+                    <span aria-hidden>‹</span> back
+                </a>
                 <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
                         <h1 className="text-xl font-bold text-secondary leading-tight">inbox</h1>
