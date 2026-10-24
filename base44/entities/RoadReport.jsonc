@@ -1,0 +1,95 @@
+{
+  "name": "RoadReport",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "traffic",
+        "crash",
+        "hazard",
+        "closure",
+        "flooding",
+        "animals",
+        "stalled",
+        "police"
+      ],
+      "description": "Kind of road report"
+    },
+    "note": {
+      "type": "string"
+    },
+    "lat": {
+      "type": "number"
+    },
+    "lng": {
+      "type": "number"
+    },
+    "reporter_id": {
+      "type": "string"
+    },
+    "reporter_name": {
+      "type": "string"
+    },
+    "confirmed_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "gone_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "cleared"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "type",
+    "lat",
+    "lng",
+    "reporter_id"
+  ],
+  "rls": {
+    "create": {
+      "data.reporter_id": "{{user.id}}"
+    },
+    "read": true,
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.reporter_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

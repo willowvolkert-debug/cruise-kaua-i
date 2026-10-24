@@ -5,6 +5,7 @@ import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { useSkies } from "@/lib/skies";
 import GreySkies from "@/components/relief/GreySkies";
+import HazardPanel from "@/components/hazards/HazardPanel";
 
 export default function Home() {
   const [user, setUser] = React.useState(null);
@@ -74,6 +75,7 @@ export default function Home() {
             <span className="text-sm text-muted-foreground">offer seats on a trip you're already making</span>
           </Link>
         </div>
+        <HazardPanel user={user} />
         <div className="space-y-2.5">
           {sections.map(({ emoji, label, desc, to }) => (
             <Link
