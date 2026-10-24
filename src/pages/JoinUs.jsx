@@ -27,7 +27,7 @@ export default function JoinUs() {
   };
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden flex flex-col">
+    <div className="min-h-screen bg-background overflow-x-hidden flex flex-col">
       <style>{`[data-sidebar="trigger"] { display: none !important; }`}</style>
 
       {/* Header */}

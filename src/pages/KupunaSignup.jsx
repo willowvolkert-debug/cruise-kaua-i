@@ -27,7 +27,7 @@ export default function KupunaSignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <style>{`[data-sidebar="trigger"] { display: none !important; }`}</style>
 
       <div className="flex items-center px-5 py-4 border-b border-gray-100">

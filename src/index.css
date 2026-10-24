@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@500;600&family=Londrina+Solid:wght@400;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Londrina+Solid:wght@400;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -83,39 +83,39 @@ button:focus-visible {
 @layer base {
   :root {
     /* Logo-matched palette: forest green primary, ocean blue secondary, warm red accent, brown text */
-    --background: 0 0% 100%;
-    --foreground: 25 30% 18%;
-    --card: 0 0% 100%;
-    --card-foreground: 25 30% 18%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 25 30% 18%;
-    --primary: 152 45% 32%;
+    --background: 47 33% 91%;
+    --foreground: 0 23% 13%;
+    --card: 47 45% 96%;
+    --card-foreground: 0 23% 13%;
+    --popover: 47 45% 96%;
+    --popover-foreground: 0 23% 13%;
+    --primary: 359 50% 54%;
     --primary-foreground: 0 0% 100%;
     --secondary: 205 60% 35%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 150 20% 94%;
-    --muted-foreground: 25 20% 45%;
-    --accent: 5 65% 48%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 5 65% 48%;
+    --muted: 88 27% 92%;
+    --muted-foreground: 0 12% 36%;
+    --accent: 88 27% 88%;
+    --accent-foreground: 0 23% 13%;
+    --destructive: 0 72% 40%;
     --destructive-foreground: 0 0% 98%;
-    --border: 150 15% 88%;
-    --input: 150 15% 88%;
-    --ring: 152 45% 32%;
+    --border: 40 15% 78%;
+    --input: 40 15% 78%;
+    --ring: 359 50% 54%;
     --chart-1: 152 45% 32%;
     --chart-2: 205 60% 35%;
     --chart-3: 5 65% 48%;
     --chart-4: 43 74% 55%;
     --chart-5: 27 70% 50%;
     --radius: 0.5rem;
-    --sidebar-background: 150 18% 97%;
-    --sidebar-foreground: 25 30% 22%;
-    --sidebar-primary: 152 45% 32%;
+    --sidebar-background: 47 40% 94%;
+    --sidebar-foreground: 0 23% 13%;
+    --sidebar-primary: 359 50% 54%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 150 20% 92%;
-    --sidebar-accent-foreground: 25 30% 18%;
-    --sidebar-border: 150 15% 88%;
-    --sidebar-ring: 152 45% 32%;
+    --sidebar-accent: 88 27% 88%;
+    --sidebar-accent-foreground: 0 23% 13%;
+    --sidebar-border: 40 15% 78%;
+    --sidebar-ring: 359 50% 54%;
   }
   .dark {
     --background: 25 20% 8%;
@@ -156,11 +156,13 @@ button:focus-visible {
 
 
 @layer base {
+  h1, h2, h3, h4 { font-family: 'Londrina Solid', 'Bebas Neue', Impact, sans-serif; font-weight: 900; letter-spacing: 0.02em; }
+  h1, h2 { text-transform: uppercase; }
   * {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans font-medium;
     overflow-x: hidden;
     overscroll-behavior-y: none;
     -webkit-overflow-scrolling: touch;

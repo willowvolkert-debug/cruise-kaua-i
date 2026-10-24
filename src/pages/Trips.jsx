@@ -81,7 +81,7 @@ export default function TripsPage() {
   const showBack = view !== "menu";
 
   return (
-    <div className="p-3 md:p-8 bg-white overflow-x-hidden min-h-screen">
+    <div className="p-3 md:p-8 bg-background overflow-x-hidden min-h-screen">
       {/* Pull-to-refresh indicator */}
       {(pullDistance > 0 || isRefreshing) && (
         <div

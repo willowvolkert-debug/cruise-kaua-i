@@ -66,7 +66,7 @@ const faqItems = [
 
 export default function AboutUsPage() {
   return (
-    <div className="p-4 md:p-8 bg-white min-h-screen">
+    <div className="p-4 md:p-8 bg-background min-h-screen">
       <div className="max-w-2xl mx-auto space-y-6">
 
         <div>

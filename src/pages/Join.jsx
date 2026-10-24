@@ -316,7 +316,7 @@ export default function JoinPage() {
   // ── LOGIN MODE ──────────────────────────────────────────────────
   if (loginMode) {
     return (
-      <div className="min-h-screen bg-white flex flex-col">
+      <div className="min-h-screen bg-background flex flex-col">
         <style>{`[data-sidebar="trigger"] { display: none !important; }`}</style>
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <img
@@ -406,7 +406,7 @@ export default function JoinPage() {
   // ── PHONE CAPTURE ───────────────────────────────────────────────
   if (phase === "phone") {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-6 py-8">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 py-8">
         <style>{`[data-sidebar="trigger"] { display: none !important; }`}</style>
         <div className="mb-6 flex items-center gap-2">
           <img
@@ -424,7 +424,7 @@ export default function JoinPage() {
   // ── COMPLETION ("you're all set!") ──────────────────────────────
   if (phase === "done") {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-6 py-8">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 py-8">
         <style>{`[data-sidebar="trigger"] { display: none !important; }`}</style>
         <div className="mb-6 flex items-center gap-2">
           <img
@@ -441,7 +441,7 @@ export default function JoinPage() {
 
   // ── SIGNUP + OTP (default) ──────────────────────────────────────
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <style>{`[data-sidebar="trigger"] { display: none !important; }`}</style>
 
       {/* Minimal header */}

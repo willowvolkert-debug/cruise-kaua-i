@@ -166,7 +166,7 @@ export default function DriverSignupFlow() {
   };
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <style>{`[data-sidebar="trigger"] { display: none !important; }`}</style>
 
       {/* Header */}

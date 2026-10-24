@@ -89,7 +89,7 @@ export default function BookingSuccess() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-white gap-4">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
         <Loader2 className="w-10 h-10 text-primary animate-spin" />
         <p className="text-gray-500 text-lg">Confirming your payment...</p>
       </div>
@@ -97,7 +97,7 @@ export default function BookingSuccess() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex flex-col items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 py-10">
       <div className="w-full max-w-md space-y-6">
 
         {/* Success header */}

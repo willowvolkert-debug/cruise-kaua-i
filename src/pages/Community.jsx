@@ -12,7 +12,7 @@ export default function Community() {
   ];
 
   return (
-    <div className="p-3 md:p-8 bg-white overflow-x-hidden min-h-screen">
+    <div className="p-3 md:p-8 bg-background overflow-x-hidden min-h-screen">
       <div className="max-w-2xl mx-auto">
         <div className="mb-5">
           <h1 className="text-2xl md:text-3xl font-bold text-secondary">community</h1>

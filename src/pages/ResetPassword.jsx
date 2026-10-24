@@ -49,7 +49,7 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
         <a href="/join?login=true" className="flex items-center gap-2">
           <img

@@ -50,7 +50,7 @@ export default function SmsOptIn() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="bg-green-800 text-white py-8 px-6 text-center">
         <img

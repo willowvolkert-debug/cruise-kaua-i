@@ -40,7 +40,7 @@ export default function UnsubscribePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-50 p-4 md:p-8 flex items-center justify-center">
+    <div className="min-h-screen bg-background p-4 md:p-8 flex items-center justify-center">
       <Card className="max-w-md w-full shadow-xl border-gray-200 rounded-3xl bg-white">
         <CardHeader>
           <CardTitle className="text-2xl text-secondary text-center">

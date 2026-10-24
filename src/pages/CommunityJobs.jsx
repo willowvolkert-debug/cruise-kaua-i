@@ -182,7 +182,7 @@ const THEMES = [
 
 export default function CommunityJobs() {
   return (
-    <div className="p-3 md:p-8 bg-white overflow-x-hidden min-h-screen">
+    <div className="p-3 md:p-8 bg-background overflow-x-hidden min-h-screen">
       <div className="max-w-2xl mx-auto">
         <div className="mb-5">
           <Link
