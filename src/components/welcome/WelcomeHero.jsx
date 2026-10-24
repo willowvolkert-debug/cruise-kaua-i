@@ -30,28 +30,13 @@ export default function WelcomeHero({ onLogin, onSignUp, onExplore }) {
         </div>
       </div>
 
-      {/* Scene: sun, mountains, road, truck */}
-      <div className="relative max-w-4xl mx-auto mt-6 h-56 md:h-80">
-        <svg viewBox="0 0 800 300" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYEnd meet" aria-hidden="true">
-          <g stroke="#E8A91C" strokeWidth="10" strokeLinecap="round">
-            <line x1="130" y1="30" x2="130" y2="48" /><line x1="60" y1="60" x2="74" y2="72" />
-            <line x1="200" y1="60" x2="186" y2="72" /><line x1="45" y1="120" x2="63" y2="120" />
-            <line x1="215" y1="120" x2="197" y2="120" />
-          </g>
-          <circle cx="130" cy="120" r="42" fill="#E8A91C" />
-          <path d="M60 250 L230 110 L300 170 L420 70 L620 250 Z" fill="#89AF76" />
-          <path d="M420 70 L390 140 M420 70 L450 150 M230 110 L215 180 M230 110 L260 170" stroke="#EDF2E4" strokeWidth="5" strokeLinecap="round" fill="none" />
-          <path d="M560 250 Q620 170 700 200 Q760 220 790 250 Z" fill="#6f9660" />
-          <rect x="0" y="250" width="800" height="50" fill="#2b2b2b" />
-          <g stroke="#F1EDE1" strokeWidth="5" strokeLinecap="round">
-            <line x1="40" y1="275" x2="120" y2="275" /><line x1="220" y1="275" x2="300" y2="275" />
-            <line x1="400" y1="275" x2="480" y2="275" /><line x1="580" y1="275" x2="660" y2="275" />
-          </g>
-        </svg>
+      {/* Illustration: feathered edges so it blends into the page */}
+      <div className="relative max-w-3xl mx-auto mt-4">
         <img
-          src={TRUCK_URL}
-          alt="Cruise truck with surfboards"
-          className="cruise-truck absolute left-1/2 -translate-x-1/2 bottom-0 w-64 md:w-[28rem] translate-y-4 md:translate-y-8 select-none" />
+          src={ISLAND_TRUCK_URL}
+          alt="Cruise truck with surfboards driving along the coast"
+          style={{ WebkitMaskImage: "radial-gradient(ellipse 46% 40% at 50% 50%, #000 62%, transparent 100%)", maskImage: "radial-gradient(ellipse 46% 40% at 50% 50%, #000 62%, transparent 100%)" }}
+          className="w-full -my-4 md:-my-10 select-none mix-blend-multiply" />
       </div>
     </header>
   );
