@@ -1,5 +1,5 @@
-import React from "react";
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import React, { useEffect } from "react";
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -16,6 +16,15 @@ const pinIcon = (color) =>
 export const NEED_ICON = pinIcon("#dc2626");
 export const RESOURCE_ICON = pinIcon("#2563eb");
 
+function FixSize() {
+  const map = useMap();
+  useEffect(() => {
+    const t = [100, 400, 1000].map((ms) => setTimeout(() => map.invalidateSize(), ms));
+    return () => t.forEach(clearTimeout);
+  }, [map]);
+  return null;
+}
+
 function ClickHandler({ onClick }) {
   useMapEvents({ click: (e) => onClick && onClick([e.latlng.lat, e.latlng.lng]) });
   return null;
@@ -28,6 +37,7 @@ export default function ReliefMap({ posts = [], onSelect, onPick, picked, center
         attribution='&copy; OpenStreetMap contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      <FixSize />
       {onPick && <ClickHandler onClick={onPick} />}
       {picked && <Marker position={picked} icon={NEED_ICON} />}
       {posts.map((p) => (

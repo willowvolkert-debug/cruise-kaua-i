@@ -207,3 +207,10 @@ button:focus-visible {
     }
   }
 }
+
+/* Leaflet maps: undo Tailwind image resets so tiles render correctly */
+.leaflet-container img.leaflet-tile,
+.leaflet-container .leaflet-marker-icon {
+  max-width: none !important;
+  max-height: none !important;
+}
