@@ -34,8 +34,10 @@ export default function ReliefMap({ posts = [], onSelect, onPick, picked, center
   return (
     <MapContainer center={center} zoom={zoom} scrollWheelZoom className={`w-full rounded-2xl z-0 ${className}`}>
       <TileLayer
-        attribution='&copy; OpenStreetMap contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; OpenStreetMap contributors &copy; CARTO'
+        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+        subdomains="abcd"
+        maxZoom={19}
       />
       <FixSize />
       {onPick && <ClickHandler onClick={onPick} />}
