@@ -1,9 +1,9 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { MapPin, CheckCircle, MessageSquare, User } from "lucide-react";
+import { Home, CheckCircle, MessageSquare, User } from "lucide-react";
 
 const TABS = [
-  { path: "/trips", label: "Trips", icon: MapPin },
+  { path: "/home", label: "Home", icon: Home },
   { path: "/confirmedrides", label: "My Rides", icon: CheckCircle },
   { path: "/inbox", label: "Inbox", icon: MessageSquare },
   { path: "/account", label: "Account", icon: User },
@@ -18,9 +18,9 @@ export default function BottomNav() {
       style={{ boxShadow: "0 -2px 10px rgba(0,0,0,0.05)" }}
     >
       {TABS.map(({ path, label, icon: Icon }) => {
-        const active = location.pathname.toLowerCase() === path ||
-          (path === "/trips" && location.pathname === "/") ||
-          (path !== "/trips" && location.pathname.toLowerCase().startsWith(path));
+        const active = path === "/home"
+          ? ["/", "/home", "/trips"].includes(location.pathname.toLowerCase())
+          : location.pathname.toLowerCase().startsWith(path);
         return (
           <Link
             key={path}
