@@ -4,9 +4,6 @@ export const USE_BRAND_EMOJIS = true;
 
 // Standard emoji -> emoji that matches the Cruise truck / island logo
 export const BRAND_EMOJI_MAP = {
-  "🚗": "🛻",
-  "🚙": "🛻",
-  "🚕": "🛻",
   "🌿": "🌴",
   "🌱": "🌴",
   "🌋": "🏝️",

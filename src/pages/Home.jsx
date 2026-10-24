@@ -16,11 +16,11 @@ export default function Home() {
   const sections = [
     { emoji: "🚗", label: "trips", desc: "Browse all available rides, post a ride you're already making, or request one for a specific trip.", to: createPageUrl("Trips") },
     { emoji: "👤", label: "account", desc: "Edit your profile, verify your license & vehicle, and manage payouts and settings.", to: createPageUrl("Account") },
-    { emoji: "🌺", label: "community", desc: "Stories, updates, and photos from the Cruise Hawaiʻi community.", to: createPageUrl("Community") },
-    { emoji: "ℹ️", label: "FAQ + about us", desc: "Learn about our mission to make getting around Hawaiʻi more affordable.", to: createPageUrl("AboutUs") },
     { emoji: "💬", label: "inbox", desc: "Manage your ride bookings, chat with drivers & riders, and review incoming requests.", to: createPageUrl("Inbox") },
     { emoji: "✅", label: "confirmed rides", desc: "See your upcoming confirmed trips and their details in one place.", to: createPageUrl("ConfirmedRides") },
     { emoji: "✉️", label: "contact us", desc: "Questions, feedback, or need a hand? Reach out and we'll get back to you.", to: createPageUrl("ContactUs") },
+    { emoji: "🌺", label: "community", desc: "Stories, updates, and photos from the Cruise Hawaiʻi community.", to: createPageUrl("Community") },
+    { emoji: "ℹ️", label: "FAQ + about us", desc: "Learn about our mission to make getting around Hawaiʻi more affordable.", to: createPageUrl("AboutUs") },
   ];
 
   const adminEmails = [
@@ -51,37 +51,37 @@ export default function Home() {
         </div>
 
         {/* Primary CTAs: demand-first + supply-first */}
-        <div className="grid grid-cols-2 gap-3 mb-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
           <Link
             to="/trips?view=request"
-            className="flex flex-col items-center gap-2 p-5 rounded-3xl bg-primary text-white hover:bg-primary/90 transition-all select-none"
+            className="flex flex-col items-center gap-1.5 p-6 rounded-3xl bg-primary text-primary-foreground hover:bg-primary/90 transition-all select-none text-center"
           >
-            <span className="text-3xl">🙋</span>
-            <span className="font-bold text-base">request a ride</span>
-            <span className="text-xs text-primary-foreground/80 text-center">post where you need to go — we'll notify drivers</span>
+            <span className="text-4xl">🙋</span>
+            <span className="font-heading text-2xl uppercase">request a ride</span>
+            <span className="text-sm opacity-90">post where you need to go and we'll notify drivers</span>
           </Link>
           <Link
-            to="/trips"
-            className="flex flex-col items-center gap-2 p-5 rounded-3xl border-2 border-primary bg-primary/5 hover:bg-primary/10 transition-all select-none"
+            to="/trips?view=post"
+            className="flex flex-col items-center gap-1.5 p-6 rounded-3xl border-2 border-primary bg-card hover:bg-primary/10 transition-all select-none text-center"
           >
-            <span className="text-3xl">🚗</span>
-            <span className="font-bold text-base text-primary">find a ride</span>
-            <span className="text-xs text-gray-500 text-center">browse rides drivers have already posted</span>
+            <span className="text-4xl">🚗</span>
+            <span className="font-heading text-2xl uppercase text-primary">post a ride</span>
+            <span className="text-sm text-muted-foreground">offer seats on a trip you're already making</span>
           </Link>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-2.5">
           {sections.map(({ emoji, label, desc, to }) => (
             <Link
               key={label}
               to={to}
-              className="w-full flex items-center gap-5 p-5 rounded-3xl border-2 border-gray-200 bg-gray-50 hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
+              className="w-full flex items-center gap-3 sm:gap-4 p-3.5 sm:p-4 rounded-2xl border border-border bg-card hover:border-primary/50 transition-all text-left group select-none"
             >
-              <span className="text-4xl shrink-0">{emoji}</span>
-              <div className="flex-1">
-                <p className="font-bold text-gray-900 text-lg group-hover:text-primary transition-colors">{label}</p>
-                <p className="text-gray-500 text-sm mt-0.5">{desc}</p>
+              <span className="text-2xl sm:text-3xl shrink-0">{emoji}</span>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-foreground text-base sm:text-lg leading-tight group-hover:text-primary transition-colors">{label}</p>
+                <p className="text-muted-foreground text-sm leading-snug mt-0.5 line-clamp-2">{desc}</p>
               </div>
-              <ChevronLeft className="w-5 h-5 text-gray-300 group-hover:text-primary rotate-180 shrink-0 transition-colors" />
+              <ChevronLeft className="w-5 h-5 text-muted-foreground group-hover:text-primary rotate-180 shrink-0 transition-colors" />
             </Link>
           ))}
         </div>
