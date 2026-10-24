@@ -12,7 +12,9 @@
         "flooding",
         "animals",
         "stalled",
-        "police"
+        "police",
+        "tree_trimming",
+        "powerline"
       ],
       "description": "Kind of road report"
     },

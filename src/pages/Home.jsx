@@ -43,7 +43,7 @@ export default function Home() {
     <div className="p-3 md:p-8 bg-background overflow-x-hidden min-h-screen">
       <div className="max-w-2xl mx-auto">
         <div className="mb-5">
-          <h1 className="text-2xl md:text-3xl font-bold text-secondary">cruise kauaʻi</h1>
+          <h1 className="cruise-head text-5xl md:text-6xl text-secondary leading-none">cruise kauaʻi</h1>
           <p className="text-gray-500 text-sm mt-1 leading-relaxed">
             Welcome! Cruise Kauaʻi was started by a Kauaʻi resident who saw
             how hard it is to get around without a car — whether you're a

@@ -7,6 +7,8 @@ export const HAZARD_TYPES = [
   { key: "animals", emoji: "🐓", label: "animals on road", color: "#16a34a" },
   { key: "stalled", emoji: "🛻", label: "stalled car", color: "#6b7280" },
   { key: "police", emoji: "🚔", label: "police", color: "#4f46e5" },
+  { key: "tree_trimming", emoji: "🌳", label: "tree trimming", color: "#15803d" },
+  { key: "powerline", emoji: "⚡", label: "powerline work", color: "#eab308" },
 ];
 
 export const getHazardType = (key) => HAZARD_TYPES.find((t) => t.key === key) || HAZARD_TYPES[2];
