@@ -24,7 +24,7 @@ export default function GreySkies({ user }) {
     <div className="p-3 md:p-8 bg-background min-h-screen">
       <div className="max-w-2xl mx-auto space-y-5">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-secondary">community based disaster relief</h1>
+          <h1 className="cruise-head text-5xl md:text-6xl text-secondary leading-none">community based disaster relief</h1>
           <p className="text-muted-foreground text-sm mt-1 leading-relaxed">
             In turbulent times, Cruise shifts from being a carpooling service to showing the resources and needs of areas affected by disaster. Zoom in and out of the map to see the locations of resources and needs: needs in red and resources in blue. See a toggled list of resources &amp; needs below the map and filter by area. Reach out to the owner of a resource or need by clicking on it and pressing "message", which will put you directly in touch with them.
           </p>
