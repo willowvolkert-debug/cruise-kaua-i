@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import BottomNav from "@/components/BottomNav";
+import BrandHeader from "@/components/BrandHeader";
 
 export default function Layout({ children, currentPageName }) {
   const location = useLocation();
@@ -82,28 +83,17 @@ export default function Layout({ children, currentPageName }) {
         `}
       </style>
       <div className="min-h-screen flex flex-col w-full bg-background">
-        <header className="bg-white border-b border-gray-200 h-14 px-4 pt-[env(safe-area-inset-top)] flex items-center justify-between gap-3 sticky top-0 z-30 select-none">
-          <span className="text-xs text-gray-500 truncate flex-1 min-w-0">press on logo to return to home screen/navigate</span>
-          <div className="flex items-center gap-3 shrink-0">
-            {!currentUser && (
-              <Link
-                to="/join?login=true"
-                className="text-sm font-bold text-primary border border-primary rounded-full px-4 py-1.5 hover:bg-primary/5 transition-colors"
-              >
-                log in
-              </Link>
-            )}
-            <Link to="/home" className="flex items-center gap-2">
-              <img
-                src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
-                alt="Cruise Kauaʻi"
-                className="w-9 h-9 rounded-xl object-cover"
-              />
-              <span className="font-bold text-primary text-lg tracking-wide hidden sm:block">cruise kauaʻi</span>
+        <BrandHeader
+          right={!currentUser && (
+            <Link
+              to="/join?login=true"
+              className="text-sm font-bold text-primary border-2 border-primary rounded-full px-3 py-1 hover:bg-primary/5 transition-colors"
+            >
+              log in
             </Link>
-          </div>
-        </header>
-        <div className="flex-1 bg-white pb-16 md:pb-0" style={{ WebkitOverflowScrolling: 'touch', overflowX: 'hidden' }}>
+          )}
+        />
+        <div className="flex-1 bg-background pb-16 md:pb-0" style={{ WebkitOverflowScrolling: 'touch', overflowX: 'hidden' }}>
           {children}
         </div>
         <BottomNav />

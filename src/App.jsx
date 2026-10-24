@@ -34,10 +34,13 @@ import DriverVerificationChart from './pages/DriverVerificationChart';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import LaunchAnnouncementPopup from './components/LaunchAnnouncementPopup';
+import BrandHeader from '@/components/BrandHeader';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
+
+const Plain = ({ children }) => <><BrandHeader />{children}</>;
 
 const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   <Layout currentPageName={currentPageName}>{children}</Layout>
@@ -135,13 +138,13 @@ const AuthenticatedApp = () => {
       <Route path="/" element={isAuthenticated ? <LayoutWrapper currentPageName="Home"><Home /></LayoutWrapper> : <Welcome />} />
       <Route path="/welcome" element={<Welcome />} />
       <Route path="/home" element={<LayoutWrapper currentPageName="Home"><Home /></LayoutWrapper>} />
-      <Route path="/termsofservice" element={<TermsOfService />} />
-      <Route path="/privacypolicy" element={<PrivacyPolicy />} />
-      <Route path="/bookingsuccess" element={<BookingSuccess />} />
-      <Route path="/sms-opt-in" element={<SmsOptIn />} />
-      <Route path="/opiosignup" element={<OpioSignup />} />
-      <Route path="/kupunasignup" element={<KupunaSignup />} />
-      <Route path="/driver-verification" element={<DriverVerificationChart />} />
+      <Route path="/termsofservice" element={<Plain><TermsOfService /></Plain>} />
+      <Route path="/privacypolicy" element={<Plain><PrivacyPolicy /></Plain>} />
+      <Route path="/bookingsuccess" element={<Plain><BookingSuccess /></Plain>} />
+      <Route path="/sms-opt-in" element={<Plain><SmsOptIn /></Plain>} />
+      <Route path="/opiosignup" element={<Plain><OpioSignup /></Plain>} />
+      <Route path="/kupunasignup" element={<Plain><KupunaSignup /></Plain>} />
+      <Route path="/driver-verification" element={<Plain><DriverVerificationChart /></Plain>} />
       <Route path="/contactus" element={<LayoutWrapper currentPageName="Contact Us"><ContactUs /></LayoutWrapper>} />
       <Route path="/contact-us" element={<LayoutWrapper currentPageName="Contact Us"><ContactUs /></LayoutWrapper>} />
 
@@ -156,12 +159,12 @@ const AuthenticatedApp = () => {
           }
         />
       ))}
-      <Route path="/DriverSignupFlow" element={<DriverSignupFlow />} />
-      <Route path="/RiderSignupFlow" element={<RiderSignupFlow />} />
-      <Route path="/joinus" element={<JoinUs />} />
-      <Route path="/join" element={<JoinPage />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/DriverSignupFlow" element={<Plain><DriverSignupFlow /></Plain>} />
+      <Route path="/RiderSignupFlow" element={<Plain><RiderSignupFlow /></Plain>} />
+      <Route path="/joinus" element={<Plain><JoinUs /></Plain>} />
+      <Route path="/join" element={<Plain><JoinPage /></Plain>} />
+      <Route path="/forgot-password" element={<Plain><ForgotPassword /></Plain>} />
+      <Route path="/reset-password" element={<Plain><ResetPassword /></Plain>} />
       <Route path="/communityforum" element={<LayoutWrapper currentPageName="Community Forum"><CommunityForum /></LayoutWrapper>} />
       <Route path="/communityinstagram" element={<LayoutWrapper currentPageName="Community Instagram"><CommunityInstagram /></LayoutWrapper>} />
       <Route path="/communityrecommendations" element={<LayoutWrapper currentPageName="Community Recommendations"><CommunityRecommendations /></LayoutWrapper>} />
