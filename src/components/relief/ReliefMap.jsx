@@ -32,7 +32,7 @@ function ClickHandler({ onClick }) {
 
 export default function ReliefMap({ posts = [], onSelect, onPick, picked, center = KAUAI_CENTER, zoom = 10, className = "h-80" }) {
   return (
-    <MapContainer center={center} zoom={zoom} scrollWheelZoom className={`w-full rounded-2xl z-0 ${className}`}>
+    <MapContainer center={center} zoom={zoom} scrollWheelZoom dragging={!L.Browser.mobile} tap={false} className={`w-full rounded-2xl z-0 ${className}`}>
       <TileLayer
         attribution='Tiles &copy; Esri'
         url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
