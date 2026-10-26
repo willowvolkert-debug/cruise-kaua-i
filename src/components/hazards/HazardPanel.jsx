@@ -55,6 +55,13 @@ export default function HazardPanel({ user }) {
     }
   };
 
+  const remove = async (report) => {
+    await base44.entities.RoadReport.delete(report.id);
+    setSelected(null);
+    setReports((rs) => rs.filter((r) => r.id !== report.id));
+    toast.success("Road alert deleted.");
+  };
+
   return (
     <div className="mb-5 p-3 rounded-3xl border-2 border-foreground/10 bg-card">
       <div className="flex items-center justify-between mb-2 px-1">
@@ -80,7 +87,7 @@ export default function HazardPanel({ user }) {
         )}
       </p>
       {selected && (
-        <ReportDetail report={selected} user={user} onVote={vote} onClose={() => setSelected(null)} />
+        <ReportDetail report={selected} user={user} onVote={vote} onDelete={remove} onClose={() => setSelected(null)} />
       )}
       <Button onClick={startReport} className="w-full mt-3 rounded-full h-12 text-base select-none">
         ⚠️ report a hazard or traffic

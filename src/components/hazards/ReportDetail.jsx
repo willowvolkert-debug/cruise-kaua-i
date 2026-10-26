@@ -1,15 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { getHazardType, timeAgo } from "./hazardTypes";
 
-export default function ReportDetail({ report, user, onVote, onClose }) {
+export default function ReportDetail({ report, user, onVote, onDelete, onClose }) {
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const isOwner = !!user && report.reporter_id === user.id;
   const t = getHazardType(report.type);
   const confirmed = report.confirmed_by || [];
   const gone = report.gone_by || [];
   const votedConfirm = !!user && confirmed.includes(user.id);
-  const votedGone = !!user && gone.includes(user.id);
-  const voted = votedConfirm || votedGone;
+
 
   return (
     <div className="mt-3 p-4 rounded-2xl border-2 border-foreground/10 bg-card">
@@ -31,11 +36,27 @@ export default function ReportDetail({ report, user, onVote, onClose }) {
         <Button disabled={votedConfirm} onClick={() => onVote(report, "confirm")} className="flex-1 rounded-full select-none">
           👍 still there
         </Button>
-        <Button disabled={votedGone} variant="outline" onClick={() => onVote(report, "gone")} className="flex-1 rounded-full select-none">
+        <Button variant="outline" onClick={() => setConfirmOpen(true)} className="flex-1 rounded-full select-none">
           👎 not there
         </Button>
       </div>
-      {voted && <p className="text-xs text-muted-foreground mt-2 text-center">Thanks for the update! You can change your answer anytime.</p>}
+      {isOwner && (
+        <button onClick={() => setConfirmOpen(true)} className="w-full mt-2 text-xs underline text-muted-foreground select-none">
+          delete my alert
+        </button>
+      )}
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent className="bg-card">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>This will delete the road alert for everyone.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>No</AlertDialogCancel>
+            <AlertDialogAction onClick={() => onDelete(report)}>Yes, delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
