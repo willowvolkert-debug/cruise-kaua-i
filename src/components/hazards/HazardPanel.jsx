@@ -21,6 +21,7 @@ export default function HazardPanel({ user }) {
       { sort: "-created_date", limit: 200 }
     );
     setReports(page.items);
+    setSelected((s) => (s ? page.items.find((r) => r.id === s.id) || null : null));
   }, []);
 
   useEffect(() => {
@@ -44,7 +45,12 @@ export default function HazardPanel({ user }) {
       confirmed_by: confirmed,
       gone_by: gone,
       status: cleared ? "cleared" : "active",
-    });
+    }).catch(() => null);
+    if (!updated) {
+      toast.error("That alert was already removed.");
+      load();
+      return;
+    }
     if (cleared) {
       setSelected(null);
       setReports((rs) => rs.filter((r) => r.id !== report.id));
@@ -56,10 +62,11 @@ export default function HazardPanel({ user }) {
   };
 
   const remove = async (report) => {
-    await base44.entities.RoadReport.delete(report.id);
+    const ok = await base44.entities.RoadReport.delete(report.id).then(() => true, () => false);
     setSelected(null);
     setReports((rs) => rs.filter((r) => r.id !== report.id));
-    toast.success("Road alert deleted.");
+    if (ok) toast.success("Road alert deleted.");
+    else load();
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -7,12 +7,20 @@ import { Input } from "@/components/ui/input";
 export default function ReliefThread({ post, user, otherId, otherName, onClose }) {
   const [msgs, setMsgs] = useState([]);
   const [text, setText] = useState("");
+  const endRef = useRef(null);
 
   const load = async () => {
     const res = await base44.entities.ReliefMessage.filter({ post_id: post.id }, { sort: "created_date", limit: 200 });
     setMsgs(res.items.filter((m) => m.sender_id === otherId || m.recipient_id === otherId));
   };
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    const id = setInterval(load, 5000);
+    return () => clearInterval(id);
+  }, []);
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ block: "end" });
+  }, [msgs.length]);
 
   const send = async () => {
     if (!text.trim()) return;
@@ -42,6 +50,7 @@ export default function ReliefThread({ post, user, otherId, otherName, onClose }
               {m.message}
             </div>
           ))}
+          <div ref={endRef} />
         </div>
         <div className="flex gap-2">
           <Input value={text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="type a message" />
