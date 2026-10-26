@@ -36,8 +36,8 @@ export default function HazardPanel({ user }) {
 
   const vote = async (report, kind) => {
     if (!user) return base44.auth.redirectToLogin(window.location.href);
-    const confirmed = [...(report.confirmed_by || [])];
-    const gone = [...(report.gone_by || [])];
+    const confirmed = (report.confirmed_by || []).filter((id) => id !== user.id);
+    const gone = (report.gone_by || []).filter((id) => id !== user.id);
     (kind === "confirm" ? confirmed : gone).push(user.id);
     const cleared = gone.length >= 2 && gone.length > confirmed.length;
     const updated = await base44.entities.RoadReport.update(report.id, {

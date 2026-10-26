@@ -7,7 +7,9 @@ export default function ReportDetail({ report, user, onVote, onClose }) {
   const t = getHazardType(report.type);
   const confirmed = report.confirmed_by || [];
   const gone = report.gone_by || [];
-  const voted = user && (confirmed.includes(user.id) || gone.includes(user.id));
+  const votedConfirm = !!user && confirmed.includes(user.id);
+  const votedGone = !!user && gone.includes(user.id);
+  const voted = votedConfirm || votedGone;
 
   return (
     <div className="mt-3 p-4 rounded-2xl border-2 border-foreground/10 bg-card">
@@ -26,14 +28,14 @@ export default function ReportDetail({ report, user, onVote, onClose }) {
         </button>
       </div>
       <div className="flex gap-2 mt-3">
-        <Button disabled={voted} onClick={() => onVote(report, "confirm")} className="flex-1 rounded-full select-none">
+        <Button disabled={votedConfirm} onClick={() => onVote(report, "confirm")} className="flex-1 rounded-full select-none">
           👍 still there
         </Button>
-        <Button disabled={voted} variant="outline" onClick={() => onVote(report, "gone")} className="flex-1 rounded-full select-none">
+        <Button disabled={votedGone} variant="outline" onClick={() => onVote(report, "gone")} className="flex-1 rounded-full select-none">
           👎 not there
         </Button>
       </div>
-      {voted && <p className="text-xs text-muted-foreground mt-2 text-center">Thanks for the update!</p>}
+      {voted && <p className="text-xs text-muted-foreground mt-2 text-center">Thanks for the update! You can change your answer anytime.</p>}
     </div>
   );
 }
