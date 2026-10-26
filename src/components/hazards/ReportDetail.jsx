@@ -18,6 +18,7 @@ export default function ReportDetail({ report, user, onVote, onClose }) {
           <p className="text-xs text-muted-foreground">
             reported {timeAgo(report.created_date)} by {report.reporter_name || "a neighbor"} · 👍 {confirmed.length} still there
           </p>
+          {report.place && <p className="text-sm font-semibold text-foreground mt-1.5">📍 {report.place}</p>}
           {report.note && <p className="text-sm text-foreground mt-1.5">{report.note}</p>}
         </div>
         <button onClick={onClose} className="text-muted-foreground select-none" aria-label="close">

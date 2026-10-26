@@ -2,40 +2,40 @@ import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { Loader2, MapPin } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import { HAZARD_TYPES } from "./hazardTypes";
 
-const getPosition = () =>
-  new Promise((resolve, reject) => {
-    if (!navigator.geolocation) return reject(new Error("no geo"));
-    navigator.geolocation.getCurrentPosition(
-      (p) => resolve([p.coords.latitude, p.coords.longitude]),
-      reject,
-      { enableHighAccuracy: true, timeout: 8000 }
-    );
-  });
+const geocode = async (q) => {
+  const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&bounded=1&viewbox=-159.85,22.25,-159.25,21.85&q=${encodeURIComponent(q + ", Kauai, Hawaii")}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  return data[0] ? [parseFloat(data[0].lat), parseFloat(data[0].lon)] : null;
+};
 
 export default function ReportDialog({ open, onOpenChange, user, picked, onCreated }) {
   const [type, setType] = useState(null);
   const [note, setNote] = useState("");
+  const [place, setPlace] = useState("");
   const [saving, setSaving] = useState(false);
 
   const submit = async () => {
     setSaving(true);
     let pos = picked;
-    if (!pos) {
-      pos = await getPosition().catch(() => null);
+    if (!pos && place.trim()) {
+      pos = await geocode(place.trim()).catch(() => null);
     }
     if (!pos) {
       setSaving(false);
-      toast.error("Couldn't get your location. Close this, tap the map to drop a pin, then report.");
+      toast.error("Couldn't find that place. Try a nearby town or road name, or tap the map to drop a pin.");
       return;
     }
     const report = await base44.entities.RoadReport.create({
       type,
       note: note.trim() || undefined,
+      place: place.trim() || undefined,
       lat: pos[0],
       lng: pos[1],
       reporter_id: user.id,
@@ -47,6 +47,7 @@ export default function ReportDialog({ open, onOpenChange, user, picked, onCreat
     setSaving(false);
     setType(null);
     setNote("");
+    setPlace("");
     onOpenChange(false);
     toast.success("Thanks! Your report is on the map.");
     onCreated(report);
@@ -72,6 +73,11 @@ export default function ReportDialog({ open, onOpenChange, user, picked, onCreat
             </button>
           ))}
         </div>
+        <Input
+          value={place}
+          onChange={(e) => setPlace(e.target.value)}
+          placeholder="where? e.g. Kuhio Hwy near Kapaʻa"
+        />
         <Textarea
           value={note}
           onChange={(e) => setNote(e.target.value)}
@@ -80,9 +86,9 @@ export default function ReportDialog({ open, onOpenChange, user, picked, onCreat
         />
         <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <MapPin className="w-3.5 h-3.5 shrink-0" />
-          {picked ? "Using the pin you dropped on the map." : "Using your current location."}
+          {picked ? "Using the pin you dropped on the map." : "Type where it is. We never use your real location."}
         </p>
-        <Button onClick={submit} disabled={!type || saving} className="w-full rounded-full select-none">
+        <Button onClick={submit} disabled={!type || saving || (!picked && !place.trim())} className="w-full rounded-full select-none">
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : "post report"}
         </Button>
       </DialogContent>

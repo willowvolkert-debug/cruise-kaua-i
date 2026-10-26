@@ -21,6 +21,10 @@
     "note": {
       "type": "string"
     },
+    "place": {
+      "type": "string",
+      "description": "Place name typed by the reporter"
+    },
     "lat": {
       "type": "number"
     },

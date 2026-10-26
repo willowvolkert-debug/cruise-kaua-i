@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Crosshair } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import HazardMap from "./HazardMap";
@@ -35,13 +34,6 @@ export default function HazardPanel({ user }) {
     setOpen(true);
   };
 
-  const locate = () => {
-    navigator.geolocation?.getCurrentPosition(
-      (p) => setFlyTo([p.coords.latitude, p.coords.longitude]),
-      () => toast.error("Couldn't get your location.")
-    );
-  };
-
   const vote = async (report, kind) => {
     if (!user) return base44.auth.redirectToLogin(window.location.href);
     const confirmed = [...(report.confirmed_by || [])];
@@ -72,9 +64,6 @@ export default function HazardPanel({ user }) {
             {reports.length ? `${reports.length} active report${reports.length === 1 ? "" : "s"} on island` : "all clear right now"}
           </p>
         </div>
-        <Button size="sm" variant="outline" onClick={locate} className="rounded-full select-none">
-          <Crosshair className="w-4 h-4 mr-1" /> me
-        </Button>
       </div>
       <HazardMap
         reports={reports}
@@ -85,7 +74,7 @@ export default function HazardPanel({ user }) {
         flyTo={flyTo}
       />
       <p className="text-[11px] text-muted-foreground mt-1.5 px-1">
-        Tap a pin to confirm it. Tap the map to drop a pin somewhere else before reporting.
+        Tap a pin to confirm it. When you report, type the place (even one you already passed) or tap the map to drop a pin.
         {picked && (
           <button onClick={() => setPicked(null)} className="ml-1 underline select-none">clear pin</button>
         )}
