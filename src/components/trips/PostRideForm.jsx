@@ -1,3 +1,4 @@
+import DriverEarningsBanner from "@/components/shared/DriverEarningsBanner";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
@@ -466,7 +467,10 @@ export default function PostRideForm({ island = "Kauai", initialRespondingToRequ
   return (
     <div className="space-y-6 max-w-4xl mx-auto relative">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold text-secondary">post your ride</h2>
+        <div>
+          <h2 className="text-2xl font-bold text-secondary">post your ride</h2>
+          <DriverEarningsBanner />
+        </div>
         <Button
           onClick={() => setShowTutorial(true)}
           variant="outline"

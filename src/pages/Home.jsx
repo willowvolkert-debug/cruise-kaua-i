@@ -5,6 +5,7 @@ import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { useSkies } from "@/lib/skies";
 import GreySkies from "@/components/relief/GreySkies";
+import ImpactCard from "@/components/shared/ImpactCard";
 import HazardPanel from "@/components/hazards/HazardPanel";
 
 export default function Home() {
@@ -55,6 +56,8 @@ export default function Home() {
             time by pressing on our logo in the top right.
           </p>
         </div>
+
+        <ImpactCard user={user} />
 
         {/* Primary CTAs: demand-first + supply-first */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">

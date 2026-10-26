@@ -1,4 +1,5 @@
 import React from "react";
+import useImpactStats from "@/lib/useImpactStats";
 import { ArrowRight, AlertTriangle, User, CheckCircle2, Circle } from "lucide-react";
 
 /**
@@ -7,6 +8,7 @@ import { ArrowRight, AlertTriangle, User, CheckCircle2, Circle } from "lucide-re
  * start browsing rides or finish their profile.
  */
 export default function SignupCompleteCard({ onBrowse, onFinishProfile }) {
+  const stats = useImpactStats();
   const checklist = [
     { done: true, label: "Account created" },
     { done: false, label: "Complete your profile" },
@@ -32,6 +34,12 @@ export default function SignupCompleteCard({ onBrowse, onFinishProfile }) {
             Great! That's all we need for now. If you're in a rush for a ride, go
             ahead and start booking. If not, finish your profile here.
           </p>
+
+          {stats && (
+            <p className="text-center text-secondary font-bold text-base leading-snug">
+              🚗 You are 1 of {stats.carsOffRoad.toLocaleString()} cars off the road when you use Cruise
+            </p>
+          )}
 
           {/* Post-signup checklist */}
           <div className="space-y-2.5">
