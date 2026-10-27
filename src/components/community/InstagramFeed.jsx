@@ -41,7 +41,7 @@ export default function InstagramFeed() {
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <Instagram className="w-5 h-5 text-secondary" />
-        <h2 className="text-lg font-bold text-secondary">from our instagram</h2>
+        <h2 className="cruise-head tracking-widest text-2xl text-secondary">from our instagram</h2>
         {username && (
           <a
             href={`https://www.instagram.com/${username}/`}
@@ -63,7 +63,7 @@ export default function InstagramFeed() {
             rel="noreferrer"
             className="group block"
           >
-            <Card className="overflow-hidden border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+            <Card className="overflow-hidden border-gray-200 rounded-lg shadow-none">
               <div className="aspect-square bg-gray-100 overflow-hidden">
                 <img
                   src={post.media_url}

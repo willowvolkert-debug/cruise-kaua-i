@@ -182,7 +182,7 @@ const THEMES = [
 
 export default function CommunityJobs() {
   return (
-    <div className="p-3 md:p-8 bg-background overflow-x-hidden min-h-screen">
+    <div className="p-3 md:p-8 bg-white overflow-x-hidden min-h-screen">
       <div className="max-w-2xl mx-auto">
         <div className="mb-5">
           <Link
@@ -192,7 +192,7 @@ export default function CommunityJobs() {
             <ChevronLeft className="w-4 h-4" />
             back to community
           </Link>
-          <h1 className="text-2xl md:text-3xl font-bold text-secondary">
+          <h1 className="cruise-head tracking-widest text-4xl text-secondary leading-none">
             We're hiring! 🌺🚗✨
           </h1>
           <p className="text-gray-600 text-sm mt-3 leading-relaxed">
@@ -209,7 +209,7 @@ export default function CommunityJobs() {
           ))}
         </div>
 
-        <div className="mt-6 p-5 rounded-3xl border-2 border-primary/30 bg-primary/5 text-center">
+        <div className="mt-6 py-5 border-t-2 border-gray-200 text-center">
           <p className="text-sm text-gray-700 leading-relaxed">
             Don't see a role that fits? We still want to hear from you. 🌿
           </p>

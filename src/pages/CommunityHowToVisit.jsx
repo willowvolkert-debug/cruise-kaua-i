@@ -7,23 +7,23 @@ const YOUTUBE_CHANNEL = "https://www.youtube.com/@kauaivisitorsbureau5320/videos
 
 export default function CommunityHowToVisit() {
   return (
-    <div className="p-4 md:p-8 bg-background min-h-screen">
+    <div className="p-4 md:p-8 bg-white min-h-screen">
       <div className="max-w-3xl mx-auto space-y-8">
-        <Link to="/community" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-primary transition-colors">
-          <ChevronLeft className="w-4 h-4" /> back to community
+        <Link to="/communityvisitorguide" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-primary transition-colors">
+          <ChevronLeft className="w-4 h-4" /> back to visitor guide
         </Link>
 
-        <div className="text-center space-y-3">
-          <h1 className="text-3xl font-bold text-secondary">how to visit Kauaʻi</h1>
+        <div className="space-y-3">
+          <h1 className="cruise-head tracking-widest text-4xl text-secondary leading-none">how to visit Kauaʻi</h1>
           <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
             Arrive informed. Here's how to travel to Kauaʻi in a way that respects the island, its people, and its resources.
           </p>
         </div>
 
         {/* DMAP description */}
-        <Card className="border-primary/20 bg-primary/5 rounded-3xl">
+        <Card className="shadow-none border-0 border-b-2 border-gray-200 rounded-none bg-white">
           <CardContent className="p-6 space-y-4">
-            <h2 className="text-xl font-bold text-secondary">Destination Management Action Plan</h2>
+            <h2 className="cruise-head tracking-widest text-2xl text-secondary">Destination Management Action Plan</h2>
             <div className="space-y-3 text-gray-700 leading-relaxed">
               <p>
                 The Kauaʻi Visitors Bureau — an island chapter of the Hawaiʻi Visitors &amp; Convention Bureau — helps carry out the island's <strong>Destination Management Action Plan (DMAP)</strong>, a community-driven roadmap for managing tourism in a way that protects Kauaʻi's natural and cultural resources for generations to come.
@@ -51,7 +51,7 @@ export default function CommunityHowToVisit() {
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-2">
               <PlayCircle className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-bold text-secondary">Kauaʻi Visitors Bureau on YouTube</h2>
+              <h2 className="cruise-head tracking-widest text-2xl text-secondary">Kauaʻi Visitors Bureau on YouTube</h2>
             </div>
             <a
               href={YOUTUBE_CHANNEL}
@@ -63,7 +63,7 @@ export default function CommunityHowToVisit() {
             </a>
           </div>
 
-          <div className="aspect-video w-full rounded-3xl overflow-hidden border-2 border-gray-200 bg-gray-100">
+          <div className="aspect-video w-full rounded-lg overflow-hidden border-2 border-gray-200 bg-gray-100">
             <iframe
               src="https://www.youtube.com/embed/videoseries?list=UUQUI-9C_HrdU7j0RZN0um_Q"
               title="Kauaʻi Visitors Bureau videos"

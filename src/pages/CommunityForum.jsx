@@ -106,24 +106,24 @@ export default function CommunityForum() {
   }
 
   return (
-    <div className="p-4 md:p-8 bg-background min-h-screen">
+    <div className="p-4 md:p-8 bg-white min-h-screen">
       <div className="max-w-3xl mx-auto space-y-6">
         <Link to="/community" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-primary transition-colors">
           <ChevronLeft className="w-4 h-4" /> back to community
         </Link>
 
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold text-secondary">forum</h1>
+          <h1 className="cruise-head tracking-widest text-4xl text-secondary leading-none">forum</h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
             this is a forum space to share business &amp; community updates, provide feedback, and share in transparent conversation about building a platform to empower community
           </p>
-          <p className="text-sm text-primary font-medium max-w-xl mx-auto mt-4 p-3 bg-green-50 rounded-2xl border border-green-200">
+          <p className="text-sm text-primary font-medium max-w-xl mx-auto mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
             🌺 This is a safe space for riders to share when they're taking a ride through the app and when they've made it to their destination safely.
           </p>
         </div>
 
         {currentUser && (
-          <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
+          <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
             <CardContent className="p-6">
               <div className="flex gap-3">
                 <Avatar className="w-12 h-12">
@@ -137,7 +137,7 @@ export default function CommunityForum() {
                     placeholder="Share your Cruise Hawaiʻi story..."
                     value={newPostContent}
                     onChange={(e) => setNewPostContent(e.target.value)}
-                    className="min-h-24 rounded-2xl border-gray-300 resize-none"
+                    className="min-h-24 rounded-lg border-gray-300 resize-none"
                     disabled={hasPendingPost}
                   />
 
@@ -163,13 +163,13 @@ export default function CommunityForum() {
                       </div>
                     </label>
 
-                    <Button onClick={handleSubmit} disabled={isSubmitting || !newPostContent.trim() || hasPendingPost} className="bg-primary hover:bg-primary/90 rounded-2xl">
+                    <Button onClick={handleSubmit} disabled={isSubmitting || !newPostContent.trim() || hasPendingPost} className="bg-primary hover:bg-primary/90 rounded-lg">
                       {isSubmitting ? "Submitting..." : (<><Send className="w-4 h-4 mr-2" />Submit for Review</>)}
                     </Button>
                   </div>
 
                   {hasPendingPost && (
-                    <div className="flex items-center gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-2xl text-yellow-800 text-sm">
+                    <div className="flex items-center gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-800 text-sm">
                       <Clock className="w-4 h-4" />
                       <span>You have a post pending review. You can submit another once it's been reviewed.</span>
                     </div>
@@ -182,7 +182,7 @@ export default function CommunityForum() {
 
         <div className="space-y-6">
           {posts.length === 0 ? (
-            <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
+            <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
               <CardContent className="p-12 text-center">
                 <MessageCircle className="w-16 h-16 mx-auto text-gray-300 mb-4" />
                 <p className="text-gray-500">No posts yet. Be the first to share your story!</p>
@@ -190,7 +190,7 @@ export default function CommunityForum() {
             </Card>
           ) : (
             posts.map(post => (
-              <Card key={post.id} className="shadow-md border-gray-200 bg-white rounded-3xl overflow-hidden">
+              <Card key={post.id} className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none overflow-hidden">
                 <CardHeader className="p-4">
                   <div className="flex items-center gap-3">
                     <Avatar className="w-12 h-12">
@@ -210,7 +210,7 @@ export default function CommunityForum() {
                   {post.image_urls && post.image_urls.length > 0 && (
                     <div className={`grid gap-2 ${post.image_urls.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
                       {post.image_urls.map((url, index) => (
-                        <div key={index} className="rounded-2xl overflow-hidden bg-gray-100">
+                        <div key={index} className="rounded-lg overflow-hidden bg-gray-100">
                           <img src={url} alt={`Post image ${index + 1}`} className="w-full h-full object-cover" />
                         </div>
                       ))}

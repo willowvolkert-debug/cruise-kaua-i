@@ -19,6 +19,7 @@ import CommunityInstagram from './pages/CommunityInstagram';
 import CommunityRecommendations from './pages/CommunityRecommendations';
 import CommunityHowToVisit from './pages/CommunityHowToVisit';
 import CommunityJobs from './pages/CommunityJobs';
+import CommunityVisitorGuide from './pages/CommunityVisitorGuide';
 import { base44 } from '@/api/base44Client';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Home from './pages/Home';
@@ -169,6 +170,7 @@ const AuthenticatedApp = () => {
       <Route path="/communityinstagram" element={<LayoutWrapper currentPageName="Community Instagram"><CommunityInstagram /></LayoutWrapper>} />
       <Route path="/communityrecommendations" element={<LayoutWrapper currentPageName="Community Recommendations"><CommunityRecommendations /></LayoutWrapper>} />
       <Route path="/communityhowtovisit" element={<LayoutWrapper currentPageName="Community How To Visit"><CommunityHowToVisit /></LayoutWrapper>} />
+      <Route path="/communityvisitorguide" element={<LayoutWrapper currentPageName="Community Visitor Guide"><CommunityVisitorGuide /></LayoutWrapper>} />
       <Route path="/communityjobs" element={<LayoutWrapper currentPageName="Community Jobs"><CommunityJobs /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>

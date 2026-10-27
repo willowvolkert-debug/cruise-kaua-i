@@ -75,7 +75,7 @@ function LocalFood({ data }) {
           </button>
         ))}
       </div>
-      <div className="space-y-3 rounded-3xl border border-gray-200 p-5 bg-white">
+      <div className="space-y-3 border-b-2 border-gray-200 pb-5 bg-white">
         {town.spots.map((s, i) => (
           <div key={i} className="flex items-start justify-between gap-3">
             <div className="space-y-0.5">
@@ -141,7 +141,7 @@ const VOLUNTEER = [
 
 function RecItem({ name, desc, url }) {
   return (
-    <Card className="border-gray-200 rounded-3xl">
+    <Card className="shadow-none border-0 border-b-2 border-gray-200 rounded-none">
       <CardContent className="p-5 space-y-2">
         <div className="flex items-start justify-between gap-3">
           <h3 className="font-bold text-secondary text-lg leading-tight">{name}</h3>
@@ -164,14 +164,14 @@ function RecItem({ name, desc, url }) {
 
 export default function CommunityRecommendations() {
   return (
-    <div className="p-4 md:p-8 bg-background min-h-screen">
+    <div className="p-4 md:p-8 bg-white min-h-screen">
       <div className="max-w-3xl mx-auto space-y-8">
-        <Link to="/community" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-primary transition-colors">
-          <ChevronLeft className="w-4 h-4" /> back to community
+        <Link to="/communityvisitorguide" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-primary transition-colors">
+          <ChevronLeft className="w-4 h-4" /> back to visitor guide
         </Link>
 
         <div className="text-center space-y-3">
-          <h1 className="text-3xl font-bold text-secondary">Kauaʻi recommendations</h1>
+          <h1 className="cruise-head tracking-widest text-4xl text-secondary leading-none">Kauaʻi recommendations</h1>
           <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
             A donation-based resource created by Willow Volkert. Here are ways to authentically support &amp; give back to the island through your visit!
           </p>
@@ -181,7 +181,7 @@ export default function CommunityRecommendations() {
         <section className="space-y-4">
           <div className="flex items-center gap-2">
             <MapPin className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-bold text-secondary">local food</h2>
+            <h2 className="cruise-head tracking-widest text-2xl text-secondary">local food</h2>
           </div>
           <LocalFood data={LOCAL_FOOD} />
         </section>
@@ -190,7 +190,7 @@ export default function CommunityRecommendations() {
         <section className="space-y-4">
           <div className="flex items-center gap-2">
             <Trees className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-bold text-secondary">tour recommendations</h2>
+            <h2 className="cruise-head tracking-widest text-2xl text-secondary">tour recommendations</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
             {TOURS.map(t => <RecItem key={t.name} {...t} />)}
@@ -201,7 +201,7 @@ export default function CommunityRecommendations() {
         <section className="space-y-4">
           <div className="flex items-center gap-2">
             <HandHeart className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-bold text-secondary">volunteer recommendations</h2>
+            <h2 className="cruise-head tracking-widest text-2xl text-secondary">volunteer recommendations</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
             {VOLUNTEER.map(v => <RecItem key={v.name} {...v} />)}

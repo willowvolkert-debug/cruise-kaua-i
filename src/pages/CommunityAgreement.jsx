@@ -43,20 +43,20 @@ export default function CommunityAgreementPage() {
     <div className="p-4 md:p-8 bg-white">
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-secondary mb-2">community agreement</h1>
+          <h1 className="cruise-head tracking-widest text-4xl text-secondary leading-none mb-2">community agreement</h1>
           <p className="text-gray-600">our shared values for safe, respectful ride-sharing</p>
         </div>
 
-        <Card className="shadow-lg border-border bg-white rounded-3xl">
+        <Card className="shadow-none border-0 bg-white rounded-none">
           <CardHeader>
             <CardTitle className="text-2xl text-secondary text-center">cruise hawaiʻi values</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
-              <Card className="border-border bg-white rounded-2xl">
+              <Card className="border-border bg-white rounded-lg">
                 <CardContent className="p-6 space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="p-3 bg-red-100 rounded-2xl">
+                    <div className="p-3 bg-red-100 rounded-lg">
                       <Shield className="w-6 h-6 text-red-600" />
                     </div>
                     <h3 className="text-lg font-bold text-secondary">safety first</h3>
@@ -67,10 +67,10 @@ export default function CommunityAgreementPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-border bg-white rounded-2xl">
+              <Card className="border-border bg-white rounded-lg">
                 <CardContent className="p-6 space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="p-3 bg-blue-100 rounded-2xl">
+                    <div className="p-3 bg-blue-100 rounded-lg">
                       <Heart className="w-6 h-6 text-blue-600" />
                     </div>
                     <h3 className="text-lg font-bold text-secondary">respect & aloha</h3>
@@ -81,10 +81,10 @@ export default function CommunityAgreementPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-border bg-white rounded-2xl">
+              <Card className="border-border bg-white rounded-lg">
                 <CardContent className="p-6 space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="p-3 bg-green-100 rounded-2xl">
+                    <div className="p-3 bg-green-100 rounded-lg">
                       <DollarSign className="w-6 h-6 text-green-600" />
                     </div>
                     <h3 className="text-lg font-bold text-secondary">shared transportation costs</h3>
@@ -95,10 +95,10 @@ export default function CommunityAgreementPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-border bg-white rounded-2xl">
+              <Card className="border-border bg-white rounded-lg">
                 <CardContent className="p-6 space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="p-3 bg-purple-100 rounded-2xl">
+                    <div className="p-3 bg-purple-100 rounded-lg">
                       <Users className="w-6 h-6 text-purple-600" />
                     </div>
                     <h3 className="text-lg font-bold text-secondary">accountability</h3>
@@ -109,10 +109,10 @@ export default function CommunityAgreementPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-border bg-white rounded-2xl">
+              <Card className="border-border bg-white rounded-lg">
                 <CardContent className="p-6 space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="p-3 bg-yellow-100 rounded-2xl">
+                    <div className="p-3 bg-yellow-100 rounded-lg">
                       <MessageCircle className="w-6 h-6 text-yellow-600" />
                     </div>
                     <h3 className="text-lg font-bold text-secondary">prompt & clear communication</h3>
@@ -123,10 +123,10 @@ export default function CommunityAgreementPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-border bg-white rounded-2xl">
+              <Card className="border-border bg-white rounded-lg">
                 <CardContent className="p-6 space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="p-3 bg-orange-100 rounded-2xl">
+                    <div className="p-3 bg-orange-100 rounded-lg">
                       <Clock className="w-6 h-6 text-orange-600" />
                     </div>
                     <h3 className="text-lg font-bold text-secondary">punctuality & flexibility</h3>
@@ -137,10 +137,10 @@ export default function CommunityAgreementPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-border bg-white rounded-2xl">
+              <Card className="border-border bg-white rounded-lg">
                 <CardContent className="p-6 space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="p-3 bg-green-100 rounded-2xl">
+                    <div className="p-3 bg-green-100 rounded-lg">
                       <Leaf className="w-6 h-6 text-green-600" />
                     </div>
                     <h3 className="text-lg font-bold text-secondary">environmental stewardship</h3>
@@ -151,10 +151,10 @@ export default function CommunityAgreementPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-border bg-white rounded-2xl">
+              <Card className="border-border bg-white rounded-lg">
                 <CardContent className="p-6 space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="p-3 bg-pink-100 rounded-2xl">
+                    <div className="p-3 bg-pink-100 rounded-lg">
                       <Heart className="w-6 h-6 text-pink-600" />
                     </div>
                     <h3 className="text-lg font-bold text-secondary">vehicle care</h3>
@@ -166,7 +166,7 @@ export default function CommunityAgreementPage() {
               </Card>
             </div>
 
-            <Card className="border-primary bg-primary/5 rounded-2xl">
+            <Card className="border-primary bg-primary/5 rounded-lg">
               <CardContent className="p-6">
                 <h3 className="text-lg font-bold text-secondary mb-3">by accepting this agreement, I commit to:</h3>
                 <ul className="space-y-2 text-gray-700">
@@ -204,7 +204,7 @@ export default function CommunityAgreementPage() {
             <Button
               onClick={handleAccept}
               disabled={!agreed || isSubmitting}
-              className="w-full bg-primary hover:bg-primary/90 rounded-2xl"
+              className="w-full bg-primary hover:bg-primary/90 rounded-lg"
             >
               <CheckCircle className="w-4 h-4 mr-2" />
               {isSubmitting ? 'accepting...' : 'accept and continue'}
