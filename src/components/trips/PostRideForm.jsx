@@ -473,8 +473,9 @@ export default function PostRideForm({ island = "Kauai", initialRespondingToRequ
     <div className="space-y-6 max-w-4xl mx-auto relative">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-3xl font-bold text-secondary">post a ride</h2>
-          <DriverEarningsBanner />
+          <h1 className="cruise-head text-5xl md:text-6xl text-secondary leading-none">post a ride</h1>
+          <DriverEarningsBanner className="text-xl font-semibold text-primary mt-2" />
+          <p className="text-lg text-gray-900 mt-3 leading-snug">offer seats on the trips you're already making</p>
         </div>
         <Button
           onClick={() => setShowTutorial(true)}
