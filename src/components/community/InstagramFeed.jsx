@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Instagram, ExternalLink, Loader2 } from "lucide-react";
+import TruckLoader from "@/components/TruckLoader";
 import { getInstagramPosts } from "@/functions/getInstagramPosts";
 
 export default function InstagramFeed() {
@@ -28,10 +29,7 @@ export default function InstagramFeed() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center gap-2 py-10 text-gray-500">
-        <Loader2 className="w-5 h-5 animate-spin" />
-        <span className="text-sm">loading our latest posts…</span>
-      </div>
+      <TruckLoader label="loading posts" />
     );
   }
 

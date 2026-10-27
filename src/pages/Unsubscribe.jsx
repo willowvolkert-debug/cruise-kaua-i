@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, AlertCircle } from "lucide-react";
+import TruckLoader from "@/components/TruckLoader";
 import { unsubscribeSetupReminders } from "@/functions/unsubscribeSetupReminders";
 
 export default function UnsubscribePage() {
@@ -50,7 +51,7 @@ export default function UnsubscribePage() {
         <CardContent className="text-center space-y-4 p-8">
           {status === 'loading' && (
             <div className="py-8">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+              <TruckLoader />
               <p className="text-gray-600 mt-4">Processing...</p>
             </div>
           )}

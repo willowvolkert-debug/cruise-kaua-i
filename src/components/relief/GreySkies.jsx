@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import ReliefMap from "@/components/relief/ReliefMap";
 import ReliefList from "@/components/relief/ReliefList";
 import ReliefForm from "@/components/relief/ReliefForm";
+import TruckLoader from "@/components/TruckLoader";
 import ReliefDetail from "@/components/relief/ReliefDetail";
 
 export default function GreySkies({ user }) {
@@ -36,7 +37,7 @@ export default function GreySkies({ user }) {
           ADD RESOURCE OR NEED HERE
         </button>
         <ReliefMap posts={posts} onSelect={setSelected} className="h-96" />
-        {loading ? <p className="text-center text-muted-foreground">loading...</p> : <ReliefList posts={posts} onSelect={setSelected} />}
+        {loading ? <TruckLoader /> : <ReliefList posts={posts} onSelect={setSelected} />}
       </div>
       {adding && <ReliefForm open user={user} onClose={() => setAdding(false)} onSaved={() => { setAdding(false); load(); }} />}
       {selected && <ReliefDetail post={selected} user={user} onClose={() => setSelected(null)} onRemoved={() => { setSelected(null); load(); }} />}

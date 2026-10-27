@@ -9,6 +9,7 @@ import RideRequestCard from "./RideRequestCard";
 import MessageRiderModal from "./MessageRiderModal";
 import RiderProfileModal from "./RiderProfileModal";
 import { toast } from "@/components/ui/use-toast";
+import TruckLoader from "@/components/TruckLoader";
 
 export default function BrowseRideRequests({ island = "Kauai", onRespondWithRide }) {
   const [requests, setRequests] = useState([]);
@@ -161,10 +162,7 @@ export default function BrowseRideRequests({ island = "Kauai", onRespondWithRide
 
       {/* List */}
       {isLoading ? (
-        <div className="rounded-3xl border-2 border-gray-200 bg-gray-50 p-12 text-center">
-          <RefreshCw className="w-10 h-10 text-primary mx-auto mb-4 animate-spin" />
-          <p className="text-base font-semibold text-gray-500">loading requests...</p>
-        </div>
+        <TruckLoader label="loading requests..." />
       ) : sortedRequests.length > 0 ? (
         <div className="space-y-3">
           <p className="text-sm text-gray-500 font-medium">

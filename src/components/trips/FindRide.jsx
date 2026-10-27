@@ -9,6 +9,7 @@ import { MapPin, Calendar, Users, AlertCircle, HelpCircle, Star, CheckCircle, Re
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { format, addDays, parseISO } from "date-fns";
+import TruckLoader from "@/components/TruckLoader";
 import DatePickerButton from "@/components/shared/DatePickerButton";
 import DriverProfileModal from "./DriverProfileModal";
 import BookingModal from "../rides/BookingModal";
@@ -202,10 +203,7 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
 
       {/* Rides List */}
       {isLoading ? (
-        <div className="rounded-3xl border-2 border-gray-200 bg-gray-50 p-12 text-center">
-          <RefreshCw className="w-10 h-10 text-primary mx-auto mb-4 animate-spin" />
-          <p className="text-base font-semibold text-gray-500">loading rides...</p>
-        </div>
+        <TruckLoader label="loading rides..." />
       ) : Object.keys(ridesByDate).length > 0 ? (
         <div className="space-y-6">
           {Object.entries(ridesByDate)

@@ -36,6 +36,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import LaunchAnnouncementPopup from './components/LaunchAnnouncementPopup';
 import BrandHeader from '@/components/BrandHeader';
+import TruckLoader from '@/components/TruckLoader';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -104,13 +105,8 @@ const AuthenticatedApp = () => {
   // Show loading spinner while checking app public settings or auth
   if (isLoadingPublicSettings || isLoadingAuth || isCheckingAuth) {
     return (
-      <div className="fixed inset-0 flex flex-col items-center justify-center bg-white gap-4">
-        <img
-          src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
-          alt="Cruise Hawaiʻi"
-          className="w-48 h-48 object-cover rounded-2xl shadow-lg"
-        />
-        <h1 className="text-2xl font-bold text-primary tracking-wide">cruise hawaiʻi</h1>
+      <div className="fixed inset-0 flex items-center justify-center bg-white">
+        <TruckLoader label="cruise hawaiʻi" />
       </div>
     );
   }
