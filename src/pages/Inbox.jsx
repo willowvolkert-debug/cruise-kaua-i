@@ -640,8 +640,8 @@ Please process the refund manually via Stripe.
                 </a>
                 <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
-                        <h1 className="text-xl font-bold text-secondary leading-tight">inbox</h1>
-                        <p className="text-gray-500 text-xs mt-0.5">chat with riders & drivers and leave ratings</p>
+                        <h1 className="cruise-head text-4xl text-secondary leading-none">inbox</h1>
+                        <p className="text-gray-900 text-lg mt-1">chat with riders & drivers and leave ratings</p>
                     </div>
                     <Button
                         onClick={() => setShowReportModal(true)}
@@ -657,9 +657,9 @@ Please process the refund manually via Stripe.
 
                 {/* Rides Needing Review */}
                 {ridesNeedingReview.length > 0 && (
-                    <Card className="shadow-lg border-orange-300 bg-orange-50 rounded-3xl">
+                    <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-orange-900">
+                            <CardTitle className="flex items-center gap-2 text-2xl font-heading text-secondary">
                                 <Star className="w-6 h-6 text-orange-500" />
                                 leave a review ({ridesNeedingReview.length})
                             </CardTitle>
@@ -710,9 +710,9 @@ Please process the refund manually via Stripe.
                 />
 
                 {pendingRequests.length > 0 && (
-                    <Card className="shadow-lg border-blue-200 bg-blue-50 rounded-3xl">
+                    <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-secondary">
+                            <CardTitle className="flex items-center gap-2 text-2xl font-heading text-secondary">
                                 <UserPlus className="w-6 h-6 text-blue-600"/>
                                 pending ride requests ({pendingRequests.length})
                             </CardTitle>
@@ -726,7 +726,7 @@ Please process the refund manually via Stripe.
                                     <button
                                         key={request.id}
                                         onClick={() => handleViewRequest(request)}
-                                        className="w-full flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200 hover:shadow-md transition-shadow"
+                                        className="w-full flex items-center justify-between p-4 bg-white rounded-lg border-2 border-gray-300"
                                     >
                                         <div className="flex items-center gap-3">
                                             <Avatar className="w-12 h-12 bg-gradient-to-r from-primary to-secondary">
@@ -760,9 +760,9 @@ Please process the refund manually via Stripe.
                 )}
 
                 {/* Combined Recent Messages card (includes active trip context) */}
-                <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
+                <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-secondary">
+                        <CardTitle className="flex items-center gap-2 text-2xl font-heading text-secondary">
                             <MessageSquare className="w-6 h-6 text-primary"/>
                             recent messages
                         </CardTitle>
@@ -776,7 +776,7 @@ Please process the refund manually via Stripe.
                                         <button
                                             key={chat.id}
                                             onClick={() => handleOpenChat(chat.booking, chat.name, chat.picture)}
-                                            className="w-full flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-md transition-shadow text-left"
+                                            className="w-full flex items-start gap-4 p-4 bg-white rounded-lg border-2 border-gray-300 text-left"
                                         >
                                             <Avatar className="w-11 h-11 shrink-0">
                                                 <AvatarImage src={chat.picture} />

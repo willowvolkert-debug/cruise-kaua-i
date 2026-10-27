@@ -293,15 +293,15 @@ export default function ConfirmedRidesPage() {
         <div className="p-4 md:p-8 bg-white">
             <div className="max-w-4xl mx-auto space-y-6">
                 <div>
-                    <h1 className="text-2xl font-bold text-secondary">my rides</h1>
-                    <p className="text-gray-500 text-sm mt-0.5">your upcoming trips, pending requests, and ride history — all in one place.</p>
+                    <h1 className="cruise-head text-4xl text-secondary leading-none">my rides</h1>
+                    <p className="text-gray-900 text-lg mt-1">your upcoming trips, pending requests, and ride history — all in one place.</p>
                 </div>
 
                 {/* Needs Review */}
                 {ridesNeedingReview.length > 0 && (
-                    <Card className="shadow-lg border-orange-300 bg-orange-50 rounded-3xl">
+                    <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-orange-900">
+                            <CardTitle className="flex items-center gap-2 text-2xl font-heading text-secondary">
                                 <Star className="w-6 h-6 text-orange-600"/>
                                 needs review ({ridesNeedingReview.length})
                             </CardTitle>
@@ -355,9 +355,9 @@ export default function ConfirmedRidesPage() {
 
                 {/* Upcoming Rides */}
                 {upcomingRides.length > 0 ? (
-                    <Card className="shadow-lg border-blue-200 bg-blue-50 rounded-3xl">
+                    <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-secondary">
+                            <CardTitle className="flex items-center gap-2 text-2xl font-heading text-secondary">
                                 <Calendar className="w-6 h-6 text-blue-600"/>
                                 upcoming rides ({upcomingRides.length})
                             </CardTitle>
@@ -489,7 +489,7 @@ export default function ConfirmedRidesPage() {
                         </CardContent>
                     </Card>
                 ) : (
-                    <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
+                    <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
                         <CardContent className="p-8 text-center text-gray-500">
                             <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                             <p className="font-medium">No upcoming confirmed rides</p>
@@ -499,12 +499,12 @@ export default function ConfirmedRidesPage() {
                 )}
 
                 {/* Past Rides */}
-                <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
+                <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
                     <CardHeader
                         className="cursor-pointer select-none"
                         onClick={() => setShowPastRides(!showPastRides)}
                     >
-                        <CardTitle className="flex items-center justify-between text-gray-700">
+                        <CardTitle className="flex items-center justify-between text-2xl font-heading text-secondary">
                             <div className="flex items-center gap-2">
                                 <Clock className="w-5 h-5 text-gray-400" />
                                 past rides {pastRides.length > 0 && `(${pastRides.length})`}
