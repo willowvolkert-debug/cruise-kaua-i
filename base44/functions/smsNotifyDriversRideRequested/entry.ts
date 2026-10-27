@@ -1,5 +1,6 @@
 // SMS: Notify all drivers when a rider posts a ride request
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+import { matchesLocation } from '../../shared/locations.ts';
 
 Deno.serve(async (req) => {
   try {
@@ -30,17 +31,7 @@ Deno.serve(async (req) => {
       if (!u.sms_notifications_enabled || !u.phone_number || u.drivers_license_verified !== true || u.vehicle_verified !== true) return false;
       if (u.sms_notify_ride_requests === false) return false;
       // Location filter: if user has preferred locations, only notify if ride request matches
-      const prefs = u.sms_preferred_locations;
-      if (prefs && prefs.length > 0) {
-        const reqLoc = (rideRequest.departure_location || '').toLowerCase();
-        const reqDest = (rideRequest.destination || '').toLowerCase();
-        const reqStops = (rideRequest.stops || []).map(s => s.toLowerCase());
-        return prefs.some(p => {
-          const pl = p.toLowerCase();
-          return reqLoc.includes(pl) || reqDest.includes(pl) || reqStops.includes(pl);
-        });
-      }
-      return true; // No preferred locations = all locations
+      return matchesLocation(u.sms_preferred_locations, [rideRequest.departure_location, rideRequest.destination, ...(rideRequest.stops || [])]);
     });
 
     if (drivers.length === 0) return Response.json({ ok: true, skipped: 'no driver recipients' });

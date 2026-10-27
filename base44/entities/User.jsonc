@@ -106,6 +106,18 @@
       "type": "boolean",
       "default": false
     },
+    "notify_relief_locations": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": [],
+      "description": "Towns to get Grey Skies texts for. Empty = all of Kauai."
+    },
+    "notify_road_locations": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": [],
+      "description": "Towns to get road alert texts for. Empty = all of Kauai."
+    },
     "sms_preferred_locations": {
       "type": "array",
       "items": {

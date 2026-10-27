@@ -1,6 +1,7 @@
 // Texts opted-in users when a new road alert is posted on their side of the island.
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 import { sendSmsToUsers, kauaiSide } from '../../shared/sms.ts';
+import { matchesLocation } from '../../shared/locations.ts';
 
 const LABELS: Record<string, string> = {
   traffic: 'traffic jam', crash: 'crash', hazard: 'road hazard', closure: 'road closed',
@@ -24,7 +25,9 @@ Deno.serve(async (req) => {
       u.sms_notifications_enabled &&
       u.phone_number &&
       u.id !== report.reporter_id &&
-      (u.notify_road_sides || []).includes(side)
+      (u.notify_road_locations?.length
+        ? matchesLocation(u.notify_road_locations, [report.place], side)
+        : (u.notify_road_sides?.length ? u.notify_road_sides.includes(side) : true))
     );
     if (recipients.length === 0) return Response.json({ ok: true, skipped: 'no recipients' });
 

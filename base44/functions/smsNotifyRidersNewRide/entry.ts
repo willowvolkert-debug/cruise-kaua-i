@@ -1,5 +1,6 @@
 // SMS: Notify all opted-in riders when a new (non-recurring) ride is posted
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+import { matchesLocation } from '../../shared/locations.ts';
 
 Deno.serve(async (req) => {
   try {
@@ -44,17 +45,7 @@ Deno.serve(async (req) => {
       // Don't notify the driver who posted this ride about their own ride
       if (u.id === ride.driver_id) return false;
       // Location filter: if user has preferred locations, only notify if ride matches
-      const prefs = u.sms_preferred_locations;
-      if (prefs && prefs.length > 0) {
-        const rideLoc = (ride.departure_location || '').toLowerCase();
-        const rideDest = (ride.destination || '').toLowerCase();
-        const rideStops = (ride.stops || []).map(s => s.toLowerCase());
-        return prefs.some(p => {
-          const pl = p.toLowerCase();
-          return rideLoc.includes(pl) || rideDest.includes(pl) || rideStops.includes(pl);
-        });
-      }
-      return true; // No preferred locations = all locations
+      return matchesLocation(u.sms_preferred_locations, [ride.departure_location, ride.destination, ...(ride.stops || [])]);
     });
 
     if (riders.length === 0) return Response.json({ ok: true, skipped: 'no rider recipients' });

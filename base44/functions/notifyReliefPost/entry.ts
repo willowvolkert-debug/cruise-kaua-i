@@ -1,6 +1,7 @@
 // Texts opted-in users when a new Grey Skies relief post is created.
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
-import { sendSmsToUsers } from '../../shared/sms.ts';
+import { sendSmsToUsers, kauaiSide } from '../../shared/sms.ts';
+import { matchesLocation } from '../../shared/locations.ts';
 
 Deno.serve(async (req) => {
   try {
@@ -17,7 +18,8 @@ Deno.serve(async (req) => {
       u.sms_notifications_enabled &&
       u.phone_number &&
       u.id !== post.owner_id &&
-      (u.notify_relief_kinds || []).includes(post.kind)
+      (u.notify_relief_kinds || []).includes(post.kind) &&
+      matchesLocation(u.notify_relief_locations, [post.location_text], kauaiSide(post.lat, post.lng))
     );
     if (recipients.length === 0) return Response.json({ ok: true, skipped: 'no recipients' });
 
