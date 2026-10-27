@@ -174,7 +174,22 @@ export default function RequestRide({ island = "Kauai" }) {
         </Alert>
       )}
 
-      <RecurringRequests refreshKey={recurringKey} />
+      <RecurringRequests
+        key={recurringKey}
+        onSelect={(r) => {
+          setRequestData(prev => ({
+            ...prev,
+            departure_location: r.departure_location || '',
+            destination: r.destination || '',
+            departure_time: r.departure_time || '',
+            is_flexible: !!r.is_flexible,
+            seats_needed: r.seats_needed || 1,
+            description: r.description || '',
+            has_luggage: !!r.has_luggage,
+          }));
+          setStops(r.stops && r.stops.length > 0 ? r.stops : ['']);
+        }}
+      />
 
       <form onSubmit={handleSubmit} className="space-y-8">
         <section className={flowSection}>

@@ -16,6 +16,7 @@ import RouteSearch from "../components/trips/RouteSearch";
 import BrowseRideRequests from "../components/trips/BrowseRideRequests";
 import HaenaWarningCard from "../components/trips/HaenaWarningCard";
 import HaenaInfoView from "../components/trips/HaenaInfoView";
+import DriverEarningsBanner from "@/components/shared/DriverEarningsBanner";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 
 const ISLANDS = ["Kauai", "Oahu", "Maui", "Big Island"];
@@ -203,10 +204,9 @@ export default function TripsPage() {
         {view === "view_week" && (
           <div className="space-y-5">
             <div>
-              <h2 className="text-2xl font-bold text-secondary">view all rides posted this week</h2>
-              <p className="text-lg text-gray-700 mt-2 leading-snug">
-                Use the <strong>date filter</strong> to pick a day (then tap find rides), and the <strong>route filter</strong> to type where you're starting and where you're headed. Leave the route blank to see everything.
-              </p>
+              <h1 className="cruise-head text-5xl md:text-6xl text-secondary leading-none">get a ride</h1>
+              <DriverEarningsBanner className="text-xl font-semibold text-primary mt-2" />
+              <p className="text-lg text-gray-900 mt-3 leading-snug">view rides posted based on date or route</p>
               <p className="text-xl font-semibold text-gray-800 mt-4">Don't see a ride that fits your plans?</p>
               <Button
                 onClick={() => setView("request")}

@@ -15,7 +15,6 @@ import BookingModal from "../rides/BookingModal";
 import FindRideTutorial from "../tutorial/FindRideTutorial";
 import { handlePaymentSuccess } from "@/functions/handlePaymentSuccess";
 import { locationsMatch } from "@/lib/locationMatching";
-import RecurringRequests from "./RecurringRequests";
 import { flowHeading, flowField, flowButton, flowSection } from "./flowStyles";
 
 export default function FindRide({ island = "Kauai", initialStartDate, initialEndDate, hideDateFilter = false, onRequestRide }) {
@@ -159,7 +158,6 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
       {/* Date Range Filter */}
       {!hideDateFilter && (
         <div className={flowSection}>
-          <RecurringRequests />
           <div className="space-y-3">
             <p className={flowHeading}>📅 pick your date</p>
             <DatePickerButton
