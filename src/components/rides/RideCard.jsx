@@ -50,7 +50,6 @@ export default function RideCard({ ride, onBookRide, showBookButton = true, curr
             </div>
             <div className="flex flex-wrap gap-2 mb-4">
                 <Badge variant="outline" className="border-primary/50 text-primary"><Users className="w-3 h-3 mr-1" />{ride.seats_available} seats left</Badge>
-                {ride.offers_detour_service && <Badge variant="outline" className="border-green-500/50 text-green-600"><Navigation className="w-3 h-3 mr-1" />Detours +$5</Badge>}
                 {ride.offers_midpoint_pickup && <Badge variant="outline" className="border-blue-500/50 text-blue-600">🚗 pickup/dropoff available along route</Badge>}
             </div>
         </div>

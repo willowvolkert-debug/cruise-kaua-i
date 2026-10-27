@@ -39,7 +39,6 @@ export default function RequestRide({ island = "Kauai" }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [error, setError] = useState(null);
-  const [stops, setStops] = useState(['']);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [postedRequest, setPostedRequest] = useState(null);
   const [isRecurring, setIsRecurring] = useState(false);
@@ -61,14 +60,6 @@ export default function RequestRide({ island = "Kauai" }) {
     setRequestData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleStopChange = (index, value) => {
-    const newStops = [...stops];
-    newStops[index] = value;
-    setStops(newStops);
-  };
-
-  const addStop = () => setStops([...stops, '']);
-  const removeStop = (index) => setStops(stops.filter((_, i) => i !== index));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -110,7 +101,6 @@ export default function RequestRide({ island = "Kauai" }) {
         rider_bio: currentUser.bio || null,
         rider_age: currentUser.age || null,
         rider_gender: currentUser.gender || null,
-        stops: stops.filter(s => s.trim() !== ''),
         seats_needed: parseInt(requestData.seats_needed),
         island: island,
         status: 'active'
@@ -125,7 +115,6 @@ export default function RequestRide({ island = "Kauai" }) {
           user_id: currentUser.id,
           departure_location: requestData.departure_location,
           destination: requestData.destination,
-          stops: stops.filter(s => s.trim() !== ''),
           departure_time: requestData.departure_time,
           is_flexible: requestData.is_flexible,
           seats_needed: parseInt(requestData.seats_needed),
@@ -145,7 +134,6 @@ export default function RequestRide({ island = "Kauai" }) {
       }
 
       setRequestData(EMPTY_REQUEST);
-      setStops(['']);
       setIsRecurring(false);
       setRecurringDays([]);
       setPostedRequest(newRequest);
@@ -187,7 +175,6 @@ export default function RequestRide({ island = "Kauai" }) {
             description: r.description || '',
             has_luggage: !!r.has_luggage,
           }));
-          setStops(r.stops && r.stops.length > 0 ? r.stops : ['']);
         }}
       />
 
@@ -217,28 +204,6 @@ export default function RequestRide({ island = "Kauai" }) {
                 className={flowField}
               />
             </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label className={flowLabel}>stops <span className="font-normal text-gray-400">(optional)</span></Label>
-            {stops.map((stop, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <Input
-                  value={stop}
-                  onChange={(e) => handleStopChange(index, e.target.value)}
-                  placeholder={`stop ${index + 1}`}
-                  className={flowField}
-                />
-                {stops.length > 1 && (
-                  <Button type="button" variant="outline" onClick={() => removeStop(index)} className="h-16 w-16 rounded-lg border-2 border-gray-300 shrink-0">
-                    <X className="w-6 h-6" />
-                  </Button>
-                )}
-              </div>
-            ))}
-            <Button type="button" variant="outline" onClick={addStop} className="h-14 px-6 text-lg rounded-lg border-2 border-gray-300">
-              <Plus className="w-5 h-5 mr-2" /> add stop
-            </Button>
           </div>
 
           <div className="space-y-2">
@@ -355,7 +320,6 @@ export default function RequestRide({ island = "Kauai" }) {
             departure_date: '',
             departure_time: '',
           }));
-          setStops(['']);
           setPostedRequest(null);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}

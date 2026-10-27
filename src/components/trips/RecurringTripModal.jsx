@@ -410,14 +410,6 @@ export default function RecurringTripModal({ isOpen, onClose, onSave, editTrip }
                 />
               </div>
 
-              <div className="flex items-center justify-between">
-                <Label>offer detour service?</Label>
-                <Switch
-                  checked={tripData.offers_detour_service}
-                  onCheckedChange={(checked) => setTripData({ ...tripData, offers_detour_service: checked })}
-                />
-              </div>
-
               <div className="space-y-2">
                 <Label>description</Label>
                 <Textarea

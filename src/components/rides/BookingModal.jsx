@@ -21,8 +21,6 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
     seats_booked: 1, 
     description: '', 
     has_luggage: false,
-    wants_detour_service: false,
-    detour_destination: '',
     is_partial_ride: false,
     partial_from: '',
     partial_to: '',
@@ -46,8 +44,6 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
           seats_booked: 1, 
           description: '', 
           has_luggage: false,
-          wants_detour_service: false,
-          detour_destination: '',
           is_partial_ride: false,
           partial_from: '',
           partial_to: '',
@@ -136,8 +132,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         return;
       }
 
-      const detourFee = bookingData.wants_detour_service ? 5 : 0;
-      const isLocal = currentUser?.has_hawaii_id === true;
+            const isLocal = currentUser?.has_hawaii_id === true;
       // Distinguish "price not set" (null) from "free ride" (explicit 0).
       // Falling back with || 0 treats a missing price as $0, which incorrectly
       // triggers the free-ride path for rides where the driver never set a
@@ -156,7 +151,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
           submitPricePerSeat = Math.max(3, Math.round(fullPricePerSeatSubmit * ratio));
         }
       }
-      const baseAmount = (bookingData.seats_booked || 0) * submitPricePerSeat + detourFee;
+      const baseAmount = (bookingData.seats_booked || 0) * submitPricePerSeat;
 
       // FREE RIDE ($0 total): skip Stripe, create booking directly
       // Covers both explicit $0 price offers and rides where the driver set price to $0
@@ -174,9 +169,6 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
           payment_status: 'paid',
           description: bookingData.description,
           has_luggage: bookingData.has_luggage,
-          wants_detour_service: bookingData.wants_detour_service,
-          detour_destination: bookingData.detour_destination || '',
-          detour_fee: 0,
           is_partial_ride: bookingData.is_partial_ride,
           partial_from: bookingData.partial_from || '',
           partial_to: bookingData.partial_to || '',
@@ -218,11 +210,8 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         ride_id: ride.id,
         seats_booked: parseInt(bookingData.seats_booked),
         base_amount: baseAmount,
-        detour_fee: detourFee,
         description: bookingData.description,
         has_luggage: bookingData.has_luggage,
-        wants_detour_service: bookingData.wants_detour_service,
-        detour_destination: bookingData.detour_destination,
         is_partial_ride: bookingData.is_partial_ride,
         partial_from: bookingData.partial_from,
         partial_to: bookingData.partial_to,
@@ -249,8 +238,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
 
   if (!ride) return null;
   
-  const detourFee = bookingData.wants_detour_service ? 5 : 0;
-  const isLocal = currentUser?.has_hawaii_id === true;
+    const isLocal = currentUser?.has_hawaii_id === true;
   // Same null-vs-zero fix as the submit path — see handleRequestToBook for details.
   const localPriceDisplay = ride.price_per_seat_local != null ? ride.price_per_seat_local : ride.price_per_seat;
   const touristPriceDisplay = ride.price_per_seat_tourist != null ? ride.price_per_seat_tourist : ride.price_per_seat;
@@ -268,7 +256,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
     }
   }
 
-  const rideAmount = (bookingData.seats_booked || 0) * pricePerSeat + detourFee;
+  const rideAmount = (bookingData.seats_booked || 0) * pricePerSeat;
   const isFreeRide = rideAmount === 0;
   const connectFeeRate = ride?.driver_license_state === 'HI' ? 0.10 : 0.30;
   // Free rides skip Stripe entirely — no connect fee, license fee, SMS fee, or card fee.
@@ -461,58 +449,11 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               </Label>
             </div>
 
-            {ride.offers_detour_service && (
-              <div className="space-y-3 p-4 bg-green-50 border border-green-200 rounded-lg">
-                <div className="flex items-start gap-2">
-                  <Navigation className="w-5 h-5 text-green-600 mt-0.5" />
-                  <div>
-                    <p className="font-medium text-green-900">detour service available</p>
-                    <p className="text-sm text-green-700">this driver is willing to drive you to a final destination off the highway for an added fee. would you like this additional service for $5?</p>
-                  </div>
-                </div>
-                <div className="flex gap-3">
-                  <Button
-                    type="button"
-                    onClick={() => setBookingData(p => ({ ...p, wants_detour_service: true }))}
-                    className={`flex-1 ${bookingData.wants_detour_service ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
-                  >
-                    yes
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={() => setBookingData(p => ({ ...p, wants_detour_service: false, detour_destination: '' }))}
-                    className={`flex-1 ${!bookingData.wants_detour_service ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
-                  >
-                    no
-                  </Button>
-                </div>
-                {bookingData.wants_detour_service && (
-                  <div className="space-y-2">
-                    <Label htmlFor="detour-destination">where is your final destination? *</Label>
-                    <Textarea
-                      id="detour-destination"
-                      value={bookingData.detour_destination}
-                      onChange={(e) => setBookingData(p => ({ ...p, detour_destination: e.target.value }))}
-                      placeholder="e.g., Princeville Resort"
-                      required={bookingData.wants_detour_service}
-                      className="h-20"
-                    />
-                  </div>
-                )}
-              </div>
-            )}
-
             <div className="bg-gray-50 rounded-lg p-4 space-y-3 border border-gray-200">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-700">{bookingData.is_price_offer && bookingData.offered_price !== '' ? 'Ride cost (your offer):' : 'Price request:'}</span>
                 <span className="font-medium">${((bookingData.seats_booked || 0) * pricePerSeat).toFixed(2)}</span>
               </div>
-              {bookingData.wants_detour_service && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-700">Detour service:</span>
-                  <span className="font-medium">${detourFee.toFixed(2)}</span>
-                </div>
-              )}
               <div className="space-y-0.5">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-700">Connect fee ({Math.round(connectFeeRate * 100)}%)</span>

@@ -720,18 +720,6 @@ export default function PostRideForm({ island = "Kauai", initialRespondingToRequ
             />
           </div>
 
-          <div className={flowToggleRow}>
-            <div>
-              <Label htmlFor="detour" className={flowLabel}>detours <span className="font-normal text-gray-400">(optional)</span></Label>
-              <p className={flowHint}>drive riders to their end destination off the highway for an added $5?</p>
-            </div>
-            <Switch
-              id="detour"
-              checked={rideData.offers_detour_service}
-              onCheckedChange={(checked) => setRideData({ ...rideData, offers_detour_service: checked })}
-            />
-          </div>
-
           <div className="space-y-2">
             <Label htmlFor="description" className={flowLabel}>why are you making this trip? *</Label>
             <Textarea

@@ -282,13 +282,6 @@ Please process full refunds for all affected riders.
                                             onCheckedChange={(v) => setEditData({...editData, pets_allowed: v})}
                                         />
                                     </div>
-                                    <div className="flex items-center justify-between">
-                                        <Label>Offers Detour Service</Label>
-                                        <Switch
-                                            checked={editData.offers_detour_service}
-                                            onCheckedChange={(v) => setEditData({...editData, offers_detour_service: v})}
-                                        />
-                                    </div>
                                 </div>
 
                                 <Button
@@ -343,9 +336,6 @@ Please process full refunds for all affected riders.
                                     )}
                                     {ride.pets_allowed && (
                                         <Badge variant="outline" className="rounded-2xl">Pets OK</Badge>
-                                    )}
-                                    {ride.offers_detour_service && (
-                                        <Badge variant="outline" className="rounded-2xl">Detour Service</Badge>
                                     )}
                                 </div>
 

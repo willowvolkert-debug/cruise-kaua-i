@@ -77,12 +77,6 @@ export default function DriverProfileModal({ isOpen, onClose, ride, onBookRide, 
                       <span className="font-medium text-green-600">along route available</span>
                     </div>
                   )}
-                  {ride?.offers_detour_service && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Detours:</span>
-                      <span className="font-medium text-green-600">available (+$5)</span>
-                    </div>
-                  )}
                 </div>
               </div>
 
