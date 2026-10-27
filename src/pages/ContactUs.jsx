@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MessageSquare, Paperclip, X } from "lucide-react";
+import { flowField, flowTextarea, flowLabel, flowButton } from "@/components/trips/flowStyles";
 import { submitContactInquiry } from "@/functions/submitContactInquiry";
 
 export default function ContactUsPage() {
@@ -92,9 +93,9 @@ export default function ContactUsPage() {
     <div className="p-4 md:p-8 bg-white">
       <div className="max-w-3xl mx-auto space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-secondary">contact us</h1>
-          <p className="text-gray-600">we're here to help! send us a message</p>
-          <p className="text-sm text-gray-500 mt-2">
+          <h1 className="cruise-head tracking-widest text-4xl text-secondary leading-none">contact us</h1>
+          <p className="text-gray-900 text-lg mt-1">we're here to help! send us a message</p>
+          <p className="text-base text-gray-500 mt-2">
             Form not working? Email us at{" "}
             <a href="mailto:cruisekauai@gmail.com" className="text-primary underline font-medium">cruisekauai@gmail.com</a>
             {" "}or text at{" "}
@@ -103,7 +104,7 @@ export default function ContactUsPage() {
         </div>
 
         {submitted ? (
-          <Card className="shadow-lg border-gray-200 bg-white rounded-3xl">
+          <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
             <CardContent className="p-12 text-center">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MessageSquare className="w-8 h-8 text-primary" />
@@ -115,59 +116,59 @@ export default function ContactUsPage() {
             </CardContent>
           </Card>
         ) : (
-          <Card className="shadow-lg border-gray-200 bg-white rounded-3xl">
-            <CardHeader>
-              <CardTitle className="text-xl text-secondary">send us a message</CardTitle>
+          <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
+            <CardHeader className="px-0">
+              <CardTitle className="cruise-head tracking-widest text-3xl text-secondary">send us a message</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-6 px-0">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {!currentUser && (
                   <>
                     <div className="space-y-2">
-                      <Label htmlFor="name">your name *</Label>
+                      <Label className={flowLabel} htmlFor="name">your name *</Label>
                       <Input
                         id="name"
                         value={formData.name}
                         onChange={(e) => setFormData({...formData, name: e.target.value})}
                         placeholder="Your full name"
-                        className="rounded-2xl"
+                        className={flowField}
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email">your email *</Label>
+                      <Label className={flowLabel} htmlFor="email">your email *</Label>
                       <Input
                         id="email"
                         type="email"
                         value={formData.email}
                         onChange={(e) => setFormData({...formData, email: e.target.value})}
                         placeholder="you@example.com"
-                        className="rounded-2xl"
+                        className={flowField}
                       />
                     </div>
                   </>
                 )}
                 <div className="space-y-2">
-                  <Label htmlFor="subject">subject *</Label>
+                  <Label className={flowLabel} htmlFor="subject">subject *</Label>
                   <Input
                     id="subject"
                     value={formData.subject}
                     onChange={(e) => setFormData({...formData, subject: e.target.value})}
                     placeholder="What can we help you with?"
                     required
-                    className="rounded-2xl"
+                    className={flowField}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="priority">priority</Label>
+                  <Label className={flowLabel} htmlFor="priority">priority</Label>
                   <Select
                     value={formData.priority}
                     onValueChange={(value) => setFormData({...formData, priority: value})}
                   >
-                    <SelectTrigger className="rounded-2xl">
+                    <SelectTrigger className={flowField}>
                       <SelectValue placeholder="Select priority" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-2xl">
+                    <SelectContent>
                       <SelectItem value="low">low</SelectItem>
                       <SelectItem value="medium">medium</SelectItem>
                       <SelectItem value="high">high</SelectItem>
@@ -176,13 +177,13 @@ export default function ContactUsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="message">message *</Label>
+                  <Label className={flowLabel} htmlFor="message">message *</Label>
                   <Textarea
                     id="message"
                     value={formData.message}
                     onChange={(e) => setFormData({...formData, message: e.target.value})}
                     placeholder="Tell us more about your inquiry..."
-                    className="h-32 rounded-2xl"
+                    className={flowTextarea}
                     required
                   />
                 </div>
@@ -190,7 +191,7 @@ export default function ContactUsPage() {
                 <div className="space-y-2">
                   <Label>screenshots / files (optional)</Label>
                   <p className="text-xs text-gray-500">Attach screenshots or documents (images, PDF, Word, Excel).</p>
-                  <label className="flex items-center gap-2 cursor-pointer border border-dashed border-gray-300 rounded-2xl px-4 py-3 hover:bg-gray-50 transition-colors">
+                  <label className="flex items-center gap-2 cursor-pointer border-2 border-dashed border-gray-300 rounded-lg px-4 py-4 text-lg">
                     <Paperclip className="w-4 h-4 text-gray-400" />
                     <span className="text-sm text-gray-500">attach files</span>
                     <input
@@ -221,7 +222,7 @@ export default function ContactUsPage() {
                 <Button
                   type="submit"
                   disabled={isSubmitting || isUploading || !formData.subject?.trim() || !formData.message?.trim()}
-                  className="w-full bg-primary hover:bg-primary/90 rounded-2xl"
+                  className={flowButton}
                 >
                   {isUploading ? 'uploading screenshots...' : isSubmitting ? 'sending...' : 'send message'}
                 </Button>
