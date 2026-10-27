@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
+import HomeHelpButton from "@/components/HomeHelpButton";
 import IslandSwitcher from "@/components/IslandSwitcher";
 import SkiesToggle from "@/components/relief/SkiesToggle";
 import { TRUCK_URL, ISLAND_TRUCK_URL } from "@/components/welcome/WelcomeHero";
@@ -35,6 +36,7 @@ export default function BrandHeader({ right = null }) {
       </Link>
       <div className="flex items-center justify-end gap-3">
         {right}
+        {isHome && <HomeHelpButton />}
         <IslandSwitcher />
         <Link to="/home" aria-label="Home" className="hidden sm:block">
           <img src={ISLAND_TRUCK_URL} alt="" className="w-10 h-10 object-contain" />

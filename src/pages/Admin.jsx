@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import BackButton from "@/components/BackButton";
 import { formatHST } from "@/lib/formatHST";
 import { getHawaiiNow, parseRideDateTimeHST } from "@/lib/hstHelpers";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -38,6 +40,7 @@ const toPublicUrl = (url) => {
 };
 
 export default function AdminPage() {
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [pendingLicenses, setPendingLicenses] = useState([]);
   const [pendingVehicles, setPendingVehicles] = useState([]);
@@ -520,6 +523,7 @@ export default function AdminPage() {
   return (
     <div className="p-4 md:p-8 bg-white">
       <div className="max-w-7xl mx-auto space-y-6">
+        <BackButton onClick={() => navigate("/home")} />
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-secondary">admin dashboard</h1>
