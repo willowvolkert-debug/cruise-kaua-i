@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import LicenseVerificationModal from "../components/account/LicenseVerificationModal";
+import TruckLoader from "@/components/TruckLoader";
 import TransactionHistory from "../components/payment/TransactionHistory";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import EnableNotificationsModal from "../components/notifications/EnableNotificationsModal";
@@ -510,7 +511,7 @@ export default function AccountPage() {
         setIsTransferring(false);
     };
 
-    if (isLoading) return <div className="p-8 text-center">Loading account...</div>;
+    if (isLoading) return <TruckLoader />;
     
     if (!user) return null;
     

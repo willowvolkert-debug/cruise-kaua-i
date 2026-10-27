@@ -1,3 +1,4 @@
+import TruckLoader from "@/components/TruckLoader";
 import React, { useState, useEffect } from "react";
 import { CheckCircle, XCircle, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -86,7 +87,7 @@ export default function ConfirmRidePage() {
 
         {status === "confirming" && (
           <div className="space-y-3">
-            <Loader className="w-8 h-8 animate-spin text-primary mx-auto" />
+            <TruckLoader className="py-0" />
             <p className="text-gray-500">confirming...</p>
           </div>
         )}

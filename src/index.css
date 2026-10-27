@@ -8,6 +8,26 @@
 @keyframes cruise-bob { 0%,100% { transform: translate(-50%, 2rem) rotate(0deg); } 50% { transform: translate(-50%, 1.7rem) rotate(-0.8deg); } }
 .cruise-truck { animation: cruise-bob 2.4s ease-in-out infinite; }
 
+/* Truck loader: engine revving, then lurching forward, with exhaust puffs */
+@keyframes truck-rev {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  10% { transform: translate(-2px, 1px) rotate(-0.6deg); }
+  20% { transform: translate(2px, 0) rotate(0.6deg); }
+  30% { transform: translate(-2px, 1px) rotate(-0.6deg); }
+  40% { transform: translate(1px, 0) rotate(0.3deg); }
+  70% { transform: translate(-4px, 0) rotate(-1deg); }
+  90% { transform: translate(10px, 0) rotate(0.5deg); }
+}
+@keyframes truck-puff {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.4); }
+  20% { opacity: 0.7; }
+  100% { opacity: 0; transform: translate(-34px, -14px) scale(1.5); }
+}
+.truck-rev { animation: truck-rev 1.6s ease-in-out infinite; }
+.truck-puff { position: absolute; left: 14px; bottom: 10px; width: 14px; height: 14px; border-radius: 9999px; background: #9ca3af; opacity: 0; animation: truck-puff 1.6s ease-out infinite; }
+.truck-puff-2 { animation-delay: 0.4s; }
+.truck-puff-3 { animation-delay: 0.8s; }
+
 
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

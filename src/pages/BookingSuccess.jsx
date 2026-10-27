@@ -1,3 +1,4 @@
+import TruckLoader from "@/components/TruckLoader";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
@@ -90,7 +91,7 @@ export default function BookingSuccess() {
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
-        <Loader2 className="w-10 h-10 text-primary animate-spin" />
+        <TruckLoader className="py-0" />
         <p className="text-gray-500 text-lg">Confirming your payment...</p>
       </div>
     );

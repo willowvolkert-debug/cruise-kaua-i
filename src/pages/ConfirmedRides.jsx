@@ -1,4 +1,5 @@
 import { getIsland } from "@/lib/island";
+import TruckLoader from "@/components/TruckLoader";
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -287,7 +288,7 @@ export default function ConfirmedRidesPage() {
 
     const { review, openReview, closeReview } = useTripReviewPrompt(ridesNeedingReview, user?.id, loadData);
 
-    if (isLoading) return <div className="p-8 text-center">Loading your rides...</div>;
+    if (isLoading) return <TruckLoader />;
 
     return (
         <div className="p-4 md:p-8 bg-white">

@@ -7,11 +7,12 @@ import { TRUCK_URL, ISLAND_TRUCK_URL } from "@/components/welcome/WelcomeHero";
 
 export default function BrandHeader({ right = null }) {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const { pathname, key } = useLocation();
   const isHome = pathname === "/" || pathname.toLowerCase() === "/home";
 
   const goBack = () => {
-    if (window.history.length > 1) navigate(-1);
+    // location.key is "default" when this is the first in-app entry (e.g. after a full reload)
+    if (key !== "default") navigate(-1);
     else navigate("/home");
   };
 
