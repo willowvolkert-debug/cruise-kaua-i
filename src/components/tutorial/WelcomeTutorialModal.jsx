@@ -140,6 +140,10 @@ function PriceBiddingTutorial() {
             <span>💰</span>
             <p><strong>Request full fare</strong> — let the rider know you'd like your listed price</p>
           </div>
+          <div className="flex gap-2 items-start">
+            <span>🚫</span>
+            <p><strong>Deny booking request</strong> — don't like the person's profile? You don't have to drive them</p>
+          </div>
         </div>
       </div>
 
@@ -193,6 +197,11 @@ function InstallAppPage({ onConfused }) {
           <li>Tap the <strong>⋮ menu</strong> (three dots) in the top-right of Chrome</li>
           <li>Tap <strong>"Add to Home screen"</strong> → <strong>"Add"</strong></li>
         </ol>
+      </div>
+
+      <div className="bg-muted border border-border rounded-2xl p-4 space-y-1">
+        <p className="font-bold text-foreground text-sm">🍏 coming soon to the App Store</p>
+        <p className="text-sm text-foreground">Cruise will be in the App Store soon, and we will send you a text when it's ready.</p>
       </div>
 
       <p className="text-xs text-center text-muted-foreground italic">🤙 mahalo for being a part of the movement</p>
