@@ -33,7 +33,7 @@ function SummaryView({ onPause, onContinue, continueLabel }) {
           {continueLabel} <ArrowRight className="w-4 h-4 ml-1" />
         </Button>
         <Button variant="outline" onClick={onPause} className="w-full rounded-full py-5 text-base font-bold border-2 border-foreground/20 select-none">
-          <Pause className="w-4 h-4 mr-1" /> pause welcome to read more
+          <Pause className="w-4 h-4 mr-1" /> tell me more
         </Button>
       </div>
     </div>

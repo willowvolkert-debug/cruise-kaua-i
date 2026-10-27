@@ -96,7 +96,7 @@ function PostRideTutorial() {
 
       <div className="bg-muted border border-border rounded-2xl p-4 space-y-2">
         <p className="font-bold text-foreground text-sm">🔁 same drive every week?</p>
-        <p className="text-xs text-foreground">Save it as a <strong>recurring trip</strong> and turn on <strong>post automatically</strong> so your ride goes up on its own.</p>
+        <p className="text-xs text-foreground">Save it as a <strong>recurring trip</strong>, pick the days of the week you're driving, and turn on <strong>post automatically</strong> so your ride goes up on its own.</p>
       </div>
     </div>
   );
