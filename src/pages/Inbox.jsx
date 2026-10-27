@@ -659,7 +659,7 @@ Please process the refund manually via Stripe.
                 {ridesNeedingReview.length > 0 && (
                     <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-2xl font-heading text-secondary">
+                            <CardTitle className="flex items-center gap-2 text-2xl font-heading tracking-widest text-secondary">
                                 <Star className="w-6 h-6 text-orange-500" />
                                 leave a review ({ridesNeedingReview.length})
                             </CardTitle>
@@ -712,7 +712,7 @@ Please process the refund manually via Stripe.
                 {pendingRequests.length > 0 && (
                     <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-2xl font-heading text-secondary">
+                            <CardTitle className="flex items-center gap-2 text-2xl font-heading tracking-widest text-secondary">
                                 <UserPlus className="w-6 h-6 text-blue-600"/>
                                 pending ride requests ({pendingRequests.length})
                             </CardTitle>
@@ -762,7 +762,7 @@ Please process the refund manually via Stripe.
                 {/* Combined Recent Messages card (includes active trip context) */}
                 <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-2xl font-heading text-secondary">
+                        <CardTitle className="flex items-center gap-2 text-2xl font-heading tracking-widest text-secondary">
                             <MessageSquare className="w-6 h-6 text-primary"/>
                             recent messages
                         </CardTitle>

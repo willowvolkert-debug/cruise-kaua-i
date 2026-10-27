@@ -35,7 +35,7 @@ export default function NotificationPreferencesCard({ user, onUserUpdate }) {
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between py-4 select-none"
       >
-        <span className="flex items-center gap-2 text-2xl font-heading text-secondary">
+        <span className="flex items-center gap-2 text-2xl font-heading tracking-widest text-secondary">
           <Bell className="w-6 h-6" /> notification settings
         </span>
         <ChevronDown className={`w-6 h-6 transition-transform ${open ? "rotate-180" : ""}`} />

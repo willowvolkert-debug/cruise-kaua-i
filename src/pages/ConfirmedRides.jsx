@@ -301,7 +301,7 @@ export default function ConfirmedRidesPage() {
                 {ridesNeedingReview.length > 0 && (
                     <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-2xl font-heading text-secondary">
+                            <CardTitle className="flex items-center gap-2 text-2xl font-heading tracking-widest text-secondary">
                                 <Star className="w-6 h-6 text-orange-600"/>
                                 needs review ({ridesNeedingReview.length})
                             </CardTitle>
@@ -357,7 +357,7 @@ export default function ConfirmedRidesPage() {
                 {upcomingRides.length > 0 ? (
                     <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-2xl font-heading text-secondary">
+                            <CardTitle className="flex items-center gap-2 text-2xl font-heading tracking-widest text-secondary">
                                 <Calendar className="w-6 h-6 text-blue-600"/>
                                 upcoming rides ({upcomingRides.length})
                             </CardTitle>
@@ -504,7 +504,7 @@ export default function ConfirmedRidesPage() {
                         className="cursor-pointer select-none"
                         onClick={() => setShowPastRides(!showPastRides)}
                     >
-                        <CardTitle className="flex items-center justify-between text-2xl font-heading text-secondary">
+                        <CardTitle className="flex items-center justify-between text-2xl font-heading tracking-widest text-secondary">
                             <div className="flex items-center gap-2">
                                 <Clock className="w-5 h-5 text-gray-400" />
                                 past rides {pastRides.length > 0 && `(${pastRides.length})`}
