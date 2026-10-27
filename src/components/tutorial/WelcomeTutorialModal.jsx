@@ -33,7 +33,7 @@ function HowItWorksPage() {
         {[
           { icon: "👤", text: "Create your profile — takes about 2 minutes" },
           { icon: "🪪", text: "Verify your ID — we review within 24 hrs" },
-          { icon: "🔍", text: "Browse rides or post your own on the Trips page" },
+          { icon: "🔍", text: "Find a ride on Get a Ride, or share yours on Post a Ride" },
           { icon: "💳", text: "Pay & communicate securely in the app" },
           { icon: "⭐", text: "Rate your driver or rider after the trip" },
         ].map(({ icon, text }) => (
@@ -49,46 +49,55 @@ function HowItWorksPage() {
   );
 }
 
-// ── Page 2: Using the Trips Page ─────────────────────────────────────────────
-function TripsPageTutorial() {
+// ── Get a Ride ───────────────────────────────────────────────────────────────
+function GetRideTutorial() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="cruise-head text-3xl text-secondary leading-tight">the trips page 🗺️</h1>
-        <p className="text-muted-foreground text-sm mt-1">everything happens here — finding & posting rides</p>
+        <h1 className="cruise-head text-3xl text-secondary leading-tight">get a ride 🔍</h1>
+        <p className="text-muted-foreground text-sm mt-1">find a local driver heading your way</p>
       </div>
 
-      <div className="space-y-3">
-        <div className="bg-muted border border-border rounded-2xl p-4">
-          <p className="font-bold text-foreground text-sm mb-2">when you tap "trips", you'll see:</p>
-          <div className="space-y-2">
-            {[
-              { emoji: "🔍", label: "get a ride", desc: "Browse available rides — by this week, a specific date, or route" },
-              { emoji: "🚗", label: "post a ride", desc: "Share a trip you're already making and offer seats" },
-              { emoji: "🙋", label: "request a ride", desc: "Post a request so drivers know you need one" },
-            ].map(({ emoji, label, desc }) => (
-              <div key={label} className="flex items-start gap-3 bg-white rounded-xl px-3 py-2 border border-gray-100">
-                <span className="text-xl shrink-0">{emoji}</span>
-                <div>
-                  <p className="font-semibold text-foreground text-sm">{label}</p>
-                  <p className="text-xs text-muted-foreground">{desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="bg-muted border border-border rounded-2xl p-4 space-y-1">
-          <p className="font-bold text-foreground text-sm">🔍 get a ride — 3 ways to search:</p>
-          <ul className="text-xs text-foreground space-y-1 ml-2">
-            <li>📅 <strong>This week</strong> — see all rides in the next 7 days</li>
-            <li>🗓️ <strong>Specific date</strong> — pick a date and browse what's available</li>
-            <li>📍 <strong>By route</strong> — search by origin and destination</li>
-          </ul>
-        </div>
+      <div className="bg-muted border border-border rounded-2xl p-4 space-y-2">
+        <p className="font-bold text-foreground text-sm">browse rides posted by drivers:</p>
+        <ul className="text-xs text-foreground space-y-1 ml-2">
+          <li>📅 <strong>By date</strong> — pick a day and see what's available</li>
+          <li>📍 <strong>By route</strong> — type where you're starting and where you're headed</li>
+        </ul>
+        <p className="text-xs text-foreground pt-1">Tap a ride to see the driver, the price, and book your seat.</p>
       </div>
 
-      <p className="text-xs text-muted-foreground text-center italic">tap "back" at any point to return to the main menu</p>
+      <div className="bg-muted border border-border rounded-2xl p-4 space-y-2">
+        <p className="font-bold text-foreground text-sm">🙋 don't see a ride that fits?</p>
+        <p className="text-xs text-foreground">Tap <strong>request a ride</strong> to tell drivers where and when you need to go. Need the same ride every week? Save it as a <strong>recurring ride request</strong> so you only pick the date.</p>
+      </div>
+    </div>
+  );
+}
+
+// ── Post a Ride ──────────────────────────────────────────────────────────────
+function PostRideTutorial() {
+  return (
+    <div className="space-y-5">
+      <div>
+        <h1 className="cruise-head text-3xl text-secondary leading-tight">post a ride 🚗</h1>
+        <p className="text-muted-foreground text-sm mt-1">share a trip you're already making & cover your gas</p>
+      </div>
+
+      <div className="bg-muted border border-border rounded-2xl p-4 space-y-2">
+        <p className="font-bold text-foreground text-sm">how to post:</p>
+        <ul className="text-xs text-foreground space-y-1 ml-2">
+          <li>📍 Enter where you're leaving from and heading to</li>
+          <li>🕒 Pick the date and time</li>
+          <li>💺 Choose how many seats and your price per seat</li>
+        </ul>
+        <p className="text-xs text-foreground pt-1">Riders can message you and book. You'll be notified in your Inbox.</p>
+      </div>
+
+      <div className="bg-muted border border-border rounded-2xl p-4 space-y-2">
+        <p className="font-bold text-foreground text-sm">🔁 same drive every week?</p>
+        <p className="text-xs text-foreground">Save it as a <strong>recurring trip</strong> and turn on <strong>post automatically</strong> so your ride goes up on its own.</p>
+      </div>
     </div>
   );
 }
@@ -241,7 +250,7 @@ function MoreQuestionsPage() {
 }
 
 // ── Main Modal ──────────────────────────────────────────────────────────────
-const PAGES = ["how_it_works", "skies", "trips_page", "price_bidding", "install_app", "more_questions"];
+const PAGES = ["how_it_works", "skies", "get_ride", "post_ride", "price_bidding", "install_app", "more_questions"];
 
 export default function WelcomeTutorialModal({ isOpen, onClose, onComplete }) {
   const [pageIndex, setPageIndex] = useState(0);
@@ -323,7 +332,8 @@ export default function WelcomeTutorialModal({ isOpen, onClose, onComplete }) {
         <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-2">
           {currentPage === "how_it_works" && <HowItWorksPage />}
           {currentPage === "skies" && <SkiesCard onContinue={() => setPageIndex(p => p + 1)} />}
-          {currentPage === "trips_page" && <TripsPageTutorial />}
+          {currentPage === "get_ride" && <GetRideTutorial />}
+          {currentPage === "post_ride" && <PostRideTutorial />}
           {currentPage === "price_bidding" && <PriceBiddingTutorial />}
           {currentPage === "install_app" && <InstallAppPage />}
           {currentPage === "more_questions" && <MoreQuestionsPage />}
