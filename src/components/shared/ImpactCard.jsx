@@ -3,7 +3,22 @@ import useImpactStats from "@/lib/useImpactStats";
 
 export default function ImpactCard({ user }) {
   const stats = useImpactStats();
-  if (!stats || !user) return null;
+  if (!user) return null;
+  if (!stats) {
+    return (
+      <div className="mb-5 p-4 rounded-3xl bg-card border border-border" aria-busy="true">
+        <p className="cruise-head text-2xl text-secondary mb-3">your impact</p>
+        <div className="grid grid-cols-2 gap-3">
+          {[0, 1, 2, 3].map((n) => (
+            <div key={n}>
+              <div className="h-8 w-16 rounded bg-muted animate-pulse" />
+              <div className="h-8 mt-1 rounded bg-muted/60 animate-pulse" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
   const me = stats.me || { carsRemoved: 0, moneyToCommunity: 0, conversations: 0 };
   const items = [
     { value: stats.carsOffRoad.toLocaleString(), label: "cars off the road now that you signed up" },
