@@ -14,6 +14,7 @@ import { createRideCheckout } from "@/functions/createRideCheckout";
 import { sendSmsNotification } from "@/functions/sendSmsNotification";
 import { format } from "date-fns";
 import { suggestPrice } from "@/components/trips/pricingUtils";
+import { flowHeading, flowLabel, flowHint, flowField, flowTextarea, flowToggleRow, flowButton } from "@/components/trips/flowStyles";
 import { toast } from "@/components/ui/use-toast";
 
 export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }) {
@@ -269,33 +270,33 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent ref={scrollRef} className="sm:max-w-lg max-h-[90vh] overflow-y-auto !bg-white">
+      <DialogContent ref={scrollRef} className="sm:max-w-lg max-h-[90vh] overflow-y-auto !bg-white !rounded-lg">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-secondary">
+          <DialogTitle className="cruise-head text-4xl text-secondary leading-none">
             request to book
           </DialogTitle>
-          <DialogDescription className="text-gray-600">
+          <DialogDescription className="text-lg text-gray-900">
             Review the driver profile and trip details before booking.
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleRequestToBook} className="space-y-4 pt-2">
+        <form onSubmit={handleRequestToBook} className="space-y-6 pt-2">
             {/* Driver Profile - Full expanded, no inner scroll */}
             {isLoading ? (
               <div className="p-8 text-center text-gray-500">Loading driver information...</div>
             ) : (
               <div className="space-y-4">
                 {/* Driver Profile Card */}
-                <div className="p-4 bg-gray-50 border border-gray-200 rounded-3xl">
+                <div className="pb-5 border-b-2 border-gray-200">
                   <div className="flex items-start gap-4">
-                    <Avatar className="w-20 h-20 shrink-0 rounded-2xl">
+                    <Avatar className="w-20 h-20 shrink-0 rounded-lg">
                       <AvatarImage src={ride?.driver_profile_picture_url} className="object-cover object-top" />
-                      <AvatarFallback className="bg-gradient-to-br from-primary to-green-400 text-white font-bold text-xl rounded-2xl">
+                      <AvatarFallback className="bg-gradient-to-br from-primary to-green-400 text-white font-bold text-xl rounded-lg">
                         {ride?.driver_name?.split(' ').map(n => n[0]).join('').toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 space-y-1">
-                      <h2 className="text-xl font-bold text-secondary">
+                      <h2 className="text-2xl font-bold text-secondary">
                         {ride?.driver_username ? `@${ride.driver_username}` : ride?.driver_name}
                       </h2>
                       {ride?.driver_age && ride?.driver_gender && (
@@ -341,9 +342,9 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                 {/* Recent Reviews */}
                 {driverRatings.length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="font-semibold text-secondary text-sm">recent reviews</h4>
+                    <h4 className={flowHeading}>recent reviews</h4>
                     {driverRatings.slice(0, 2).map(rating => (
-                      <div key={rating.id} className="p-3 bg-gray-50 rounded-2xl border border-gray-200">
+                      <div key={rating.id} className="p-3 rounded-lg border-2 border-gray-200">
                         <div className="flex items-center gap-2 mb-1">
                           {Array(rating.rating_value).fill(0).map((_, i) => (
                             <Star key={i} className="w-3 h-3 text-amber-400 fill-amber-400" />
@@ -366,9 +367,9 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
             )}
 
             <div className="space-y-2">
-                <Label htmlFor="seats">seats required</Label>
+                <Label htmlFor="seats" className={flowLabel}>seats required</Label>
                 <Select value={bookingData.seats_booked.toString()} onValueChange={(v) => setBookingData(p=>({...p, seats_booked: parseInt(v, 10)}))}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger className={flowField}><SelectValue /></SelectTrigger>
                     <SelectContent>
                         {Array.from({ length: Math.min(ride.seats_available, 8) }, (_, i) => (
                             <SelectItem key={i + 1} value={(i + 1).toString()}>{i + 1}</SelectItem>
@@ -378,7 +379,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="description">
+                <Label htmlFor="description" className={flowLabel}>
                   why riding <span className="text-red-500 font-bold">*</span>
                 </Label>
                 <Textarea 
@@ -386,22 +387,22 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                   value={bookingData.description} 
                   onChange={(e) => setBookingData(p => ({...p, description: e.target.value}))} 
                   placeholder="e.g., heading to the north shore for surfing!" 
-                  className="h-20 border-gray-300 focus:border-primary"
+                  className={flowTextarea}
                 />
                 {!bookingData.description && (
-                  <p className="text-xs text-gray-400">required — helps the driver know who's joining</p>
+                  <p className={flowHint}>required — helps the driver know who's joining</p>
                 )}
             </div>
 
             {ride.offers_midpoint_pickup && (
-              <div className="space-y-3 p-4 bg-blue-50 border border-blue-200 rounded-2xl">
-                <div className="flex items-center space-x-2">
+              <div className={`${flowToggleRow} flex-col items-stretch`}>
+                <div className="flex items-center space-x-3">
                   <Checkbox
                     id="partial_ride"
                     checked={bookingData.is_partial_ride}
                     onCheckedChange={(checked) => setBookingData(p => ({ ...p, is_partial_ride: checked, partial_from: '', partial_to: '' }))}
                   />
-                  <Label htmlFor="partial_ride" className="cursor-pointer font-medium text-blue-800">
+                  <Label htmlFor="partial_ride" className="cursor-pointer text-lg font-bold text-gray-800">
                     are you only looking for a section of this ride, not the whole thing?
                   </Label>
                 </div>
@@ -413,7 +414,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                         value={bookingData.partial_from}
                         onChange={(e) => setBookingData(p => ({ ...p, partial_from: e.target.value }))}
                         placeholder="e.g., Kapaa"
-                        className="rounded-2xl"
+                        className={flowField}
                       />
                     </div>
                     <div className="space-y-1">
@@ -422,7 +423,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                         value={bookingData.partial_to}
                         onChange={(e) => setBookingData(p => ({ ...p, partial_to: e.target.value }))}
                         placeholder="e.g., Hanalei"
-                        className="rounded-2xl"
+                        className={flowField}
                       />
                     </div>
                     {bookingData.partial_from && bookingData.partial_to && (
@@ -438,18 +439,18 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               </div>
             )}
 
-            <div className="flex items-center space-x-2">
+            <div className={`${flowToggleRow} justify-start`}>
               <Checkbox 
                 id="luggage" 
                 checked={bookingData.has_luggage}
                 onCheckedChange={(checked) => setBookingData(p => ({...p, has_luggage: checked}))}
               />
-              <Label htmlFor="luggage" className="cursor-pointer">
+              <Label htmlFor="luggage" className="cursor-pointer text-lg font-bold text-gray-800">
                 I have luggage
               </Label>
             </div>
 
-            <div className="bg-gray-50 rounded-lg p-4 space-y-3 border border-gray-200">
+            <div className="space-y-3 pb-5 border-b-2 border-gray-200 [&_.text-sm]:text-base">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-700">{bookingData.is_price_offer && bookingData.offered_price !== '' ? 'Ride cost (your offer):' : 'Price request:'}</span>
                 <span className="font-medium">${((bookingData.seats_booked || 0) * pricePerSeat).toFixed(2)}</span>
@@ -496,7 +497,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
             </div>
 
             {/* Price offer section */}
-            <div className={`rounded-2xl border-2 p-4 space-y-3 transition-all ${bookingData.is_price_offer ? 'border-green-400 bg-green-50' : 'border-gray-200 bg-gray-50'}`}>
+            <div className={`rounded-lg border-2 p-5 space-y-3 transition-all ${bookingData.is_price_offer ? 'border-green-500 bg-white' : 'border-gray-300 bg-white'}`}>
               <div
                 className="flex items-center gap-3 cursor-pointer"
                 onClick={() => setBookingData(p => ({ ...p, is_price_offer: !p.is_price_offer, offered_price: '' }))}
@@ -504,7 +505,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                 <div className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${bookingData.is_price_offer ? 'border-green-500 bg-green-500' : 'border-gray-400 bg-white'}`}>
                   {bookingData.is_price_offer && <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
                 </div>
-                <span className={`text-sm font-medium ${bookingData.is_price_offer ? 'text-green-800' : 'text-gray-700'}`}>
+                <span className={`text-lg font-bold ${bookingData.is_price_offer ? 'text-green-800' : 'text-gray-800'}`}>
                   too expensive? pitch an offer you can afford
                 </span>
               </div>
@@ -523,7 +524,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                         placeholder="$ per seat"
                         value={bookingData.offered_price}
                         onChange={(e) => { setOfferError(''); setBookingData(p => ({ ...p, offered_price: e.target.value })); }}
-                        className="rounded-2xl border-green-400 focus:border-green-500"
+                        className="h-14 text-lg rounded-lg border-2 border-green-500"
                         onClick={(e) => e.stopPropagation()}
                         style={{ MozAppearance: 'textfield' }}
                       />
@@ -552,29 +553,28 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
             </div>
 
             {!isFreeRide && (
-              <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <CreditCard className="w-5 h-5 text-blue-600" />
-                <p className="text-sm text-blue-800">
+              <div className="flex items-center gap-3 py-2">
+                <CreditCard className="w-6 h-6 text-gray-700" />
+                <p className="text-base text-gray-700">
                   You'll be redirected to Stripe to complete payment securely.
                 </p>
               </div>
             )}
             {isFreeRide && (
-              <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-                <HeartHandshake className="w-5 h-5 text-green-600" />
-                <p className="text-sm text-green-800">
+              <div className="flex items-center gap-3 py-2">
+                <HeartHandshake className="w-6 h-6 text-green-600" />
+                <p className="text-base text-green-800">
                   Free ride — no payment or Stripe redirect needed.
                 </p>
               </div>
             )}
 
             <DialogFooter className="pt-2 flex-col gap-2">
-              <div className="flex gap-2 w-full justify-end">
-                <Button type="button" variant="outline" onClick={onClose}>cancel</Button>
+              <div className="flex flex-col gap-3 w-full">
                 <Button 
                   type="submit" 
                   disabled={isSubmitting} 
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                  className={flowButton}
                 >
                   {isSubmitting ? (
                     <>
@@ -589,6 +589,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                     'book this ride'
                   )}
                 </Button>
+                <Button type="button" variant="outline" onClick={onClose} className="w-full h-14 text-lg font-bold rounded-lg border-2 border-gray-300">cancel</Button>
               </div>
             </DialogFooter>
             </form>
