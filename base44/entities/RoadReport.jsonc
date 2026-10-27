@@ -62,6 +62,17 @@
         "cleared"
       ],
       "default": "active"
+    },
+    "island": {
+      "type": "string",
+      "enum": [
+        "Kauai",
+        "Oahu",
+        "Maui",
+        "Big Island"
+      ],
+      "default": "Kauai",
+      "description": "Which island this belongs to"
     }
   },
   "required": [

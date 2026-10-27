@@ -1,3 +1,4 @@
+import { getIsland } from "@/lib/island";
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -27,6 +28,7 @@ export default function ReliefForm({ open, onClose, user, onSaved }) {
       location_text: locationText.trim(),
       lat: pin[0],
       lng: pin[1],
+      island: getIsland(),
       owner_id: user.id,
       owner_name: user.full_name || user.username || user.email?.split("@")[0] || "Cruise member",
       owner_username: user.username || undefined,

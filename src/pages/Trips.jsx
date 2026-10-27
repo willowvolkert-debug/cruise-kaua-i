@@ -7,7 +7,7 @@ import PostRideForm from "../components/trips/PostRideForm";
 import NeedHelpButton from "../components/trips/NeedHelpButton";
 import WelcomeTutorialModal from "../components/tutorial/WelcomeTutorialModal";
 import { base44 } from "@/api/base44Client";
-import { getIslandFromDomain } from "@/lib/islandConfig";
+import { getIsland } from "@/lib/island";
 import { format, addDays, parseISO } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -26,9 +26,7 @@ export default function TripsPage() {
   const navigate = useNavigate();
   const [showTutorial, setShowTutorial] = React.useState(false);
   const [isExploreMode, setIsExploreMode] = React.useState(false);
-  const [selectedIsland, setSelectedIsland] = React.useState(getIslandFromDomain());
-  const [islandLoaded, setIslandLoaded] = React.useState(false);
-  const [islandSelectorVisible, setIslandSelectorVisible] = React.useState(false);
+  const [selectedIsland, setSelectedIsland] = React.useState(getIsland());
   const [view, setView] = React.useState("menu");
   const [specificDate, setSpecificDate] = React.useState(format(new Date(), 'yyyy-MM-dd'));
   const [appliedDate, setAppliedDate] = React.useState(format(new Date(), 'yyyy-MM-dd'));
@@ -50,30 +48,11 @@ export default function TripsPage() {
     if (viewParam) setView(viewParam);
     else navigate("/home", { replace: true });
 
-    const domainIsland = getIslandFromDomain();
-    base44.auth.me().then(user => {
-      const hostname = window.location.hostname.toLowerCase();
-      const isGenericDomain = !hostname.includes('cruisekauai') && !hostname.includes('cruiseoahu') && !hostname.includes('cruisemaui') && !hostname.includes('cruisebigisland');
-      if (isGenericDomain && user?.preferred_island) {
-        setSelectedIsland(user.preferred_island);
-      } else {
-        setSelectedIsland(domainIsland);
-      }
-      setIslandLoaded(true);
-    }).catch(() => setIslandLoaded(true));
   }, []);
 
-  const handleIslandChange = async (island) => {
-    setSelectedIsland(island);
-    window.dispatchEvent(new CustomEvent('islandChanged', { detail: island }));
-    try { await base44.auth.updateMe({ preferred_island: island }); } catch (e) {}
-  };
-
   React.useEffect(() => {
-    if (islandLoaded) {
-      window.dispatchEvent(new CustomEvent('islandChanged', { detail: selectedIsland }));
-    }
-  }, [islandLoaded, selectedIsland]);
+    window.dispatchEvent(new CustomEvent('islandChanged', { detail: selectedIsland }));
+  }, [selectedIsland]);
 
   const goBack = () => {
     if (view === "haena_info") setView("view_sub");
@@ -109,36 +88,6 @@ export default function TripsPage() {
             <NeedHelpButton onOpenTutorial={() => setShowTutorial(true)} />
           </div>
 
-          {/* Island Selector */}
-          <div className="mt-3 flex items-center gap-3 flex-wrap">
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <MapPin className="w-4 h-4 text-primary" />
-              <span className="font-medium">island:</span>
-              <button
-                onClick={() => setIslandSelectorVisible(v => !v)}
-                className="text-xs text-gray-400 hover:text-gray-600 transition-colors underline"
-              >
-                {islandSelectorVisible ? "hide" : "change"}
-              </button>
-            </div>
-            {islandSelectorVisible ? (
-              <div className="flex flex-wrap gap-2">
-                {ISLANDS.map(island => (
-                  <button
-                    key={island}
-                    onClick={() => { handleIslandChange(island); setIslandSelectorVisible(false); }}
-                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-                      selectedIsland === island ? 'bg-primary text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                    }`}
-                  >
-                    {island}
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <span className="text-sm font-medium text-primary">{selectedIsland}</span>
-            )}
-          </div>
 
           {isExploreMode && (
             <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-2xl">

@@ -1,3 +1,4 @@
+import { getIsland } from "@/lib/island";
 import React, { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import ReliefMap from "@/components/relief/ReliefMap";
@@ -14,7 +15,7 @@ export default function GreySkies({ user }) {
   const load = useCallback(async () => {
     // Relief posts expire 1 month after posting
     const since = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
-    const res = await base44.entities.ReliefPost.filter({ created_date: { $gte: since } }, { sort: "-created_date", limit: 500 });
+    const res = await base44.entities.ReliefPost.filter({ created_date: { $gte: since }, island: getIsland() }, { sort: "-created_date", limit: 500 });
     setPosts(res.items);
     setLoading(false);
   }, []);

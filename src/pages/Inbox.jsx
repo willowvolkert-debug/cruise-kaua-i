@@ -1,3 +1,4 @@
+import { getIsland } from "@/lib/island";
 import React, { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -128,10 +129,10 @@ export default function InboxPage() {
             // Merge, deduplicate by booking id
             const bookingMap = new Map();
             [...driverBookings, ...passengerBookings].forEach(b => bookingMap.set(b.id, b));
-            const allBookings = Array.from(bookingMap.values());
+            const rawBookings = Array.from(bookingMap.values());
 
             // Collect all ride IDs we need to fetch (exclude ride-request reply bookings)
-            const myBookingRideIds = allBookings
+            const myBookingRideIds = rawBookings
                 .map(b => b.ride_id)
                 .filter(id => id && !id.startsWith('ride-request-'));
 
@@ -144,7 +145,11 @@ export default function InboxPage() {
             // Merge, deduplicate
             const rideMap = new Map();
             [...myOwnRides, ...bookingRideResults].forEach(r => { if (r) rideMap.set(r.id, r); });
-            const allRides = Array.from(rideMap.values());
+            // Islands are separate silos: only this island's rides and bookings
+            const island = getIsland();
+            const allRides = Array.from(rideMap.values()).filter(r => (r.island || 'Kauai') === island);
+            const islandRideIds = new Set(allRides.map(r => r.id));
+            const allBookings = rawBookings.filter(b => islandRideIds.has(b.ride_id) || String(b.ride_id).startsWith('ride-request-'));
             setAllRidesData(allRides);
 
             const myRideIds = allRides.filter(r => String(r.driver_id) === String(currentUser.id)).map(r => r.id);

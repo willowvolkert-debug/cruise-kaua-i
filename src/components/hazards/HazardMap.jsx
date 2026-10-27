@@ -3,8 +3,9 @@ import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-lea
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { getHazardType } from "./hazardTypes";
+import { getIslandMap } from "@/lib/island";
 
-const KAUAI_CENTER = [22.05, -159.5];
+const ISLAND = getIslandMap();
 
 const emojiIcon = (emoji, color, ring) =>
   L.divIcon({
@@ -36,7 +37,7 @@ function MapBits({ onPick, flyTo }) {
 
 export default function HazardMap({ reports, selectedId, onSelect, onPick, picked, flyTo }) {
   return (
-    <MapContainer center={KAUAI_CENTER} zoom={10} scrollWheelZoom dragging={!L.Browser.mobile} tap={false} className="w-full h-80 sm:h-96 rounded-2xl z-0">
+    <MapContainer center={ISLAND.center} zoom={ISLAND.zoom} scrollWheelZoom dragging={!L.Browser.mobile} tap={false} className="w-full h-80 sm:h-96 rounded-2xl z-0">
       <TileLayer
         attribution="Tiles &copy; Esri"
         url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"

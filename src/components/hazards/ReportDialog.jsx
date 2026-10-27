@@ -8,6 +8,7 @@ import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import HazardTypePicker from "./HazardTypePicker";
 import { geocode } from "./geocode";
+import { getIsland } from "@/lib/island";
 
 export default function ReportDialog({ open, onOpenChange, user, picked, onCreated }) {
   const [type, setType] = useState(null);
@@ -38,6 +39,7 @@ export default function ReportDialog({ open, onOpenChange, user, picked, onCreat
       gone_by: [],
       last_confirmed_at: new Date().toISOString(),
       status: "active",
+      island: getIsland(),
     });
     setSaving(false);
     setType(null);

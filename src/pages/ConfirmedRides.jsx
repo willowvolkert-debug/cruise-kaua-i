@@ -1,3 +1,4 @@
+import { getIsland } from "@/lib/island";
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -46,10 +47,10 @@ export default function ConfirmedRidesPage() {
             const currentUser = await base44.auth.me();
             setUser(currentUser);
 
-            const allBookings = await base44.entities.RideBooking.list('-created_date', 500);
+            const rawBookings = await base44.entities.RideBooking.list('-created_date', 500);
 
             // Collect ride IDs from bookings we're involved in
-            const myBookingRideIds = allBookings
+            const myBookingRideIds = rawBookings
                 .filter(b => String(b.passenger_id) === String(currentUser.id) || String(b.driver_id) === String(currentUser.id))
                 .map(b => b.ride_id)
                 .filter(id => id && !id.startsWith('ride-request-'));
@@ -62,7 +63,11 @@ export default function ConfirmedRidesPage() {
 
             const rideMap = new Map();
             [...myOwnRides, ...bookingRideResults].forEach(r => { if (r) rideMap.set(r.id, r); });
-            const allRides = Array.from(rideMap.values());
+            // Islands are separate silos: only this island's rides and bookings
+            const island = getIsland();
+            const allRides = Array.from(rideMap.values()).filter(r => (r.island || 'Kauai') === island);
+            const islandRideIds = new Set(allRides.map(r => r.id));
+            const allBookings = rawBookings.filter(b => islandRideIds.has(b.ride_id) || String(b.ride_id).startsWith('ride-request-'));
             setAllRidesData(allRides);
 
             // Rider's pending paid bookings (awaiting driver acceptance)
@@ -137,7 +142,8 @@ export default function ConfirmedRidesPage() {
             // Load my ride requests (active and future only)
             const allRideRequests = await base44.entities.RidePost.filter({
                 rider_id: currentUser.id,
-                status: 'active'
+                status: 'active',
+                island: getIsland()
             });
 
             const futureRequests = allRideRequests.filter(request => {

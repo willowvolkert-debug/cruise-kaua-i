@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
+import { getIsland } from "@/lib/island";
 import HazardMap from "./HazardMap";
 import ReportDialog from "./ReportDialog";
 import ReportDetail from "./ReportDetail";
@@ -19,6 +20,7 @@ export default function HazardPanel({ user }) {
     const page = await base44.entities.RoadReport.filter(
       {
         status: "active",
+        island: getIsland(),
         $or: [
           { last_confirmed_at: { $gte: since } },
           { last_confirmed_at: { $exists: false }, created_date: { $gte: since } },
