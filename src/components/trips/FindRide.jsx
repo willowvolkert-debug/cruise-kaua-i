@@ -15,6 +15,8 @@ import BookingModal from "../rides/BookingModal";
 import FindRideTutorial from "../tutorial/FindRideTutorial";
 import { handlePaymentSuccess } from "@/functions/handlePaymentSuccess";
 import { locationsMatch } from "@/lib/locationMatching";
+import RecurringRequests from "./RecurringRequests";
+import { flowHeading, flowField, flowButton, flowSection } from "./flowStyles";
 
 export default function FindRide({ island = "Kauai", initialStartDate, initialEndDate, hideDateFilter = false, onRequestRide }) {
   const today = new Date();
@@ -156,43 +158,45 @@ export default function FindRide({ island = "Kauai", initialStartDate, initialEn
 
       {/* Date Range Filter */}
       {!hideDateFilter && (
-        <div className="rounded-3xl border-2 border-gray-200 bg-gray-50 p-5 space-y-4">
-          <p className="text-base font-bold text-gray-700">📅 pick your date</p>
-          <DatePickerButton
-            value={startDate}
-            onChange={(d) => { setStartDate(d); setEndDate(d); }}
-            placeholder="select a date"
-          />
-          <p className="text-base font-bold text-gray-700">📍 pick your route <span className="font-normal text-gray-400">(optional)</span></p>
-          <div className="flex flex-col sm:flex-row items-stretch gap-3">
-            <Input
-              value={fromQuery}
-              onChange={(e) => setFromQuery(e.target.value)}
-              placeholder="from — e.g., Lihue"
-              className="rounded-2xl h-12 border-2 border-gray-200 focus:border-primary flex-1"
-            />
-            <Input
-              value={toQuery}
-              onChange={(e) => setToQuery(e.target.value)}
-              placeholder="to — e.g., Hanalei"
-              className="rounded-2xl h-12 border-2 border-gray-200 focus:border-primary flex-1"
+        <div className={flowSection}>
+          <RecurringRequests />
+          <div className="space-y-3">
+            <p className={flowHeading}>📅 pick your date</p>
+            <DatePickerButton
+              value={startDate}
+              onChange={(d) => { setStartDate(d); setEndDate(d); }}
+              placeholder="select a date"
+              className="h-16 text-lg rounded-lg border-gray-300 px-4 [&_svg]:w-5 [&_svg]:h-5"
             />
           </div>
-          <div className="flex gap-2">
-            <Button
-              onClick={handleRefresh}
-              disabled={isLoading}
-              className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-2xl h-12 text-base font-bold"
-            >
-              <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+          <div className="space-y-3">
+            <p className={flowHeading}>📍 pick your route <span className="text-lg font-normal text-gray-400">(optional)</span></p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Input
+                value={fromQuery}
+                onChange={(e) => setFromQuery(e.target.value)}
+                placeholder="from — e.g., Lihue"
+                className={flowField}
+              />
+              <Input
+                value={toQuery}
+                onChange={(e) => setToQuery(e.target.value)}
+                placeholder="to — e.g., Hanalei"
+                className={flowField}
+              />
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <Button onClick={handleRefresh} disabled={isLoading} className={`flex-1 ${flowButton}`}>
+              <RefreshCw className={`w-5 h-5 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
               {isLoading ? 'loading...' : 'find rides 🔍'}
             </Button>
             <Button
               onClick={() => setShowTutorial(true)}
               variant="outline"
-              className="rounded-2xl h-12 px-4 border-2 border-gray-200"
+              className="h-16 w-16 rounded-lg border-2 border-gray-300 shrink-0"
             >
-              <HelpCircle className="w-5 h-5" />
+              <HelpCircle className="w-6 h-6" />
             </Button>
           </div>
         </div>

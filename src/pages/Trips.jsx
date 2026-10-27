@@ -210,7 +210,7 @@ export default function TripsPage() {
               <p className="text-xl font-semibold text-gray-800 mt-4">Don't see a ride that fits your plans?</p>
               <Button
                 onClick={() => setView("request")}
-                className="mt-2 w-full bg-primary hover:bg-primary/90 text-white rounded-2xl h-14 text-xl font-bold"
+                className="mt-2 w-full bg-primary hover:bg-primary/90 text-white rounded-lg h-16 text-xl font-bold"
               >
                 🙋 request here
               </Button>

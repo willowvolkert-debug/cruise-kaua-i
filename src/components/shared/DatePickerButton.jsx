@@ -4,6 +4,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon, Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 /**
  * A date picker that displays a friendly label like "June 5th"
@@ -24,7 +25,7 @@ export default function DatePickerButton({ value, onChange, placeholder = "pick 
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className={`w-full justify-start text-left font-semibold rounded-2xl h-12 border-2 border-gray-200 bg-white hover:border-primary focus:border-primary transition-colors ${!label ? "text-gray-400 font-normal" : "text-gray-800"} ${className}`}
+          className={cn("w-full justify-start text-left font-semibold rounded-2xl h-12 border-2 border-gray-200 bg-white hover:border-primary focus:border-primary transition-colors", !label ? "text-gray-400 font-normal" : "text-gray-800", className)}
         >
           <CalendarIcon className="w-4 h-4 mr-2 text-gray-400 shrink-0" />
           {label || placeholder}
