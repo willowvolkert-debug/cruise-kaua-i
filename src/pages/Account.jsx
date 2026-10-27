@@ -523,8 +523,8 @@ export default function AccountPage() {
     return (
         <div className="p-4 md:p-8 bg-white">
             <div className="max-w-4xl mx-auto space-y-8">
-                <Card className="shadow-lg border-gray-200 bg-white rounded-3xl">
-                    <CardContent className="p-6 md:p-8">
+                <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
+                    <CardContent className="px-0 py-6">
                         {isEditing && (
                             <div className="flex justify-end mb-4 gap-2">
                                 <Button variant="outline" onClick={() => { setIsEditing(false); setProfilePicFile(null); setEditMode('guided'); setExpandedToFull(false); }} className="rounded-2xl border-gray-300 text-gray-600">cancel</Button>
@@ -566,7 +566,7 @@ export default function AccountPage() {
                                 )}
                             </div>
                             <div className="flex-1 text-center md:text-left space-y-2">
-                                <h2 className="text-3xl font-bold text-secondary">
+                                <h2 className="cruise-head text-4xl text-secondary">
                                     {user.username ? `@${user.username}` : (user.full_name || user.email?.split('@')[0] || 'Cruise member')}
                                 </h2>
                                 {isEditing ? (
@@ -877,8 +877,8 @@ export default function AccountPage() {
                 )}
 
                 {/* Verification card — always shown below profile */}
-                <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
-                    <CardHeader><CardTitle className="text-xl text-secondary">verification</CardTitle></CardHeader>
+                <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
+                    <CardHeader><CardTitle className="text-2xl font-bold text-secondary">verification</CardTitle></CardHeader>
                     <CardContent className="space-y-3">
                         {user.drivers_license_pending_review && !user.drivers_license_verified && (
                             <div className="p-3 bg-gray-100 border border-gray-300 rounded-2xl text-gray-700 text-sm">
@@ -939,7 +939,7 @@ export default function AccountPage() {
 
                 {/* Become a Driver CTA — shown when user is not yet a verified driver */}
                 {user.user_type !== 'driver' && !user.vehicle_verified && (
-                    <Card className="shadow-md border-primary/30 bg-gradient-to-br from-primary/5 to-green-50 rounded-3xl">
+                    <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
                         <CardContent className="p-6 text-center space-y-3">
                             <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
                                 <Car className="w-7 h-7 text-primary" />
@@ -967,8 +967,8 @@ export default function AccountPage() {
                     <div className="md:col-span-2 space-y-8">
 
                         {!agreementsComplete && (
-                            <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
-                                <CardHeader><CardTitle className="text-xl text-secondary">legal agreements</CardTitle></CardHeader>
+                            <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
+                                <CardHeader><CardTitle className="text-2xl font-bold text-secondary">legal agreements</CardTitle></CardHeader>
                                 <CardContent className="space-y-4">
                                     <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200">
                                         <div className="flex items-center gap-2">
@@ -1017,7 +1017,7 @@ export default function AccountPage() {
                         )}
 
                         {pendingRequests.length > 0 && (
-                            <Card className="shadow-lg border-blue-200 bg-blue-50 rounded-3xl">
+                            <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2 text-secondary">
                                         <UserPlus className="w-6 h-6 text-blue-600"/>
@@ -1071,8 +1071,8 @@ export default function AccountPage() {
                             </Card>
                         )}
 
-                        <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
-                            <CardHeader><CardTitle className="text-xl text-secondary">ride history</CardTitle></CardHeader>
+                        <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
+                            <CardHeader><CardTitle className="text-2xl font-bold text-secondary">ride history</CardTitle></CardHeader>
                             <CardContent className="flex items-center justify-around text-center">
                                 <div><p className="text-3xl font-bold text-primary">{ridesGiven.length}</p><p className="text-gray-500">rides given</p></div>
                                 <Separator orientation="vertical" className="h-16"/>
@@ -1082,9 +1082,9 @@ export default function AccountPage() {
                     </div>
 
                     <div className="space-y-8">
-                        <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
+                        <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
                             <CardHeader>
-                                <CardTitle className="text-xl text-secondary">transaction history</CardTitle>
+                                <CardTitle className="text-2xl font-bold text-secondary">transaction history</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <TransactionHistory />
@@ -1092,7 +1092,7 @@ export default function AccountPage() {
                         </Card>
 
                         {user.vehicle_verified && (
-                        <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
+                        <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
                             <CardHeader>
                                 <CardTitle className="text-xl text-secondary flex items-center gap-2">
                                     <DollarSign className="w-5 h-5 text-primary" />
@@ -1279,8 +1279,8 @@ export default function AccountPage() {
                     </div>
                 </div>
                 
-                <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
-                    <CardHeader><CardTitle className="text-xl text-secondary">ratings</CardTitle></CardHeader>
+                <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
+                    <CardHeader><CardTitle className="text-2xl font-bold text-secondary">ratings</CardTitle></CardHeader>
                     <CardContent className="grid md:grid-cols-2 gap-8">
                         <RatingsList ratings={driverRatings} title="as a driver" />
                         <RatingsList ratings={passengerRatings} title="as a passenger" />
@@ -1290,8 +1290,8 @@ export default function AccountPage() {
 
 
                 {agreementsComplete && (
-                    <Card className="shadow-md border-gray-200 bg-white rounded-3xl">
-                        <CardHeader><CardTitle className="text-xl text-secondary">legal agreements</CardTitle></CardHeader>
+                    <Card className="shadow-none border-0 border-b-2 border-gray-200 bg-white rounded-none">
+                        <CardHeader><CardTitle className="text-2xl font-bold text-secondary">legal agreements</CardTitle></CardHeader>
                         <CardContent className="space-y-4">
                             <Link to={createPageUrl("TermsOfService")} className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-colors cursor-pointer">
                                             <div className="flex items-center gap-2">
