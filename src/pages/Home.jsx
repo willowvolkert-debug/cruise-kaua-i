@@ -4,6 +4,7 @@ import { ChevronLeft } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { useSkies } from "@/lib/skies";
+import BouncySubheading from "@/components/BouncySubheading";
 import GreySkies from "@/components/relief/GreySkies";
 import ImpactCard from "@/components/shared/ImpactCard";
 import HazardPanel from "@/components/hazards/HazardPanel";
@@ -44,17 +45,8 @@ export default function Home() {
     <div className="p-3 md:p-8 bg-background overflow-x-hidden min-h-screen">
       <div className="max-w-2xl mx-auto">
         <div className="mb-5">
-          <h1 className="cruise-head text-5xl md:text-6xl text-secondary leading-none">cruise kauaʻi</h1>
-          <p className="text-gray-500 text-sm mt-1 leading-relaxed">
-            Welcome! Cruise Kauaʻi was started by a Kauaʻi resident who saw
-            how hard it is to get around without a car — whether you're a
-            resident whose car has broken down, or a visitor exploring the
-            island. Our mission is to provide accessible &amp; affordable
-            transportation across the islands, divert money into our local
-            economy, and build a community support network where everyone can
-            get to where they need to go. Get back to this home page at any
-            time by pressing on our logo in the top right.
-          </p>
+          <h1 className="cruise-head text-5xl md:text-6xl text-secondary leading-none">cruise hawaiʻi</h1>
+          <BouncySubheading text="reduce traffic, save money, build community." />
         </div>
 
         <ImpactCard user={user} />

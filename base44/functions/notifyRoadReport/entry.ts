@@ -1,7 +1,7 @@
 // Texts opted-in users when a new road alert is posted on their side of the island.
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 import { sendSmsToUsers, kauaiSide } from '../../shared/sms.ts';
-import { matchesLocation } from '../../shared/locations.ts';
+import { matchesLocation, userIsland } from '../../shared/locations.ts';
 
 const LABELS: Record<string, string> = {
   traffic: 'traffic jam', crash: 'crash', hazard: 'road hazard', closure: 'road closed',
@@ -22,6 +22,7 @@ Deno.serve(async (req) => {
     const users = await base44.asServiceRole.entities.User.list('-created_date', 5000);
     const recipients = users.filter((u: any) =>
       u.notify_road &&
+      userIsland(u) === (report.island || 'Kauai') &&
       u.sms_notifications_enabled &&
       u.phone_number &&
       u.id !== report.reporter_id &&

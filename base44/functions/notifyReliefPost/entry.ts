@@ -1,7 +1,7 @@
 // Texts opted-in users when a new Grey Skies relief post is created.
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 import { sendSmsToUsers, kauaiSide } from '../../shared/sms.ts';
-import { matchesLocation } from '../../shared/locations.ts';
+import { matchesLocation, userIsland } from '../../shared/locations.ts';
 
 Deno.serve(async (req) => {
   try {
@@ -15,6 +15,7 @@ Deno.serve(async (req) => {
     const users = await base44.asServiceRole.entities.User.list('-created_date', 5000);
     const recipients = users.filter((u: any) =>
       u.notify_relief &&
+      userIsland(u) === (post.island || 'Kauai') &&
       u.sms_notifications_enabled &&
       u.phone_number &&
       u.id !== post.owner_id &&

@@ -24,3 +24,5 @@ export function matchesLocation(prefs: string[] | undefined, texts: string[], si
   if (wanted.some((p) => hay.includes(p))) return true;
   return !!side && wanted.some((p) => SIDE_OF[p] === side);
 }
+// The island a user is signed up on (unset = Kauaʻi).
+export const userIsland = (u: any) => u?.preferred_island || 'Kauai';

@@ -5,11 +5,19 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const sr = base44.asServiceRole;
 
+    // Each island is its own silo: everything below is scoped to the chosen island.
+    let island = 'Kauai';
+    try { const body = await req.json(); if (body?.island) island = body.island; } catch (_) { /* no body */ }
+
     const users = await sr.entities.User.list('-created_date', 5000);
-    const userCount = users.length;
+    const userCount = users.filter((u: any) => (u.preferred_island || 'Kauai') === island).length;
+
+    const islandRides = await sr.entities.Ride.filter({ island }, '-created_date', 5000);
+    const islandRideList = Array.isArray(islandRides) ? islandRides : islandRides.items || [];
+    const islandRideIds = new Set(islandRideList.map((r: any) => r.id));
 
     const txs = await sr.entities.Transaction.filter({ transaction_status: 'completed' }, '-created_date', 5000);
-    const txList = Array.isArray(txs) ? txs : txs.items || [];
+    const txList = (Array.isArray(txs) ? txs : txs.items || []).filter((t: any) => islandRideIds.has(t.ride_id));
     const driverEarnings = txList.reduce((s: number, t: any) => s + (t.ride_amount || 0), 0);
 
     const result: any = {
@@ -28,7 +36,8 @@ Deno.serve(async (req) => {
         1000
       );
       const list = Array.isArray(bookings) ? bookings : bookings.items || [];
-      const done = list.filter((b: any) => b.booking_status === 'confirmed' || b.booking_status === 'completed');
+      const islandBookings = list.filter((b: any) => islandRideIds.has(b.ride_id));
+      const done = islandBookings.filter((b: any) => b.booking_status === 'confirmed' || b.booking_status === 'completed');
       const seatsOnMyRides = done
         .filter((b: any) => b.driver_id === me.id)
         .reduce((s: number, b: any) => s + (b.seats_booked || 1), 0);
@@ -37,10 +46,12 @@ Deno.serve(async (req) => {
       const moneyToCommunity = done.reduce((s: number, b: any) => s + (b.total_amount || 0), 0);
 
       // Every booking chat counts, whatever its status (including archived ones)
-      let conversations = list.filter((b: any) => (b.messages || []).length > 0).length;
+      let conversations = islandBookings.filter((b: any) => (b.messages || []).length > 0).length;
 
       const relief = await sr.entities.ReliefMessage.filter({ recipient_id: me.id }, '-created_date', 500);
-      const reliefList = Array.isArray(relief) ? relief : relief.items || [];
+      const islandPosts = await sr.entities.ReliefPost.filter({ island }, '-created_date', 1000);
+      const islandPostIds = new Set((Array.isArray(islandPosts) ? islandPosts : islandPosts.items || []).map((p: any) => p.id));
+      const reliefList = (Array.isArray(relief) ? relief : relief.items || []).filter((m: any) => islandPostIds.has(m.post_id));
       conversations += new Set(reliefList.map((m: any) => `${m.post_id}:${m.sender_id}`)).size;
 
       result.me = {

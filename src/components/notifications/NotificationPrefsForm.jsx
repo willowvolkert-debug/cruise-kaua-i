@@ -2,6 +2,7 @@ import React from "react";
 import { Switch } from "@/components/ui/switch";
 import MultiChips from "@/components/notifications/MultiChips";
 import LocationPicker from "@/components/notifications/LocationPicker";
+import { getIsland, ISLAND_MAP } from "@/lib/island";
 import { RELIEF_KINDS } from "@/components/notifications/notificationOptions";
 
 function Row({ label, checked, onChange }) {
@@ -23,6 +24,8 @@ function Section({ title, children }) {
 }
 
 function Where({ value, onChange }) {
+  // Town groups are for Kauaʻi; other islands get alerts for the whole island
+  if (getIsland() !== "Kauai") return <p className="text-xs text-muted-foreground">you'll get alerts for all of {ISLAND_MAP[getIsland()].label}</p>;
   return (
     <div className="space-y-2">
       <p className="text-xs text-muted-foreground">where? pick a side of the island or specific towns</p>

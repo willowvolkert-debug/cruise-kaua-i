@@ -1,6 +1,6 @@
 // SMS: Notify all opted-in riders when a new (non-recurring) ride is posted
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
-import { matchesLocation } from '../../shared/locations.ts';
+import { matchesLocation, userIsland } from '../../shared/locations.ts';
 
 Deno.serve(async (req) => {
   try {
@@ -40,6 +40,7 @@ Deno.serve(async (req) => {
     const riders = allUsers.filter(u => {
       if (!u.sms_notifications_enabled || !u.phone_number) return false;
       if (u.sms_notify_posted_rides === false) return false;
+      if (userIsland(u) !== (ride.island || 'Kauai')) return false;
       // Don't blast drivers about new rides — they post rides, they don't need "new ride available" alerts
       if (u.user_type === 'driver') return false;
       // Don't notify the driver who posted this ride about their own ride
