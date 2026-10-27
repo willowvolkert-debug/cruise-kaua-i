@@ -29,12 +29,15 @@ Deno.serve(async (req) => {
       );
       const list = Array.isArray(bookings) ? bookings : bookings.items || [];
       const done = list.filter((b: any) => b.booking_status === 'confirmed' || b.booking_status === 'completed');
-      const carsRemoved = done.reduce((s: number, b: any) => s + (b.seats_booked || 1), 0);
+      const seatsOnMyRides = done
+        .filter((b: any) => b.driver_id === me.id)
+        .reduce((s: number, b: any) => s + (b.seats_booked || 1), 0);
+      const ridesTaken = done.filter((b: any) => b.passenger_id === me.id).length;
+      const carsRemoved = seatsOnMyRides + ridesTaken;
       const moneyToCommunity = done.reduce((s: number, b: any) => s + (b.total_amount || 0), 0);
 
-      let conversations = list.filter((b: any) =>
-        (b.messages || []).some((m: any) => m.sender_id !== me.id)
-      ).length;
+      // Every booking chat counts, whatever its status (including archived ones)
+      let conversations = list.filter((b: any) => (b.messages || []).length > 0).length;
 
       const relief = await sr.entities.ReliefMessage.filter({ recipient_id: me.id }, '-created_date', 500);
       const reliefList = Array.isArray(relief) ? relief : relief.items || [];
