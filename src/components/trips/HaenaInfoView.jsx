@@ -22,16 +22,12 @@ const OPTIONS = [
   }
 ];
 
+import BackButton from "@/components/BackButton";
+
 export default function HaenaInfoView({ onBack }) {
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
-      <button
-        type="button"
-        onClick={onBack}
-        className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-primary transition-colors"
-      >
-        <ChevronLeft className="w-4 h-4" /> back to request a ride
-      </button>
+<BackButton onClick={onBack} />
 
       <div className="text-center space-y-3">
         <h2 className="text-2xl font-bold text-secondary">Hāʻena State Park access</h2>

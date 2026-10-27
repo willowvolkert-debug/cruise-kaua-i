@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -108,9 +109,7 @@ export default function CommunityForum() {
   return (
     <div className="p-4 md:p-8 bg-white min-h-screen">
       <div className="max-w-3xl mx-auto space-y-6">
-        <Link to="/community" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-primary transition-colors">
-          <ChevronLeft className="w-4 h-4" /> back to community
-        </Link>
+        <BackButton />
 
         <div className="text-center space-y-2">
           <h1 className="cruise-head tracking-widest text-4xl text-secondary leading-none">forum</h1>

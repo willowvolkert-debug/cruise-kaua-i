@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import JobThemeAccordion from "@/components/jobs/JobThemeAccordion";
 
 const JOBS_EMAIL = "cruisekauai@gmail.com";
@@ -185,13 +186,7 @@ export default function CommunityJobs() {
     <div className="p-3 md:p-8 bg-white overflow-x-hidden min-h-screen">
       <div className="max-w-2xl mx-auto">
         <div className="mb-5">
-          <Link
-            to="/community"
-            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-primary transition-colors mb-3"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            back to community
-          </Link>
+          <BackButton className="mb-3" />
           <h1 className="cruise-head tracking-widest text-4xl text-secondary leading-none">
             We're hiring! 🌺🚗✨
           </h1>

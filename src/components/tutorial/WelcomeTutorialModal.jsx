@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import { sendInstallHelpEmail } from "@/functions/sendInstallHelpEmail";
 import SkiesCard from "@/components/welcome/SkiesCard";
+import NavigatingPage from "@/components/tutorial/NavigatingPage";
 
 // ── Page 1: How It Works ────────────────────────────────────────────────────
 function HowItWorksPage() {
@@ -259,7 +260,7 @@ function MoreQuestionsPage() {
 }
 
 // ── Main Modal ──────────────────────────────────────────────────────────────
-const PAGES = ["how_it_works", "skies", "get_ride", "post_ride", "price_bidding", "install_app", "more_questions"];
+const PAGES = ["how_it_works", "navigating", "skies", "get_ride", "post_ride", "price_bidding", "install_app", "more_questions"];
 
 export default function WelcomeTutorialModal({ isOpen, onClose, onComplete }) {
   const [pageIndex, setPageIndex] = useState(0);
@@ -340,6 +341,7 @@ export default function WelcomeTutorialModal({ isOpen, onClose, onComplete }) {
         {/* Content */}
         <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-2">
           {currentPage === "how_it_works" && <HowItWorksPage />}
+          {currentPage === "navigating" && <NavigatingPage />}
           {currentPage === "skies" && <SkiesCard onContinue={() => setPageIndex(p => p + 1)} />}
           {currentPage === "get_ride" && <GetRideTutorial />}
           {currentPage === "post_ride" && <PostRideTutorial />}

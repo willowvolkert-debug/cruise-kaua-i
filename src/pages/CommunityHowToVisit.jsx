@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ExternalLink, PlayCircle } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { Card, CardContent } from "@/components/ui/card";
 
 const YOUTUBE_CHANNEL = "https://www.youtube.com/@kauaivisitorsbureau5320/videos";
@@ -9,9 +10,7 @@ export default function CommunityHowToVisit() {
   return (
     <div className="p-4 md:p-8 bg-white min-h-screen">
       <div className="max-w-3xl mx-auto space-y-8">
-        <Link to="/communityvisitorguide" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-primary transition-colors">
-          <ChevronLeft className="w-4 h-4" /> back to visitor guide
-        </Link>
+        <BackButton />
 
         <div className="space-y-3">
           <h1 className="cruise-head tracking-widest text-4xl text-secondary leading-none">how to visit Kauaʻi</h1>

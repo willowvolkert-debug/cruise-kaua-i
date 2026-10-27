@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
+import BackButton from "@/components/BackButton";
 
 const sections = [
   { emoji: "🏝️", label: "how to visit Kauaʻi", desc: "Learn about the Destination Management Action Plan and how to travel to Kauaʻi responsibly.", to: "/communityhowtovisit" },
@@ -11,9 +12,7 @@ export default function CommunityVisitorGuide() {
   return (
     <div className="p-4 md:p-8 bg-white min-h-screen">
       <div className="max-w-2xl mx-auto">
-        <Link to="/community" className="inline-flex items-center gap-1 text-base text-gray-500 mb-4 select-none">
-          <ChevronLeft className="w-4 h-4" /> back to community
-        </Link>
+        <BackButton className="mb-4" />
         <div className="mb-5">
           <h1 className="cruise-head tracking-widest text-4xl text-secondary leading-none">visitor guide</h1>
           <p className="text-gray-900 text-lg mt-1">Everything for visiting Kauaʻi with aloha.</p>

@@ -23,7 +23,7 @@ export default function BrandHeader({ right = null }) {
           <button
             onClick={goBack}
             aria-label="Go back"
-            className="flex items-center gap-0.5 text-primary font-semibold text-base py-2 pr-3"
+            className="inline-flex items-center gap-1 h-10 pl-2 pr-4 rounded-lg bg-primary hover:bg-primary/90 text-white font-bold text-base"
           >
             <ChevronLeft className="w-5 h-5" /> back
           </button>
