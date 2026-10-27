@@ -1,0 +1,40 @@
+{
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create"
+      ],
+      "entity_name": "ReliefPost"
+    }
+  },
+  "name": "Notify New Relief Post",
+  "description": "Texts opted-in users when a Grey Skies resource or need is posted",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "notify_new_relief_post",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "notifyReliefPost",
+            "args": {
+              "entity_id": "${ .trigger.entity_id }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Text subscribers",
+            "description": "Resource / need alerts"
+          }
+        }
+      }
+    ]
+  }
+}

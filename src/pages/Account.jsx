@@ -26,7 +26,7 @@ import WelcomeTutorialModal from "../components/tutorial/WelcomeTutorialModal";
 import SignupInfoCard from "../components/account/SignupInfoCard";
 import PostSignupCard from "../components/account/PostSignupCard";
 import SmsSettingsCard from "../components/account/SmsSettingsCard";
-import SmsLocationPreferences from "../components/account/SmsLocationPreferences";
+import NotificationPreferencesCard from "../components/account/NotificationPreferencesCard";
 import { deleteAccount } from "../functions/deleteAccount";
 import { Trash2, AlertTriangle } from "lucide-react";
 
@@ -864,8 +864,8 @@ export default function AccountPage() {
                 {/* SMS Settings — lets every user opt in / opt out of text alerts */}
                 <SmsSettingsCard user={user} onUpdated={loadData} />
 
-                {/* SMS Location Preferences — shown when SMS is enabled */}
-                <SmsLocationPreferences user={user} onUserUpdate={(u) => setUser(u)} />
+                {/* Notification preferences (rides, grey skies, road alerts) */}
+                <NotificationPreferencesCard user={user} onUserUpdate={(u) => setUser(u)} />
 
                 {/* Admin Messages */}
                 {adminMessages.length > 0 && (

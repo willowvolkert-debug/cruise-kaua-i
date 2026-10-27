@@ -12,8 +12,10 @@ export default function GreySkies({ user }) {
   const [selected, setSelected] = useState(null);
 
   const load = useCallback(async () => {
-    const res = await base44.entities.ReliefPost.list("-created_date", 500);
-    setPosts(res.items || res);
+    // Relief posts expire 1 month after posting
+    const since = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
+    const res = await base44.entities.ReliefPost.filter({ created_date: { $gte: since } }, { sort: "-created_date", limit: 500 });
+    setPosts(res.items);
     setLoading(false);
   }, []);
   useEffect(() => { load(); }, [load]);

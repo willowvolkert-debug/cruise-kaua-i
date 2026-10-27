@@ -17,7 +17,13 @@ export default function HazardPanel({ user }) {
   const load = useCallback(async () => {
     const since = new Date(Date.now() - HAZARD_TTL_HOURS * 3600 * 1000).toISOString();
     const page = await base44.entities.RoadReport.filter(
-      { status: "active", created_date: { $gte: since } },
+      {
+        status: "active",
+        $or: [
+          { last_confirmed_at: { $gte: since } },
+          { last_confirmed_at: { $exists: false }, created_date: { $gte: since } },
+        ],
+      },
       { sort: "-created_date", limit: 200 }
     );
     setReports(page.items);
@@ -44,6 +50,7 @@ export default function HazardPanel({ user }) {
     const updated = await base44.entities.RoadReport.update(report.id, {
       confirmed_by: confirmed,
       gone_by: gone,
+      ...(kind === "confirm" ? { last_confirmed_at: new Date().toISOString() } : {}),
       status: cleared ? "cleared" : "active",
     }).catch(() => null);
     if (!updated) {
@@ -94,7 +101,14 @@ export default function HazardPanel({ user }) {
         )}
       </p>
       {selected && (
-        <ReportDetail report={selected} user={user} onVote={vote} onDelete={remove} onClose={() => setSelected(null)} />
+        <ReportDetail
+          report={selected}
+          user={user}
+          onVote={vote}
+          onDelete={remove}
+          onEdited={(r) => { setSelected(r); setReports((rs) => rs.map((x) => (x.id === r.id ? r : x))); }}
+          onClose={() => setSelected(null)}
+        />
       )}
       <Button onClick={startReport} className="w-full mt-3 rounded-full h-12 text-base select-none">
         ⚠️ report a hazard or traffic

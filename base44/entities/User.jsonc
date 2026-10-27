@@ -58,6 +58,54 @@
       "default": false,
       "description": "Whether the user has opted in to SMS notifications"
     },
+    "sms_notify_posted_rides": {
+      "type": "boolean",
+      "description": "Text me when a ride is posted. Unset = yes."
+    },
+    "sms_notify_ride_requests": {
+      "type": "boolean",
+      "description": "Text me when a ride is requested (drivers). Unset = yes."
+    },
+    "notify_relief": {
+      "type": "boolean",
+      "default": false,
+      "description": "Text me about new Grey Skies relief posts"
+    },
+    "notify_relief_kinds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "need",
+          "resource"
+        ]
+      },
+      "default": [],
+      "description": "Which relief post kinds to be notified about"
+    },
+    "notify_road": {
+      "type": "boolean",
+      "default": false,
+      "description": "Text me about new road alerts"
+    },
+    "notify_road_sides": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "north",
+          "east",
+          "south",
+          "west"
+        ]
+      },
+      "default": [],
+      "description": "Sides of Kauai to get road alert texts for"
+    },
+    "notification_prefs_set": {
+      "type": "boolean",
+      "default": false
+    },
     "sms_preferred_locations": {
       "type": "array",
       "items": {

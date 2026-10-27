@@ -1,0 +1,40 @@
+{
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create"
+      ],
+      "entity_name": "RoadReport"
+    }
+  },
+  "name": "Notify New Road Alert",
+  "description": "Texts opted-in users when a road alert is posted on their side of the island",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "notify_new_road_alert",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "notifyRoadReport",
+            "args": {
+              "entity_id": "${ .trigger.entity_id }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Text subscribers",
+            "description": "Road alerts by island side"
+          }
+        }
+      }
+    ]
+  }
+}

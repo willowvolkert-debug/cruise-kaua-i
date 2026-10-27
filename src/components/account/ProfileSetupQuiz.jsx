@@ -12,6 +12,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Camera, ChevronRight, CheckCircle, Upload, Car, MapPin, X, FileText, Shield, Bell, Info } from "lucide-react";
 import { requestNotificationPermission } from "@/components/utils/notifications";
+import NotificationPrefsForm from "@/components/notifications/NotificationPrefsForm";
+import { prefsFromUser } from "@/components/notifications/notificationOptions";
 
 const BASE_STEPS = [
   { id: "username", title: "What should we call you?", subtitle: "Choose a username others will see on the platform (no spaces).", type: "text", placeholder: "e.g. kaleo_808", field: "username" },
@@ -25,6 +27,7 @@ const BASE_STEPS = [
   { id: "bio", title: "Tell us about yourself", subtitle: "Share where you're from, how long you've lived on the island, and what you do — this helps build trust with the people you ride with.", type: "textarea", placeholder: "e.g. Born and raised on Kauaʻi, love hiking the Na Pali Coast and meeting new people!", field: "bio" },
   { id: "phone", title: "What's your phone number?", subtitle: "Optional. We'll text you when someone messages you or books your ride. We'll never send promotions.", type: "phone", field: "phone_number" },
   { id: "push_notifications", title: "Enable push notifications", subtitle: "Get notified when a rider books your ride, a driver accepts your request, or someone sends you a message.", type: "push_notifications", field: "push_notifications" },
+  { id: "notification_prefs", title: "Choose your notifications", subtitle: "Pick what you want texts about. You can change this any time in your account.", type: "notification_prefs", field: "notification_prefs" },
   { id: "profile_picture", title: "Add a profile photo", subtitle: "A clear photo of your face helps build trust in our community.", type: "photo", field: "profile_picture_url" },
   { id: "terms_of_service", title: "Terms of Service", subtitle: "Please read and agree to our Terms of Service before continuing.", type: "terms_of_service", field: "terms_of_service" },
   { id: "privacy_policy", title: "Privacy Policy", subtitle: "Please read and agree to our Privacy Policy before continuing.", type: "privacy_policy", field: "privacy_policy" },
@@ -109,6 +112,9 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
   const vehicleIntRef = useRef();
   const insuranceRef = useRef();
 
+  // Text notification preferences
+  const [notifPrefs, setNotifPrefs] = useState(() => prefsFromUser(user));
+
   // Push notifications
   const [notifStatus, setNotifStatus] = useState('idle'); // 'idle' | 'granted' | 'denied'
 
@@ -156,6 +162,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
       else if (s.type === 'textarea' && s.field === 'bio' && user?.bio) complete = true;
       else if (s.type === 'phone' && user?.phone_number) complete = true;
       else if (s.type === 'push_notifications') complete = true;
+      else if (s.type === 'notification_prefs' && user?.notification_prefs_set) complete = true;
       else if (s.type === 'photo' && user?.profile_picture_url) complete = true;
       else if (s.type === 'terms_of_service' && user?.terms_accepted) complete = true;
       else if (s.type === 'privacy_policy' && user?.privacy_policy_accepted) complete = true;
@@ -191,7 +198,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
       return true;
     } else if (current.type === "phone") {
       return true; // optional step
-    } else if (current.type === "push_notifications") {
+    } else if (current.type === "push_notifications" || current.type === "notification_prefs") {
       return true; // optional step
     } else if (current.type === "photo") {
       if (!photoFile && !user?.profile_picture_url) { setError("Oops! You have to complete this step before moving on."); return false; }
@@ -230,6 +237,8 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
       phone_number: answers.phone_number || '',
       preferred_island: answers.preferred_island || 'Kauai',
       sms_notifications_enabled: !!(answers.phone_number),
+      ...notifPrefs,
+      notification_prefs_set: true,
       profile_complete: !!(answers.username && answers.age && answers.gender && answers.bio && profilePicUrl),
       has_completed_profile_quiz: true,
       terms_accepted: true,
@@ -638,6 +647,11 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                 <Label htmlFor="privacyAgreed" className="cursor-pointer text-sm font-semibold text-foreground leading-tight">I have read and agree to the Privacy Policy</Label>
               </div>
             </div>
+          )}
+
+          {/* TEXT NOTIFICATION PREFERENCES */}
+          {current.type === "notification_prefs" && (
+            <NotificationPrefsForm value={notifPrefs} onChange={setNotifPrefs} canText={!!answers.phone_number} />
           )}
 
           {/* PUSH NOTIFICATIONS */}

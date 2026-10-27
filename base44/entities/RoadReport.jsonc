@@ -51,6 +51,10 @@
       },
       "default": []
     },
+    "last_confirmed_at": {
+      "type": "string",
+      "description": "ISO time of the latest 'still there' vote (or creation). Alert expires 24h after this."
+    },
     "status": {
       "type": "string",
       "enum": [

@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
     }
 
     const allUsers = await base44.asServiceRole.entities.User.list();
-    const recipients = allUsers.filter(u => u.sms_notifications_enabled && u.phone_number);
+    const recipients = allUsers.filter(u => u.sms_notifications_enabled && u.phone_number && u.sms_notify_posted_rides !== false);
 
     if (recipients.length === 0) return Response.json({ ok: true, skipped: 'no recipients' });
 

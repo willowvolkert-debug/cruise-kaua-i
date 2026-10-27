@@ -13,8 +13,8 @@ export const HAZARD_TYPES = [
 
 export const getHazardType = (key) => HAZARD_TYPES.find((t) => t.key === key) || HAZARD_TYPES[2];
 
-// Reports stay on the map for this many hours
-export const HAZARD_TTL_HOURS = 4;
+// Reports stay on the map this many hours after posting, or after the latest "still there" vote
+export const HAZARD_TTL_HOURS = 24;
 
 export function timeAgo(dateStr) {
   const d = new Date(/Z|[+-]\d\d:?\d\d$/.test(dateStr) ? dateStr : dateStr + "Z");

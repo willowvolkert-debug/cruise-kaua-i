@@ -62,7 +62,7 @@ Deno.serve(async (req) => {
     const message = `Cruise Kauai: ${driverName} - recurring ride ${scheduleDesc}, ${loc} to ${dest}, ${seats} seat(s)${price}. cruisekauai.org STOP=optout`;
 
     // Find all opted-in riders
-    const riders = users.filter(u => u.sms_notifications_enabled && u.phone_number);
+    const riders = users.filter(u => u.sms_notifications_enabled && u.phone_number && u.sms_notify_posted_rides !== false);
     if (riders.length === 0) return Response.json({ ok: true, skipped: 'no rider recipients' });
 
     const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');

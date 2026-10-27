@@ -6,14 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Loader2, MapPin } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
-import { HAZARD_TYPES } from "./hazardTypes";
-
-const geocode = async (q) => {
-  const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&bounded=1&viewbox=-159.85,22.25,-159.25,21.85&q=${encodeURIComponent(q + ", Kauai, Hawaii")}`;
-  const res = await fetch(url);
-  const data = await res.json();
-  return data[0] ? [parseFloat(data[0].lat), parseFloat(data[0].lon)] : null;
-};
+import HazardTypePicker from "./HazardTypePicker";
+import { geocode } from "./geocode";
 
 export default function ReportDialog({ open, onOpenChange, user, picked, onCreated }) {
   const [type, setType] = useState(null);
@@ -42,6 +36,7 @@ export default function ReportDialog({ open, onOpenChange, user, picked, onCreat
       reporter_name: user.full_name || "neighbor",
       confirmed_by: [user.id],
       gone_by: [],
+      last_confirmed_at: new Date().toISOString(),
       status: "active",
     });
     setSaving(false);
@@ -59,20 +54,7 @@ export default function ReportDialog({ open, onOpenChange, user, picked, onCreat
         <DialogHeader>
           <DialogTitle className="cruise-head text-3xl text-secondary">what's happening?</DialogTitle>
         </DialogHeader>
-        <div className="grid grid-cols-4 gap-2">
-          {HAZARD_TYPES.map((t) => (
-            <button
-              key={t.key}
-              onClick={() => setType(t.key)}
-              className={`flex flex-col items-center gap-1 p-2 rounded-2xl border-2 text-center select-none transition-all ${
-                type === t.key ? "border-primary bg-primary/10" : "border-border bg-background"
-              }`}
-            >
-              <span className="text-2xl">{t.emoji}</span>
-              <span className="text-[11px] leading-tight font-semibold text-foreground">{t.label}</span>
-            </button>
-          ))}
-        </div>
+        <HazardTypePicker value={type} onChange={setType} />
         <Input
           value={place}
           onChange={(e) => setPlace(e.target.value)}

@@ -6,9 +6,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { getHazardType, timeAgo } from "./hazardTypes";
+import EditReportDialog from "./EditReportDialog";
 
-export default function ReportDetail({ report, user, onVote, onDelete, onClose }) {
+export default function ReportDetail({ report, user, onVote, onDelete, onEdited, onClose }) {
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const isOwner = !!user && report.reporter_id === user.id;
   const t = getHazardType(report.type);
   const confirmed = report.confirmed_by || [];
@@ -40,11 +42,19 @@ export default function ReportDetail({ report, user, onVote, onDelete, onClose }
           👎 not there
         </Button>
       </div>
-      {isOwner && (
-        <button onClick={() => setConfirmOpen(true)} className="w-full mt-2 text-xs underline text-muted-foreground select-none">
-          delete my alert
-        </button>
+      {user && (
+        <div className="flex justify-center gap-4 mt-2">
+          <button onClick={() => setEditOpen(true)} className="text-xs underline text-muted-foreground select-none">
+            edit details
+          </button>
+          {isOwner && (
+            <button onClick={() => setConfirmOpen(true)} className="text-xs underline text-muted-foreground select-none">
+              delete my alert
+            </button>
+          )}
+        </div>
       )}
+      {editOpen && <EditReportDialog key={report.id} report={report} open={editOpen} onOpenChange={setEditOpen} onSaved={onEdited} />}
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent className="bg-card">
           <AlertDialogHeader>
