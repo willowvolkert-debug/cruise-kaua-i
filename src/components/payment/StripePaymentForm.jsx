@@ -43,7 +43,7 @@ export default function StripePaymentForm({ amount, bookingId, rideId, onSuccess
         amount,
         booking_id: bookingId,
         ride_id: rideId,
-        description: `Cruise Kauaʻi ride booking`
+        description: `Cruise Hawaiʻi ride booking`
       });
 
       if (intentData.error) {

@@ -23,23 +23,23 @@ const Accordion = ({ title, children, defaultOpen = false }) => {
 
 const faqItems = [
   {
-    q: "How does Cruise Kauaʻi work?",
-    a: "Cruise Kauaʻi connects local drivers already making a trip with riders who need to get somewhere along the way. Drivers post their rides with a date, time, and route. Riders browse available rides and request a seat. Once confirmed, riders pay through the app and coordinate details via in-app chat."
+    q: "How does Cruise Hawaiʻi work?",
+    a: "Cruise Hawaiʻi connects local drivers already making a trip with riders who need to get somewhere along the way. Drivers post their rides with a date, time, and route. Riders browse available rides and request a seat. Once confirmed, riders pay through the app and coordinate details via in-app chat."
   },
   {
     q: "Is this the same as a taxi or rideshare like Uber?",
-    a: "No. Cruise Kauaʻi is a community carpooling platform — not a taxi or commercial rideshare service. Drivers are neighbors and community members sharing trips they were already planning to make. The cost riders pay is purely cost-sharing — helping cover gas and expenses for the trip, not a professional fare or a source of profit. Cruise Kauaʻi does not employ drivers; every driver is an independent community member choosing to share their ride."
+    a: "No. Cruise Hawaiʻi is a community carpooling platform — not a taxi or commercial rideshare service. Drivers are neighbors and community members sharing trips they were already planning to make. The cost riders pay is purely cost-sharing — helping cover gas and expenses for the trip, not a professional fare or a source of profit. Cruise Hawaiʻi does not employ drivers; every driver is an independent community member choosing to share their ride."
   },
   {
-    q: "Is Cruise Kauaʻi safe?",
-    a: "The Cruise Kauaʻi community is made up of people who share a love for the island and a desire to help each other get around. Everyone who participates benefits from the system, so there's a strong incentive to treat others with aloha and respect. That said, users are encouraged to use their best judgment before booking with someone, review driver and rider profiles, and practice safe behavior during rides. Cruise Kauaʻi is not liable for any damages, losses, or injury arising from the use of the platform or any events related to a ride."
+    q: "Is Cruise Hawaiʻi safe?",
+    a: "The Cruise Hawaiʻi community is made up of people who share a love for the island and a desire to help each other get around. Everyone who participates benefits from the system, so there's a strong incentive to treat others with aloha and respect. That said, users are encouraged to use their best judgment before booking with someone, review driver and rider profiles, and practice safe behavior during rides. Cruise Hawaiʻi is not liable for any damages, losses, or injury arising from the use of the platform or any events related to a ride."
   },
   {
     q: "How are drivers verified?",
     a: "All drivers are required to upload a valid driver's license and vehicle insurance before posting rides. Our team reviews these documents manually. Drivers with expired or unverified documents are flagged and cannot post new rides until their documents are current."
   },
   {
-    q: "Who can drive on Cruise Kauaʻi?",
+    q: "Who can drive on Cruise Hawaiʻi?",
     a: "Any Kauaʻi resident (or long-term visitor) with a valid driver's license, registered vehicle, and active insurance can sign up as a driver. Drivers must agree to our community guidelines and terms of service before their first ride."
   },
   {
@@ -71,7 +71,7 @@ export default function AboutUsPage() {
 
         <div>
           <h1 className="text-3xl font-bold text-secondary">FAQ & about us</h1>
-          <p className="text-gray-500 text-sm mt-1">everything you need to know about cruise kauaʻi</p>
+          <p className="text-gray-500 text-sm mt-1">everything you need to know about cruise hawaiʻi</p>
         </div>
 
         {/* FAQ Card (dropdown) */}
@@ -126,17 +126,17 @@ function AboutUsAccordion() {
           <div className="flex flex-col sm:flex-row gap-5 items-start">
             <img
               src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/cedec1129_DC5F7FC1-3850-429F-BB9B-986B15078A46_1_105_c.jpeg"
-              alt="Willow Volkert, founder of Cruise Kauaʻi"
+              alt="Willow Volkert, founder of Cruise Hawaiʻi"
               className="w-full sm:w-40 h-48 sm:h-40 object-cover rounded-2xl shadow-md shrink-0"
             />
             <p className="text-green-900 font-bold text-base leading-snug">
-              Cruise Kauaʻi was founded by 23 year old Willow Volkert, who had struggled for years to get around the island with broken cars.
+              Cruise Hawaiʻi was founded by 23 year old Willow Volkert, who had struggled for years to get around the island with broken cars.
             </p>
           </div>
           <div className="space-y-3 text-gray-700 leading-relaxed text-sm">
             <p>She commuted Wailua to Waimea one year, then Hanapepe to Hāʻena the next — paying for gas, sitting in traffic, and listening to a lot of podcasts.</p>
             <p>In all that time, she wondered about carpooling. It would solve all her problems! Help pay for gas, reduce traffic, and give her someone to talk to on some of these long drives — not to mention helping someone out.</p>
-            <p>Cruise Kauaʻi stayed as a theory to help the island for about a year, but with persistence, Willow learned how to build an app, and started turning ideas into reality.</p>
+            <p>Cruise Hawaiʻi stayed as a theory to help the island for about a year, but with persistence, Willow learned how to build an app, and started turning ideas into reality.</p>
           </div>
           <div className="bg-green-900 text-white rounded-2xl p-5 space-y-2">
             <h3 className="font-extrabold uppercase tracking-wide text-sm">our mission</h3>

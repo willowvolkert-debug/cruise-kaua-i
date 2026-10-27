@@ -203,7 +203,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         try {
           await sendSmsNotification({
             userId: ride.driver_id,
-            message: `Cruise Kauaʻi: ${currentUser.full_name} ${bookingData.is_price_offer ? 'requested a free ride' : 'booked your free ride'}! "${bookingData.description}" Log in to accept or decline: https://cruisekauai.org`
+            message: `Cruise Hawaiʻi: ${currentUser.full_name} ${bookingData.is_price_offer ? 'requested a free ride' : 'booked your free ride'}! "${bookingData.description}" Log in to accept or decline: https://cruisekauai.org`
           });
         } catch (smsErr) {
           console.error("SMS error:", smsErr);
@@ -518,7 +518,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                   <span className="text-gray-700">Connect fee ({Math.round(connectFeeRate * 100)}%)</span>
                   <span className="font-medium">${connectFee.toFixed(2)}</span>
                 </div>
-                <p className="text-xs text-gray-400 pl-0">Platform fee Cruise Kauaʻi charges to maintain the app and process payments</p>
+                <p className="text-xs text-gray-400 pl-0">Platform fee Cruise Hawaiʻi charges to maintain the app and process payments</p>
               </div>
 
               {isFirstBooking && (

@@ -1,22 +1,22 @@
 export const faqItems = [
   {
-    q: "How does Cruise Kauaʻi work?",
-    a: "Cruise Kauaʻi connects local drivers already making a trip with riders who need to get somewhere along the way. Drivers post their rides with a date, time, and route. Riders browse available rides and request a seat. Once confirmed, riders pay through the app and coordinate details via in-app chat."
+    q: "How does Cruise Hawaiʻi work?",
+    a: "Cruise Hawaiʻi connects local drivers already making a trip with riders who need to get somewhere along the way. Drivers post their rides with a date, time, and route. Riders browse available rides and request a seat. Once confirmed, riders pay through the app and coordinate details via in-app chat."
   },
   {
     q: "Is this the same as a taxi or rideshare like Uber?",
-    a: "No. Cruise Kauaʻi is a community carpooling platform — not a taxi or commercial rideshare service. Drivers are neighbors and community members sharing trips they were already planning to make. The cost riders pay is purely cost-sharing — helping cover gas and expenses for the trip, not a professional fare or a source of profit. Cruise Kauaʻi does not employ drivers; every driver is an independent community member choosing to share their ride."
+    a: "No. Cruise Hawaiʻi is a community carpooling platform — not a taxi or commercial rideshare service. Drivers are neighbors and community members sharing trips they were already planning to make. The cost riders pay is purely cost-sharing — helping cover gas and expenses for the trip, not a professional fare or a source of profit. Cruise Hawaiʻi does not employ drivers; every driver is an independent community member choosing to share their ride."
   },
   {
-    q: "Is Cruise Kauaʻi safe?",
-    a: "The Cruise Kauaʻi community is made up of people who share a love for the island and a desire to help each other get around. Everyone who participates benefits from the system, so there's a strong incentive to treat others with aloha and respect. That said, users are encouraged to use their best judgment before booking with someone, review driver and rider profiles, and practice safe behavior during rides. Cruise Kauaʻi is not liable for any damages, losses, or injury arising from the use of the platform or any events related to a ride."
+    q: "Is Cruise Hawaiʻi safe?",
+    a: "The Cruise Hawaiʻi community is made up of people who share a love for the island and a desire to help each other get around. Everyone who participates benefits from the system, so there's a strong incentive to treat others with aloha and respect. That said, users are encouraged to use their best judgment before booking with someone, review driver and rider profiles, and practice safe behavior during rides. Cruise Hawaiʻi is not liable for any damages, losses, or injury arising from the use of the platform or any events related to a ride."
   },
   {
     q: "How are drivers verified?",
     a: "All drivers are required to upload a valid driver's license and vehicle insurance before posting rides. Our team reviews these documents manually. Drivers with expired or unverified documents are flagged and cannot post new rides until their documents are current."
   },
   {
-    q: "Who can drive on Cruise Kauaʻi?",
+    q: "Who can drive on Cruise Hawaiʻi?",
     a: "Any Kauaʻi resident (or long-term visitor) with a valid driver's license, registered vehicle, and active insurance can sign up as a driver. Drivers must agree to our community guidelines and terms of service before their first ride."
   },
   {

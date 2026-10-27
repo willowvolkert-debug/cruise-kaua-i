@@ -68,7 +68,7 @@ const THEMES = [
         title: "Social Media & Storytelling Coordinator — Part Time",
         rate: "$30/hour · approximately 10 hours/week",
         description:
-          "Cruise Kauaʻi is looking for a creative, community-minded Kauaʻi resident to tell the story of transportation on our island — and the people working together to change it. You'll produce a monthly interview series, manage our Instagram, and create content that is honest, warm, and rooted in real Kauaʻi voices.",
+          "Cruise Hawaiʻi is looking for a creative, community-minded Kauaʻi resident to tell the story of transportation on our island — and the people working together to change it. You'll produce a monthly interview series, manage our Instagram, and create content that is honest, warm, and rooted in real Kauaʻi voices.",
         experience:
           "Experience in video production, photography, or social media content creation preferred. Must be based on Kauaʻi and deeply familiar with the community.",
         apply: "Email cruisekauai@gmail.com with an intro and links to any past work.",
@@ -103,7 +103,7 @@ const THEMES = [
         title: "Community Engagement Coordinator — Part Time",
         rate: "$27/hour · 10–15 hours/week",
         description:
-          "Cruise Kauaʻi is looking for a passionate, community-rooted Kauaʻi resident to help us grow. You'll organize and facilitate community listening sessions across the island, manage our partnerships with local ʻāina organizations and schools, and coordinate the logistics of our kūpuna rides program. This role is about relationships — showing up, listening, and making sure Cruise Kauaʻi reflects the real needs of our community.",
+          "Cruise Hawaiʻi is looking for a passionate, community-rooted Kauaʻi resident to help us grow. You'll organize and facilitate community listening sessions across the island, manage our partnerships with local ʻāina organizations and schools, and coordinate the logistics of our kūpuna rides program. This role is about relationships — showing up, listening, and making sure Cruise Hawaiʻi reflects the real needs of our community.",
         experience:
           "Experience in community organizing, nonprofit work, or local outreach preferred. Must be based on Kauaʻi and deeply familiar with the community.",
         apply: "Email cruisekauai@gmail.com with an intro about yourself and why this work matters to you.",
@@ -196,7 +196,7 @@ export default function CommunityJobs() {
             We're hiring! 🌺🚗✨
           </h1>
           <p className="text-gray-600 text-sm mt-3 leading-relaxed">
-            Cruise Kauaʻi is growing into a statewide operation! Tap a category
+            Cruise Hawaiʻi is growing into a statewide operation! Tap a category
             below to explore open roles. If none fit your skills but you're still
             interested in working with us, send us an email with your interests
             and how you'd like to be involved.

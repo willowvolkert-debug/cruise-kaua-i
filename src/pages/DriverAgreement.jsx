@@ -135,7 +135,7 @@ export default function DriverAgreementPage() {
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-secondary mb-2">Driver Agreement</h1>
-          <p className="text-gray-600 mb-3">Required for all drivers on Cruise Kauaʻi</p>
+          <p className="text-gray-600 mb-3">Required for all drivers on Cruise Hawaiʻi</p>
           <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="rounded-2xl">
             <Download className="w-4 h-4 mr-2" /> Download PDF
           </Button>
@@ -155,15 +155,15 @@ export default function DriverAgreementPage() {
                   Driver Participation Agreement
                 </p>
                 <p className="mb-4">
-                  This Driver Participation Agreement ("Agreement") is entered into between you ("Driver") and Cruise Kauaʻi.
+                  This Driver Participation Agreement ("Agreement") is entered into between you ("Driver") and Cruise Hawaiʻi.
                 </p>
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">1. Agreement to Terms</h3>
-                  <p className="mb-2">By registering as a driver or offering rides through Cruise Kauaʻi, you confirm that you have read, understand, and agree to:</p>
+                  <p className="mb-2">By registering as a driver or offering rides through Cruise Hawaiʻi, you confirm that you have read, understand, and agree to:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
                     <li>This Agreement</li>
-                    <li>Cruise Kauaʻi Terms of Service</li>
+                    <li>Cruise Hawaiʻi Terms of Service</li>
                     <li>All applicable Hawaii laws and regulations</li>
                   </ul>
                   <p className="mt-2">If you do not agree, you may not use the platform as a driver.</p>
@@ -173,9 +173,9 @@ export default function DriverAgreementPage() {
                   <h3 className="font-bold text-lg text-secondary mb-2">2. Independent Status</h3>
                   <p className="mb-2">You acknowledge and agree that:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li>You are not an employee, agent, partner, or contractor of Cruise Kauaʻi</li>
+                    <li>You are not an employee, agent, partner, or contractor of Cruise Hawaiʻi</li>
                     <li>You act solely as an independent individual</li>
-                    <li>Cruise Kauaʻi does not control how, when, or whether you provide rides</li>
+                    <li>Cruise Hawaiʻi does not control how, when, or whether you provide rides</li>
                     <li>You are solely responsible for your conduct, vehicle, and compliance with law</li>
                   </ul>
                 </section>
@@ -216,9 +216,9 @@ export default function DriverAgreementPage() {
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">6. Insurance Acknowledgment</h3>
-                  <p className="mb-2">Drivers are responsible for maintaining legally required insurance coverage, and Cruise Kauaʻi encourages all users to confirm their coverage related to carpooling activities. You acknowledge and agree that:</p>
+                  <p className="mb-2">Drivers are responsible for maintaining legally required insurance coverage, and Cruise Hawaiʻi encourages all users to confirm their coverage related to carpooling activities. You acknowledge and agree that:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li>Cruise Kauaʻi does not provide insurance coverage</li>
+                    <li>Cruise Hawaiʻi does not provide insurance coverage</li>
                     <li>You are responsible for maintaining legally required auto insurance</li>
                     <li>We encourage you to confirm with your insurer that carpooling activities are covered</li>
                   </ul>
@@ -227,7 +227,7 @@ export default function DriverAgreementPage() {
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">7. Shared Responsibility</h3>
-                  <p className="mb-2">Cruise Kauaʻi serves as a coordination platform connecting independent community members for voluntary cost-sharing carpools. As a driver, you acknowledge responsibility for:</p>
+                  <p className="mb-2">Cruise Hawaiʻi serves as a coordination platform connecting independent community members for voluntary cost-sharing carpools. As a driver, you acknowledge responsibility for:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
                     <li>Safe operation of your motor vehicle</li>
                     <li>Your interactions with passengers and platform users</li>
@@ -237,7 +237,7 @@ export default function DriverAgreementPage() {
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">8. Indemnification</h3>
-                  <p className="mb-2">You agree to defend, indemnify, and hold harmless Cruise Kauaʻi from any claims, damages, losses, liabilities, or expenses arising from:</p>
+                  <p className="mb-2">You agree to defend, indemnify, and hold harmless Cruise Hawaiʻi from any claims, damages, losses, liabilities, or expenses arising from:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
                     <li>Your driving</li>
                     <li>Vehicle condition</li>
@@ -248,12 +248,12 @@ export default function DriverAgreementPage() {
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">9. Safety Standards & Community Responsibility</h3>
-                  <p>Cruise Kauaʻi is actively evaluating operational best practices and safety standards appropriate for community-based carpool coordination. We require license verification for all drivers and are committed to continuously improving our community safety processes. Users are encouraged to exercise good judgment when connecting with other community members.</p>
+                  <p>Cruise Hawaiʻi is actively evaluating operational best practices and safety standards appropriate for community-based carpool coordination. We require license verification for all drivers and are committed to continuously improving our community safety processes. Users are encouraged to exercise good judgment when connecting with other community members.</p>
                 </section>
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">10. Suspension or Termination</h3>
-                  <p>Cruise Kauaʻi may suspend or terminate your access at any time for safety, compliance, or legal concerns.</p>
+                  <p>Cruise Hawaiʻi may suspend or terminate your access at any time for safety, compliance, or legal concerns.</p>
                 </section>
 
                 <section>
@@ -275,7 +275,7 @@ export default function DriverAgreementPage() {
                 <p className="font-semibold text-secondary mb-3">By checking all boxes below, I certify that:</p>
                 <div className="space-y-2">
                   {[
-                    { key: 'notTransportProvider', label: 'I understand Cruise Kauaʻi is not a transportation provider' },
+                    { key: 'notTransportProvider', label: 'I understand Cruise Hawaiʻi is not a transportation provider' },
                     { key: 'notEmployee', label: 'I understand I am not an employee or agent' },
                     { key: 'solelyResponsible', label: 'I understand I am solely responsible for my actions' },
                     { key: 'incidentalTravel', label: 'My rides are incidental to my own travel' },
@@ -286,15 +286,15 @@ export default function DriverAgreementPage() {
                     { key: 'vehicleSafe', label: 'My vehicle is safe and roadworthy' },
                     { key: 'willRemoveUnsafe', label: 'I will remove my vehicle if unsafe' },
                     { key: 'hasInsurance', label: 'I maintain legally required auto insurance' },
-                    { key: 'noInsuranceProvided', label: 'I understand Cruise Kauaʻi does not provide insurance coverage' },
+                    { key: 'noInsuranceProvided', label: 'I understand Cruise Hawaiʻi does not provide insurance coverage' },
                     { key: 'insuranceDenial', label: 'I understand I should confirm carpooling coverage with my insurer' },
                     { key: 'confirmedCoverage', label: 'I have reviewed my insurance coverage in relation to carpooling' },
                     { key: 'inherentRisk', label: 'Driving involves inherent risk' },
                     { key: 'passengersIndependent', label: 'Passengers are independent individuals' },
                     { key: 'accidentsMayOccur', label: 'Accidents and injuries may occur' },
-                    { key: 'noBackgroundChecks', label: 'I understand that Cruise Kauaʻi is actively evaluating safety standards for community carpool coordination and I agree to exercise good judgment in my interactions' },
+                    { key: 'noBackgroundChecks', label: 'I understand that Cruise Hawaiʻi is actively evaluating safety standards for community carpool coordination and I agree to exercise good judgment in my interactions' },
                     { key: 'responsibleInteractions', label: 'I am responsible for my interactions with passengers' },
-                    { key: 'indemnify', label: 'I understand I may be required to indemnify Cruise Kauaʻi' },
+                    { key: 'indemnify', label: 'I understand I may be required to indemnify Cruise Hawaiʻi' },
                     { key: 'financialResponsibility', label: 'I accept financial responsibility for my actions' },
                     { key: 'accurateInfo', label: 'All information I provided is accurate' },
                     { key: 'violationRemoval', label: 'I understand violations may result in removal' },
@@ -339,7 +339,7 @@ export default function DriverAgreementPage() {
         </Card>
 
         <footer className="pt-6 border-t border-border text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} Cruise Kauaʻi. All rights reserved.
+          © {new Date().getFullYear()} Cruise Hawaiʻi. All rights reserved.
         </footer>
       </div>
     </div>

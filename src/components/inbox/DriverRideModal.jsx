@@ -89,8 +89,8 @@ export default function DriverRideModal({ isOpen, onClose, ride, bookings = [], 
                     try {
                         await sendBookingEmail({
                             userId: booking.passenger_id,
-                            subject: `Ride Cancelled - Cruise Kauaʻi`,
-                            body: `Aloha ${booking.passenger_name},\n\nUnfortunately, the driver has cancelled the ride scheduled for ${format(new Date(ride.departure_date), "EEE, MMM d, yyyy")} at ${formatTime12Hour(ride.departure_time)}.\n\nRoute: ${ride.departure_location} → ${ride.destination}\n\nA full refund will be processed to your original payment method.\n\nWe apologize for any inconvenience. Please log into Cruise Kauaʻi to find another ride.\n\nMahalo,\nCruise Kauaʻi Team`
+                            subject: `Ride Cancelled - Cruise Hawaiʻi`,
+                            body: `Aloha ${booking.passenger_name},\n\nUnfortunately, the driver has cancelled the ride scheduled for ${format(new Date(ride.departure_date), "EEE, MMM d, yyyy")} at ${formatTime12Hour(ride.departure_time)}.\n\nRoute: ${ride.departure_location} → ${ride.destination}\n\nA full refund will be processed to your original payment method.\n\nWe apologize for any inconvenience. Please log into Cruise Hawaiʻi to find another ride.\n\nMahalo,\nCruise Hawaiʻi Team`
                         });
                     } catch (emailError) {
                         console.error("Error sending cancellation email:", emailError);
@@ -127,8 +127,8 @@ Please process full refunds for all affected riders.
             try {
                 await sendBookingEmail({
                     userId: ride.driver_id,
-                    subject: `Your ride is cancelled - Cruise Kauaʻi`,
-                    body: `Aloha ${ride.driver_name},\n\nYour ride from ${ride.departure_location} → ${ride.destination} on ${format(new Date(ride.departure_date + 'T12:00:00'), "EEE, MMM d, yyyy")} at ${formatTime12Hour(ride.departure_time)} has been cancelled.\n\n${hasRiders ? `All ${confirmedBookings.length} confirmed rider(s) have been notified and will receive full refunds.\n\n` : ''}Mahalo,\nCruise Kauaʻi Team`
+                    subject: `Your ride is cancelled - Cruise Hawaiʻi`,
+                    body: `Aloha ${ride.driver_name},\n\nYour ride from ${ride.departure_location} → ${ride.destination} on ${format(new Date(ride.departure_date + 'T12:00:00'), "EEE, MMM d, yyyy")} at ${formatTime12Hour(ride.departure_time)} has been cancelled.\n\n${hasRiders ? `All ${confirmedBookings.length} confirmed rider(s) have been notified and will receive full refunds.\n\n` : ''}Mahalo,\nCruise Hawaiʻi Team`
                 });
             } catch (emailError) {
                 console.error("Error sending cancellation confirmation email to driver:", emailError);

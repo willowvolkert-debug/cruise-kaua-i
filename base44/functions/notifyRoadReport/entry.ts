@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
     if (recipients.length === 0) return Response.json({ ok: true, skipped: 'no recipients' });
 
     const where = report.place ? ` near ${report.place}` : '';
-    const body = `Cruise Kauaʻi road alert (${side} side): ${LABELS[report.type] || 'hazard'}${where}. cruisehi.org STOP=optout`;
+    const body = `Cruise Hawaiʻi road alert (${side} side): ${LABELS[report.type] || 'hazard'}${where}. cruisehi.org STOP=optout`;
     const result = await sendSmsToUsers(recipients, body);
     return Response.json({ ok: true, side, ...result });
   } catch (error) {

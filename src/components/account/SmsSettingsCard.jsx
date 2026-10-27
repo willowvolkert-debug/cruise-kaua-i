@@ -118,7 +118,7 @@ export default function SmsSettingsCard({ user, onUpdated }) {
                 className="mt-0.5 h-4 w-4 rounded border-gray-400 accent-green-700 cursor-pointer"
               />
               <label htmlFor="sms-resub-consent" className="text-xs text-gray-700 leading-relaxed cursor-pointer">
-                I agree to receive recurring automated transactional SMS text messages from <strong>Cruise Kauaʻi</strong> at the number above (ride confirmations, reminders, and messages). Consent is not required to use the platform. Message &amp; data rates may apply. Reply <strong>STOP</strong> to unsubscribe, <strong>HELP</strong> for help. See our <a href="/sms-opt-in" className="text-green-700 underline" target="_blank" rel="noreferrer">SMS Terms</a>.
+                I agree to receive recurring automated transactional SMS text messages from <strong>Cruise Hawaiʻi</strong> at the number above (ride confirmations, reminders, and messages). Consent is not required to use the platform. Message &amp; data rates may apply. Reply <strong>STOP</strong> to unsubscribe, <strong>HELP</strong> for help. See our <a href="/sms-opt-in" className="text-green-700 underline" target="_blank" rel="noreferrer">SMS Terms</a>.
               </label>
             </div>
             {error && <p className="text-red-500 text-xs font-medium">{error}</p>}

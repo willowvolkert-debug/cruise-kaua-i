@@ -40,8 +40,8 @@ export default function ContactInquiriesPanel({ inquiries, onRefresh }) {
     try {
       await base44.integrations.Core.SendEmail({
         to: selectedInquiry.user_email,
-        subject: `Re: ${selectedInquiry.subject} - Cruise Kauaʻi Support`,
-        body: `Aloha ${selectedInquiry.user_name},\n\nThank you for contacting us. We've responded to your inquiry:\n\n"${selectedInquiry.subject}"\n\n---\n\n${responseMessage}\n\n---\n\nYou can view this response in your Cruise Kauaʻi inbox.\n\nMahalo,\nCruise Kauaʻi Team`
+        subject: `Re: ${selectedInquiry.subject} - Cruise Hawaiʻi Support`,
+        body: `Aloha ${selectedInquiry.user_name},\n\nThank you for contacting us. We've responded to your inquiry:\n\n"${selectedInquiry.subject}"\n\n---\n\n${responseMessage}\n\n---\n\nYou can view this response in your Cruise Hawaiʻi inbox.\n\nMahalo,\nCruise Hawaiʻi Team`
       });
       await base44.entities.AdminMessage.create({
         recipient_id: selectedInquiry.user_id,

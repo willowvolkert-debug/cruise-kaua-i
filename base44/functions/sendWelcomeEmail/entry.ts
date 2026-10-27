@@ -26,8 +26,8 @@ Deno.serve(async (req) => {
     const unsubscribeUrl = `${appUrl}/unsubscribe?user_id=${user.id}`;
 
     const logo = `<div style="text-align:center;margin-bottom:28px;">
-      <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;" />
-      <p style="margin:8px 0 0 0;font-weight:bold;color:#2f7d52;font-size:15px;letter-spacing:1px;">Cruise Kauaʻi</p>
+      <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Hawaiʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;" />
+      <p style="margin:8px 0 0 0;font-weight:bold;color:#2f7d52;font-size:15px;letter-spacing:1px;">Cruise Hawaiʻi</p>
     </div>`;
 
     const footer = `
@@ -36,16 +36,16 @@ Deno.serve(async (req) => {
       <p style="font-size:12px;color:#9ca3af;margin-top:8px;">To stop receiving emails like this, <a href="${unsubscribeUrl}" style="color:#6b7280;">unsubscribe here</a>.</p>
     `;
 
-    const subject = 'Welcome to Cruise Kauaʻi- why this service is worth your time';
+    const subject = 'Welcome to Cruise Hawaiʻi- why this service is worth your time';
     const body = `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
       ${logo}
       <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName} 🤙</p>
-      <p style="margin-bottom:16px;">This is Willow, founder of Cruise Kauaʻi. I wanted to reach out personally, because I think you joining this platform genuinely means something. We're building something worth being part of, and I'm glad you're here.</p>
+      <p style="margin-bottom:16px;">This is Willow, founder of Cruise Hawaiʻi. I wanted to reach out personally, because I think you joining this platform genuinely means something. We're building something worth being part of, and I'm glad you're here.</p>
 
       <p style="margin-bottom:16px;">Kauaʻi is one of the most beautiful places on Earth — and it's under pressure. Traffic on the highway is getting worse every year. The cost of living keeps climbing. Locals are leaving. Tourists are frustrated. And yet, every single day, thousands of us are driving the same roads, alone in our cars, going the same direction.</p>
 
       <div style="background:#f0fdf4;border-radius:12px;padding:24px;margin-bottom:24px;border:1px solid #86efac;">
-        <p style="font-weight:bold;font-size:16px;margin:0 0 12px;color:#166534;">Cruise Kauaʻi is one real, tangible way to change that — right now.</p>
+        <p style="font-weight:bold;font-size:16px;margin:0 0 12px;color:#166534;">Cruise Hawaiʻi is one real, tangible way to change that — right now.</p>
         <p style="margin:0 0 10px;color:#333;">Not someday when the infrastructure improves. Not when the government changes. <em>Right now</em>, with the people already on this island, sharing the rides we're already making.</p>
       </div>
 
@@ -88,13 +88,13 @@ Deno.serve(async (req) => {
       <p style="margin-bottom:8px;">This island is small. What we do here — together — makes a real difference. I'm glad you're here.</p>
       <p style="margin:0 0 4px;">Me ke aloha,</p>
       <p style="margin:0;font-weight:bold;">Willow</p>
-      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
+      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Hawaiʻi</p>
       ${footer}
     </body></html>`;
 
     await base44.asServiceRole.integrations.Core.SendEmail({
       to: user.email,
-      from_name: "Cruise Kaua'i",
+      from_name: "Cruise Hawaiʻi",
       subject,
       body,
     });

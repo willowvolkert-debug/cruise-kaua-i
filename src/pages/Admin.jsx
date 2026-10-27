@@ -358,8 +358,8 @@ export default function AdminPage() {
       // Send rejection email notification
       await base44.integrations.Core.SendEmail({
         to: selectedUser.email,
-        subject: "License Verification Update - Cruise Kauaʻi",
-        body: `Aloha ${selectedUser.full_name},\n\nWe were unable to verify your driver's license at this time.\n\nReason: ${reason}\n\nPlease update your verification documents and try again. If you have questions, contact us through the app.\n\nMahalo,\nThe Cruise Kauaʻi Team`
+        subject: "License Verification Update - Cruise Hawaiʻi",
+        body: `Aloha ${selectedUser.full_name},\n\nWe were unable to verify your driver's license at this time.\n\nReason: ${reason}\n\nPlease update your verification documents and try again. If you have questions, contact us through the app.\n\nMahalo,\nThe Cruise Hawaiʻi Team`
       });
 
       alert(`License rejected for ${selectedUser.full_name}. Reason: ${reason}`);
@@ -419,8 +419,8 @@ export default function AdminPage() {
       // Send rejection email notification
       await base44.integrations.Core.SendEmail({
         to: selectedUser.email,
-        subject: "Vehicle Verification Update - Cruise Kauaʻi",
-        body: `Aloha ${selectedUser.full_name},\n\nWe were unable to verify your vehicle at this time.\n\nReason: ${reason}\n\nPlease update your vehicle information and try again. If you have questions, contact us through the app.\n\nMahalo,\nThe Cruise Kauaʻi Team`
+        subject: "Vehicle Verification Update - Cruise Hawaiʻi",
+        body: `Aloha ${selectedUser.full_name},\n\nWe were unable to verify your vehicle at this time.\n\nReason: ${reason}\n\nPlease update your vehicle information and try again. If you have questions, contact us through the app.\n\nMahalo,\nThe Cruise Hawaiʻi Team`
       });
 
       alert(`Vehicle rejected for ${selectedUser.full_name}. Reason: ${reason}`);
@@ -446,7 +446,7 @@ export default function AdminPage() {
           recipient_id: userId,
           recipient_name: post.user_name,
           subject: '🎉 Your community post has been approved!',
-          message: `Your community post has been approved and is now live! Thank you for sharing your story with the Cruise Kauaʻi community.\n\nYour post:\n"${post.content.substring(0, 100)}..."\n\nKeep sharing the aloha!`,
+          message: `Your community post has been approved and is now live! Thank you for sharing your story with the Cruise Hawaiʻi community.\n\nYour post:\n"${post.content.substring(0, 100)}..."\n\nKeep sharing the aloha!`,
           message_type: 'info'
         });
       }
@@ -1560,7 +1560,7 @@ export default function AdminPage() {
         )}
 
         <footer className="pt-6 border-t border-border text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} Cruise Kauaʻi. All rights reserved.
+          © {new Date().getFullYear()} Cruise Hawaiʻi. All rights reserved.
         </footer>
 
         {/* License Review Modal */}

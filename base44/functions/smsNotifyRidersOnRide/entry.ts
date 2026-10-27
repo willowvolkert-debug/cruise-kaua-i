@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
     const price = r.price_per_seat != null ? `$${r.price_per_seat}/seat` : '';
 
     const formattedDate = (() => { try { const d = new Date((r.departure_date || '').includes('T') ? r.departure_date : (r.departure_date || '') + 'T00:00:00'); return isNaN(d) ? r.departure_date : d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }); } catch { return r.departure_date; } })();
-    const msg = `Aloha! A ride from ${r.departure_location} to ${r.destination} is available on ${formattedDate} at ${r.departure_time}${price ? ' for ' + price : ''}. To request a seat, find the ride on the "get a ride" page on the app on your Home Screen or at cruisehi.org. Mahalo from Cruise Kaua'i!`;
+    const msg = `Aloha! A ride from ${r.departure_location} to ${r.destination} is available on ${formattedDate} at ${r.departure_time}${price ? ' for ' + price : ''}. To request a seat, find the ride on the "get a ride" page on the app on your Home Screen or at cruisehi.org. Mahalo from Cruise Hawaiʻi!`;
 
     // Preview mode: send to a single test number
     if (testNumber) {

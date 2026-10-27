@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
 
     const label = post.kind === 'need' ? 'NEED' : 'RESOURCE';
     const where = post.location_text ? ` in ${post.location_text}` : '';
-    const body = `Cruise Kauaʻi Grey Skies: new ${label}${where} - ${post.title}. Open cruisehi.org to message them. STOP=optout`;
+    const body = `Cruise Hawaiʻi Grey Skies: new ${label}${where} - ${post.title}. Open cruisehi.org to message them. STOP=optout`;
     const result = await sendSmsToUsers(recipients, body);
     return Response.json({ ok: true, ...result });
   } catch (error) {

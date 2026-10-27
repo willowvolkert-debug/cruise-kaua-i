@@ -32,7 +32,7 @@ export default function SmsReactivationCard({ user, onReactivated }) {
           <div>
             <h3 className="font-bold text-amber-900 text-lg">we paused your text alerts</h3>
             <p className="text-sm text-amber-800 mt-1">
-              We noticed you haven't been active on Cruise Kauaʻi recently, so we turned off your SMS ride notifications to avoid sending you unwanted messages. Your account still works — you just won't get text alerts until you turn them back on.
+              We noticed you haven't been active on Cruise Hawaiʻi recently, so we turned off your SMS ride notifications to avoid sending you unwanted messages. Your account still works — you just won't get text alerts until you turn them back on.
             </p>
           </div>
         </div>

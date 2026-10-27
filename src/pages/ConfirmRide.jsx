@@ -59,7 +59,7 @@ export default function ConfirmRidePage() {
       <div className="bg-white rounded-3xl shadow-xl p-6 max-w-md w-full text-center space-y-5">
         <img
           src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
-          alt="Cruise Kauaʻi"
+          alt="Cruise Hawaiʻi"
           className="w-16 h-16 rounded-2xl mx-auto"
         />
 

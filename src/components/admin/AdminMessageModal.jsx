@@ -36,18 +36,18 @@ export default function AdminMessageModal({ isOpen, onClose, user, onSuccess }) 
       try {
         await base44.integrations.Core.SendEmail({
           to: user.email,
-          subject: `Cruise Kauaʻi: ${subject}`,
+          subject: `Cruise Hawaiʻi: ${subject}`,
           body: `
 Aloha ${user.full_name},
 
-You have a new message from the Cruise Kauaʻi team:
+You have a new message from the Cruise Hawaiʻi team:
 
 ${message}
 
-Please log into your Cruise Kauaʻi account and check your Inbox for more details.
+Please log into your Cruise Hawaiʻi account and check your Inbox for more details.
 
 Mahalo,
-Cruise Kauaʻi Team
+Cruise Hawaiʻi Team
           `.trim()
         });
       } catch (emailError) {

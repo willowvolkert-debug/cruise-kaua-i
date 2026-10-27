@@ -77,7 +77,7 @@ Deno.serve(async (req) => {
       if (normalized.length === 10) normalized = '+1' + normalized;
       else if (!normalized.startsWith('+')) normalized = '+' + normalized;
 
-      const message = `Cruise Kauaʻi: Great news! ${driver} posted a ride matching your request: ${loc} to ${dest} on ${formattedDate} at ${time}. ${seats} seat(s) available${price}. Request a seat on the app or cruisekauai.org\n\nReply STOP to opt out.`;
+      const message = `Cruise Hawaiʻi: Great news! ${driver} posted a ride matching your request: ${loc} to ${dest} on ${formattedDate} at ${time}. ${seats} seat(s) available${price}. Request a seat on the app or cruisekauai.org\n\nReply STOP to opt out.`;
 
       try {
         const resp = await fetch(

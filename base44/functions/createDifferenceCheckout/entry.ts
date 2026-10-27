@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
                     currency: 'usd',
                     product_data: {
                         name: 'Connect Fee',
-                        description: `Cruise Kauaʻi service fee (${Math.round(connectFeeRate * 100)}%)`
+                        description: `Cruise Hawaiʻi service fee (${Math.round(connectFeeRate * 100)}%)`
                     },
                     unit_amount: Math.round(connectFee * 100)
                 },

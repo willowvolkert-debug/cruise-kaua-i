@@ -81,11 +81,11 @@ Deno.serve(async (req) => {
             "Hi! I'm a local student traveling to work. Would love to share the ride!"
         </div>
         
-        <p style="font-size: 16px; color: #333; text-align: center;">Please log into Cruise Kauaʻi to manage this request.</p>
+        <p style="font-size: 16px; color: #333; text-align: center;">Please log into Cruise Hawaiʻi to manage this request.</p>
         
         <div class="footer">
             Mahalo,<br>
-            <strong>Cruise Kauaʻi Team</strong>
+            <strong>Cruise Hawaiʻi Team</strong>
         </div>
     </div>
 </body>

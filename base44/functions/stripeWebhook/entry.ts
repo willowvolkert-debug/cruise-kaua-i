@@ -137,7 +137,7 @@ Deno.serve(async (req) => {
                 recipient_id: actualDriverId,
                 recipient_name: driver?.full_name || 'Driver',
                 ride_amount: rideAmount, // This amount goes to driver
-                connect_fee: connectFee, // This amount goes to Cruise Kauaʻi business
+                connect_fee: connectFee, // This amount goes to Cruise Hawaiʻi business
                 total_amount: totalPaid,
                 payment_method_last4: session.payment_method_types?.[0] || 'card',
                 payment_method_brand: 'Card',
@@ -191,8 +191,8 @@ Deno.serve(async (req) => {
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
         <tr><td align="center" style="padding:32px 24px 20px;border-bottom:1px solid #f0ebe0;">
-          <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kaua'i" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #e8742a;display:block;margin:0 auto 10px;" />
-          <div style="font-family:Georgia,serif;font-size:1.1rem;font-weight:700;color:#1a1a1a;">Cruise Kaua'i</div>
+          <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Hawaiʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #e8742a;display:block;margin:0 auto 10px;" />
+          <div style="font-family:Georgia,serif;font-size:1.1rem;font-weight:700;color:#1a1a1a;">Cruise Hawaiʻi</div>
         </td></tr>
         <tr><td style="padding:32px 32px 24px;">
           <h1 style="font-family:Georgia,serif;font-size:1.6rem;font-weight:700;color:#1a1a1a;margin:0 0 12px;">${booking.is_price_offer ? `Price offer from ${booking.passenger_name} 💰` : `You've got a rider, ${driverFirstName}! 🎉`}</h1>
@@ -215,7 +215,7 @@ Deno.serve(async (req) => {
         </td></tr>
         <tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:20px 32px;text-align:center;">
           <p style="font-family:Georgia,serif;font-size:0.95rem;color:#888;font-style:italic;margin:0 0 8px;">Mahalo nui loa 🌺</p>
-          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0;">— The Cruise Kaua'i Team · <a href="https://cruisekauai.org/" style="color:#e8742a;text-decoration:none;">cruisekauai.org</a></p>
+          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0;">— The Cruise Hawaiʻi Team · <a href="https://cruisekauai.org/" style="color:#e8742a;text-decoration:none;">cruisekauai.org</a></p>
         </td></tr>
       </table>
     </td></tr>
@@ -224,7 +224,7 @@ Deno.serve(async (req) => {
 
                     await base44.asServiceRole.integrations.Core.SendEmail({
                         to: driver.email,
-                        from_name: "Cruise Kaua'i",
+                        from_name: "Cruise Hawaiʻi",
                         subject: booking.is_price_offer ? `💰 Price offer from ${booking.passenger_name}!` : `🚗 New ride request from ${booking.passenger_name}!`,
                         body: emailBody
                     });

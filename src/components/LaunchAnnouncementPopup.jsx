@@ -71,7 +71,7 @@ export default function LaunchAnnouncementPopup() {
             <div className="bg-gradient-to-br from-primary to-secondary p-8 text-center">
               <img
                 src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
-                alt="Cruise Kauaʻi"
+                alt="Cruise Hawaiʻi"
                 className="w-16 h-16 rounded-2xl mx-auto mb-3 border-2 border-white/30 object-cover"
               />
               <h2 className="text-white text-2xl font-bold">We're Pausing — And Leveling Up</h2>

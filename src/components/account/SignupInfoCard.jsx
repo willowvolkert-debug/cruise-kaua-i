@@ -78,7 +78,7 @@ export default function SignupInfoCard({ user, onComplete }) {
               className="mt-0.5 shrink-0"
             />
             <Label htmlFor="sms-consent" className="cursor-pointer text-xs text-foreground leading-relaxed">
-              I agree to receive automated transactional SMS messages from <strong>Cruise Kauaʻi</strong> (ride confirmations, reminders, booking notifications). Message &amp; data rates may apply. Reply <strong>STOP</strong> to unsubscribe. <a href="/sms-opt-in" className="text-green-700 underline" target="_blank">SMS Terms</a>.
+              I agree to receive automated transactional SMS messages from <strong>Cruise Hawaiʻi</strong> (ride confirmations, reminders, booking notifications). Message &amp; data rates may apply. Reply <strong>STOP</strong> to unsubscribe. <a href="/sms-opt-in" className="text-green-700 underline" target="_blank">SMS Terms</a>.
             </Label>
           </div>
 

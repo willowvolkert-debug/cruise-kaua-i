@@ -29,8 +29,8 @@ export default function BrandHeader({ right = null }) {
         )}
         {isHome && <SkiesToggle />}
       </div>
-      <Link to="/home" aria-label="Cruise Kauaʻi home" className="flex items-center justify-center">
-        <img src={TRUCK_URL} alt="Cruise Kauaʻi" className="h-12 w-auto object-contain" />
+      <Link to="/home" aria-label="Cruise Hawaiʻi home" className="flex items-center justify-center">
+        <img src={TRUCK_URL} alt="Cruise Hawaiʻi" className="h-12 w-auto object-contain" />
       </Link>
       <div className="flex items-center justify-end gap-3">
         {right}

@@ -94,7 +94,7 @@ export default function TermsOfServicePage() {
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-secondary mb-2">Terms of Service</h1>
-          <p className="text-gray-600 mb-3">Please read carefully before using Cruise Kauaʻi</p>
+          <p className="text-gray-600 mb-3">Please read carefully before using Cruise Hawaiʻi</p>
           <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="rounded-2xl">
             <Download className="w-4 h-4 mr-2" /> Download PDF
           </Button>
@@ -112,14 +112,14 @@ export default function TermsOfServicePage() {
               <div className="space-y-6 text-gray-700">
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">1. Acceptance of Terms</h3>
-                  <p>By accessing or using Cruise Kauaʻi ("Cruise Kauaʻi," "we," "us," or "our"), you acknowledge that you have read, understood, and agree to be bound by these Terms of Service ("Terms").</p>
+                  <p>By accessing or using Cruise Hawaiʻi ("Cruise Hawaiʻi," "we," "us," or "our"), you acknowledge that you have read, understood, and agree to be bound by these Terms of Service ("Terms").</p>
                   <p className="mt-2">If you do not agree to these Terms, you must not access or use the platform.</p>
                 </section>
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">2. Platform Description</h3>
-                  <p className="mb-2">Cruise Kauaʻi is a technology platform that enables users to connect with one another to arrange voluntary, cost-sharing carpools.</p>
-                  <p className="font-semibold mb-2">Cruise Kauaʻi:</p>
+                  <p className="mb-2">Cruise Hawaiʻi is a technology platform that enables users to connect with one another to arrange voluntary, cost-sharing carpools.</p>
+                  <p className="font-semibold mb-2">Cruise Hawaiʻi:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
                     <li>Is not a transportation provider, carrier, broker, or insurer;</li>
                     <li>Does not own, lease, or operate vehicles;</li>
@@ -131,7 +131,7 @@ export default function TermsOfServicePage() {
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">3. No Agency or Employment Relationship</h3>
-                  <p>No joint venture, partnership, employment, agency, or carrier relationship exists between Cruise Kauaʻi and any user, including drivers.</p>
+                  <p>No joint venture, partnership, employment, agency, or carrier relationship exists between Cruise Hawaiʻi and any user, including drivers.</p>
                   <p className="mt-2">Drivers are independent individuals and are solely responsible for their conduct, vehicles, insurance, and compliance with applicable laws.</p>
                 </section>
 
@@ -144,13 +144,13 @@ export default function TermsOfServicePage() {
                     <li>Property damage</li>
                     <li>Acts or omissions of other users</li>
                   </ul>
-                  <p className="mt-2 font-semibold">By using Cruise Kauaʻi, you VOLUNTARILY AND KNOWINGLY ASSUME ALL SUCH RISKS, whether foreseeable or unforeseeable, to the fullest extent permitted by Hawaii law.</p>
+                  <p className="mt-2 font-semibold">By using Cruise Hawaiʻi, you VOLUNTARILY AND KNOWINGLY ASSUME ALL SUCH RISKS, whether foreseeable or unforeseeable, to the fullest extent permitted by Hawaii law.</p>
                 </section>
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">5. Platform Role & Limitation of Liability</h3>
-                  <p className="mb-2">Cruise Kauaʻi serves as a coordination platform connecting independent community members for voluntary cost-sharing carpools. Cruise Kauaʻi is not responsible for the acts or omissions of independent users, vehicle condition, or the outcome of individual arrangements made between community members.</p>
-                  <p>To the extent permitted by Hawaii law, Cruise Kauaʻi is not liable for claims arising out of transportation activities arranged through the platform.</p>
+                  <p className="mb-2">Cruise Hawaiʻi serves as a coordination platform connecting independent community members for voluntary cost-sharing carpools. Cruise Hawaiʻi is not responsible for the acts or omissions of independent users, vehicle condition, or the outcome of individual arrangements made between community members.</p>
+                  <p>To the extent permitted by Hawaii law, Cruise Hawaiʻi is not liable for claims arising out of transportation activities arranged through the platform.</p>
                 </section>
 
                 <section>
@@ -165,7 +165,7 @@ export default function TermsOfServicePage() {
                     <li>Ensuring all cost-sharing charges are limited to actual trip expenses</li>
                     <li>Not engaging in commercial or for-hire transportation activities</li>
                   </ul>
-                  <p className="mt-2">Drivers acknowledge that Cruise Kauaʻi does not verify insurance coverage or compliance beyond basic information collection.</p>
+                  <p className="mt-2">Drivers acknowledge that Cruise Hawaiʻi does not verify insurance coverage or compliance beyond basic information collection.</p>
                 </section>
 
                 <section>
@@ -181,13 +181,13 @@ export default function TermsOfServicePage() {
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">8. Insurance Guidance</h3>
-                  <p className="mb-2">Drivers are responsible for maintaining legally required insurance coverage, and Cruise Kauaʻi encourages all users to confirm their coverage related to carpooling activities with their insurer.</p>
-                  <p>Cruise Kauaʻi does not provide automobile or liability insurance, and users are encouraged to review their policies accordingly.</p>
+                  <p className="mb-2">Drivers are responsible for maintaining legally required insurance coverage, and Cruise Hawaiʻi encourages all users to confirm their coverage related to carpooling activities with their insurer.</p>
+                  <p>Cruise Hawaiʻi does not provide automobile or liability insurance, and users are encouraged to review their policies accordingly.</p>
                 </section>
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">9. Cost-Sharing Only (Non-Commercial Use)</h3>
-                  <p className="mb-2">Cruise Kauaʻi is intended solely for voluntary cost-sharing carpools.</p>
+                  <p className="mb-2">Cruise Hawaiʻi is intended solely for voluntary cost-sharing carpools.</p>
                   <p className="mb-2">Drivers may only request reimbursement reasonably related to actual trip costs (e.g., fuel, tolls, vehicle wear).</p>
                   <p>Drivers may not generate profit, receive compensation, or provide transportation for hire.</p>
                   <p className="mt-2 font-semibold">Use of the platform for commercial ridesharing or for-hire transportation is strictly prohibited.</p>
@@ -195,13 +195,13 @@ export default function TermsOfServicePage() {
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">10. Safety Standards</h3>
-                  <p className="mb-2">Cruise Kauaʻi is actively evaluating operational best practices and safety standards appropriate for community-based carpool coordination.</p>
+                  <p className="mb-2">Cruise Hawaiʻi is actively evaluating operational best practices and safety standards appropriate for community-based carpool coordination.</p>
                   <p>We require license verification for all drivers and are committed to continuously improving our community safety processes.</p>
                 </section>
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">11. Waiver and Release of Claims</h3>
-                  <p className="mb-2">To the fullest extent permitted by Hawaii law, you WAIVE, RELEASE, AND FOREVER DISCHARGE Cruise Kauaʻi and its owners, officers, employees, and affiliates from any and all claims, known or unknown, arising out of or related to:</p>
+                  <p className="mb-2">To the fullest extent permitted by Hawaii law, you WAIVE, RELEASE, AND FOREVER DISCHARGE Cruise Hawaiʻi and its owners, officers, employees, and affiliates from any and all claims, known or unknown, arising out of or related to:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
                     <li>Use of the platform</li>
                     <li>Participation in carpooling activities</li>
@@ -212,7 +212,7 @@ export default function TermsOfServicePage() {
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">12. Indemnification</h3>
-                  <p className="mb-2">You agree to defend, indemnify, and hold harmless Cruise Kauaʻi from any claims, damages, losses, liabilities, or expenses arising from:</p>
+                  <p className="mb-2">You agree to defend, indemnify, and hold harmless Cruise Hawaiʻi from any claims, damages, losses, liabilities, or expenses arising from:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
                     <li>Your use of the platform</li>
                     <li>Your violation of these Terms</li>
@@ -240,12 +240,12 @@ export default function TermsOfServicePage() {
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">15. Changes to Terms</h3>
-                  <p>Cruise Kauaʻi may modify these Terms at any time. Continued use of the platform after changes constitutes acceptance.</p>
+                  <p>Cruise Hawaiʻi may modify these Terms at any time. Continued use of the platform after changes constitutes acceptance.</p>
                 </section>
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">16. Contact Information</h3>
-                  <p>For questions regarding these Terms, please contact us through the Cruise Kauaʻi website.</p>
+                  <p>For questions regarding these Terms, please contact us through the Cruise Hawaiʻi website.</p>
                 </section>
 
                 <p className="text-sm italic pt-4">Last Updated: {new Date().toLocaleDateString()}</p>
@@ -275,7 +275,7 @@ export default function TermsOfServicePage() {
         </Card>
 
         <footer className="pt-6 border-t border-border text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} Cruise Kauaʻi. All rights reserved.
+          © {new Date().getFullYear()} Cruise Hawaiʻi. All rights reserved.
         </footer>
       </div>
     </div>

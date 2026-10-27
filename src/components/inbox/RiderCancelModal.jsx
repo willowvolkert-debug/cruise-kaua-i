@@ -89,13 +89,13 @@ export default function RiderCancelModal({ isOpen, onClose, booking, ride, onCon
     if (hoursUntilRide >= 24) {
       return {
         percentage: "100%",
-        description: "You will receive a full refund of the trip cost (Cruise Kauaʻi fee and Stripe processing fees are non-refundable).",
+        description: "You will receive a full refund of the trip cost (Cruise Hawaiʻi fee and Stripe processing fees are non-refundable).",
         color: "green"
       };
     } else if (hoursUntilRide >= 2) {
       return {
         percentage: "50%",
-        description: "You will receive a 50% refund of the trip cost (Cruise Kauaʻi fee and Stripe processing fees are non-refundable).",
+        description: "You will receive a 50% refund of the trip cost (Cruise Hawaiʻi fee and Stripe processing fees are non-refundable).",
         color: "yellow"
       };
     } else {
@@ -179,7 +179,7 @@ export default function RiderCancelModal({ isOpen, onClose, booking, ride, onCon
               <li>Within 2 hours: No refund</li>
             </ul>
             <p className="mt-2 text-xs text-gray-500">
-              Note: Cruise Kauaʻi service fees and Stripe processing fees are non-refundable.
+              Note: Cruise Hawaiʻi service fees and Stripe processing fees are non-refundable.
             </p>
           </div>
 

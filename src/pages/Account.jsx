@@ -573,7 +573,7 @@ export default function AccountPage() {
                                     <div className="space-y-4">
                                         {editMode === 'guided' && !expandedToFull && (
                                             <div className="p-3 bg-blue-50 border border-blue-200 rounded-2xl text-sm text-blue-800">
-                                                filling in a few missing details to help you get the most out of Cruise Kauaʻi
+                                                filling in a few missing details to help you get the most out of Cruise Hawaiʻi
                                             </div>
                                         )}
                                         
@@ -647,7 +647,7 @@ export default function AccountPage() {
                                             <div className="space-y-2">
                                                 <Label>Bio *</Label>
                                                 <p className="text-sm text-gray-600">
-                                                    Tell us a bit about yourself and why you're using Cruise Kauaʻi!
+                                                    Tell us a bit about yourself and why you're using Cruise Hawaiʻi!
                                                 </p>
                                                 <Textarea 
                                                     value={editData.bio} 
@@ -702,7 +702,7 @@ export default function AccountPage() {
                                                             className="mt-0.5 h-4 w-4 rounded border-gray-400 accent-green-700 cursor-pointer"
                                                         />
                                                         <label htmlFor="sms-opt-in" className="text-xs text-gray-600 leading-relaxed cursor-pointer">
-                                                            I agree to receive recurring automated transactional SMS text messages from <strong>Cruise Kauaʻi</strong> at the number above (ride confirmations, reminders, and messages). Consent is not required to use the platform. Message &amp; data rates may apply. Reply <strong>STOP</strong> to unsubscribe, <strong>HELP</strong> for help. See our <a href="/sms-opt-in" className="text-green-700 underline" target="_blank">SMS Terms</a>.
+                                                            I agree to receive recurring automated transactional SMS text messages from <strong>Cruise Hawaiʻi</strong> at the number above (ride confirmations, reminders, and messages). Consent is not required to use the platform. Message &amp; data rates may apply. Reply <strong>STOP</strong> to unsubscribe, <strong>HELP</strong> for help. See our <a href="/sms-opt-in" className="text-green-700 underline" target="_blank">SMS Terms</a>.
                                                         </label>
                                                     </div>
                                                 </div>

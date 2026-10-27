@@ -33,8 +33,8 @@ Deno.serve(async (req) => {
     if (emailAddress) {
       await base44.asServiceRole.integrations.Core.SendEmail({
         to: emailAddress,
-        subject: `📬 New message from Cruise Kauaʻi: ${subject}`,
-        body: `Aloha ${recipientName},\n\nYou have a new message from the Cruise Kauaʻi team:\n\n---\n${message}\n---\n\nLog in to Cruise Kauaʻi to reply or view your inbox.\n\nMahalo,\nCruise Kauaʻi Team`
+        subject: `📬 New message from Cruise Hawaiʻi: ${subject}`,
+        body: `Aloha ${recipientName},\n\nYou have a new message from the Cruise Hawaiʻi team:\n\n---\n${message}\n---\n\nLog in to Cruise Hawaiʻi to reply or view your inbox.\n\nMahalo,\nCruise Hawaiʻi Team`
       });
     }
 

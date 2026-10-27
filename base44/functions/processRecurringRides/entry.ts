@@ -176,13 +176,13 @@ Deno.serve(async (req) => {
       await Promise.all([
         base44.asServiceRole.integrations.Core.SendEmail({
           to: user.email,
-          subject: `⏰ Confirm your ride on ${dateStr} - Cruise Kauaʻi`,
+          subject: `⏰ Confirm your ride on ${dateStr} - Cruise Hawaiʻi`,
           body: `<html><body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;background-color:#f5f0e8;">
 <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f0e8;">
   <tr><td align="center" style="padding:32px 16px;">
     <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
       <tr><td align="center" style="padding:32px 24px 20px;border-bottom:1px solid #f0ebe0;">
-        <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;display:block;margin:0 auto 10px;" />
+        <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Hawaiʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;display:block;margin:0 auto 10px;" />
         <div style="font-family:Georgia,serif;font-size:1.3rem;font-weight:700;color:#1a1a1a;">Confirm your recurring ride</div>
       </td></tr>
       <tr><td style="padding:32px 32px 24px;">
@@ -203,7 +203,7 @@ Deno.serve(async (req) => {
         </table>
       </td></tr>
       <tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:20px 32px;text-align:center;">
-        <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0;">— The Cruise Kaua'i Team</p>
+        <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0;">— The Cruise Hawaiʻi Team</p>
       </td></tr>
     </table>
   </td></tr>

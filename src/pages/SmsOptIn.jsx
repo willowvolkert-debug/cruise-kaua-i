@@ -55,10 +55,10 @@ export default function SmsOptIn() {
       <div className="bg-green-800 text-white py-8 px-6 text-center">
         <img
           src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
-          alt="Cruise Kauaʻi"
+          alt="Cruise Hawaiʻi"
           className="w-16 h-16 object-cover rounded-xl shadow mx-auto mb-3"
         />
-        <h1 className="text-2xl font-bold">Cruise Kauaʻi</h1>
+        <h1 className="text-2xl font-bold">Cruise Hawaiʻi</h1>
         <p className="text-green-200 text-sm mt-1">SMS Notifications Sign-Up</p>
       </div>
 
@@ -69,7 +69,7 @@ export default function SmsOptIn() {
             <CheckCircle className="w-12 h-12 text-green-600 mx-auto" />
             <h2 className="text-2xl font-bold text-green-800">SMS Opt-In Saved!</h2>
             <p className="text-gray-700 text-sm leading-relaxed">
-              Your phone number has been saved. To complete your account setup and start using Cruise Kauaʻi, continue creating your profile.
+              Your phone number has been saved. To complete your account setup and start using Cruise Hawaiʻi, continue creating your profile.
             </p>
             <Button
               onClick={() => window.location.href = '/RiderSignupFlow'}
@@ -95,7 +95,7 @@ export default function SmsOptIn() {
             <div className="bg-white border border-gray-200 rounded-2xl p-6">
               <h2 className="text-lg font-bold text-gray-900 mb-2">About This SMS Program</h2>
               <p className="text-gray-700 text-sm leading-relaxed">
-                <strong>Cruise Kauaʻi</strong> sends transactional SMS text messages to members who opt in. Messages are sent to notify you about activity on your account, including:
+                <strong>Cruise Hawaiʻi</strong> sends transactional SMS text messages to members who opt in. Messages are sent to notify you about activity on your account, including:
               </p>
               <ul className="list-disc list-inside text-gray-700 text-sm mt-3 space-y-1">
                 <li>Ride booking requests and confirmations</li>
@@ -117,7 +117,7 @@ export default function SmsOptIn() {
             <div className="bg-white border border-gray-200 rounded-2xl p-6">
               <h2 className="text-lg font-bold text-gray-900 mb-1">Sign Up for SMS Notifications</h2>
               <p className="text-gray-500 text-sm mb-5">
-                By completing this form you are providing your express written consent to receive recurring automated text messages from <strong>Cruise Kauaʻi</strong>.
+                By completing this form you are providing your express written consent to receive recurring automated text messages from <strong>Cruise Hawaiʻi</strong>.
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-5">
@@ -147,7 +147,7 @@ export default function SmsOptIn() {
                     required
                   />
                   <label htmlFor="sms-consent" className="text-sm text-gray-700 leading-relaxed cursor-pointer">
-                    By checking this box, I provide my express written consent to receive recurring automated transactional SMS text messages from <strong>Cruise Kauaʻi</strong> at the mobile phone number provided above. I understand these messages may include ride booking confirmations, trip reminders, payment receipts, and account notifications. I acknowledge that:
+                    By checking this box, I provide my express written consent to receive recurring automated transactional SMS text messages from <strong>Cruise Hawaiʻi</strong> at the mobile phone number provided above. I understand these messages may include ride booking confirmations, trip reminders, payment receipts, and account notifications. I acknowledge that:
                     <br /><br />
                     • Consent is <strong>not</strong> required as a condition of purchase or use of any service.<br />
                     • Message &amp; data rates may apply.<br />
@@ -185,8 +185,8 @@ export default function SmsOptIn() {
         {/* --- Always-Visible CTIA Disclosures --- */}
         <div className="bg-white border border-gray-200 rounded-2xl p-6 text-sm text-gray-600 space-y-2">
           <h3 className="font-bold text-gray-800 text-base mb-3">SMS Program Terms &amp; Disclosures</h3>
-          <p><strong>Program name:</strong> Cruise Kauaʻi Ride Notifications</p>
-          <p><strong>Message sender:</strong> Cruise Kauaʻi (cruisekauai.org)</p>
+          <p><strong>Program name:</strong> Cruise Hawaiʻi Ride Notifications</p>
+          <p><strong>Message sender:</strong> Cruise Hawaiʻi (cruisekauai.org)</p>
           <p><strong>Message types:</strong> Transactional — ride confirmations, reminders, payment receipts, account alerts.</p>
           <p><strong>Message frequency:</strong> Varies based on account activity. Typically 1–5 messages per booking event.</p>
           <p><strong>Cost:</strong> Message &amp; data rates may apply. Check with your mobile carrier.</p>
@@ -195,11 +195,11 @@ export default function SmsOptIn() {
           <p><strong>For help:</strong> Reply <strong>HELP</strong> to any message, or contact us at <a href="mailto:hello@cruisekauai.org" className="text-green-700 underline">hello@cruisekauai.org</a>.</p>
           <p><strong>Supported carriers:</strong> AT&amp;T, Verizon, T-Mobile, and most major US carriers. Carrier support may vary.</p>
           <p><strong>Privacy:</strong> We will not sell, rent, or share your phone number with third parties for marketing purposes. See our <a href="/privacypolicy" className="text-green-700 underline">Privacy Policy</a>.</p>
-          <p><strong>Consent is not required</strong> to purchase or use any Cruise Kauaʻi service.</p>
+          <p><strong>Consent is not required</strong> to purchase or use any Cruise Hawaiʻi service.</p>
         </div>
 
         <footer className="text-center text-xs text-gray-400 pb-8 space-y-1">
-          <p>Cruise Kauaʻi · Kauaʻi, Hawaiʻi</p>
+          <p>Cruise Hawaiʻi · Kauaʻi, Hawaiʻi</p>
           <p>
             <a href="mailto:hello@cruisekauai.org" className="text-green-700 underline">hello@cruisekauai.org</a>
             {" · "}

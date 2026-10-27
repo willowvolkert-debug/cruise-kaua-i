@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
     const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');
     const fromNumber = Deno.env.get('TWILIO_PHONE_NUMBER');
 
-    const message = customMessage || `Cruise Kauaʻi SMS is live! You'll now get texts when riders request seats, drivers accept/deny, and new messages come in. Finish your profile or start posting/requesting rides by opening the application in your Home Screen, or the website- cruisehi.org`;
+    const message = customMessage || `Cruise Hawaiʻi SMS is live! You'll now get texts when riders request seats, drivers accept/deny, and new messages come in. Finish your profile or start posting/requesting rides by opening the application in your Home Screen, or the website- cruisehi.org`;
 
     let sent = 0;
     let failed = 0;

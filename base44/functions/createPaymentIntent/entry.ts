@@ -28,7 +28,7 @@ Deno.serve(async (req) => {
                 booking_id: booking_id || '',
                 ride_id: ride_id || ''
             },
-            description: description || 'Cruise Kauaʻi ride payment',
+            description: description || 'Cruise Hawaiʻi ride payment',
             automatic_payment_methods: {
                 enabled: true,
             },

@@ -27,9 +27,9 @@ Deno.serve(async (req) => {
     let message;
     const formattedDate = (() => { try { const d = new Date((data.departure_date || '').includes('T') ? data.departure_date : (data.departure_date || '') + 'T00:00:00'); return isNaN(d) ? data.departure_date : d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }); } catch { return data.departure_date; } })();
     if (entityName === 'Ride') {
-      message = `Cruise Kauaʻi: Your ride from ${data.departure_location} to ${data.destination} on ${formattedDate} has been posted! view the application in your Home Screen, or the website- cruisehi.org\n\nReply STOP to opt out.`;
+      message = `Cruise Hawaiʻi: Your ride from ${data.departure_location} to ${data.destination} on ${formattedDate} has been posted! view the application in your Home Screen, or the website- cruisehi.org\n\nReply STOP to opt out.`;
     } else {
-      message = `Cruise Kauaʻi: Your ride request from ${data.departure_location} to ${data.destination} on ${formattedDate} has been posted! view the application in your Home Screen, or the website- cruisehi.org\n\nReply STOP to opt out.`;
+      message = `Cruise Hawaiʻi: Your ride request from ${data.departure_location} to ${data.destination} on ${formattedDate} has been posted! view the application in your Home Screen, or the website- cruisehi.org\n\nReply STOP to opt out.`;
     }
 
     const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');

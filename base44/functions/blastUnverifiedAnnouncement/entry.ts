@@ -113,7 +113,7 @@ Deno.serve(async (req) => {
       try {
         await base44.asServiceRole.integrations.Core.SendEmail({
           to: user.email,
-          from_name: "Cruise Kaua'i",
+          from_name: "Cruise Hawaiʻi",
           subject: '[PREVIEW] ' + emailSubject,
           body: buildEmailHtml(firstName, unsubUrl),
         });
@@ -180,7 +180,7 @@ Deno.serve(async (req) => {
             const unsubUrl = appUrl + '/Unsubscribe?user_id=' + item.user.id;
             await base44.asServiceRole.integrations.Core.SendEmail({
               to: item.user.email,
-              from_name: "Cruise Kaua'i",
+              from_name: "Cruise Hawaiʻi",
               subject: emailSubject,
               body: buildEmailHtml(firstName, unsubUrl),
             });

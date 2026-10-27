@@ -21,7 +21,7 @@ export const ISLAND_CONFIG = {
     islandSubtitle: "kauaʻi",
     domain: "cruisekauai.org",
     heroImage: "https://images.unsplash.com/photo-1505852679233-d9fd70aff56d?w=1200&q=80",
-    visitingDesc: "Get around with Cruise Kauaʻi & The Hanalei Initiative Shuttles in Kapaʻa, Princeville, Hanalei & Hāʻena.",
+    visitingDesc: "Get around with Cruise Hawaiʻi & The Hanalei Initiative Shuttles in Kapaʻa, Princeville, Hanalei & Hāʻena.",
     trafficDesc: "traffic on kauaʻi",
     sidebarLabel: "cruise hawaiʻi",
   },

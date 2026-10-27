@@ -134,7 +134,7 @@ export default function CommunityForum() {
                 </Avatar>
                 <div className="flex-1 space-y-3">
                   <Textarea
-                    placeholder="Share your Cruise Kauaʻi story..."
+                    placeholder="Share your Cruise Hawaiʻi story..."
                     value={newPostContent}
                     onChange={(e) => setNewPostContent(e.target.value)}
                     className="min-h-24 rounded-2xl border-gray-300 resize-none"

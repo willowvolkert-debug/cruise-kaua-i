@@ -60,7 +60,7 @@ export default function UnsubscribePage() {
               <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
               <p className="text-lg text-gray-700 mb-4">{message}</p>
               <p className="text-sm text-gray-600">
-                You will no longer receive automated emails from Cruise Kauaʻi (daily ride updates, setup reminders, and community blasts).
+                You will no longer receive automated emails from Cruise Hawaiʻi (daily ride updates, setup reminders, and community blasts).
               </p>
               <p className="text-sm text-gray-600 mt-2">
                 You can update your email preferences anytime on your Account page.
@@ -83,7 +83,7 @@ export default function UnsubscribePage() {
               onClick={() => window.location.href = 'https://ride-connect-b7a57d59.base44.app'}
               className="bg-primary hover:bg-primary/90 rounded-2xl"
             >
-              Return to Cruise Kauaʻi
+              Return to Cruise Hawaiʻi
             </Button>
           </div>
         </CardContent>

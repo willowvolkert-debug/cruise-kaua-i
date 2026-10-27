@@ -124,7 +124,7 @@ Deno.serve(async (req) => {
                 passenger_id: booking.passenger_id,
                 driver_id: booking.driver_id
             },
-            description: `Cruise Kauaʻi ride - ${booking.passenger_name}`
+            description: `Cruise Hawaiʻi ride - ${booking.passenger_name}`
         });
 
         if (paymentIntent.status === 'succeeded') {

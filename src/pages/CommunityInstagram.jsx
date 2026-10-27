@@ -14,7 +14,7 @@ export default function CommunityInstagram() {
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-secondary">instagram</h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            See our latest posts from the Cruise Kauaʻi Instagram feed.
+            See our latest posts from the Cruise Hawaiʻi Instagram feed.
           </p>
         </div>
 

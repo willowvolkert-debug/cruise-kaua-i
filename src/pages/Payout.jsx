@@ -136,7 +136,7 @@ export default function PayoutPage() {
 
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
                   <p className="text-green-800 font-semibold">✓ Setup Complete!</p>
-                  <p className="text-sm text-green-700 mt-1">You can now use all features of Cruise Kauaʻi</p>
+                  <p className="text-sm text-green-700 mt-1">You can now use all features of Cruise Hawaiʻi</p>
                   <Button
                     onClick={() => window.location.href = '/account'}
                     className="mt-3 bg-primary hover:bg-primary/90"
@@ -177,7 +177,7 @@ export default function PayoutPage() {
                 <Alert className="bg-yellow-50 border-yellow-200">
                   <AlertCircle className="h-4 w-4 text-yellow-700" />
                   <AlertDescription className="text-yellow-800">
-                    <strong>Required for all users:</strong> You must connect a bank account via Stripe Connect to use Cruise Kauaʻi. 
+                    <strong>Required for all users:</strong> You must connect a bank account via Stripe Connect to use Cruise Hawaiʻi. 
                     This ensures secure payments for both drivers and riders.
                   </AlertDescription>
                 </Alert>
@@ -231,7 +231,7 @@ export default function PayoutPage() {
         </Card>
 
         <footer className="pt-6 border-t border-border text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} Cruise Kauaʻi. All rights reserved.
+          © {new Date().getFullYear()} Cruise Hawaiʻi. All rights reserved.
         </footer>
       </div>
     </div>

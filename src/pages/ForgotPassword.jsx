@@ -37,7 +37,7 @@ export default function ForgotPassword() {
         <a href="/join?login=true" className="flex items-center gap-2">
           <img
             src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
-            alt="Cruise Kauaʻi"
+            alt="Cruise Hawaiʻi"
             className="w-9 h-9 rounded-xl object-cover"
           />
         </a>

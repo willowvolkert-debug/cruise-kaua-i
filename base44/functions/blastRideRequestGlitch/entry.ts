@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
     const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');
     const fromNumber = Deno.env.get('TWILIO_PHONE_NUMBER');
 
-    const message = `🚗🌀 Cruise Kauaʻi: We had a glitch with ride requests not showing in the app, but we have 2 riders who need rides:\n\n1. Rohan — Kilauea → Lihue Airport, today (Sun 6/14) at 11 AM, 1 seat\n\n2. Kim — Lihue → Princeville, Tue 6/16 at 10:15 AM, 1 seat\n\nGo to Post a Ride and enter the details of their ride (or yours, if longer) — we will notify the rider to book it. Open the app on your Home Screen or cruisehi.org`;
+    const message = `🚗🌀 Cruise Hawaiʻi: We had a glitch with ride requests not showing in the app, but we have 2 riders who need rides:\n\n1. Rohan — Kilauea → Lihue Airport, today (Sun 6/14) at 11 AM, 1 seat\n\n2. Kim — Lihue → Princeville, Tue 6/16 at 10:15 AM, 1 seat\n\nGo to Post a Ride and enter the details of their ride (or yours, if longer) — we will notify the rider to book it. Open the app on your Home Screen or cruisehi.org`;
 
     let sent = 0;
     let failed = 0;

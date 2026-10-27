@@ -46,7 +46,7 @@ export default function EnableNotificationsModal({ isOpen, onClose }) {
             enable notifications 🔔
           </DialogTitle>
           <p className="text-sm text-gray-500 mt-1 leading-relaxed">
-            First, add Cruise Kauaʻi to your home screen — then notifications will work.
+            First, add Cruise Hawaiʻi to your home screen — then notifications will work.
           </p>
         </DialogHeader>
 

@@ -7,16 +7,16 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
 
   basic: {
-    subject: 'Welcome to Cruise Kauaʻi- why this service is worth your time',
+    subject: 'Welcome to Cruise Hawaiʻi- why this service is worth your time',
     body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
       ${logo}
       <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName} 🤙</p>
-      <p style="margin-bottom:16px;">This is Willow, founder of Cruise Kauaʻi. I wanted to reach out personally, because I think you joining this platform genuinely means something. We're building something worth being part of, and I'm glad you're here.</p>
+      <p style="margin-bottom:16px;">This is Willow, founder of Cruise Hawaiʻi. I wanted to reach out personally, because I think you joining this platform genuinely means something. We're building something worth being part of, and I'm glad you're here.</p>
 
       <p style="margin-bottom:16px;">Kauaʻi is one of the most beautiful places on Earth — and it's under pressure. Traffic on the highway is getting worse every year. The cost of living keeps climbing. Locals are leaving. Tourists are frustrated. And yet, every single day, thousands of us are driving the same roads, alone in our cars, going the same direction.</p>
 
       <div style="background:#f0fdf4;border-radius:12px;padding:24px;margin-bottom:24px;border:1px solid #86efac;">
-        <p style="font-weight:bold;font-size:16px;margin:0 0 12px;color:#166534;">Cruise Kauaʻi is one real, tangible way to change that — right now.</p>
+        <p style="font-weight:bold;font-size:16px;margin:0 0 12px;color:#166534;">Cruise Hawaiʻi is one real, tangible way to change that — right now.</p>
         <p style="margin:0 0 10px;color:#333;">Not someday when the infrastructure improves. Not when the government changes. <em>Right now</em>, with the people already on this island, sharing the rides we're already making.</p>
       </div>
 
@@ -59,24 +59,24 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
       <p style="margin-bottom:8px;">This island is small. What we do here — together — makes a real difference. I'm glad you're here.</p>
       <p style="margin:0 0 4px;">Me ke aloha,</p>
       <p style="margin:0;font-weight:bold;">Willow</p>
-      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
+      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Hawaiʻi</p>
       ${footer}
     </body></html>`,
   },
 
   license_submitted: {
-    subject: 'Welcome to Cruise Kauaʻi- here\'s what\'s next',
+    subject: 'Welcome to Cruise Hawaiʻi- here\'s what\'s next',
     body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
       ${logo}
       <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName}! 🌺</p>
-      <p style="margin-bottom:16px;">This is Willow, founder of Cruise Kauaʻi. <strong>Mahalo for submitting your license</strong> — that's the big one. You're almost ready to start booking rides.</p>
+      <p style="margin-bottom:16px;">This is Willow, founder of Cruise Hawaiʻi. <strong>Mahalo for submitting your license</strong> — that's the big one. You're almost ready to start booking rides.</p>
 
       <div style="background:#fefce8;border-left:4px solid #ca8a04;border-radius:8px;padding:20px;margin-bottom:20px;">
         <p style="font-weight:bold;margin:0 0 8px;color:#1a1a1a;">⏳ We're reviewing your license now</p>
         <p style="margin:0;color:#555;">Our team typically reviews within 24 hours. Once verified, you'll get an email and you'll be able to <strong>view & book rides immediately</strong>.</p>
       </div>
 
-      <p style="margin-bottom:12px;font-weight:bold;color:#1a1a1a;">While you wait — here's how riding on Cruise Kauaʻi works:</p>
+      <p style="margin-bottom:12px;font-weight:bold;color:#1a1a1a;">While you wait — here's how riding on Cruise Hawaiʻi works:</p>
       <ul style="padding-left:20px;color:#444;margin-bottom:24px;line-height:2.4;">
         <li>🔍 <strong>Browse rides</strong> on the Trips board — filter by date, route, and time</li>
         <li>💳 <strong>Request a ride & pay securely in-app</strong> — no cash needed.</li>
@@ -86,7 +86,7 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
 
       <div style="background:#f0fdf4;border-radius:12px;padding:20px;margin-bottom:24px;border:1px solid #86efac;">
         <p style="font-weight:bold;margin:0 0 8px;color:#166534;">🚗 Also consider becoming a driver</p>
-        <p style="margin:0 0 10px;color:#333;">If you have a car and make regular trips — even just to the grocery store or work — you could be earning money on Cruise Kauaʻi. Drivers set their own prices and only take rides they want.</p>
+        <p style="margin:0 0 10px;color:#333;">If you have a car and make regular trips — even just to the grocery store or work — you could be earning money on Cruise Hawaiʻi. Drivers set their own prices and only take rides they want.</p>
         <p style="margin:0;font-size:13px;">→ <a href="${appUrl}/Account" style="color:#2f7d52;font-weight:bold;">Add your vehicle on your Account page</a> whenever you're ready</p>
       </div>
 
@@ -101,17 +101,17 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
       <p style="margin-bottom:8px;">Mahalo for being part of this — every shared ride helps our community 🙏</p>
       <p style="margin:0 0 4px;">With aloha,</p>
       <p style="margin:0;font-weight:bold;">Willow</p>
-      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
+      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Hawaiʻi</p>
       ${footer}
     </body></html>`,
   },
 
   license_verified: {
-    subject: 'You\'re verified! Start booking rides on Cruise Kauaʻi',
+    subject: 'You\'re verified! Start booking rides on Cruise Hawaiʻi',
     body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
       ${logo}
       <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName}! 🎉</p>
-      <p style="margin-bottom:16px;">This is Willow, founder of Cruise Kauaʻi. <strong>Mahalo — your driver's license has been verified!</strong> You now have full access to book rides on our platform.</p>
+      <p style="margin-bottom:16px;">This is Willow, founder of Cruise Hawaiʻi. <strong>Mahalo — your driver's license has been verified!</strong> You now have full access to book rides on our platform.</p>
 
       <div style="background:#f0fdf4;border-left:4px solid #2f7d52;border-radius:8px;padding:20px;margin-bottom:20px;">
         <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">✅ You're all set to ride!</p>
@@ -148,17 +148,17 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
       <p style="margin-bottom:8px;">Mahalo for being part of this — every shared ride helps our community 🙏</p>
       <p style="margin:0 0 4px;">With aloha,</p>
       <p style="margin:0;font-weight:bold;">Willow</p>
-      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
+      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Hawaiʻi</p>
       ${footer}
     </body></html>`,
   },
 
   driver_submitted: {
-    subject: 'You\'re almost a driver on Cruise Kauaʻi',
+    subject: 'You\'re almost a driver on Cruise Hawaiʻi',
     body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
       ${logo}
       <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName}! 🌺</p>
-      <p style="margin-bottom:16px;">This is Willow, founder & CEO of Cruise Kauaʻi. <strong>Mahalo for submitting your vehicle details</strong> — you're so close to becoming a driver on our platform!</p>
+      <p style="margin-bottom:16px;">This is Willow, founder & CEO of Cruise Hawaiʻi. <strong>Mahalo for submitting your vehicle details</strong> — you're so close to becoming a driver on our platform!</p>
       <p style="margin-bottom:24px;">Here's what happens next:</p>
 
       <div style="background:#f0fdf4;border-left:4px solid #2f7d52;border-radius:8px;padding:20px;margin-bottom:20px;">
@@ -195,17 +195,17 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
       <p style="margin-top:32px;margin-bottom:8px;">Mahalo for helping reduce traffic on our beautiful island 🙏</p>
       <p style="margin:0 0 4px;">With aloha,</p>
       <p style="margin:0;font-weight:bold;">Willow</p>
-      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
+      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Hawaiʻi</p>
       ${footer}
     </body></html>`,
   },
 
   driver_verified: {
-    subject: 'You\'re approved! Start earning as a driver on Cruise Kauaʻi',
+    subject: 'You\'re approved! Start earning as a driver on Cruise Hawaiʻi',
     body: `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
       ${logo}
       <p style="font-size:18px;margin-bottom:20px;">Aloha ${firstName}! 🎉</p>
-      <p style="margin-bottom:16px;">This is Willow, founder & CEO of Cruise Kauaʻi. <strong>Mahalo — your driver account is fully verified!</strong> You can now start posting rides and earning money on trips you're already making.</p>
+      <p style="margin-bottom:16px;">This is Willow, founder & CEO of Cruise Hawaiʻi. <strong>Mahalo — your driver account is fully verified!</strong> You can now start posting rides and earning money on trips you're already making.</p>
 
       <div style="background:#f0fdf4;border-left:4px solid #2f7d52;border-radius:8px;padding:20px;margin-bottom:20px;">
         <p style="font-weight:bold;margin:0 0 10px;color:#1a1a1a;">✅ You're ready to drive!</p>
@@ -248,7 +248,7 @@ const buildEmails = (firstName, appUrl, unsubscribeUrl, logo, footer) => ({
       <p style="margin-top:32px;margin-bottom:8px;">Mahalo for helping reduce traffic on our beautiful island 🙏</p>
       <p style="margin:0 0 4px;">With aloha,</p>
       <p style="margin:0;font-weight:bold;">Willow</p>
-      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
+      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Hawaiʻi</p>
       ${footer}
     </body></html>`,
   },
@@ -269,19 +269,19 @@ Deno.serve(async (req) => {
 
     const appUrl = 'https://cruisekauai.org';
     const logo = `<div style="text-align:center;margin-bottom:28px;">
-      <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;" />
-      <p style="margin:8px 0 0 0;font-weight:bold;color:#2f7d52;font-size:15px;letter-spacing:1px;">Cruise Kauaʻi</p>
+      <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Hawaiʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;" />
+      <p style="margin:8px 0 0 0;font-weight:bold;color:#2f7d52;font-size:15px;letter-spacing:1px;">Cruise Hawaiʻi</p>
     </div>`;
 
     if (send_trips_update || send_trips_blast) {
-      const tripsSubject = "New look + price offer feature on Cruise Kauaʻi";
+      const tripsSubject = "New look + price offer feature on Cruise Hawaiʻi";
       const buildTripsBody = (firstName, unsubUrl) => `<html><body style="margin:0;padding:0;background:#f5f0e8;font-family:Arial,sans-serif;">
         <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e8;padding:32px 16px;"><tr><td align="center">
         <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
         <tr><td align="center" style="padding:32px 24px 20px;border-bottom:1px solid #f0ebe0;">${logo}</td></tr>
         <tr><td style="padding:36px;">
         <p style="font-size:1.05rem;color:#333;margin:0 0 18px;">Aloha ${firstName}! 🌺</p>
-        <p style="font-size:0.95rem;line-height:1.8;color:#444;margin:0 0 22px;">This is Willow, founder of Cruise Kauaʻi. We have been listening to your feedback and today we are rolling out two big improvements to make getting around Kauaʻi <strong>easier and more accessible than ever.</strong></p>
+        <p style="font-size:0.95rem;line-height:1.8;color:#444;margin:0 0 22px;">This is Willow, founder of Cruise Hawaiʻi. We have been listening to your feedback and today we are rolling out two big improvements to make getting around Kauaʻi <strong>easier and more accessible than ever.</strong></p>
         <div style="background:#f0fdf4;border-left:4px solid #2f7d52;border-radius:8px;padding:20px;margin-bottom:22px;">
         <p style="font-weight:700;font-size:1rem;color:#1a1a1a;margin:0 0 10px;">New look for the Trips page</p>
         <p style="font-size:0.92rem;line-height:1.7;color:#555;margin:0 0 14px;">The Trips page has a fresh cleaner layout. You now choose from three clear options:</p>
@@ -311,17 +311,17 @@ Deno.serve(async (req) => {
         <p style="font-size:0.92rem;line-height:1.7;color:#555;margin:0 0 20px;">Every ride shared reduces traffic, keeps money in our local economy, and makes Kauaʻi a better place. Mahalo. 🙏</p>
         <p style="margin:0 0 4px;color:#444;">Me ke aloha,</p>
         <p style="margin:0;font-weight:bold;">Willow</p>
-        <p style="margin:0;font-size:0.82rem;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
+        <p style="margin:0;font-size:0.82rem;color:#888;">Founder & CEO, Cruise Hawaiʻi</p>
         </td></tr>
         <tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:20px 32px;text-align:center;">
-        <p style="font-size:0.78rem;color:#aaa;margin:0 0 6px;">The Cruise Kauaʻi Team &middot; <a href="https://cruisekauai.org" style="color:#2f7d52;">cruisekauai.org</a></p>
+        <p style="font-size:0.78rem;color:#aaa;margin:0 0 6px;">The Cruise Hawaiʻi Team &middot; <a href="https://cruisekauai.org" style="color:#2f7d52;">cruisekauai.org</a></p>
         <p style="font-size:0.75rem;color:#bbb;margin:0;"><a href="${unsubUrl}" style="color:#bbb;">unsubscribe</a></p>
         </td></tr></table></td></tr></table></body></html>`;
 
       if (send_trips_update) {
         await base44.asServiceRole.integrations.Core.SendEmail({
           to: 'willowvolkert@gmail.com',
-          from_name: "Cruise Kaua'i",
+          from_name: "Cruise Hawaiʻi",
           subject: '[PREVIEW] ' + tripsSubject,
           body: buildTripsBody('Willow', 'https://cruisekauai.org/Unsubscribe?user_id=preview'),
         });
@@ -337,7 +337,7 @@ Deno.serve(async (req) => {
             const fn = u.full_name ? u.full_name.split(' ')[0] : 'there';
             await base44.asServiceRole.integrations.Core.SendEmail({
               to: u.email,
-              from_name: "Cruise Kaua'i",
+              from_name: "Cruise Hawaiʻi",
               subject: tripsSubject,
               body: buildTripsBody(fn, 'https://cruisekauai.org/Unsubscribe?user_id=' + u.id),
             });
@@ -369,7 +369,7 @@ Deno.serve(async (req) => {
         const { subject, body } = previewEmails[type];
         await base44.asServiceRole.integrations.Core.SendEmail({
           to: 'willowvolkert@gmail.com',
-          from_name: "Cruise Kaua'i",
+          from_name: "Cruise Hawaiʻi",
           subject: `[PREVIEW ${type.toUpperCase()}] ${subject}`,
           body,
         });
@@ -415,7 +415,7 @@ Deno.serve(async (req) => {
 
         await base44.asServiceRole.integrations.Core.SendEmail({
           to: u.email,
-          from_name: "Cruise Kaua'i",
+          from_name: "Cruise Hawaiʻi",
           subject,
           body,
         });

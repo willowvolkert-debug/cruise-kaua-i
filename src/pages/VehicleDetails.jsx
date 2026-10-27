@@ -434,7 +434,7 @@ export default function VehicleDetailsPage() {
         </Card>
 
         <footer className="pt-6 border-t border-border text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} Cruise Kauaʻi. All rights reserved.
+          © {new Date().getFullYear()} Cruise Hawaiʻi. All rights reserved.
         </footer>
       </div>
 

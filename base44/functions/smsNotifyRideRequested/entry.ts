@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
     }
 
     const riderName = booking.passenger_name || booking.passenger_username || 'Someone';
-    const message = `Cruise Kauaʻi: ${riderName} just requested a seat on your trip! view the application in your Home Screen, or the website- cruisehi.org`;
+    const message = `Cruise Hawaiʻi: ${riderName} just requested a seat on your trip! view the application in your Home Screen, or the website- cruisehi.org`;
 
     const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
     const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');

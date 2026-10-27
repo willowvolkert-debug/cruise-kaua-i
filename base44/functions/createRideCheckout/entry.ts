@@ -108,7 +108,7 @@ Deno.serve(async (req) => {
                 price_data: {
                     currency: 'usd',
                     product_data: {
-                        name: `Cruise Kauaʻi Ride`,
+                        name: `Cruise Hawaiʻi Ride`,
                         description: `${ride.departure_location} → ${ride.destination} on ${hawaiiDateStr} at ${hawaiiTimeStr} HST · ${seats_booked} seat${seats_booked > 1 ? 's' : ''}`
                     },
                     unit_amount: Math.round(rideAmount * 100)
@@ -120,7 +120,7 @@ Deno.serve(async (req) => {
                     currency: 'usd',
                     product_data: {
                         name: 'Connect Fee',
-                        description: `Cruise Kauaʻi service fee (${Math.round(connectFeeRate * 100)}%)`
+                        description: `Cruise Hawaiʻi service fee (${Math.round(connectFeeRate * 100)}%)`
                     },
                     unit_amount: Math.round(connectFee * 100)
                 },

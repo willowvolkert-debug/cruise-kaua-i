@@ -208,7 +208,7 @@ function MoreQuestionsPage() {
           <span className="text-2xl shrink-0">❓</span>
           <div>
             <p className="font-bold text-foreground text-sm">FAQ & About Us</p>
-            <p className="text-xs text-muted-foreground mt-0.5">Answers to the most common questions about how Cruise Kauaʻi works.</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Answers to the most common questions about how Cruise Hawaiʻi works.</p>
           </div>
         </a>
 
@@ -281,7 +281,7 @@ export default function WelcomeTutorialModal({ isOpen, onClose, onComplete }) {
         user_name: user?.full_name || "Anonymous",
         user_email: user?.email || "unknown",
         subject: "Help installing the app",
-        message: "I'm having trouble adding Cruise Kauaʻi to my home screen as an app.",
+        message: "I'm having trouble adding Cruise Hawaiʻi to my home screen as an app.",
         priority: "low",
       });
       // Send the detailed help email

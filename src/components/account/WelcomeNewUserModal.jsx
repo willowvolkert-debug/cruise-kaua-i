@@ -38,7 +38,7 @@ export default function WelcomeNewUserModal({ user, onStartQuiz, onDismiss }) {
     try {
       await sendSmsNotification({
         to: formatted,
-        message: "Aloha from Cruise Kauaʻi! 🤙 Just a reminder to finish setting up your profile so you can start booking rides. Visit cruisekauai.org and head to your Account page. Mahalo!"
+        message: "Aloha from Cruise Hawaiʻi! 🤙 Just a reminder to finish setting up your profile so you can start booking rides. Visit cruisekauai.org and head to your Account page. Mahalo!"
       });
     } catch (e) {
       // non-blocking
@@ -89,7 +89,7 @@ export default function WelcomeNewUserModal({ user, onStartQuiz, onDismiss }) {
               <div className="text-3xl">📱</div>
               <h2 className="text-xl font-bold text-secondary">we'll text you tonight!</h2>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                Enter your phone number and Cruise Kauaʻi will send you a reminder this evening to finish your profile.
+                Enter your phone number and Cruise Hawaiʻi will send you a reminder this evening to finish your profile.
               </p>
               <Input
                 type="tel"
@@ -124,7 +124,7 @@ export default function WelcomeNewUserModal({ user, onStartQuiz, onDismiss }) {
         {/* Header */}
         <div className="px-6 pt-14 pb-6 text-center text-white bg-primary">
           <h1 className="cruise-head text-4xl text-white">
-            welcome to cruise kauaʻi
+            welcome to cruise hawaiʻi
           </h1>
         </div>
 
@@ -185,7 +185,7 @@ function AddToHomeScreen({ onAmazing, onNeedsHelp, helpSent, sendingHelp }) {
       <div className="bg-card rounded-3xl shadow-2xl border-2 border-foreground/10 max-w-sm w-full overflow-hidden my-4">
         <div className="px-6 pt-7 pb-5 text-center text-white bg-secondary">
           <div className="text-3xl mb-2">📲</div>
-          <h2 className="cruise-head text-3xl">add cruise kauaʻi to your home screen</h2>
+          <h2 className="cruise-head text-3xl">add cruise hawaiʻi to your home screen</h2>
           <p className="text-white/80 text-sm mt-1">no app store needed — ever!</p>
         </div>
 

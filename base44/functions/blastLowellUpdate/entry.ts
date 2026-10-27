@@ -7,7 +7,7 @@ const buildBody = (name, unsubUrl) => `<html><body style="font-family:Arial,sans
 <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;">
   <div style="text-align:center;padding:28px;border-bottom:1px solid #f0ebe0;">
     <img src="${AU}/logo.jpg" style="width:64px;height:64px;border-radius:50%;border:3px solid #2f7d52;"/>
-    <p style="font-weight:700;margin:8px 0 0;">Cruise Kauaʻi</p>
+    <p style="font-weight:700;margin:8px 0 0;">Cruise Hawaiʻi</p>
   </div>
   <div style="padding:32px;">
     <p>Aloha ${name},</p>
@@ -36,7 +36,7 @@ export default async function(req) {
     if (preview) {
       await base44.asServiceRole.integrations.Core.SendEmail({
         to: 'willowvolkert@gmail.com',
-        from_name: "Cruise Kauaʻi",
+        from_name: "Cruise Hawaiʻi",
         subject: '[PREVIEW] ' + SUBJECT,
         body: buildBody('Willow', AU + '/Unsubscribe?user_id=preview')
       });
@@ -52,7 +52,7 @@ export default async function(req) {
           const fn = u.full_name ? u.full_name.split(' ')[0] : 'there';
           await base44.asServiceRole.integrations.Core.SendEmail({
             to: u.email,
-            from_name: "Cruise Kauaʻi",
+            from_name: "Cruise Hawaiʻi",
             subject: SUBJECT,
             body: buildBody(fn, AU + '/Unsubscribe?user_id=' + u.id)
           });

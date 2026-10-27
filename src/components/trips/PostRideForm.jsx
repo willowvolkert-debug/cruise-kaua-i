@@ -400,7 +400,7 @@ export default function PostRideForm({ island = "Kauai", initialRespondingToRequ
           await base44.integrations.Core.SendEmail({
             to: respondingToRequest.rider_email || '',
             subject: `A driver responded to your ride request!`,
-            body: `Aloha ${respondingToRequest.rider_name},\n\nA driver has posted a ride that matches your request!\n\nRoute: ${ridePayload.departure_location} → ${ridePayload.destination}\nDate: ${ridePayload.departure_date}\nTime: ${ridePayload.departure_time}\n\nLog in to Cruise Kauaʻi to book it: https://cruisekauai.org\n\nMahalo,\nCruise Kauaʻi Team`
+            body: `Aloha ${respondingToRequest.rider_name},\n\nA driver has posted a ride that matches your request!\n\nRoute: ${ridePayload.departure_location} → ${ridePayload.destination}\nDate: ${ridePayload.departure_date}\nTime: ${ridePayload.departure_time}\n\nLog in to Cruise Hawaiʻi to book it: https://cruisekauai.org\n\nMahalo,\nCruise Hawaiʻi Team`
           });
         } catch (e) { /* email optional */ }
         // Also send an in-app notification

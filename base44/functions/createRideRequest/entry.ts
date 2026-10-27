@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
             await base44.asServiceRole.integrations.Core.SendEmail({
               to: riderUser.email,
               subject: `🚗 We found ${matchedRides.length} ride${matchedRides.length > 1 ? 's' : ''} matching your request!`,
-              body: `Aloha ${payload.rider_name || 'there'}!\n\nGood news — there ${matchedRides.length > 1 ? 'are' : 'is'} ${matchedRides.length} ride${matchedRides.length > 1 ? 's' : ''} already posted that match your route:\n\n${rideList}\n\nLog in to view and book: https://cruisekauai.org/trips\n\nMahalo,\nCruise Kauaʻi`
+              body: `Aloha ${payload.rider_name || 'there'}!\n\nGood news — there ${matchedRides.length > 1 ? 'are' : 'is'} ${matchedRides.length} ride${matchedRides.length > 1 ? 's' : ''} already posted that match your route:\n\n${rideList}\n\nLog in to view and book: https://cruisekauai.org/trips\n\nMahalo,\nCruise Hawaiʻi`
             });
           } catch (e) { /* skip email failure */ }
         }

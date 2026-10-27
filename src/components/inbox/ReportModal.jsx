@@ -198,7 +198,7 @@ export default function ReportModal({ isOpen, onClose, recentChats }) {
                   <CheckCircle className="w-12 h-12 text-primary" />
                 </div>
                 <h3 className="text-2xl font-bold text-secondary text-center mb-2">
-                  mahalo for keeping cruise kauaʻi safe for everyone
+                  mahalo for keeping cruise hawaiʻi safe for everyone
                 </h3>
               </div>
 

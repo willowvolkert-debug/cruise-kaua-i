@@ -106,10 +106,10 @@ const AuthenticatedApp = () => {
       <div className="fixed inset-0 flex flex-col items-center justify-center bg-white gap-4">
         <img
           src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
-          alt="Cruise Kauaʻi"
+          alt="Cruise Hawaiʻi"
           className="w-48 h-48 object-cover rounded-2xl shadow-lg"
         />
-        <h1 className="text-2xl font-bold text-primary tracking-wide">cruise kauaʻi</h1>
+        <h1 className="text-2xl font-bold text-primary tracking-wide">cruise hawaiʻi</h1>
       </div>
     );
   }

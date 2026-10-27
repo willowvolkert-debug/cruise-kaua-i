@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
     
     <p style="font-size: 18px; margin-bottom: 24px;">🌺 Aloha!</p>
 
-    <p style="margin-bottom: 20px;"><strong>This is Willow, founder & CEO of Cruise Kauaʻi.</strong> Mahalo for creating an account with us and being interested in reducing traffic on our small island. Cruise Kauaʻi is a transportation alternative for those sick of sitting in traffic and paying too much money to get around. It is like a combination of the bus, Uber, and the Nextdoor community app; a community-based ride-sharing platform to get cars off the road, put money in locals' pockets, and make transportation more affordable & accessible for everyone.</p>
+    <p style="margin-bottom: 20px;"><strong>This is Willow, founder & CEO of Cruise Hawaiʻi.</strong> Mahalo for creating an account with us and being interested in reducing traffic on our small island. Cruise Hawaiʻi is a transportation alternative for those sick of sitting in traffic and paying too much money to get around. It is like a combination of the bus, Uber, and the Nextdoor community app; a community-based ride-sharing platform to get cars off the road, put money in locals' pockets, and make transportation more affordable & accessible for everyone.</p>
 
     <p style="margin-bottom: 24px;">I wanted to remind you to finish setting up your account. We need more drivers posting rides as we finish beta testing, and need your help to make the culture shift toward carpooling a reality on Kauaʻi!</p>
 
@@ -61,7 +61,7 @@ Deno.serve(async (req) => {
 
     <p style="margin-bottom: 24px;"><strong>(2) RECURRING RIDES:</strong> drivers can now set up recurring rides when posting a trip. Simply fill out the recurring ride tab under "post a ride" with your morning commute or daily grocery run. Then, press on that ride and it will populate below, and the only field you have to fill out is the date.</p>
 
-    <p style="margin-top: 40px; margin-bottom: 8px;">Mahalo for joining cruise kauaʻi and helping our island home 🙏</p>
+    <p style="margin-top: 40px; margin-bottom: 8px;">Mahalo for joining cruise hawaiʻi and helping our island home 🙏</p>
     <p style="margin: 0;">Founder & CEO,</p>
     <p style="margin: 0; font-weight: bold;">Willow</p>
 
@@ -69,15 +69,15 @@ Deno.serve(async (req) => {
 
     <p style="font-size: 12px; color: #666; margin-bottom: 12px;">If you'd like to stop receiving these setup reminders, <a href="https://cruisekauai.base44.app/unsubscribe?user_id=test123" style="color: #0066cc;">click here</a>.</p>
 
-    <p style="font-size: 12px; color: #666;">Replies to this email are not monitored. Please fill out the contact us form on the Cruise Kauaʻi website, or email willowvolkert@gmail.com, with any questions or concerns.</p>
+    <p style="font-size: 12px; color: #666;">Replies to this email are not monitored. Please fill out the contact us form on the Cruise Hawaiʻi website, or email willowvolkert@gmail.com, with any questions or concerns.</p>
     </body>
     </html>
     `.trim();
 
     await base44.asServiceRole.integrations.Core.SendEmail({
-      from_name: 'Cruise Kauaʻi',
+      from_name: 'Cruise Hawaiʻi',
       to: email,
-      subject: '🌺 Finish setting up your Cruise Kauaʻi Carpooling Account Today!',
+      subject: '🌺 Finish setting up your Cruise Hawaiʻi Carpooling Account Today!',
       body: emailBody
     });
 

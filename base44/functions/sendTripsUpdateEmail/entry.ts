@@ -12,8 +12,8 @@ Deno.serve(async (req) => {
     const preview = !!payload.send_preview;
     const blast = !!payload.send_all;
 
-    const subject = "New look + price offer feature on Cruise Kauaʻi";
-    const logoHtml = '<div style="text-align:center;margin-bottom:24px;"><img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauai" style="width:68px;height:68px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;" /><p style="margin:6px 0 0;font-weight:bold;color:#2f7d52;font-size:14px;">Cruise Kauaʻi</p></div>';
+    const subject = "New look + price offer feature on Cruise Hawaiʻi";
+    const logoHtml = '<div style="text-align:center;margin-bottom:24px;"><img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauai" style="width:68px;height:68px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;" /><p style="margin:6px 0 0;font-weight:bold;color:#2f7d52;font-size:14px;">Cruise Hawaiʻi</p></div>';
 
     const html = (name, unsub) => '<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f5f0e8;font-family:Arial,sans-serif;">' +
       '<table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e8;padding:28px 12px;"><tr><td align="center">' +
@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
       '<tr><td align="center" style="padding:28px 24px 16px;border-bottom:1px solid #f0ebe0;">' + logoHtml + '</td></tr>' +
       '<tr><td style="padding:32px 28px;">' +
       '<p style="font-size:16px;color:#333;margin:0 0 14px;">Aloha ' + name + '! 🌺</p>' +
-      '<p style="font-size:14px;line-height:1.8;color:#444;margin:0 0 20px;">This is Willow, founder of Cruise Kauaʻi. We have been listening to your feedback and today we are rolling out two big improvements to make getting around Kauaʻi <strong>easier and more accessible than ever.</strong></p>' +
+      '<p style="font-size:14px;line-height:1.8;color:#444;margin:0 0 20px;">This is Willow, founder of Cruise Hawaiʻi. We have been listening to your feedback and today we are rolling out two big improvements to make getting around Kauaʻi <strong>easier and more accessible than ever.</strong></p>' +
 
       '<div style="background:#f0fdf4;border-left:4px solid #2f7d52;border-radius:8px;padding:18px;margin-bottom:18px;">' +
       '<p style="font-weight:700;font-size:15px;color:#1a1a1a;margin:0 0 10px;">🗺️ New look for the Trips page</p>' +
@@ -56,10 +56,10 @@ Deno.serve(async (req) => {
       '<p style="font-size:13px;line-height:1.7;color:#555;margin:0 0 16px;">Every ride shared reduces traffic, keeps money in our local economy, and makes Kauaʻi a better place. Mahalo for being part of it. 🙏</p>' +
       '<p style="margin:0 0 3px;color:#444;font-size:13px;">Me ke aloha,</p>' +
       '<p style="margin:0;font-weight:bold;font-size:13px;">Willow</p>' +
-      '<p style="margin:0;font-size:12px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>' +
+      '<p style="margin:0;font-size:12px;color:#888;">Founder & CEO, Cruise Hawaiʻi</p>' +
       '</td></tr>' +
       '<tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:16px 28px;text-align:center;">' +
-      '<p style="font-size:12px;color:#aaa;margin:0 0 4px;">The Cruise Kauaʻi Team &middot; <a href="https://cruisekauai.org" style="color:#2f7d52;">cruisekauai.org</a></p>' +
+      '<p style="font-size:12px;color:#aaa;margin:0 0 4px;">The Cruise Hawaiʻi Team &middot; <a href="https://cruisekauai.org" style="color:#2f7d52;">cruisekauai.org</a></p>' +
       '<p style="font-size:11px;color:#bbb;margin:0;"><a href="' + unsub + '" style="color:#bbb;">unsubscribe</a></p>' +
       '</td></tr>' +
       '</table></td></tr></table></body></html>';
@@ -67,7 +67,7 @@ Deno.serve(async (req) => {
     if (preview) {
       await base44.asServiceRole.integrations.Core.SendEmail({
         to: 'willowvolkert@gmail.com',
-        from_name: "Cruise Kaua'i",
+        from_name: "Cruise Hawaiʻi",
         subject: '[PREVIEW] ' + subject,
         body: html('Willow', 'https://cruisekauai.org/Unsubscribe?user_id=preview'),
       });
@@ -83,7 +83,7 @@ Deno.serve(async (req) => {
           const firstName = u.full_name ? u.full_name.split(' ')[0] : 'there';
           await base44.asServiceRole.integrations.Core.SendEmail({
             to: u.email,
-            from_name: "Cruise Kaua'i",
+            from_name: "Cruise Hawaiʻi",
             subject,
             body: html(firstName, 'https://cruisekauai.org/Unsubscribe?user_id=' + u.id),
           });

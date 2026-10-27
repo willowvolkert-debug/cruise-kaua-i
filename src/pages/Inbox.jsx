@@ -294,7 +294,7 @@ export default function InboxPage() {
                 await sendBookingEmail({
                     userId: booking.passenger_id,
                     subject: `🎉 Your ride request was accepted!`,
-                    body: `Hi ${booking.passenger_name},\n\nGreat news! Your ride request has been accepted by the driver.\n\nTrip Details:\n${ride ? `${ride.departure_location} → ${ride.destination}\nDate: ${ride.departure_date}\nTime: ${ride.departure_time}` : ''}\n\nPlease log into Cruise Kauaʻi to chat with your driver.\n\nMahalo,\nCruise Kauaʻi Team`
+                    body: `Hi ${booking.passenger_name},\n\nGreat news! Your ride request has been accepted by the driver.\n\nTrip Details:\n${ride ? `${ride.departure_location} → ${ride.destination}\nDate: ${ride.departure_date}\nTime: ${ride.departure_time}` : ''}\n\nPlease log into Cruise Hawaiʻi to chat with your driver.\n\nMahalo,\nCruise Hawaiʻi Team`
                 });
             } catch (emailError) {
                 console.error("Error sending confirmation email:", emailError);
@@ -326,8 +326,8 @@ export default function InboxPage() {
         try {
             await sendBookingEmail({
                 userId: booking.passenger_id,
-                subject: `Ride request update - Cruise Kauaʻi`,
-                body: `Aloha ${booking.passenger_name},\n\nUnfortunately, the driver was unable to accept your ride request at this time. Your payment will be refunded.\n\nPlease log into Cruise Kauaʻi to find another ride.\n\nMahalo,\nCruise Kauaʻi Team`
+                subject: `Ride request update - Cruise Hawaiʻi`,
+                body: `Aloha ${booking.passenger_name},\n\nUnfortunately, the driver was unable to accept your ride request at this time. Your payment will be refunded.\n\nPlease log into Cruise Hawaiʻi to find another ride.\n\nMahalo,\nCruise Hawaiʻi Team`
             });
         } catch (emailError) {
             console.error("Error sending rejection email:", emailError);
@@ -366,8 +366,8 @@ export default function InboxPage() {
             try {
                 await sendBookingEmail({
                     userId: booking.passenger_id,
-                    subject: `The driver wants the full price - Cruise Kauaʻi`,
-                    body: `Aloha ${booking.passenger_name},\n\nThe driver has reviewed your price offer of $${booking.offered_price}/seat and is requesting the original price request for this ride.\n\nPlease log into Cruise Kauaʻi to review the request. If you don't respond, your payment will be refunded.\n\nhttps://www.cruisekauai.org/trips\n\nMahalo,\nCruise Kauaʻi Team`
+                    subject: `The driver wants the full price - Cruise Hawaiʻi`,
+                    body: `Aloha ${booking.passenger_name},\n\nThe driver has reviewed your price offer of $${booking.offered_price}/seat and is requesting the original price request for this ride.\n\nPlease log into Cruise Hawaiʻi to review the request. If you don't respond, your payment will be refunded.\n\nhttps://www.cruisekauai.org/trips\n\nMahalo,\nCruise Hawaiʻi Team`
                 });
             } catch (emailError) {
                 console.error("Error sending full price request email:", emailError);
@@ -404,8 +404,8 @@ export default function InboxPage() {
             try {
                 await sendBookingEmail({
                     userId: booking.driver_id,
-                    subject: `Ride request cancelled - Cruise Kauaʻi`,
-                    body: `Aloha,\n\n${booking.passenger_name} has cancelled their ride request before you accepted it.\n\nNo action is needed on your end.\n\nMahalo,\nCruise Kauaʻi Team`
+                    subject: `Ride request cancelled - Cruise Hawaiʻi`,
+                    body: `Aloha,\n\n${booking.passenger_name} has cancelled their ride request before you accepted it.\n\nNo action is needed on your end.\n\nMahalo,\nCruise Hawaiʻi Team`
                 });
             } catch (emailError) {
                 console.error("Error sending cancellation email to driver:", emailError);
@@ -414,8 +414,8 @@ export default function InboxPage() {
             try {
                 await sendBookingEmail({
                     userId: booking.passenger_id,
-                    subject: `Your ride request is cancelled - Cruise Kauaʻi`,
-                    body: `Aloha ${booking.passenger_name},\n\nYour ride request has been cancelled.\n\nYour payment will be refunded.\n\nMahalo,\nCruise Kauaʻi Team`
+                    subject: `Your ride request is cancelled - Cruise Hawaiʻi`,
+                    body: `Aloha ${booking.passenger_name},\n\nYour ride request has been cancelled.\n\nYour payment will be refunded.\n\nMahalo,\nCruise Hawaiʻi Team`
                 });
             } catch (emailError) {
                 console.error("Error sending cancellation confirmation email to rider:", emailError);
@@ -491,8 +491,8 @@ Please process the refund manually via Stripe.
             try {
                 await sendBookingEmail({
                     userId: booking.driver_id,
-                    subject: `Rider cancelled - Cruise Kauaʻi`,
-                    body: `Aloha,\n\n${booking.passenger_name} has cancelled their confirmed booking for your ride on ${ride?.departure_date ? format(parseDateString(ride.departure_date), "EEE, MMM d, yyyy") : 'TBD'} at ${ride?.departure_time ? formatTime12Hour(ride.departure_time) : 'TBD'}.\n\nReason: ${reason}\n\nThe seat(s) have been made available again for your ride.\n\nMahalo,\nCruise Kauaʻi Team`
+                    subject: `Rider cancelled - Cruise Hawaiʻi`,
+                    body: `Aloha,\n\n${booking.passenger_name} has cancelled their confirmed booking for your ride on ${ride?.departure_date ? format(parseDateString(ride.departure_date), "EEE, MMM d, yyyy") : 'TBD'} at ${ride?.departure_time ? formatTime12Hour(ride.departure_time) : 'TBD'}.\n\nReason: ${reason}\n\nThe seat(s) have been made available again for your ride.\n\nMahalo,\nCruise Hawaiʻi Team`
                 });
             } catch (emailError) {
                 console.error("Error sending cancellation email to driver:", emailError);
@@ -501,8 +501,8 @@ Please process the refund manually via Stripe.
             try {
                 await sendBookingEmail({
                     userId: booking.passenger_id,
-                    subject: `Your cancellation is confirmed - Cruise Kauaʻi`,
-                    body: `Aloha ${booking.passenger_name},\n\nYour booking for the ride from ${ride?.departure_location} → ${ride?.destination} on ${ride?.departure_date ? format(parseDateString(ride.departure_date), "EEE, MMM d, yyyy") : 'TBD'} at ${ride?.departure_time ? formatTime12Hour(ride.departure_time) : 'TBD'} has been cancelled.\n\nReason: ${reason}\n\nRefund: ${refundPercentage} of your payment will be processed.\n\nMahalo,\nCruise Kauaʻi Team`
+                    subject: `Your cancellation is confirmed - Cruise Hawaiʻi`,
+                    body: `Aloha ${booking.passenger_name},\n\nYour booking for the ride from ${ride?.departure_location} → ${ride?.destination} on ${ride?.departure_date ? format(parseDateString(ride.departure_date), "EEE, MMM d, yyyy") : 'TBD'} at ${ride?.departure_time ? formatTime12Hour(ride.departure_time) : 'TBD'} has been cancelled.\n\nReason: ${reason}\n\nRefund: ${refundPercentage} of your payment will be processed.\n\nMahalo,\nCruise Hawaiʻi Team`
                 });
             } catch (emailError) {
                 console.error("Error sending cancellation confirmation email to rider:", emailError);
@@ -540,7 +540,7 @@ Please process the refund manually via Stripe.
                     booking_id: booking.id,
                     ride_id: booking.ride_id,
                     payer_id: booking.driver_id,
-                    payer_name: "Cruise Kauaʻi (Refund)",
+                    payer_name: "Cruise Hawaiʻi (Refund)",
                     recipient_id: booking.passenger_id,
                     recipient_name: booking.passenger_name,
                     ride_amount: -refundAmount,

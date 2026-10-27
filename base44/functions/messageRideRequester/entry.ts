@@ -70,13 +70,13 @@ Deno.serve(async (req) => {
         const appUrl = 'https://www.cruisekauai.org';
         await base44.asServiceRole.integrations.Core.SendEmail({
           to: riderEmail,
-          subject: `🌺 A driver responded to your ride request on Cruise Kauaʻi!`,
+          subject: `🌺 A driver responded to your ride request on Cruise Hawaiʻi!`,
           body: `<html><body style="font-family: Arial, sans-serif; line-height: 1.8; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
 <p>Aloha ${rider_name || ''},</p>
-<p>A driver has seen your ride request and sent you a message on Cruise Kauaʻi!</p>
+<p>A driver has seen your ride request and sent you a message on Cruise Hawaiʻi!</p>
 <p style="background: #f5f5f5; padding: 16px; border-radius: 8px; font-style: italic;">"${message}"</p>
 <p>Log in to the app to chat with them and book your ride: <a href="${appUrl}">${appUrl}</a></p>
-<p>Mahalo,<br/>Cruise Kauaʻi Team</p>
+<p>Mahalo,<br/>Cruise Hawaiʻi Team</p>
 </body></html>`
         });
       } catch (e) {

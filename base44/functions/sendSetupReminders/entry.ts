@@ -91,13 +91,13 @@ Deno.serve(async (req) => {
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
         <tr><td align="center" style="padding:32px 24px 20px;border-bottom:1px solid #f0ebe0;">
-          <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kaua'i" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;display:block;margin:0 auto 10px;" />
-          <div style="font-family:Georgia,serif;font-size:1.1rem;font-weight:700;color:#1a1a1a;">Cruise Kauaʻi</div>
+          <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Hawaiʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;display:block;margin:0 auto 10px;" />
+          <div style="font-family:Georgia,serif;font-size:1.1rem;font-weight:700;color:#1a1a1a;">Cruise Hawaiʻi</div>
         </td></tr>
         <tr><td style="padding:32px 32px 24px;">
           <h1 style="font-family:Georgia,serif;font-size:1.5rem;font-weight:700;color:#1a1a1a;margin:0 0 16px;">Aloha, ${firstName}! 🌺</h1>
 
-          <p style="font-size:0.95rem;line-height:1.8;color:#444;margin:0 0 16px;"><strong>This is Willow, founder of Cruise Kauaʻi.</strong> Mahalo for creating an account with us! Cruise Kauaʻi is a community carpooling service — like a combination of the bus, Uber, and Nextdoor. It connects drivers on the routes they're already taking with folks who need a ride. It gets cars off the road, puts money in locals' pockets, and makes transportation more affordable &amp; accessible for everyone on our island.</p>
+          <p style="font-size:0.95rem;line-height:1.8;color:#444;margin:0 0 16px;"><strong>This is Willow, founder of Cruise Hawaiʻi.</strong> Mahalo for creating an account with us! Cruise Hawaiʻi is a community carpooling service — like a combination of the bus, Uber, and Nextdoor. It connects drivers on the routes they're already taking with folks who need a ride. It gets cars off the road, puts money in locals' pockets, and makes transportation more affordable &amp; accessible for everyone on our island.</p>
 
           <p style="font-size:0.95rem;line-height:1.8;color:#444;margin:0 0 24px;">We'd love to have you fully set up so you can start sharing rides with your community. It only takes a few minutes!</p>
 
@@ -109,7 +109,7 @@ Deno.serve(async (req) => {
 
           <table width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #f0ebe0;padding-top:24px;margin-top:4px;">
             <tr><td>
-              <p style="font-size:0.95rem;font-weight:700;color:#1a1a1a;margin:0 0 16px;">✨ What's new on Cruise Kauaʻi:</p>
+              <p style="font-size:0.95rem;font-weight:700;color:#1a1a1a;margin:0 0 16px;">✨ What's new on Cruise Hawaiʻi:</p>
 
               <table width="100%" cellpadding="0" cellspacing="0" style="background:#faf7f2;border:1px solid #ede5d4;border-radius:12px;margin:0 0 16px;">
                 <tr><td style="padding:16px 20px;border-bottom:1px solid #ede5d4;">
@@ -137,9 +137,9 @@ Deno.serve(async (req) => {
 </body></html>`;
 
                     await base44.asServiceRole.integrations.Core.SendEmail({
-                        from_name: 'Cruise Kauaʻi',
+                        from_name: 'Cruise Hawaiʻi',
                         to: u.email,
-                        subject: '🌺 Finish setting up your Cruise Kauaʻi Carpooling Account Today!',
+                        subject: '🌺 Finish setting up your Cruise Hawaiʻi Carpooling Account Today!',
                         body: emailBody
                     });
 

@@ -41,7 +41,7 @@ const DRIVER_STEPS = [
 ];
 
 const AGREEMENT_BOXES = [
-  { key: 'notTransportProvider', label: 'I understand Cruise Kauaʻi is not a transportation provider' },
+  { key: 'notTransportProvider', label: 'I understand Cruise Hawaiʻi is not a transportation provider' },
   { key: 'notEmployee', label: 'I understand I am not an employee or agent' },
   { key: 'solelyResponsible', label: 'I understand I am solely responsible for my actions' },
   { key: 'incidentalTravel', label: 'My rides are incidental to my own travel' },
@@ -52,15 +52,15 @@ const AGREEMENT_BOXES = [
   { key: 'vehicleSafe', label: 'My vehicle is safe and roadworthy' },
   { key: 'willRemoveUnsafe', label: 'I will remove my vehicle if unsafe' },
   { key: 'hasInsurance', label: 'I maintain legally required auto insurance' },
-  { key: 'noInsuranceProvided', label: 'I understand Cruise Kauaʻi provides NO insurance' },
+  { key: 'noInsuranceProvided', label: 'I understand Cruise Hawaiʻi provides NO insurance' },
   { key: 'insuranceDenial', label: 'I understand my insurer may deny coverage' },
   { key: 'confirmedCoverage', label: 'I have confirmed coverage with my insurer' },
   { key: 'inherentRisk', label: 'Driving involves inherent risk' },
   { key: 'passengersIndependent', label: 'Passengers are independent individuals' },
   { key: 'accidentsMayOccur', label: 'Accidents and injuries may occur' },
-  { key: 'noBackgroundChecks', label: 'I understand Cruise Kauaʻi does not conduct background checks' },
+  { key: 'noBackgroundChecks', label: 'I understand Cruise Hawaiʻi does not conduct background checks' },
   { key: 'responsibleInteractions', label: 'I am responsible for my interactions with passengers' },
-  { key: 'indemnify', label: 'I understand I may be required to indemnify Cruise Kauaʻi' },
+  { key: 'indemnify', label: 'I understand I may be required to indemnify Cruise Hawaiʻi' },
   { key: 'financialResponsibility', label: 'I accept financial responsibility for my actions' },
   { key: 'accurateInfo', label: 'All information I provided is accurate' },
   { key: 'violationRemoval', label: 'I understand violations may result in removal' },
@@ -387,7 +387,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
         <div className="bg-card rounded-3xl shadow-2xl border-2 border-foreground/10 max-w-md w-full p-8 flex flex-col items-center gap-6 text-center">
-          <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" className="w-20 h-20 rounded-2xl object-cover shadow-md" />
+          <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Hawaiʻi" className="w-20 h-20 rounded-2xl object-cover shadow-md" />
           <div>
             <h2 className="text-2xl font-bold text-secondary mb-2">let's build your profile 🌺</h2>
             <p className="text-muted-foreground text-sm leading-relaxed">It only takes 2 minutes. We'll ask you a few quick questions so drivers and riders know who you are.</p>
@@ -404,7 +404,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
         <div className="bg-card rounded-3xl shadow-2xl border-2 border-foreground/10 max-w-md w-full overflow-hidden max-h-[90vh] flex flex-col">
           <div className="bg-primary p-6 text-white text-center">
             <div className="text-4xl mb-2">🌺</div>
-            <h2 className="text-xl font-bold">here's how cruise kauaʻi works!</h2>
+            <h2 className="text-xl font-bold">here's how cruise hawaiʻi works!</h2>
             <p className="text-white/80 text-sm mt-1">if you ever forget, you can rewatch the welcome tutorial in your account.</p>
           </div>
           <div className="overflow-y-auto flex-1 p-6 space-y-4">
@@ -583,21 +583,21 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-secondary mb-1">
                 <FileText className="w-5 h-5 text-primary" />
-                <span className="font-semibold text-sm">Cruise Kauaʻi Terms of Service</span>
+                <span className="font-semibold text-sm">Cruise Hawaiʻi Terms of Service</span>
               </div>
               <ScrollArea className="h-56 w-full rounded-2xl border border-border bg-muted p-4 text-xs text-foreground space-y-3">
                 <div className="space-y-3 pr-2">
                   {[
-                    ["1. Acceptance of Terms", "By accessing or using Cruise Kauaʻi, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service. If you do not agree, you must not access or use the platform."],
-                    ["2. Platform Description", "Cruise Kauaʻi is a technology platform for voluntary, cost-sharing carpools. It is NOT a transportation provider, does not employ drivers, and does not own vehicles. All transportation is provided by independent users."],
-                    ["3. No Agency or Employment", "No employment, agency, or partnership exists between Cruise Kauaʻi and any user. Drivers are independent individuals solely responsible for their conduct, vehicles, insurance, and legal compliance."],
-                    ["4. Assumption of Risk", "USE OF THE PLATFORM INVOLVES INHERENT RISKS including personal injury, vehicle accidents, and property damage. By using Cruise Kauaʻi, you VOLUNTARILY ASSUME ALL SUCH RISKS to the fullest extent permitted by Hawaii law."],
-                    ["5. Limitation of Liability", "Cruise Kauaʻi is not responsible for acts or omissions of users, vehicle condition, or outcomes of arrangements between community members. To the extent permitted by Hawaii law, Cruise Kauaʻi is not liable for claims from transportation activities."],
+                    ["1. Acceptance of Terms", "By accessing or using Cruise Hawaiʻi, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service. If you do not agree, you must not access or use the platform."],
+                    ["2. Platform Description", "Cruise Hawaiʻi is a technology platform for voluntary, cost-sharing carpools. It is NOT a transportation provider, does not employ drivers, and does not own vehicles. All transportation is provided by independent users."],
+                    ["3. No Agency or Employment", "No employment, agency, or partnership exists between Cruise Hawaiʻi and any user. Drivers are independent individuals solely responsible for their conduct, vehicles, insurance, and legal compliance."],
+                    ["4. Assumption of Risk", "USE OF THE PLATFORM INVOLVES INHERENT RISKS including personal injury, vehicle accidents, and property damage. By using Cruise Hawaiʻi, you VOLUNTARILY ASSUME ALL SUCH RISKS to the fullest extent permitted by Hawaii law."],
+                    ["5. Limitation of Liability", "Cruise Hawaiʻi is not responsible for acts or omissions of users, vehicle condition, or outcomes of arrangements between community members. To the extent permitted by Hawaii law, Cruise Hawaiʻi is not liable for claims from transportation activities."],
                     ["6. Driver Responsibilities", "Drivers must: maintain a safe, registered vehicle; hold a valid license; comply with all Hawaii laws; maintain required insurance; and ensure rides are cost-sharing only (not for profit or hire)."],
                     ["7. Passenger Responsibilities", "Passengers must act lawfully, responsibly, and respectfully; follow driver safety instructions; and refrain from illegal or unsafe conduct."],
-                    ["8. Cost-Sharing Only", "Cruise Kauaʻi is for voluntary cost-sharing only. Drivers may only request reimbursement for actual trip costs. Commercial use is strictly prohibited."],
-                    ["9. Waiver & Release", "To the fullest extent permitted by Hawaii law, you WAIVE AND RELEASE Cruise Kauaʻi from all claims arising from use of the platform or carpooling activities."],
-                    ["10. Indemnification", "You agree to indemnify and hold harmless Cruise Kauaʻi from claims arising from your use of the platform, violations of these Terms, or your carpooling activities."],
+                    ["8. Cost-Sharing Only", "Cruise Hawaiʻi is for voluntary cost-sharing only. Drivers may only request reimbursement for actual trip costs. Commercial use is strictly prohibited."],
+                    ["9. Waiver & Release", "To the fullest extent permitted by Hawaii law, you WAIVE AND RELEASE Cruise Hawaiʻi from all claims arising from use of the platform or carpooling activities."],
+                    ["10. Indemnification", "You agree to indemnify and hold harmless Cruise Hawaiʻi from claims arising from your use of the platform, violations of these Terms, or your carpooling activities."],
                     ["11. Governing Law", "These Terms are governed by the laws of the State of Hawaii. Disputes are resolved through binding arbitration in Kauaʻi County, Hawaii."],
                   ].map(([title, body]) => (
                     <div key={title}>
@@ -620,7 +620,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-secondary mb-1">
                 <Shield className="w-5 h-5 text-primary" />
-                <span className="font-semibold text-sm">Cruise Kauaʻi Privacy Policy</span>
+                <span className="font-semibold text-sm">Cruise Hawaiʻi Privacy Policy</span>
               </div>
               <ScrollArea className="h-56 w-full rounded-2xl border border-border bg-muted p-4 text-xs text-foreground">
                 <div className="space-y-3 pr-2">
@@ -630,7 +630,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                     ["3. Information Sharing", "We share info with other users (profile/ratings), service providers (Stripe), and as required by law. We do NOT sell your personal information to third parties."],
                     ["4. Data Security", "We use industry-standard security including encryption in transit and at rest, PCI-compliant payment processing, and access controls. No method is 100% secure."],
                     ["5. Your Rights", "You have the right to access, correct, or request deletion of your data; opt out of marketing; and export your data. Contact us through the Contact Us page."],
-                    ["6. Children's Privacy", "Cruise Kauaʻi is only available to users 18 and older. We do not knowingly collect information from minors."],
+                    ["6. Children's Privacy", "Cruise Hawaiʻi is only available to users 18 and older. We do not knowingly collect information from minors."],
                     ["7. Changes", "We may update this Privacy Policy periodically and will notify users of significant changes through the app or email."],
                     ["8. Contact", "For privacy questions, please use our Contact Us page at cruisekauai.org."],
                   ].map(([title, body]) => (
@@ -923,7 +923,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                   <li>• You're an independent driver, not an employee</li>
                   <li>• Rides are cost-sharing only, not for profit</li>
                   <li>• You maintain valid license, registration & insurance</li>
-                  <li>• Cruise Kauaʻi provides no insurance coverage</li>
+                  <li>• Cruise Hawaiʻi provides no insurance coverage</li>
                   <li>• You assume all risks of driving and passenger transport</li>
                 </ul>
               </div>

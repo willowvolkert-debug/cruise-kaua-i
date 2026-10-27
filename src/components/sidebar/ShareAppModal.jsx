@@ -6,7 +6,7 @@ import { base44 } from "@/api/base44Client";
 
 export default function ShareAppModal({ isOpen, onClose, currentUser }) {
   const handleShare = async (platform) => {
-    const shareText = "Check out Cruise Kauaʻi - the island's ride-sharing app! 🚗🌺";
+    const shareText = "Check out Cruise Hawaiʻi - the island's ride-sharing app! 🚗🌺";
     const shareUrl = "https://cruisekauai.org";
     
     let url = '';
@@ -56,7 +56,7 @@ export default function ShareAppModal({ isOpen, onClose, currentUser }) {
           </div>
 
           <div>
-            <h2 className="text-2xl font-bold mb-2">want to share cruise kauaʻi?</h2>
+            <h2 className="text-2xl font-bold mb-2">want to share cruise hawaiʻi?</h2>
             <p className="text-blue-100">
               share with 3 friends and get a carpool coupon on us!
             </p>

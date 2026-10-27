@@ -46,7 +46,7 @@ export default function SignupPromptModal({ isOpen, onClose }) {
         <div className="text-center space-y-3">
           <img
             src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
-            alt="Cruise Kauaʻi"
+            alt="Cruise Hawaiʻi"
             className="w-16 h-16 rounded-2xl object-cover mx-auto shadow-md"
           />
           <h2 className="text-xl font-extrabold text-secondary">welcome! 🤙</h2>

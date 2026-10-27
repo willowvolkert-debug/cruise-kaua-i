@@ -22,8 +22,8 @@ Deno.serve(async (req) => {
     const appUrl = 'https://cruisekauai.org';
 
     const logo = `<div style="text-align:center;margin-bottom:28px;">
-      <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Kauaʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;" />
-      <p style="margin:8px 0 0 0;font-weight:bold;color:#2f7d52;font-size:15px;letter-spacing:1px;">Cruise Kauaʻi</p>
+      <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Hawaiʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;" />
+      <p style="margin:8px 0 0 0;font-weight:bold;color:#2f7d52;font-size:15px;letter-spacing:1px;">Cruise Hawaiʻi</p>
     </div>`;
 
     const body = `<html><body style="font-family:Arial,sans-serif;line-height:1.8;color:#333;max-width:600px;margin:0 auto;padding:24px 16px;">
@@ -40,7 +40,7 @@ Deno.serve(async (req) => {
           <li>If you don't see it right away, try scrolling the bottom toolbar slightly</li>
           <li>Scroll down the share menu and tap <strong>"Add to Home Screen"</strong></li>
           <li>Tap <strong>"Add"</strong> in the top right corner</li>
-          <li>Done! Look for the Cruise Kauaʻi icon on your home screen</li>
+          <li>Done! Look for the Cruise Hawaiʻi icon on your home screen</li>
         </ol>
         <p style="margin:12px 0 0;font-size:13px;color:#6b7280;font-style:italic;">Note: If you see "..." (three dots) at the top right of the share menu, tap that — "Add to Home Screen" may be hidden there.</p>
       </div>
@@ -61,7 +61,7 @@ Deno.serve(async (req) => {
 
       <p style="margin-bottom:8px;">With aloha,</p>
       <p style="margin:0;font-weight:bold;">Willow</p>
-      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Kauaʻi</p>
+      <p style="margin:0;font-size:13px;color:#888;">Founder & CEO, Cruise Hawaiʻi</p>
 
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:40px 0 24px;" />
       <p style="font-size:13px;color:#6b7280;">Need more help? <a href="${appUrl}/contactus" style="color:#2f7d52;font-weight:bold;">Contact us here</a></p>
@@ -69,8 +69,8 @@ Deno.serve(async (req) => {
 
     await base44.asServiceRole.integrations.Core.SendEmail({
       to: email,
-      from_name: "Cruise Kaua'i",
-      subject: "How to add Cruise Kauaʻi to your home screen",
+      from_name: "Cruise Hawaiʻi",
+      subject: "How to add Cruise Hawaiʻi to your home screen",
       body,
     });
 

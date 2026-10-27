@@ -103,7 +103,7 @@ export default function PaymentForm({ amount, onPaymentSuccess, onBack }) {
                 <span className="font-medium">${amount.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-secondary">cruise kauaʻi connect fee (10%):</span>
+                <span className="text-secondary">cruise hawaiʻi connect fee (10%):</span>
                 <span className="font-medium">${connectFee.toFixed(2)}</span>
               </div>
               <div className="border-t border-border pt-2 mt-2">

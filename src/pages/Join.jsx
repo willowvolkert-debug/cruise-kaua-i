@@ -333,7 +333,7 @@ export default function JoinPage() {
         </div>
         <div className="flex-1 flex flex-col max-w-md mx-auto w-full px-6 py-8">
           <h1 className="text-3xl font-extrabold text-gray-900 mb-1">welcome back 🤙</h1>
-          <p className="text-gray-500 text-base mb-6">log in to your cruise kauaʻi account.</p>
+          <p className="text-gray-500 text-base mb-6">log in to your cruise hawaiʻi account.</p>
 
           {signupError && (
             <div className="mb-4 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
@@ -414,7 +414,7 @@ export default function JoinPage() {
             alt="Cruise logo"
             className="w-8 h-8 rounded-lg object-cover"
           />
-          <span className="font-bold text-primary text-base">cruise kauaʻi</span>
+          <span className="font-bold text-primary text-base">cruise hawaiʻi</span>
         </div>
         <PhoneCaptureCard onSubmit={handlePhoneSubmit} loading={phoneLoading} />
       </div>
@@ -432,7 +432,7 @@ export default function JoinPage() {
             alt="Cruise logo"
             className="w-8 h-8 rounded-lg object-cover"
           />
-          <span className="font-bold text-primary text-base">cruise kauaʻi</span>
+          <span className="font-bold text-primary text-base">cruise hawaiʻi</span>
         </div>
         <SignupCompleteCard onBrowse={handleBrowseRides} onFinishProfile={handleFinishProfile} />
       </div>
