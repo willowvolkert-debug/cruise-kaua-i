@@ -22,6 +22,11 @@ import RecurringAutoPostModal from "./RecurringAutoPostModal";
 import RiderProfileModal from "./RiderProfileModal";
 import ProfileIncompleteModal from "./ProfileIncompleteModal";
 import { useDraftSave, loadDraft, clearDraft } from "@/hooks/useDraftSave";
+import DatePickerButton from "../shared/DatePickerButton";
+import {
+  flowHeading, flowLabel, flowHint, flowField, flowTextarea,
+  flowToggleRow, flowButton, flowSection,
+} from "./flowStyles";
 
 export default function PostRideForm({ island = "Kauai", initialRespondingToRequest = null }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -468,7 +473,7 @@ export default function PostRideForm({ island = "Kauai", initialRespondingToRequ
     <div className="space-y-6 max-w-4xl mx-auto relative">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-2xl font-bold text-secondary">post your ride</h2>
+          <h2 className="text-3xl font-bold text-secondary">post a ride</h2>
           <DriverEarningsBanner />
         </div>
         <Button
@@ -561,53 +566,41 @@ export default function PostRideForm({ island = "Kauai", initialRespondingToRequ
       )}
 
       {/* Recurring Trips */}
-      <Card className="border-secondary/20 shadow-sm bg-blue-50 rounded-3xl">
-        <CardHeader className="cursor-pointer" onClick={() => setShowRecurringTrips(!showRecurringTrips)}>
-          <CardTitle className="flex items-center justify-between text-secondary">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-secondary/10 rounded-2xl">
-                <Repeat className="w-5 h-5 text-secondary" />
-              </div>
-              recurring trips
-            </div>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="rounded-2xl"
-            >
-              {showRecurringTrips ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-            </Button>
-          </CardTitle>
-        </CardHeader>
+      <div className="space-y-4 pb-8 border-b-2 border-gray-200">
+        <button type="button" onClick={() => setShowRecurringTrips(!showRecurringTrips)} className="w-full flex items-center justify-between select-none">
+          <span className={`${flowHeading} flex items-center gap-2`}>
+            <Repeat className="w-6 h-6 text-primary" /> your recurring trips
+          </span>
+          {showRecurringTrips ? <ChevronUp className="w-6 h-6" /> : <ChevronDown className="w-6 h-6" />}
+        </button>
         {showRecurringTrips && (
-          <CardContent className="p-6 space-y-4">
-            <p className="text-sm text-gray-600">
+          <div className="space-y-4">
+            <p className={flowHint}>
               have your daily drive down? add a recurring trip here. when you press on it, the drive details will automatically populate below, and the only field you have to fill out is the date.
             </p>
             <Button
               type="button"
               onClick={() => setShowRecurringTripModal(true)}
-              className="w-full rounded-2xl bg-secondary"
+              className="w-full h-14 text-lg rounded-lg bg-secondary hover:bg-secondary/90 text-white select-none"
             >
-              <Plus className="w-4 h-4 mr-2" />
+              <Plus className="w-5 h-5 mr-2" />
               add recurring trip
             </Button>
             {recurringTrips.length > 0 && (
               <div className="space-y-2">
                 {recurringTrips.map(trip => (
-                  <Card
+                  <div
                     key={trip.id}
-                    className="cursor-pointer hover:shadow-md transition-shadow border-secondary/20 rounded-2xl"
+                    className={`${flowToggleRow} cursor-pointer hover:border-primary items-start`}
                     onClick={() => handleSelectRecurringTrip(trip)}
                   >
-                    <CardContent className="p-4 flex items-start justify-between">
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-secondary mb-1">{trip.trip_name}</h4>
-                        <p className="text-sm text-gray-600">
+                    <>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-lg font-bold text-secondary">{trip.trip_name}</h4>
+                        <p className="text-base text-gray-600">
                           {trip.departure_location} → {trip.destination}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-base text-gray-500">
                           {trip.departure_time} • {trip.seats_available} seats
                         </p>
                       </div>
@@ -653,350 +646,277 @@ export default function PostRideForm({ island = "Kauai", initialRespondingToRequ
                             : "post automatically?"}
                         </Button>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </>
+                  </div>
                 ))}
               </div>
             )}
-          </CardContent>
+          </div>
         )}
-      </Card>
+      </div>
 
-      <form onSubmit={handleSubmit}>
-        <div className="space-y-8">
-          <Card className="border-gray-200 shadow-sm bg-white rounded-3xl">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-secondary">
-                <div className="p-2 bg-primary/10 rounded-2xl">
-                  <MapPin className="w-5 h-5 text-primary" />
-                </div>
-                route details
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="departure">coming from *</Label>
-                  <LocationAutocomplete
-                    id="departure"
-                    value={rideData.departure_location}
-                    onChange={(value) => handleInputChange('departure_location', value)}
-                    placeholder="e.g., Lihue"
-                    onValidationChange={(isUnsupported) => setHasUnsupportedLocation(prev => isUnsupported || prev)}
-                    island={island}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="destination">going to *</Label>
-                  <LocationAutocomplete
-                    id="destination"
-                    value={rideData.destination}
-                    onChange={(value) => handleInputChange('destination', value)}
-                    placeholder="e.g., Hanalei"
-                    onValidationChange={(isUnsupported) => setHasUnsupportedLocation(isUnsupported)}
-                    island={island}
-                  />
-                </div>
-              </div>
+      <form onSubmit={handleSubmit} className="space-y-8">
+        <section className={flowSection}>
+          <p className={flowHeading}>📍 pick your route</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="space-y-2">
+              <Label htmlFor="departure" className={flowLabel}>coming from *</Label>
+              <LocationAutocomplete
+                id="departure"
+                value={rideData.departure_location}
+                onChange={(value) => handleInputChange('departure_location', value)}
+                placeholder="e.g., Lihue"
+                onValidationChange={(isUnsupported) => setHasUnsupportedLocation(prev => isUnsupported || prev)}
+                island={island}
+                className={flowField}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="destination" className={flowLabel}>going to *</Label>
+              <LocationAutocomplete
+                id="destination"
+                value={rideData.destination}
+                onChange={(value) => handleInputChange('destination', value)}
+                placeholder="e.g., Hanalei"
+                onValidationChange={(isUnsupported) => setHasUnsupportedLocation(isUnsupported)}
+                island={island}
+                className={flowField}
+              />
+            </div>
+          </div>
 
-              <div className="space-y-2">
-                <Label>stops (optional)</Label>
-                {stops.map((stop, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <Input 
-                      value={stop} 
-                      onChange={(e) => handleStopChange(index, e.target.value)} 
-                      placeholder={`stop ${index + 1}`}
-                      className="rounded-2xl"
-                    />
-                    {stops.length > 1 && (
-                      <Button 
-                        type="button" 
-                        variant="ghost" 
-                        size="icon" 
-                        onClick={() => removeStop(index)}
-                        className="rounded-2xl"
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    )}
-                  </div>
-                ))}
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={addStop}
-                  className="mt-2 rounded-2xl"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  add stop
-                </Button>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label htmlFor="midpointPickup" className="font-medium">pickup/dropoff along the way</Label>
-                    <p className="text-xs text-gray-500 mt-0.5">can you pick up or drop off riders at points along your route?</p>
-                  </div>
-                  <Switch
-                    id="midpointPickup"
-                    checked={rideData.offers_midpoint_pickup}
-                    onCheckedChange={(checked) => handleInputChange('offers_midpoint_pickup', checked)}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <Label className="text-lg font-semibold text-secondary">detours (optional)</Label>
-                <p className="text-sm text-gray-600">would you like to drive riders to their end destination off the highway for an added $5?</p>
-                <div className="flex gap-3">
-                  <Button
-                    type="button"
-                    onClick={() => setRideData({ ...rideData, offers_detour_service: true })}
-                    className={`flex-1 ${rideData.offers_detour_service ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
-                  >
-                    yes
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={() => setRideData({ ...rideData, offers_detour_service: false })}
-                    className={`flex-1 ${!rideData.offers_detour_service ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
-                  >
-                    no
-                  </Button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="description">trip description (why?) *</Label>
-                <Textarea
-                  id="description"
-                  value={rideData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
-                  placeholder="e.g., Going to work, beach trip, visiting family..."
-                  className="h-24 rounded-2xl"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-gray-200 shadow-sm bg-white rounded-3xl">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-secondary">
-                <div className="p-2 bg-primary/10 rounded-2xl">
-                  <Clock className="w-5 h-5 text-primary" />
-                </div>
-                schedule
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="date">departure date *</Label>
-                  <Input
-                    id="date"
-                    type="date"
-                    lang="en"
-                    value={rideData.departure_date}
-                    onChange={(e) => handleInputChange('departure_date', e.target.value)}
-                    required
-                    className="rounded-2xl"
-                  />
-                </div>
-                <div className="space-y-2">
-                   <Label htmlFor="time">departure time *</Label>
-                   <TimeInput
-                     id="time"
-                     value={rideData.departure_time}
-                     onChange={(v) => handleInputChange('departure_time', v)}
-                     required
-                     className="rounded-2xl w-full"
-                   />
-                 </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="flexible">flexible departure time</Label>
-                  <Switch
-                    id="flexible"
-                    checked={rideData.is_flexible}
-                    onCheckedChange={(checked) => handleInputChange('is_flexible', checked)}
-                  />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="lastminute" className="text-orange-600">
-                    last minute ride (within 2 hours)
-                  </Label>
-                  <Switch
-                    id="lastminute"
-                    checked={rideData.is_last_minute}
-                    onCheckedChange={(checked) => handleInputChange('is_last_minute', checked)}
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-gray-200 shadow-sm bg-white rounded-3xl">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-secondary">
-                <div className="p-2 bg-primary/10 rounded-2xl">
-                  <Car className="w-5 h-5 text-primary" />
-                </div>
-                vehicle & pricing
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="carModel">car model</Label>
+          <div className="space-y-2">
+            <Label className={flowLabel}>stops <span className="font-normal text-gray-400">(optional)</span></Label>
+            {stops.map((stop, index) => (
+              <div key={index} className="flex items-center gap-2">
                 <Input
-                  id="carModel"
-                  value={rideData.car_model}
-                  onChange={(e) => handleInputChange('car_model', e.target.value)}
-                  placeholder="e.g., Toyota Tacoma 2020"
-                  className="rounded-2xl"
+                  value={stop}
+                  onChange={(e) => handleStopChange(index, e.target.value)}
+                  placeholder={`stop ${index + 1}`}
+                  className={flowField}
                 />
+                {stops.length > 1 && (
+                  <Button type="button" variant="outline" onClick={() => removeStop(index)} className="h-16 w-16 rounded-lg border-2 border-gray-300 shrink-0">
+                    <X className="w-6 h-6" />
+                  </Button>
+                )}
               </div>
+            ))}
+            <Button type="button" variant="outline" onClick={addStop} className="h-14 px-6 text-lg rounded-lg border-2 border-gray-300">
+              <Plus className="w-5 h-5 mr-2" /> add stop
+            </Button>
+          </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="seats">seats available</Label>
-                <Select
-                  value={rideData.seats_available.toString()}
-                  onValueChange={(value) => handleInputChange('seats_available', parseInt(value))}
-                >
-                  <SelectTrigger className="rounded-2xl">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-2xl">
-                    {Array.from({ length: 8 }, (_, i) => (
-                      <SelectItem key={i + 1} value={(i + 1).toString()}>
-                        {i + 1} seat{i > 0 ? 's' : ''}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+          <div className={flowToggleRow}>
+            <div>
+              <Label htmlFor="midpointPickup" className={flowLabel}>pickup/dropoff along the way</Label>
+              <p className={flowHint}>can you pick up or drop off riders along your route?</p>
+            </div>
+            <Switch
+              id="midpointPickup"
+              checked={rideData.offers_midpoint_pickup}
+              onCheckedChange={(checked) => handleInputChange('offers_midpoint_pickup', checked)}
+            />
+          </div>
+
+          <div className={flowToggleRow}>
+            <div>
+              <Label htmlFor="detour" className={flowLabel}>detours <span className="font-normal text-gray-400">(optional)</span></Label>
+              <p className={flowHint}>drive riders to their end destination off the highway for an added $5?</p>
+            </div>
+            <Switch
+              id="detour"
+              checked={rideData.offers_detour_service}
+              onCheckedChange={(checked) => setRideData({ ...rideData, offers_detour_service: checked })}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="description" className={flowLabel}>why are you making this trip? *</Label>
+            <Textarea
+              id="description"
+              value={rideData.description}
+              onChange={(e) => handleInputChange('description', e.target.value)}
+              placeholder="e.g., Going to work, beach trip, visiting family..."
+              className={flowTextarea}
+            />
+          </div>
+        </section>
+
+        <section className={flowSection}>
+          <p className={flowHeading}>📅 pick your date &amp; time</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="space-y-2">
+              <Label className={flowLabel}>departure date *</Label>
+              <DatePickerButton
+                value={rideData.departure_date}
+                onChange={(d) => handleInputChange('departure_date', d)}
+                placeholder="select a date"
+                className="h-16 text-lg rounded-lg border-gray-300 px-4 [&_svg]:w-5 [&_svg]:h-5"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="time" className={flowLabel}>departure time *</Label>
+              <TimeInput
+                id="time"
+                value={rideData.departure_time}
+                onChange={(v) => handleInputChange('departure_time', v)}
+                required
+                className={`${flowField} w-full`}
+              />
+            </div>
+          </div>
+
+          <div className={flowToggleRow}>
+            <Label htmlFor="flexible" className={flowLabel}>flexible departure time</Label>
+            <Switch id="flexible" checked={rideData.is_flexible} onCheckedChange={(checked) => handleInputChange('is_flexible', checked)} />
+          </div>
+          <div className={flowToggleRow}>
+            <Label htmlFor="lastminute" className={`${flowLabel} text-orange-600`}>last minute ride (within 2 hours)</Label>
+            <Switch id="lastminute" checked={rideData.is_last_minute} onCheckedChange={(checked) => handleInputChange('is_last_minute', checked)} />
+          </div>
+        </section>
+
+        <section className="space-y-5">
+          <p className={flowHeading}>🚗 vehicle &amp; pricing</p>
+          <div className="space-y-2">
+            <Label htmlFor="carModel" className={flowLabel}>car model</Label>
+            <Input
+              id="carModel"
+              value={rideData.car_model}
+              onChange={(e) => handleInputChange('car_model', e.target.value)}
+              placeholder="e.g., Toyota Tacoma 2020"
+              className={flowField}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="seats" className={flowLabel}>seats available</Label>
+            <Select
+              value={rideData.seats_available.toString()}
+              onValueChange={(value) => handleInputChange('seats_available', parseInt(value))}
+            >
+              <SelectTrigger className={flowField}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="rounded-lg">
+                {Array.from({ length: 8 }, (_, i) => (
+                  <SelectItem key={i + 1} value={(i + 1).toString()} className="text-lg py-3">
+                    {i + 1} seat{i > 0 ? 's' : ''}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="riderPreference" className={flowLabel}>who can ride with me</Label>
+            <Select
+              value={rideData.rider_preference}
+              onValueChange={(value) => handleInputChange('rider_preference', value)}
+            >
+              <SelectTrigger className={flowField}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="rounded-lg">
+                <SelectItem value="locals_only" className="text-lg py-3">locals only</SelectItem>
+                <SelectItem value="tourists_only" className="text-lg py-3">tourists only</SelectItem>
+                <SelectItem value="both_fine" className="text-lg py-3">both are fine</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {pricingSuggestion && (
+            <div className="rounded-lg bg-blue-50 border-2 border-blue-200 p-5 space-y-2">
+              <div className="flex items-center gap-2 text-blue-800 font-bold text-lg">
+                <Lightbulb className="w-5 h-5" />
+                suggested price ({pricingSuggestion.distance} miles)
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="riderPreference" className="flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  who can ride with me
-                </Label>
-                <Select
-                  value={rideData.rider_preference}
-                  onValueChange={(value) => handleInputChange('rider_preference', value)}
-                >
-                  <SelectTrigger className="rounded-2xl">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-2xl">
-                    <SelectItem value="locals_only">locals only</SelectItem>
-                    <SelectItem value="tourists_only">tourists only</SelectItem>
-                    <SelectItem value="both_fine">both are fine</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="flex gap-6 text-lg text-blue-700">
+                <span>local: <strong>${pricingSuggestion.local}</strong></span>
+                <span>visitor: <strong>${pricingSuggestion.visitor}</strong></span>
               </div>
-
-              {pricingSuggestion && (
-                <div className="rounded-2xl bg-blue-50 border border-blue-200 p-4 space-y-2">
-                  <div className="flex items-center gap-2 text-blue-800 font-semibold text-sm">
-                    <Lightbulb className="w-4 h-4" />
-                    suggested price ({pricingSuggestion.distance} miles)
-                  </div>
-                  <div className="flex gap-4 text-sm text-blue-700">
-                    <span>local: <strong>${pricingSuggestion.local}</strong></span>
-                    <span>visitor: <strong>${pricingSuggestion.visitor}</strong></span>
-                  </div>
-                  {priceCapWarning && (
-                    <div className="flex items-start gap-2 text-amber-700 text-xs mt-1">
-                      <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                      <span>
-                        IRS business rate max for {pricingSuggestion.distance} miles:{" "}
-                        <strong>${priceCapWarning.local}</strong> — keeping prices at or below this helps ensure ride-sharing stays cost-sharing, not commercial.
-                      </span>
-                    </div>
-                  )}
-                  <div className="flex gap-2 mt-2">
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      className="rounded-2xl border-blue-300 text-blue-700 hover:bg-blue-100 text-xs"
-                      onClick={() => {
-                        if (rideData.rider_preference === 'both_fine') {
-                          handleInputChange('price_per_seat_local', pricingSuggestion.local);
-                          handleInputChange('price_per_seat_tourist', pricingSuggestion.visitor);
-                        } else {
-                          handleInputChange('price_per_seat', pricingSuggestion.local);
-                        }
-                      }}
-                    >
-                      use suggested price
-                    </Button>
-                  </div>
+              {priceCapWarning && (
+                <div className="flex items-start gap-2 text-amber-700 text-base mt-1">
+                  <AlertTriangle className="w-4 h-4 mt-1 flex-shrink-0" />
+                  <span>
+                    IRS business rate max for {pricingSuggestion.distance} miles:{" "}
+                    <strong>${priceCapWarning.local}</strong> — keeping prices at or below this helps ensure ride-sharing stays cost-sharing, not commercial.
+                  </span>
                 </div>
               )}
+              <Button
+                type="button"
+                variant="outline"
+                className="mt-2 h-12 px-5 text-base rounded-lg border-2 border-blue-300 text-blue-700 hover:bg-blue-100"
+                onClick={() => {
+                  if (rideData.rider_preference === 'both_fine') {
+                    handleInputChange('price_per_seat_local', pricingSuggestion.local);
+                    handleInputChange('price_per_seat_tourist', pricingSuggestion.visitor);
+                  } else {
+                    handleInputChange('price_per_seat', pricingSuggestion.local);
+                  }
+                }}
+              >
+                use suggested price
+              </Button>
+            </div>
+          )}
 
-              {rideData.rider_preference === 'both_fine' ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="priceLocal">price request for locals ($)</Label>
-                    <Input
-                      id="priceLocal"
-                      type="number"
-                      min="0"
-                      step="1"
-                      value={rideData.price_per_seat_local}
-                      onChange={(e) => handleInputChange('price_per_seat_local', e.target.value)}
-                      required
-                      className={`rounded-2xl ${priceCapWarning && parseFloat(rideData.price_per_seat_local) > priceCapWarning.local ? 'border-red-400' : ''}`}
-                    />
-                    {priceCapWarning && parseFloat(rideData.price_per_seat_local) > priceCapWarning.local && (
-                      <p className="text-red-500 text-xs flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> exceeds cap of ${priceCapWarning.local}</p>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="priceTourist">price request for tourists ($)</Label>
-                    <Input
-                      id="priceTourist"
-                      type="number"
-                      min="0"
-                      step="1"
-                      value={rideData.price_per_seat_tourist}
-                      onChange={(e) => handleInputChange('price_per_seat_tourist', e.target.value)}
-                      required
-                      className={`rounded-2xl ${priceCapWarning && parseFloat(rideData.price_per_seat_tourist) > priceCapWarning.visitor ? 'border-red-400' : ''}`}
-                    />
-                    {priceCapWarning && parseFloat(rideData.price_per_seat_tourist) > priceCapWarning.visitor && (
-                      <p className="text-red-500 text-xs flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> exceeds cap of ${priceCapWarning.visitor}</p>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <Label htmlFor="price">price request per seat ($)</Label>
-                  <Input
-                    id="price"
-                    type="number"
-                    min="0"
-                    step="1"
-                    value={rideData.price_per_seat}
-                    onChange={(e) => handleInputChange('price_per_seat', e.target.value)}
-                    required
-                    className={`rounded-2xl ${priceCapWarning && parseFloat(rideData.price_per_seat) > priceCapWarning.local ? 'border-red-400' : ''}`}
-                  />
-                  {priceCapWarning && parseFloat(rideData.price_per_seat) > priceCapWarning.local && (
-                    <p className="text-red-500 text-xs flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> exceeds cap of ${priceCapWarning.local}</p>
-                  )}
-                </div>
+          {rideData.rider_preference === 'both_fine' ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="space-y-2">
+                <Label htmlFor="priceLocal" className={flowLabel}>price request for locals ($)</Label>
+                <Input
+                  id="priceLocal"
+                  type="number"
+                  min="0"
+                  step="1"
+                  value={rideData.price_per_seat_local}
+                  onChange={(e) => handleInputChange('price_per_seat_local', e.target.value)}
+                  required
+                  className={`${flowField} ${priceCapWarning && parseFloat(rideData.price_per_seat_local) > priceCapWarning.local ? 'border-red-400' : ''}`}
+                />
+                {priceCapWarning && parseFloat(rideData.price_per_seat_local) > priceCapWarning.local && (
+                  <p className="text-red-500 text-base flex items-center gap-1"><AlertTriangle className="w-4 h-4" /> exceeds cap of ${priceCapWarning.local}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="priceTourist" className={flowLabel}>price request for tourists ($)</Label>
+                <Input
+                  id="priceTourist"
+                  type="number"
+                  min="0"
+                  step="1"
+                  value={rideData.price_per_seat_tourist}
+                  onChange={(e) => handleInputChange('price_per_seat_tourist', e.target.value)}
+                  required
+                  className={`${flowField} ${priceCapWarning && parseFloat(rideData.price_per_seat_tourist) > priceCapWarning.visitor ? 'border-red-400' : ''}`}
+                />
+                {priceCapWarning && parseFloat(rideData.price_per_seat_tourist) > priceCapWarning.visitor && (
+                  <p className="text-red-500 text-base flex items-center gap-1"><AlertTriangle className="w-4 h-4" /> exceeds cap of ${priceCapWarning.visitor}</p>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <Label htmlFor="price" className={flowLabel}>price request per seat ($)</Label>
+              <Input
+                id="price"
+                type="number"
+                min="0"
+                step="1"
+                value={rideData.price_per_seat}
+                onChange={(e) => handleInputChange('price_per_seat', e.target.value)}
+                required
+                className={`${flowField} ${priceCapWarning && parseFloat(rideData.price_per_seat) > priceCapWarning.local ? 'border-red-400' : ''}`}
+              />
+              {priceCapWarning && parseFloat(rideData.price_per_seat) > priceCapWarning.local && (
+                <p className="text-red-500 text-base flex items-center gap-1"><AlertTriangle className="w-4 h-4" /> exceeds cap of ${priceCapWarning.local}</p>
               )}
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          )}
+        </section>
       </form>
 
       {postedRide && (
@@ -1074,16 +994,15 @@ export default function PostRideForm({ island = "Kauai", initialRespondingToRequ
         );
       })()}
 
-      <div className="mt-6 pb-8 space-y-2">
+      <div className="mt-6 pb-8 space-y-4">
         <Button
           onClick={handleSubmit}
           disabled={isSubmitting || !canPostRide || hasUnsupportedLocation}
-          size="lg"
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-8 py-4 rounded-2xl shadow-lg"
+          className={flowButton}
         >
           {isSubmitting ? 'posting...' : 'post ride'}
         </Button>
-        <p className="text-center text-sm text-gray-500">
+        <p className="text-center text-base text-gray-500">
           <Link to="/inbox" className="text-primary underline underline-offset-2 hover:text-primary/80 font-medium">
           edit a pre-existing ride here →
           </Link>
