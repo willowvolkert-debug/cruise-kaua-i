@@ -56,6 +56,34 @@
       ],
       "default": "pending"
     },
+    "price_per_seat": {
+      "type": "number"
+    },
+    "ride_amount": {
+      "type": "number"
+    },
+    "connect_fee": {
+      "type": "number"
+    },
+    "total_charged": {
+      "type": "number"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "none",
+        "pending",
+        "paid",
+        "refunded"
+      ],
+      "default": "none"
+    },
+    "stripe_session_id": {
+      "type": "string"
+    },
+    "stripe_payment_intent": {
+      "type": "string"
+    },
     "messages": {
       "type": "array",
       "items": {
@@ -89,7 +117,9 @@
   ],
   "rls": {
     "create": {
-      "data.passenger_id": "{{user.id}}"
+      "user_condition": {
+        "role": "admin"
+      }
     },
     "read": {
       "$or": [
@@ -122,19 +152,9 @@
       ]
     },
     "delete": {
-      "$or": [
-        {
-          "data.driver_id": "{{user.id}}"
-        },
-        {
-          "data.passenger_id": "{{user.id}}"
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "user_condition": {
+        "role": "admin"
+      }
     }
   }
 }
