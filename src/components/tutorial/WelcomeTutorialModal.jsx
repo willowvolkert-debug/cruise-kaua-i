@@ -5,6 +5,7 @@ import { base44 } from "@/api/base44Client";
 import { sendInstallHelpEmail } from "@/functions/sendInstallHelpEmail";
 import SkiesCard from "@/components/welcome/SkiesCard";
 import NavigatingPage from "@/components/tutorial/NavigatingPage";
+import PoolsTutorial from "@/components/tutorial/PoolsTutorial";
 
 // ── Page 1: How It Works ────────────────────────────────────────────────────
 function HowItWorksPage() {
@@ -260,7 +261,7 @@ function MoreQuestionsPage() {
 }
 
 // ── Main Modal ──────────────────────────────────────────────────────────────
-const PAGES = ["how_it_works", "navigating", "skies", "get_ride", "post_ride", "price_bidding", "install_app", "more_questions"];
+const PAGES = ["how_it_works", "navigating", "skies", "get_ride", "post_ride", "price_bidding", "pools", "install_app", "more_questions"];
 
 export default function WelcomeTutorialModal({ isOpen, onClose, onComplete }) {
   const [pageIndex, setPageIndex] = useState(0);
@@ -346,6 +347,7 @@ export default function WelcomeTutorialModal({ isOpen, onClose, onComplete }) {
           {currentPage === "get_ride" && <GetRideTutorial />}
           {currentPage === "post_ride" && <PostRideTutorial />}
           {currentPage === "price_bidding" && <PriceBiddingTutorial />}
+          {currentPage === "pools" && <PoolsTutorial />}
           {currentPage === "install_app" && <InstallAppPage />}
           {currentPage === "more_questions" && <MoreQuestionsPage />}
         </div>

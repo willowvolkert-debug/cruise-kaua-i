@@ -4,9 +4,12 @@ import { ChevronLeft } from "lucide-react";
 import HomeHelpButton from "@/components/HomeHelpButton";
 import IslandSwitcher from "@/components/IslandSwitcher";
 import SkiesToggle from "@/components/relief/SkiesToggle";
+import CarpoolMenu from "@/components/pool/CarpoolMenu";
+import { useSkies } from "@/lib/skies";
 import { TRUCK_URL, ISLAND_TRUCK_URL } from "@/components/welcome/WelcomeHero";
 
 export default function BrandHeader({ right = null }) {
+  const skies = useSkies();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const isHome = pathname === "/" || pathname.toLowerCase() === "/home";
@@ -29,7 +32,12 @@ export default function BrandHeader({ right = null }) {
             <ChevronLeft className="w-5 h-5" /> back
           </button>
         )}
-        {isHome && <SkiesToggle />}
+        {isHome && (
+          <div className="flex items-center gap-1.5">
+            <SkiesToggle />
+            {skies !== "grey" && <CarpoolMenu />}
+          </div>
+        )}
       </div>
       <Link to="/home" aria-label="Cruise Hawaiʻi home" className="flex items-center justify-center">
         <img src={TRUCK_URL} alt="Cruise Hawaiʻi" className="h-12 w-auto object-contain" />

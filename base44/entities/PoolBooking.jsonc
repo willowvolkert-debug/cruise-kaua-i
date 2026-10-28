@@ -1,0 +1,140 @@
+{
+  "name": "PoolBooking",
+  "type": "object",
+  "properties": {
+    "ride_id": {
+      "type": "string"
+    },
+    "pool_type": {
+      "type": "string",
+      "enum": [
+        "school",
+        "party"
+      ]
+    },
+    "pool_id": {
+      "type": "string"
+    },
+    "pool_name": {
+      "type": "string"
+    },
+    "ride_summary": {
+      "type": "string"
+    },
+    "ride_date": {
+      "type": "string"
+    },
+    "ride_time": {
+      "type": "string"
+    },
+    "driver_id": {
+      "type": "string"
+    },
+    "driver_name": {
+      "type": "string"
+    },
+    "passenger_id": {
+      "type": "string"
+    },
+    "passenger_name": {
+      "type": "string"
+    },
+    "seats": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "note": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "declined",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "sender_id": {
+            "type": "string"
+          },
+          "sender_name": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "ride_id",
+    "pool_type",
+    "pool_id",
+    "driver_id",
+    "passenger_id",
+    "passenger_name",
+    "seats"
+  ],
+  "rls": {
+    "create": {
+      "data.passenger_id": "{{user.id}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "data.driver_id": "{{user.id}}"
+        },
+        {
+          "data.passenger_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.driver_id": "{{user.id}}"
+        },
+        {
+          "data.passenger_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.driver_id": "{{user.id}}"
+        },
+        {
+          "data.passenger_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

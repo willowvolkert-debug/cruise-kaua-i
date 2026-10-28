@@ -25,6 +25,8 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Home from './pages/Home';
 import Welcome from './pages/Welcome';
 import ContactUs from './pages/ContactUs';
+import SchoolPool from './pages/SchoolPool';
+import PartyPool from './pages/PartyPool';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import BookingSuccess from './pages/BookingSuccess';
@@ -144,6 +146,8 @@ const AuthenticatedApp = () => {
       <Route path="/driver-verification" element={<Plain><DriverVerificationChart /></Plain>} />
       <Route path="/contactus" element={<LayoutWrapper currentPageName="Contact Us"><ContactUs /></LayoutWrapper>} />
       <Route path="/contact-us" element={<LayoutWrapper currentPageName="Contact Us"><ContactUs /></LayoutWrapper>} />
+      <Route path="/schoolpool" element={<LayoutWrapper currentPageName="Schoolpool"><SchoolPool /></LayoutWrapper>} />
+      <Route path="/partypool" element={<LayoutWrapper currentPageName="Partypool"><PartyPool /></LayoutWrapper>} />
 
       {Object.entries(Pages).map(([path, Page]) => (
         <Route

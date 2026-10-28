@@ -1,0 +1,109 @@
+{
+  "name": "PoolRide",
+  "type": "object",
+  "properties": {
+    "pool_type": {
+      "type": "string",
+      "enum": [
+        "school",
+        "party"
+      ]
+    },
+    "pool_id": {
+      "type": "string"
+    },
+    "pool_name": {
+      "type": "string"
+    },
+    "ride_kind": {
+      "type": "string",
+      "description": "e.g. to_school, from_school, to_event, sober_ride_home"
+    },
+    "driver_id": {
+      "type": "string"
+    },
+    "driver_name": {
+      "type": "string"
+    },
+    "departure_location": {
+      "type": "string"
+    },
+    "destination": {
+      "type": "string"
+    },
+    "departure_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "departure_time": {
+      "type": "string"
+    },
+    "seats_available": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "notes": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "cancelled"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "pool_type",
+    "pool_id",
+    "driver_id",
+    "driver_name",
+    "departure_location",
+    "destination",
+    "departure_date",
+    "departure_time",
+    "seats_available"
+  ],
+  "rls": {
+    "create": {
+      "data.driver_id": "{{user.id}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "data.driver_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.driver_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.driver_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
