@@ -16,6 +16,7 @@ import { format } from "date-fns";
 import { suggestPrice } from "@/components/trips/pricingUtils";
 import { flowHeading, flowLabel, flowHint, flowField, flowTextarea, flowToggleRow, flowButton } from "@/components/trips/flowStyles";
 import { toast } from "@/components/ui/use-toast";
+import { carpoolConnectFee } from "@/lib/fees";
 
 export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }) {
   const [bookingData, setBookingData] = useState({ 
@@ -149,7 +150,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         const partialRouteSuggestion = suggestPrice(bookingData.partial_from, bookingData.partial_to);
         if (fullRouteSuggestion && partialRouteSuggestion && fullRouteSuggestion.distance > 0) {
           const ratio = partialRouteSuggestion.distance / fullRouteSuggestion.distance;
-          submitPricePerSeat = Math.max(3, Math.round(fullPricePerSeatSubmit * ratio));
+          submitPricePerSeat = fullPricePerSeatSubmit === 0 ? 0 : Math.max(3, Math.round(fullPricePerSeatSubmit * ratio));
         }
       }
       const baseAmount = (bookingData.seats_booked || 0) * submitPricePerSeat;
@@ -253,15 +254,14 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
     const partialRouteSuggestion = suggestPrice(bookingData.partial_from, bookingData.partial_to);
     if (fullRouteSuggestion && partialRouteSuggestion && fullRouteSuggestion.distance > 0) {
       const ratio = partialRouteSuggestion.distance / fullRouteSuggestion.distance;
-      pricePerSeat = Math.max(3, Math.round(fullPricePerSeat * ratio));
+      pricePerSeat = fullPricePerSeat === 0 ? 0 : Math.max(3, Math.round(fullPricePerSeat * ratio));
     }
   }
 
   const rideAmount = (bookingData.seats_booked || 0) * pricePerSeat;
   const isFreeRide = rideAmount === 0;
-  const connectFeeRate = ride?.driver_license_state === 'HI' ? 0.10 : 0.30;
   // Free rides skip Stripe entirely — no connect fee, license fee, SMS fee, or card fee.
-  const connectFee = isFreeRide ? 0 : rideAmount * connectFeeRate;
+  const connectFee = carpoolConnectFee(isLocal, rideAmount);
   const licenseVerificationFee = (isFirstBooking && !isFreeRide) ? 1.50 : 0;
   const smsFee = (currentUser?.sms_notifications_enabled && !isFreeRide) ? 0.50 : 0;
   const subtotal = rideAmount + connectFee + licenseVerificationFee + smsFee;
@@ -457,7 +457,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               </div>
               <div className="space-y-0.5">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-700">Connect fee ({Math.round(connectFeeRate * 100)}%)</span>
+                  <span className="text-gray-700">Connect fee (flat per ride)</span>
                   <span className="font-medium">${connectFee.toFixed(2)}</span>
                 </div>
                 <p className="text-xs text-gray-400 pl-0">Platform fee Cruise Hawaiʻi charges to maintain the app and process payments</p>

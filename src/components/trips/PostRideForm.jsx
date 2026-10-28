@@ -388,11 +388,11 @@ export default function PostRideForm({ island = "Kauai", initialRespondingToRequ
       console.log('Ride payload driver_profile_picture_url:', ridePayload.driver_profile_picture_url);
 
       if (rideData.rider_preference === 'both_fine') {
-        ridePayload.price_per_seat_local = parseFloat(rideData.price_per_seat_local);
-        ridePayload.price_per_seat_tourist = parseFloat(rideData.price_per_seat_tourist);
+        ridePayload.price_per_seat_local = parseFloat(rideData.price_per_seat_local) || 0;
+        ridePayload.price_per_seat_tourist = parseFloat(rideData.price_per_seat_tourist) || 0;
         delete ridePayload.price_per_seat;
       } else {
-        ridePayload.price_per_seat = parseFloat(rideData.price_per_seat);
+        ridePayload.price_per_seat = parseFloat(rideData.price_per_seat) || 0;
         delete ridePayload.price_per_seat_local;
         delete ridePayload.price_per_seat_tourist;
       }
@@ -855,7 +855,7 @@ export default function PostRideForm({ island = "Kauai", initialRespondingToRequ
           {rideData.rider_preference === 'both_fine' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="space-y-2">
-                <Label htmlFor="priceLocal" className={flowLabel}>price request for locals ($)</Label>
+                <Label htmlFor="priceLocal" className={flowLabel}>price request for locals ($) — enter 0 for free</Label>
                 <Input
                   id="priceLocal"
                   type="number"
@@ -871,7 +871,7 @@ export default function PostRideForm({ island = "Kauai", initialRespondingToRequ
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="priceTourist" className={flowLabel}>price request for tourists ($)</Label>
+                <Label htmlFor="priceTourist" className={flowLabel}>price request for tourists ($) — enter 0 for free</Label>
                 <Input
                   id="priceTourist"
                   type="number"
@@ -889,7 +889,7 @@ export default function PostRideForm({ island = "Kauai", initialRespondingToRequ
             </div>
           ) : (
             <div className="space-y-2">
-              <Label htmlFor="price" className={flowLabel}>price request per seat ($)</Label>
+              <Label htmlFor="price" className={flowLabel}>price request per seat ($) — enter 0 for free</Label>
               <Input
                 id="price"
                 type="number"

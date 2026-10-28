@@ -44,7 +44,7 @@ const faqItems = [
   },
   {
     q: "How much does it cost?",
-    a: "Ride prices are set by the driver and typically range from $5–$30 depending on the distance. Drivers set separate pricing for locals and tourists. A small connect fee (10%) is added to each booking to help keep the platform running."
+    a: "Ride prices are set by the driver and typically range from $5–$30 depending on the distance. Drivers set separate pricing for locals and tourists. Prices can be set to $0 for a free ride. A small flat connect fee (+$3 for locals, +$7 for visitors) is added to each paid booking to help keep the platform running."
   },
   {
     q: "How do I pay?",

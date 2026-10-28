@@ -203,7 +203,7 @@ export default function TransactionHistory() {
                         <span className="font-medium">${selectedTransaction.ride_amount?.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Connect fee (10%):</span>
+                        <span className="text-gray-600">Connect fee:</span>
                         <span className="font-medium">${selectedTransaction.connect_fee?.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between border-t border-gray-200 pt-2">

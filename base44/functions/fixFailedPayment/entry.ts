@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 import Stripe from 'npm:stripe';
+import { carpoolConnectFee } from '../../shared/fees.ts';
 
 Deno.serve(async (req) => {
   try {
@@ -144,8 +145,7 @@ Deno.serve(async (req) => {
       const passenger = passengers[0];
 
       const rideAmount = booking.total_amount;
-      const connectFeeRate = ride?.driver_license_state === 'HI' ? 0.10 : 0.30;
-      const connectFee = rideAmount * connectFeeRate;
+      const connectFee = carpoolConnectFee(passenger?.has_hawaii_id === true, rideAmount);
 
       // Update booking to paid
       await base44.asServiceRole.entities.RideBooking.update(booking_id, {

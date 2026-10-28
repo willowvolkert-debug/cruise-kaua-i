@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 import Stripe from 'npm:stripe';
+import { carpoolConnectFee } from '../../shared/fees.ts';
 
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY"));
 
@@ -52,8 +53,7 @@ Deno.serve(async (req) => {
 
                     // Calculate amounts
                     const rideAmount = booking.total_amount;
-                    const connectFeeRate = ride?.driver_license_state === 'HI' ? 0.10 : 0.30;
-                    const connectFee = rideAmount * connectFeeRate;
+                    const connectFee = carpoolConnectFee(user.has_hawaii_id === true, rideAmount);
                     const totalPaid = session.amount_total / 100;
 
                     // Seed initial message thread from rider's description

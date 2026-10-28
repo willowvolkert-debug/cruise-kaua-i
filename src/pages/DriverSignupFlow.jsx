@@ -58,7 +58,7 @@ const STEPS = [
           <p className="text-muted-foreground text-sm mt-1">Drivers who post 3–5 rides per week cover their gas costs and earn $200–$600/month in supplemental income.</p>
         </div>
         <div className="bg-muted border border-border rounded-2xl p-3">
-          <p className="text-xs text-muted-foreground leading-relaxed"><strong>💡 Fee note:</strong> Cruise {island} adds a 10% connect fee on top of your listed price — which the rider pays. The price you post is exactly what you receive. For example, if you post $20, the rider pays $22.</p>
+          <p className="text-xs text-muted-foreground leading-relaxed"><strong>💡 Fee note:</strong> Cruise {island} adds a flat connect fee on top of your listed price (+$3 for locals, +$7 for visitors) — which the rider pays. The price you post is exactly what you receive. For example, if you post $20, a local rider pays $23. You can also post $0 for a free ride.</p>
         </div>
       </div>
     ),

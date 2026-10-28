@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 import Stripe from 'npm:stripe';
+import { carpoolConnectFee } from '../../shared/fees.ts';
 
 Deno.serve(async (req) => {
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY"));
@@ -47,6 +48,15 @@ Deno.serve(async (req) => {
 
         if (event.type === 'checkout.session.completed') {
             const session = event.data.object;
+            // Schoolpool / partypool payments are tracked on PoolBooking
+            if (session.metadata?.pool_booking_id) {
+                await base44.asServiceRole.entities.PoolBooking.update(session.metadata.pool_booking_id, {
+                    payment_status: 'paid',
+                    stripe_payment_intent: session.payment_intent,
+                });
+                return Response.json({ received: true });
+            }
+
             const { booking_id, ride_id, passenger_id, driver_id } = session.metadata;
 
             if (!booking_id) {
@@ -95,8 +105,7 @@ Deno.serve(async (req) => {
             // Calculate amounts from the session
             const totalPaid = session.amount_total / 100; // Convert from cents
             const rideAmount = booking.total_amount; // This is the ride cost without connect fee
-            const connectFeeRate = ride?.driver_license_state === 'HI' ? 0.10 : 0.30;
-            const connectFee = rideAmount * connectFeeRate;
+            const connectFee = carpoolConnectFee(passenger?.has_hawaii_id === true, rideAmount);
 
             // Idempotency guard — check BEFORE making any changes
             if (booking.payment_status === 'paid') {

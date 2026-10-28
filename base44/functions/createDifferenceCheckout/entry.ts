@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 import Stripe from 'npm:stripe';
+import { carpoolConnectFee } from '../../shared/fees.ts';
 
 Deno.serve(async (req) => {
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY"));
@@ -47,8 +48,7 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'No difference to pay' }, { status: 400 });
         }
 
-        const connectFeeRate = ride.driver_license_state === 'HI' ? 0.10 : 0.30;
-        const connectFee = differenceAmount * connectFeeRate;
+        const connectFee = carpoolConnectFee(user.has_hawaii_id === true, differenceAmount);
         const subtotal = differenceAmount + connectFee;
         const creditCardFee = subtotal * 0.03;
         const totalAmount = subtotal + creditCardFee;
@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
                     currency: 'usd',
                     product_data: {
                         name: 'Connect Fee',
-                        description: `Cruise Hawaiʻi service fee (${Math.round(connectFeeRate * 100)}%)`
+                        description: `Cruise Hawaiʻi service fee (flat per ride)`
                     },
                     unit_amount: Math.round(connectFee * 100)
                 },

@@ -52,7 +52,7 @@ const STEPS = [
           ))}
         </div>
         <div className="bg-muted border border-border rounded-2xl p-3">
-          <p className="text-xs text-muted-foreground leading-relaxed"><strong>💡 Fee note:</strong> Cruise {island} adds a 10% connect fee on top of the driver's listed price — that's what you pay. For example, a $20 ride costs you $22. The driver receives exactly what they posted.</p>
+          <p className="text-xs text-muted-foreground leading-relaxed"><strong>💡 Fee note:</strong> Cruise {island} adds a flat connect fee on top of the driver's listed price (+$3 for locals, +$7 for visitors). For example, a $20 ride costs a local rider $23. The driver receives exactly what they posted. Free ($0) rides have no fee.</p>
         </div>
       </div>
     ),
