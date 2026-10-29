@@ -319,11 +319,7 @@ export default function JoinPage() {
       <div className="min-h-screen bg-background flex flex-col">
         <style>{`[data-sidebar="trigger"] { display: none !important; }`}</style>
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-          <img
-            src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
-            alt="Cruise logo"
-            className="w-9 h-9 rounded-xl object-cover"
-          />
+          <span />
           <button
             onClick={() => { setLoginMode(false); setOtpState(null); }}
             className="text-sm text-gray-400 hover:text-gray-700 transition-colors underline underline-offset-2"
@@ -446,11 +442,7 @@ export default function JoinPage() {
 
       {/* Minimal header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-        <img
-          src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
-          alt="Cruise logo"
-          className="w-9 h-9 rounded-xl object-cover"
-        />
+        <span />
         <button
           onClick={() => setLoginMode(true)}
           className="text-sm text-gray-400 hover:text-gray-700 transition-colors underline underline-offset-2"
@@ -462,7 +454,7 @@ export default function JoinPage() {
       <div className="flex-1 flex flex-col max-w-md mx-auto w-full px-6 py-8">
         {/* SIGNUP FORM (before OTP) */}
         {!otpState && !loginRetry && (
-          <div className="space-y-5 flex-1">
+          <div className="space-y-5">
             <div>
               <h1 className="text-3xl font-extrabold text-gray-900 mb-1">create your account 🎉</h1>
               <p className="text-gray-500 text-base">enter your email and a password to get started.</p>
@@ -546,7 +538,7 @@ export default function JoinPage() {
 
         {/* OTP VERIFICATION */}
         {otpState === "sent" && !loginRetry && (
-          <div className="space-y-5 flex-1">
+          <div className="space-y-5">
             <div>
               <h1 className="text-3xl font-extrabold text-gray-900 mb-1">check your email 📧</h1>
               <p className="text-gray-500 text-base">
@@ -595,7 +587,7 @@ export default function JoinPage() {
 
         {/* LOGIN RETRY — shown when auto-login fails after OTP */}
         {loginRetry && (
-          <div className="space-y-5 flex-1">
+          <div className="space-y-5">
             <div>
               <h1 className="text-3xl font-extrabold text-gray-900 mb-1">email verified! ✅</h1>
               <p className="text-gray-500 text-base">
