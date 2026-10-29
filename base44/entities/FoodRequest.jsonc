@@ -1,0 +1,135 @@
+{
+  "name": "FoodRequest",
+  "type": "object",
+  "properties": {
+    "requester_id": {
+      "type": "string"
+    },
+    "requester_name": {
+      "type": "string"
+    },
+    "island": {
+      "type": "string"
+    },
+    "pickup_location": {
+      "type": "string",
+      "description": "Where the food is picked up"
+    },
+    "dropoff_location": {
+      "type": "string",
+      "description": "Where the food is delivered"
+    },
+    "description": {
+      "type": "string",
+      "description": "What needs delivering"
+    },
+    "needed_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "needed_time": {
+      "type": "string"
+    },
+    "offered_pay": {
+      "type": "number",
+      "minimum": 0,
+      "description": "What the requester will pay for the delivery"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "claimed",
+        "delivered",
+        "cancelled"
+      ],
+      "default": "open"
+    },
+    "driver_id": {
+      "type": "string"
+    },
+    "driver_name": {
+      "type": "string"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "sender_id": {
+            "type": "string"
+          },
+          "sender_name": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "requester_id",
+    "requester_name",
+    "island",
+    "pickup_location",
+    "dropoff_location",
+    "needed_date",
+    "offered_pay"
+  ],
+  "rls": {
+    "create": {
+      "data.requester_id": "{{user.id}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "data.requester_id": "{{user.id}}"
+        },
+        {
+          "data.driver_id": "{{user.id}}"
+        },
+        {
+          "data.status": "open"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.requester_id": "{{user.id}}"
+        },
+        {
+          "data.driver_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.requester_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

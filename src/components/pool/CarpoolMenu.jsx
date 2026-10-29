@@ -13,6 +13,7 @@ export default function CarpoolMenu() {
       <DropdownMenuContent align="start" className="min-w-[10rem]">
         <DropdownMenuItem onClick={() => navigate("/schoolpool")} className="select-none text-base">🎒 schoolpool</DropdownMenuItem>
         <DropdownMenuItem onClick={() => navigate("/partypool")} className="select-none text-base">🎉 partypool</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/foodpool")} className="select-none text-base">🥬 foodpool</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

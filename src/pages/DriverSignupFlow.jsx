@@ -119,6 +119,29 @@ const STEPS = [
     ),
   },
   {
+    id: "food",
+    title: "help deliver food? 🥬",
+    content: (island, ctx) => (
+      <div className="space-y-4">
+        <p className="text-foreground text-base leading-relaxed">
+          Some trips can carry more than people. Would you be willing to help deliver food, like wholesale deliveries or grocery orders from places such as Mālama Kauaʻi? You'll only see requests along with your carpool trips, and you choose which to take.
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          {[{ v: "yes", label: "yes, I'm in" }, { v: "no", label: "not right now" }].map(({ v, label }) => (
+            <button
+              key={v}
+              onClick={() => ctx.setFood(v)}
+              className={`rounded-2xl border-2 p-4 font-bold select-none ${ctx.food === v ? "border-primary bg-primary text-white" : "border-border text-foreground"}`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <p className="text-xs text-muted-foreground">You can change this anytime on the foodpool page.</p>
+      </div>
+    ),
+  },
+  {
     id: "ready",
     title: "ready to join? 🌿",
     content: (island) => (
@@ -148,6 +171,14 @@ const STEPS = [
 export default function DriverSignupFlow() {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
+  const [food, setFood] = useState(localStorage.getItem("cruise_delivers_food") || "");
+
+  const chooseFood = (v) => {
+    setFood(v);
+    localStorage.setItem("cruise_delivers_food", v);
+    // Already logged in? Save it right away; otherwise the foodpool page saves it after login.
+    base44.auth.isAuthenticated().then((ok) => ok && base44.auth.updateMe({ delivers_food: v === "yes" }));
+  };
 
   // Detect island from domain
   const hostname = window.location.hostname.toLowerCase();
@@ -192,7 +223,7 @@ export default function DriverSignupFlow() {
       <div className="max-w-lg mx-auto px-6 pb-8">
         <div className="mb-6">
           <h2 className="cruise-head text-3xl text-secondary mb-4">{currentStep.titleFn ? currentStep.titleFn(islandKey) : currentStep.title}</h2>
-          {currentStep.content(islandKey)}
+          {currentStep.content(islandKey, { food, setFood: chooseFood })}
         </div>
 
         {/* Navigation */}

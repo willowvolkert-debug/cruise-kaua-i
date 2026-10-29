@@ -32,6 +32,16 @@ export const POOL_COPY = {
       "Once in, use get a ride, post a ride, inbox and confirmed rides to coordinate drop-offs and pick-ups with other parents.",
     ],
   },
+  food: {
+    title: "foodpool",
+    emoji: "🥬",
+    help: [
+      "Tap “request a delivery”, say where the food is picked up and dropped off, and how much you'll pay for the delivery.",
+      "Carpool drivers already heading your way show up under your request automatically.",
+      "Drivers who turned on food deliveries can see open requests, and any that match their own carpool trips are shown first.",
+      "Once a driver claims your request, chat with them from “my requests” and mark it delivered when it arrives.",
+    ],
+  },
   party: {
     title: "partypool",
     emoji: "🎉",
