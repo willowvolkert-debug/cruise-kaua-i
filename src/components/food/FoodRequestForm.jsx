@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { todayHST } from "@/lib/pool";
+import TownSelect from "@/components/food/TownSelect";
 
 const label = "block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1";
 
@@ -37,8 +38,8 @@ export default function FoodRequestForm({ user, island, onPosted }) {
   return (
     <div className="space-y-4">
       <h2 className="cruise-head text-3xl text-secondary">request a delivery</h2>
-      <div><label className={label}>pick up from</label><Input className="h-14 text-lg" placeholder="e.g. Mālama Kauaʻi, Kukui Grove" value={f.pickup_location} onChange={set("pickup_location")} /></div>
-      <div><label className={label}>drop off at</label><Input className="h-14 text-lg" placeholder="address or place" value={f.dropoff_location} onChange={set("dropoff_location")} /></div>
+      <div><label className={label}>pick up town</label><TownSelect placeholder="choose a town" value={f.pickup_location} onChange={(v) => setF({ ...f, pickup_location: v })} /></div>
+      <div><label className={label}>drop off town</label><TownSelect placeholder="choose a town" value={f.dropoff_location} onChange={(v) => setF({ ...f, dropoff_location: v })} /></div>
       <div><label className={label}>what's being delivered</label><Textarea className="text-lg" placeholder="grocery order, wholesale boxes…" value={f.description} onChange={set("description")} /></div>
       <div className="grid grid-cols-2 gap-3">
         <div><label className={label}>date</label><Input type="date" className="h-14 text-lg" min={todayHST()} value={f.needed_date} onChange={set("needed_date")} /></div>

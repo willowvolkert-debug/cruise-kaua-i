@@ -1,19 +1,14 @@
-// Matches foodpool requests with carpool rides (same date, shared place names).
-const STOP = new Set(["street", "road", "highway", "hawaii", "kauai", "kauaʻi", "near", "the", "and", "drive", "avenue", "beach", "town"]);
+// Matches foodpool requests with carpool rides (same date, same towns).
+const norm = (s) =>
+  (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[ʻ'’`]/g, "").replace(/\s+/g, " ").trim();
 
-const words = (s) =>
-  (s || "").toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, " ").split(/\s+/).filter((w) => w.length > 3 && !STOP.has(w));
-
-const overlaps = (a, b) => {
-  const set = new Set(words(a));
-  return words(b).some((w) => set.has(w));
-};
+const mentionsTown = (town, text) => !!town && norm(text).includes(norm(town));
 
 // 0 = no match, 1 = one end of the delivery is on the ride's route, 2 = both ends are.
 export function matchScore(request, ride) {
   if (request.needed_date !== ride.departure_date) return 0;
-  const places = [ride.departure_location, ride.destination, ...(ride.stops || [])].join(" ");
-  return (overlaps(request.pickup_location, places) ? 1 : 0) + (overlaps(request.dropoff_location, places) ? 1 : 0);
+  const places = [ride.departure_location, ride.destination, ...(ride.stops || [])].join(" | ");
+  return (mentionsTown(request.pickup_location, places) ? 1 : 0) + (mentionsTown(request.dropoff_location, places) ? 1 : 0);
 }
 
 export const ridesForRequest = (request, rides) =>
