@@ -109,12 +109,12 @@ button:focus-visible {
     --card-foreground: 0 23% 13%;
     --popover: 47 45% 96%;
     --popover-foreground: 0 23% 13%;
-    --primary: 359 50% 54%;
+    --primary: 359 52% 44%;
     --primary-foreground: 0 0% 100%;
     --secondary: 205 60% 35%;
     --secondary-foreground: 0 0% 100%;
     --muted: 88 27% 92%;
-    --muted-foreground: 0 12% 36%;
+    --muted-foreground: 0 12% 28%;
     --accent: 88 27% 88%;
     --accent-foreground: 0 23% 13%;
     --destructive: 0 72% 40%;

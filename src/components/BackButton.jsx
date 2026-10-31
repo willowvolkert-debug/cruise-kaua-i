@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 
 export const backButtonClass =
-  "inline-flex items-center gap-1 h-10 pl-2 pr-4 rounded-lg bg-primary hover:bg-primary/90 text-white font-bold text-base select-none";
+  "inline-flex items-center gap-1 min-h-[44px] min-w-[44px] pl-1 pr-3 text-secondary hover:underline font-bold text-base select-none";
 
-// Red back button that returns to the previous page.
+// Ocean-blue text link button that returns to the previous page.
 export default function BackButton({ onClick, className = "" }) {
   const navigate = useNavigate();
   const goBack = () => (window.history.state?.idx > 0 ? navigate(-1) : navigate("/home"));
