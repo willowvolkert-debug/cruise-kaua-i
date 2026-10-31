@@ -4,6 +4,7 @@ import { ChevronLeft } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { useSkies } from "@/lib/skies";
+import { getIslandMap } from "@/lib/island";
 import BouncySubheading from "@/components/BouncySubheading";
 import GreySkies from "@/components/relief/GreySkies";
 import ImpactCard from "@/components/shared/ImpactCard";
@@ -45,7 +46,7 @@ export default function Home() {
     <div className="p-3 md:p-8 bg-background overflow-x-hidden min-h-screen">
       <div className="max-w-2xl mx-auto">
         <div className="mb-5">
-          <h1 className="cruise-head text-5xl md:text-6xl text-secondary leading-none">cruise hawaiʻi</h1>
+          <h1 className="cruise-head text-5xl md:text-6xl text-secondary leading-none">cruise {getIslandMap().label}</h1>
           <BouncySubheading text="reduce traffic, save money, build community." />
         </div>
 

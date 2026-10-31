@@ -7,7 +7,7 @@ export default function SkiesToggle() {
   return (
     <button
       onClick={toggleSkies}
-      className={`text-sm font-bold rounded-full px-3 py-1.5 border-2 select-none transition-colors ${
+      className={`whitespace-nowrap text-xs font-bold rounded-full px-2 py-1 border-2 select-none transition-colors ${
         grey ? "bg-secondary text-primary-foreground border-secondary" : "bg-card text-primary border-primary"
       }`}
     >

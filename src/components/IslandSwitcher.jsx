@@ -15,7 +15,7 @@ export default function IslandSwitcher() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1.5 text-sm font-semibold text-primary select-none outline-none">
+      <DropdownMenuTrigger className="flex items-center gap-0.5 whitespace-nowrap rounded-full border border-border bg-background px-2 py-1 text-xs font-semibold text-primary select-none outline-none">
         <MapPin className="w-4 h-4" />
         <span className="max-w-[5.5rem] truncate">{ISLAND_MAP[current].label}</span>
         <ChevronDown className="w-3.5 h-3.5" />

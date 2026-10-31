@@ -6,7 +6,7 @@ import IslandSwitcher from "@/components/IslandSwitcher";
 import SkiesToggle from "@/components/relief/SkiesToggle";
 import CarpoolMenu from "@/components/pool/CarpoolMenu";
 import { useSkies } from "@/lib/skies";
-import { TRUCK_URL, ISLAND_TRUCK_URL } from "@/components/welcome/WelcomeHero";
+import { ISLAND_TRUCK_URL } from "@/components/welcome/WelcomeHero";
 
 export default function BrandHeader({ right = null }) {
   const skies = useSkies();
@@ -21,7 +21,7 @@ export default function BrandHeader({ right = null }) {
   };
 
   return (
-    <header className="bg-card border-b border-border h-16 px-3 pt-[env(safe-area-inset-top)] grid grid-cols-[1fr_auto_1fr] items-center sticky top-0 z-30 select-none">
+    <header className="bg-card border-b border-border h-16 px-3 pt-[env(safe-area-inset-top)] flex justify-between gap-1 items-center sticky top-0 z-30 select-none">
       <div className="flex items-center">
         {!isHome && (
           <button
@@ -39,10 +39,7 @@ export default function BrandHeader({ right = null }) {
           </div>
         )}
       </div>
-      <Link to="/home" aria-label="Cruise Hawaiʻi home" className="flex items-center justify-center">
-        <img src={TRUCK_URL} alt="Cruise Hawaiʻi" className="h-12 w-auto object-contain" />
-      </Link>
-      <div className="flex items-center justify-end gap-3">
+      <div className="flex items-center justify-end gap-1.5">
         {right}
         {isHome && <HomeHelpButton />}
         <IslandSwitcher />
