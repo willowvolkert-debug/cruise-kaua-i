@@ -2,10 +2,12 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { MapPin, UserCheck, ShieldAlert } from "lucide-react";
+import { MapPin, UserCheck, ShieldAlert, PlayCircle, Users } from "lucide-react";
+import ReferFriendDialog from "@/components/account/ReferFriendDialog";
 
-export default function PostSignupCard({ user, onFinishProfile }) {
+export default function PostSignupCard({ user, onFinishProfile, onViewTutorial }) {
   const navigate = useNavigate();
+  const [showRefer, setShowRefer] = React.useState(false);
 
   const handleBrowseRides = async () => {
     try {
@@ -65,6 +67,23 @@ export default function PostSignupCard({ user, onFinishProfile }) {
             <UserCheck className="w-4 h-4 mr-2" />
             finish my profile
           </Button>
+          <Button
+            onClick={onViewTutorial}
+            variant="outline"
+            className="w-full border-border text-foreground hover:bg-muted rounded-full py-5 text-base font-bold"
+          >
+            <PlayCircle className="w-4 h-4 mr-2" />
+            view welcome tutorial
+          </Button>
+          <Button
+            onClick={() => setShowRefer(true)}
+            variant="outline"
+            className="w-full border-border text-foreground hover:bg-muted rounded-full py-5 text-base font-bold"
+          >
+            <Users className="w-4 h-4 mr-2" />
+            refer a friend
+          </Button>
+          <ReferFriendDialog open={showRefer} onClose={() => setShowRefer(false)} />
         </div>
       </div>
     </div>

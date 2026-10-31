@@ -6,8 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChevronLeft, ChevronRight, Eye, EyeOff, Mail } from "lucide-react";
 import { checkEmailExists } from "@/functions/checkEmailExists";
-import PhoneCaptureCard from "@/components/signup/PhoneCaptureCard";
-import SignupCompleteCard from "@/components/signup/SignupCompleteCard";
+import WelcomeIntroCard from "@/components/signup/WelcomeIntroCard";
 
 // Signup phases: "signup" → "otp" → "loginRetry" → "phone" → "done"
 // Login mode is separate (toggled by the user).
@@ -43,17 +42,9 @@ export default function JoinPage() {
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
 
-  // Phone capture
-  const [phoneLoading, setPhoneLoading] = useState(false);
-
-  // Redirect target after the flow completes
-  const [nextUrl, setNextUrl] = useState(null);
-
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const next = params.get("next");
     const isLogin = params.get("login") === "true";
-    if (next) setNextUrl(next);
     if (isLogin) setLoginMode(true);
   }, []);
 
@@ -141,8 +132,7 @@ export default function JoinPage() {
           base44.auth.setToken(otpLoginData.access_token);
         }
         try { await base44.auth.updateMe({ has_verified_otp: true }); } catch (e) {}
-        // After OTP, move to phone capture (new flow)
-        setPhase("phone");
+        setPhase("welcome");
       } catch (loginErr) {
         setLoginRetry(true);
         setLoginRetryError("almost there! your email is verified. enter your password to log in.");
@@ -196,8 +186,7 @@ export default function JoinPage() {
         base44.auth.setToken(retryData.access_token);
       }
       try { await base44.auth.updateMe({ has_verified_otp: true }); } catch (e) {}
-      // After login retry, move to phone capture (new flow)
-      setPhase("phone");
+      setPhase("welcome");
     } catch (e) {
       const msg = e?.response?.data?.message || e?.message || "";
       if (msg.toLowerCase().includes("password") || msg.toLowerCase().includes("credential")) {
@@ -281,36 +270,10 @@ export default function JoinPage() {
     setLoginLoading(false);
   };
 
-  // Save phone number + SMS opt-in, then move to completion screen
-  const handlePhoneSubmit = async (phone) => {
-    setPhoneLoading(true);
-    try {
-      await base44.auth.updateMe({
-        phone_number: phone,
-        sms_notifications_enabled: true,
-        sms_opt_in_date: new Date().toISOString(),
-        has_completed_signup: true,
-      });
-      setPhase("done");
-    } catch (e) {
-      // Even if saving fails, let the user continue
-      setPhase("done");
-    }
-    setPhoneLoading(false);
-  };
-
-  // Completion screen actions
-  const handleBrowseRides = () => {
-    const target = nextUrl || "/trips";
-    const sep = target.includes('?') ? '&' : '?';
+  // Welcome card → Account page, which shows the phone step and "you're all set!" cards
+  const handleWelcomeContinue = () => {
     const token = localStorage.getItem('base44_access_token');
-    window.location.href = target + (token ? `${sep}access_token=${token}` : '');
-  };
-
-  const handleFinishProfile = () => {
-    const target = "/account?setup=true";
-    const token = localStorage.getItem('base44_access_token');
-    window.location.href = target + (token ? `&access_token=${token}` : '');
+    window.location.href = "/account?setup=true" + (token ? `&access_token=${token}` : '');
   };
 
   // ── LOGIN MODE ──────────────────────────────────────────────────
@@ -394,43 +357,26 @@ export default function JoinPage() {
             having trouble logging in? email{" "}
             <a href="mailto:cruisekauai@gmail.com" className="text-primary underline">cruisekauai@gmail.com</a>
           </p>
+          <p className="text-sm text-gray-500 text-center mt-4">
+            need an account?{" "}
+            <button
+              onClick={() => { setLoginMode(false); setOtpState(null); }}
+              className="text-primary underline font-semibold"
+            >
+              sign up here
+            </button>
+          </p>
         </div>
       </div>
     );
   }
 
-  // ── PHONE CAPTURE ───────────────────────────────────────────────
-  if (phase === "phone") {
+  // ── WELCOME ─────────────────────────────────────────────────────
+  if (phase === "welcome") {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 py-8">
         <style>{`[data-sidebar="trigger"] { display: none !important; }`}</style>
-        <div className="mb-6 flex items-center gap-2">
-          <img
-            src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
-            alt="Cruise logo"
-            className="w-8 h-8 rounded-lg object-cover"
-          />
-          <span className="font-bold text-primary text-base">cruise hawaiʻi</span>
-        </div>
-        <PhoneCaptureCard onSubmit={handlePhoneSubmit} loading={phoneLoading} />
-      </div>
-    );
-  }
-
-  // ── COMPLETION ("you're all set!") ──────────────────────────────
-  if (phase === "done") {
-    return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 py-8">
-        <style>{`[data-sidebar="trigger"] { display: none !important; }`}</style>
-        <div className="mb-6 flex items-center gap-2">
-          <img
-            src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg"
-            alt="Cruise logo"
-            className="w-8 h-8 rounded-lg object-cover"
-          />
-          <span className="font-bold text-primary text-base">cruise hawaiʻi</span>
-        </div>
-        <SignupCompleteCard onBrowse={handleBrowseRides} onFinishProfile={handleFinishProfile} />
+        <WelcomeIntroCard onContinue={handleWelcomeContinue} />
       </div>
     );
   }

@@ -1473,6 +1473,10 @@ export default function AccountPage() {
                     user={user}
                     onFinishProfile={() => {
                         setShowPostSignupCard(false);
+                        setShowProfileQuiz(true);
+                    }}
+                    onViewTutorial={() => {
+                        setShowPostSignupCard(false);
                         setShowTutorial(true);
                     }}
                 />
