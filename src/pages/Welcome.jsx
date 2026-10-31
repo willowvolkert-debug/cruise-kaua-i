@@ -11,6 +11,7 @@ import WelcomeHero from "@/components/welcome/WelcomeHero";
 import MissionSlide from "@/components/welcome/MissionSlide";
 import HowItWorks from "@/components/welcome/HowItWorks";
 import GreySkies from "@/components/welcome/GreySkies";
+import PoolsSection from "@/components/welcome/PoolsSection";
 import WelcomeFaq from "@/components/welcome/WelcomeFaq";
 import { trackPageView } from "@/functions/trackPageView";
 import { getPublicRides } from "@/functions/getPublicRides";
@@ -64,6 +65,7 @@ export default function WelcomePage() {
       <MissionSlide />
       <HowItWorks onSignUp={handleSignUp} />
       <GreySkies />
+      <PoolsSection />
       <WelcomeFaq />
 
       {/* ── VIEW RIDES ── */}
