@@ -58,6 +58,9 @@ export default function JoinPage() {
     setOtpError("");
   };
 
+  const withTimeout = (promise, ms) =>
+    Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), ms))]);
+
   const handleSignup = async () => {
     setSignupError("");
     if (!email || !password || !confirmPassword) {
@@ -84,7 +87,7 @@ export default function JoinPage() {
     setSignupLoading(true);
 
     try {
-      const check = await checkEmailExists({ email });
+      const check = await withTimeout(checkEmailExists({ email }), 8000);
       if (check?.exists) {
         setSignupError("this email is already registered. log in with your password below 👇");
         setLoginPassword(password);
@@ -95,10 +98,15 @@ export default function JoinPage() {
     } catch (e) { /* fall through to register */ }
 
     try {
-      await base44.auth.register({ email, password });
+      await withTimeout(base44.auth.register({ email, password }), 20000);
       setOtpState("sent");
       setSignupError("");
     } catch (e) {
+      if (e?.message === "timeout") {
+        setSignupError("this is taking too long. please check your connection and try again in a moment.");
+        setSignupLoading(false);
+        return;
+      }
       const msg = e?.response?.data?.message || e?.message || "";
       if (msg.toLowerCase().includes("already") || msg.toLowerCase().includes("exists")) {
         setSignupError("this email is already registered. log in with your password below 👇");
