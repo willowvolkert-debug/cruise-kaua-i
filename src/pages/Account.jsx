@@ -26,6 +26,7 @@ import ProfileSetupQuiz from "../components/account/ProfileSetupQuiz";
 import ProfileChecklist, { getProfileChecklist } from "../components/account/ProfileChecklist";
 import WelcomeTutorialModal from "../components/tutorial/WelcomeTutorialModal";
 import SignupInfoCard from "../components/account/SignupInfoCard";
+import UsernameCard from "../components/account/UsernameCard";
 import PostSignupCard from "../components/account/PostSignupCard";
 import SmsSettingsCard from "../components/account/SmsSettingsCard";
 import NotificationPreferencesCard from "../components/account/NotificationPreferencesCard";
@@ -113,6 +114,7 @@ export default function AccountPage() {
     const [profileQuizSavedStep, setProfileQuizSavedStep] = useState(0);
     const [showTutorial, setShowTutorial] = useState(false);
     const [showSignupInfoCard, setShowSignupInfoCard] = useState(false);
+    const [showUsernameCard, setShowUsernameCard] = useState(false);
     const [showPostSignupCard, setShowPostSignupCard] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -170,7 +172,8 @@ export default function AccountPage() {
                 if (forceQuiz) await base44.auth.updateMe({ has_completed_profile_quiz: false });
                 // New flow: SignupInfoCard → Welcome Tutorial → Profile Quiz
                 if (!currentUser.has_seen_signup_info_card && !forceQuiz) {
-                    setShowSignupInfoCard(true);
+                    if (!currentUser.username) setShowUsernameCard(true);
+                    else setShowSignupInfoCard(true);
                 } else if (!currentUser.has_seen_post_signup_card && !forceQuiz) {
                     setShowPostSignupCard(true);
                 } else if (!currentUser.has_dismissed_welcome_modal && !forceQuiz) {
@@ -1460,6 +1463,17 @@ export default function AccountPage() {
                     setShowProfileQuiz(true);
                 }}
             />
+
+            {showUsernameCard && user && (
+                <UsernameCard
+                    user={user}
+                    onComplete={async () => {
+                        setShowUsernameCard(false);
+                        await loadData();
+                        setShowSignupInfoCard(true);
+                    }}
+                />
+            )}
 
             {showSignupInfoCard && user && (
                 <SignupInfoCard

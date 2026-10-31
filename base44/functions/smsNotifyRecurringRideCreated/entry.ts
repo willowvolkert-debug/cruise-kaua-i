@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
     // Look up the driver
     const users = await base44.asServiceRole.entities.User.list('-created_date', 500);
     const driver = users.find(u => u.id === schedule.user_id);
-    const driverName = driver?.full_name || trip.trip_name || 'a driver';
+    const driverName = driver?.username || driver?.full_name || trip.trip_name || 'a driver';
 
     // Build schedule description
     // Merge trip time into schedule for formatting

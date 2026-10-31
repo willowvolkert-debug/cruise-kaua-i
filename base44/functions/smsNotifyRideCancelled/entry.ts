@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
       return Response.json({ ok: true, skipped: 'driver not opted in or no phone' });
     }
 
-    const riderName = booking.passenger_name || booking.passenger_username || 'A rider';
+    const riderName = booking.passenger_username || booking.passenger_name || 'A rider';
     const message = `Cruise Hawaiʻi: ${riderName} has cancelled their booking on your trip. view the application in your Home Screen, or the website- cruisehi.org`;
 
     const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');

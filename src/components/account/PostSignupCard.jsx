@@ -54,15 +54,15 @@ export default function PostSignupCard({ user, onFinishProfile, onViewTutorial }
         <div className="px-6 pb-6 space-y-3">
           <Button
             onClick={handleBrowseRides}
-            className="w-full bg-primary hover:bg-primary/90 text-white rounded-full py-5 text-base font-bold shadow-lg"
+            variant="outline"
+            className="w-full border-border text-foreground hover:bg-muted rounded-full py-5 text-base font-bold"
           >
             <MapPin className="w-4 h-4 mr-2" />
             start browsing rides →
           </Button>
           <Button
             onClick={handleFinishProfile}
-            variant="outline"
-            className="w-full border-border text-foreground hover:bg-muted rounded-full py-5 text-base font-bold"
+            className="w-full bg-primary hover:bg-primary/90 text-white rounded-full py-5 text-base font-bold shadow-lg"
           >
             <UserCheck className="w-4 h-4 mr-2" />
             finish my profile

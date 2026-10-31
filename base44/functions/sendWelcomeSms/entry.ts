@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
     else if (!user.phone_number.startsWith('+')) toNumber = '+' + raw;
     else toNumber = '+' + raw;
 
-    const firstName = user.full_name?.split(' ')[0] || 'there';
+    const firstName = user.username || user.full_name?.split(' ')[0] || 'there';
 
     const message = `Aloha ${firstName}! Welcome to Cruise Hawaiʻi — a community carpooling app connecting neighbors on the island. Browse available rides, post your own, or request one. view the application in your Home Screen, or the website- cruisehi.org\n\nReply STOP to opt out.`;
 

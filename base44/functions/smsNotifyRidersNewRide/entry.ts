@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
     const dest = ride.destination || '?';
     const date = ride.departure_date || '?';
     const time = ride.departure_time || '?';
-    const driver = ride.driver_name || ride.driver_username || 'a driver';
+    const driver = ride.driver_username || ride.driver_name || 'a driver';
     const seats = ride.seats_available || '?';
     const price = ride.price_per_seat != null ? ` for $${ride.price_per_seat}/seat` : '';
 
