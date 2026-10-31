@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 const reasons = [
   { icon: "🚗", title: "fewer cars, less traffic", desc: "Neighbors share seats on trips they're already making." },
   { icon: "💸", title: "save money", desc: "Rides are affordable ($5–$30) and drivers cover their gas." },
-  { icon: "🤙", title: "build community", desc: "Meet locals, share road alerts, and help each other out." },
+  { icon: "🤙", title: "build community", desc: "Meet new people, share what's happening on the road, and help each other out." },
 ];
 
 export default function WelcomeIntroCard({ onContinue }) {
@@ -21,9 +21,15 @@ export default function WelcomeIntroCard({ onContinue }) {
           Cruise connects drivers with open seats to riders heading the same way, so we all spend less, drive less, and know our community better.
         </p>
         {stats && (
-          <div className="text-center bg-muted rounded-2xl p-3">
-            <p className="font-heading text-3xl text-primary leading-none">{stats.carsOffRoad.toLocaleString()}</p>
-            <p className="text-sm text-muted-foreground mt-1">cars off the road thanks to our community</p>
+          <div className="grid grid-cols-2 gap-2 text-center bg-muted rounded-2xl p-3">
+            <div>
+              <p className="font-heading text-3xl text-primary leading-none">{stats.carsOffRoad.toLocaleString()}</p>
+              <p className="text-xs text-muted-foreground mt-1">cars off the road thanks to our community</p>
+            </div>
+            <div>
+              <p className="font-heading text-3xl text-primary leading-none">${Math.round(stats.driverEarnings || 0).toLocaleString()}</p>
+              <p className="text-xs text-muted-foreground mt-1">earned by local drivers</p>
+            </div>
           </div>
         )}
         <div className="space-y-2">

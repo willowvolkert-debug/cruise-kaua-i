@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
 
     const result: any = {
       userCount,
-      carsOffRoad: Math.max(1, Math.round(userCount / 2)),
+      carsOffRoad: Math.max(1, Math.round(users.length / 2)),
       driverEarnings: Math.round(driverEarnings * 100) / 100,
       me: null,
     };
