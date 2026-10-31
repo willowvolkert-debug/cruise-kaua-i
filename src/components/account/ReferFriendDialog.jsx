@@ -5,7 +5,7 @@ import { Copy, Check, MessageSquare, Mail, Share2 } from "lucide-react";
 
 export default function ReferFriendDialog({ open, onClose }) {
   const [copied, setCopied] = useState(false);
-  const link = `${window.location.origin}/join`;
+  const link = "cruisehi.org";
   const message = `Aloha! I've been using Cruise, a community ridesharing app for the islands. You can save money, skip traffic, and meet neighbors. Sign up here: ${link}`;
   const enc = encodeURIComponent(message);
 
