@@ -65,6 +65,7 @@ const AGREEMENT_BOXES = [
   { key: 'accurateInfo', label: 'All information I provided is accurate' },
   { key: 'violationRemoval', label: 'I understand violations may result in removal' },
   { key: 'voluntaryParticipation', label: 'I voluntarily agree to participate' },
+  { key: 'keepQuietPlacesQuiet', label: 'Keep quiet places quiet: I agree not to disclose special spots to visitors, and only recommend well known tourist destinations' },
 ];
 
 export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, driverMode = false }) {

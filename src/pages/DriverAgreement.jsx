@@ -39,6 +39,7 @@ export default function DriverAgreementPage() {
     accurateInfo: false,
     violationRemoval: false,
     voluntaryParticipation: false,
+    keepQuietPlacesQuiet: false,
   });
 
   const allCheckboxesChecked = Object.values(checkboxes).every(val => val === true);
@@ -88,9 +89,10 @@ export default function DriverAgreementPage() {
       ['7. Shared Responsibility', 'Cruise Kauai serves as a coordination platform connecting independent community members for voluntary cost-sharing carpools. As a driver, you acknowledge responsibility for safe operation of your motor vehicle, your interactions with passengers, and compliance with all applicable laws and safety standards.'],
       ['8. Indemnification', 'You agree to defend, indemnify, and hold harmless Cruise Kauai from any claims, damages, losses, liabilities, or expenses arising from your driving, vehicle condition, insurance coverage, or violations of law or this Agreement.'],
       ['9. Safety Standards & Community Responsibility', 'Cruise Kauai is actively evaluating operational best practices and safety standards appropriate for community-based carpool coordination. We require license verification for all drivers and are committed to continuously improving our community safety processes. Users are encouraged to exercise good judgment when connecting with other community members.'],
-      ['10. Suspension or Termination', 'Cruise Kauai may suspend or terminate your access at any time for safety, compliance, or legal concerns.'],
-      ['11. Governing Law', 'This Agreement is governed by the laws of the State of Hawaii.'],
-      ['12. Electronic Acceptance', 'By clicking "I Agree," you acknowledge this Agreement has the same legal effect as a written signature.'],
+      ['10. Keep quiet places quiet', 'I agree not to disclose special spots to visitors, and only recommend people to check out well known tourist destinations.'],
+      ['11. Suspension or Termination', 'Cruise Kauai may suspend or terminate your access at any time for safety, compliance, or legal concerns.'],
+      ['12. Governing Law', 'This Agreement is governed by the laws of the State of Hawaii.'],
+      ['13. Electronic Acceptance', 'By clicking "I Agree," you acknowledge this Agreement has the same legal effect as a written signature.'],
     ];
 
     sections.forEach(([title, body]) => {
@@ -252,17 +254,22 @@ export default function DriverAgreementPage() {
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">10. Suspension or Termination</h3>
+                  <h3 className="font-bold text-lg text-secondary mb-2">10. Keep quiet places quiet</h3>
+                  <p>I agree not to disclose special spots to visitors, and only recommend people to check out well known tourist destinations.</p>
+                </section>
+
+                <section>
+                  <h3 className="font-bold text-lg text-secondary mb-2">11. Suspension or Termination</h3>
                   <p>Cruise Hawaiʻi may suspend or terminate your access at any time for safety, compliance, or legal concerns.</p>
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">11. Governing Law</h3>
+                  <h3 className="font-bold text-lg text-secondary mb-2">12. Governing Law</h3>
                   <p>This Agreement is governed by the laws of the State of Hawaii.</p>
                 </section>
 
                 <section>
-                  <h3 className="font-bold text-lg text-secondary mb-2">12. Electronic Acceptance</h3>
+                  <h3 className="font-bold text-lg text-secondary mb-2">13. Electronic Acceptance</h3>
                   <p className="font-semibold">By clicking "I Agree," you acknowledge this Agreement has the same legal effect as a written signature.</p>
                 </section>
 
@@ -299,6 +306,7 @@ export default function DriverAgreementPage() {
                     { key: 'accurateInfo', label: 'All information I provided is accurate' },
                     { key: 'violationRemoval', label: 'I understand violations may result in removal' },
                     { key: 'voluntaryParticipation', label: 'I voluntarily agree to participate' },
+                    { key: 'keepQuietPlacesQuiet', label: 'Keep quiet places quiet: I agree not to disclose special spots to visitors, and only recommend well known tourist destinations' },
                   ].map(({ key, label }) => (
                     <div key={key} className="flex items-start space-x-2">
                       <Checkbox 
