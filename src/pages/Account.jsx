@@ -23,6 +23,7 @@ import EnableNotificationsModal from "../components/notifications/EnableNotifica
 import { requestNotificationPermission } from "../components/utils/notifications";
 import AdminMessageCard from "../components/inbox/AdminMessageCard";
 import ProfileSetupQuiz from "../components/account/ProfileSetupQuiz";
+import ProfileChecklist, { getProfileChecklist } from "../components/account/ProfileChecklist";
 import WelcomeTutorialModal from "../components/tutorial/WelcomeTutorialModal";
 import SignupInfoCard from "../components/account/SignupInfoCard";
 import PostSignupCard from "../components/account/PostSignupCard";
@@ -791,13 +792,16 @@ export default function AccountPage() {
                                     </div>
                                 ) : (
                                    <div className="flex flex-col gap-2">
-                                       {!user.has_completed_profile_quiz && profileQuizSavedStep > 0 ? (
+                                       {getProfileChecklist(user).some((i) => !i.done) ? (
+                                           <>
+                                           <ProfileChecklist items={getProfileChecklist(user)} />
                                            <Button
                                                onClick={() => setShowProfileQuiz(true)}
                                                className="rounded-2xl animate-pulse bg-blue-600 hover:bg-blue-700 text-white"
                                            >
                                                ✨ finish profile
                                            </Button>
+                                           </>
                                        ) : (
                                        <Button onClick={() => {
                                            const missingFields = !user.username || !user.bio || !user.age || !user.gender || !user.profile_picture_url;
