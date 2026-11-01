@@ -162,7 +162,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
       else if (s.type === 'textarea' && s.field === 'bio' && user?.bio) complete = true;
       else if (s.type === 'phone' && user?.phone_number) complete = true;
       else if (s.type === 'push_notifications') complete = true;
-      else if (s.type === 'notification_prefs' && user?.notification_prefs_set) complete = true;
+      else if (s.type === 'notification_prefs') complete = true; // optional, not part of the profile checklist
       else if (s.type === 'photo' && user?.profile_picture_url) complete = true;
       else if (s.type === 'terms_of_service' && user?.terms_accepted) complete = true;
       else if (s.type === 'privacy_policy' && user?.privacy_policy_accepted) complete = true;
