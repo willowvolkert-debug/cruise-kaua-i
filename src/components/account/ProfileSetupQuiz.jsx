@@ -24,7 +24,6 @@ const BASE_STEPS = [
     { value: "prefer_not_to_say", label: "Prefer not to say" },
   ]},
   { id: "bio", title: "Tell us about yourself", subtitle: "Share where you're from, how long you've lived on the island, and what you do — this helps build trust with the people you ride with.", type: "textarea", placeholder: "e.g. Born and raised on Kauaʻi, love hiking the Na Pali Coast and meeting new people!", field: "bio" },
-  { id: "phone", title: "What's your phone number?", subtitle: "Optional. We'll text you when someone messages you or books your ride. We'll never send promotions.", type: "phone", field: "phone_number" },
   { id: "push_notifications", title: "Enable push notifications", subtitle: "Get notified when a rider books your ride, a driver accepts your request, or someone sends you a message.", type: "push_notifications", field: "push_notifications" },
   { id: "notification_prefs", title: "Choose your notifications", subtitle: "Pick what you want texts about. You can change this any time in your account.", type: "notification_prefs", field: "notification_prefs" },
   { id: "profile_picture", title: "Add a profile photo", subtitle: "A clear photo of your face helps build trust in our community.", type: "photo", field: "profile_picture_url" },
