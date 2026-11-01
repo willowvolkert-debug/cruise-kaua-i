@@ -15,8 +15,8 @@ export default function PoolsTutorial() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="cruise-head text-3xl text-secondary leading-tight">schoolpool & partypool 🚗</h1>
-        <p className="text-muted-foreground text-sm mt-1">find them under the “carpool” button on Home (blue skies)</p>
+        <h1 className="cruise-head text-3xl text-secondary leading-tight">new Cruise features 🚗</h1>
+        <p className="text-muted-foreground text-sm mt-1">schoolpool, foodpool, and partypool</p>
       </div>
       <Block
         emoji="🎒"
@@ -34,6 +34,15 @@ export default function PoolsTutorial() {
           "Events on your island show up automatically. Tap “register an event” to add one.",
           "Tap an event to find a safe ride home or offer a sober ride.",
           "Drivers pledge to stay sober when they offer a ride home.",
+        ]}
+      />
+      <Block
+        emoji="🥡"
+        title="foodpool"
+        lines={[
+          "Need food or supplies delivered? Post a request with a pickup, a dropoff, and what you'll pay.",
+          "Drivers can toggle foodpool on and deliver along routes they're already driving.",
+          "Chat with your driver or requester right in the request.",
         ]}
       />
       <p className="text-xs text-muted-foreground text-center italic">Tap the ? on either page anytime for a refresher.</p>
