@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
             cancel_url
         } = await req.json();
 
-        if (!ride_id || !base_amount) {
+        if (!ride_id || base_amount == null) {
             return Response.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
@@ -61,8 +61,10 @@ Deno.serve(async (req) => {
         // Calculate fees
         const rideAmount = base_amount + (detour_fee || 0);
         const connectFee = carpoolConnectFee(user.has_hawaii_id === true, rideAmount);
-        const licenseVerificationFee = isFirstBooking ? 1.50 : 0;
-        const smsFee = user.sms_notifications_enabled ? 0.50 : 0;
+        const isFreeRide = !(rideAmount > 0);
+        // Free rides always carry the $1.50 ID fee; paid rides only on the rider's first booking
+        const licenseVerificationFee = (isFreeRide || isFirstBooking) ? 1.50 : 0;
+        const smsFee = (user.sms_notifications_enabled && !isFreeRide) ? 0.50 : 0;
         const subtotal = rideAmount + connectFee + licenseVerificationFee + smsFee;
         const creditCardFee = subtotal * 0.03;
         const totalAmount = subtotal + creditCardFee;
@@ -103,8 +105,10 @@ Deno.serve(async (req) => {
         });
 
         // Build line items
-        const lineItems = [
-            {
+        const lineItems = [];
+
+        if (!isFreeRide) {
+            lineItems.push({
                 price_data: {
                     currency: 'usd',
                     product_data: {
@@ -114,8 +118,8 @@ Deno.serve(async (req) => {
                     unit_amount: Math.round(rideAmount * 100)
                 },
                 quantity: 1
-            },
-            {
+            });
+            lineItems.push({
                 price_data: {
                     currency: 'usd',
                     product_data: {
@@ -125,17 +129,17 @@ Deno.serve(async (req) => {
                     unit_amount: Math.round(connectFee * 100)
                 },
                 quantity: 1
-            }
-        ];
+            });
+        }
 
-        // Add license verification fee for first-time riders
-        if (isFirstBooking) {
+        // Add ID fee (free rides, or first-time riders)
+        if (licenseVerificationFee > 0) {
             lineItems.push({
                 price_data: {
                     currency: 'usd',
                     product_data: {
-                        name: 'License Verification Fee',
-                        description: 'One-time Stripe identity verification fee'
+                        name: 'ID Fee',
+                        description: isFreeRide ? 'ID verification fee for free rides' : 'One-time Stripe identity verification fee'
                     },
                     unit_amount: Math.round(licenseVerificationFee * 100)
                 },

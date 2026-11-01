@@ -155,59 +155,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
       }
       const baseAmount = (bookingData.seats_booked || 0) * submitPricePerSeat;
 
-      // FREE RIDE ($0 total): skip Stripe, create booking directly
-      // Covers both explicit $0 price offers and rides where the driver set price to $0
-      if (baseAmount === 0) {
-        const booking = await base44.entities.RideBooking.create({
-          ride_id: ride.id,
-          driver_id: ride.driver_id,
-          passenger_id: currentUser.id,
-          passenger_name: currentUser.full_name,
-          passenger_username: currentUser.username || '',
-          driver_username: ride.driver_username || '',
-          seats_booked: parseInt(bookingData.seats_booked),
-          total_amount: 0,
-          booking_status: 'pending',
-          payment_status: 'paid',
-          description: bookingData.description,
-          has_luggage: bookingData.has_luggage,
-          is_partial_ride: bookingData.is_partial_ride,
-          partial_from: bookingData.partial_from || '',
-          partial_to: bookingData.partial_to || '',
-          is_price_offer: bookingData.is_price_offer || false,
-          offered_price: bookingData.is_price_offer ? 0 : null,
-          price_offer_status: bookingData.is_price_offer ? 'pending' : null,
-          messages: [{
-            sender_id: currentUser.id,
-            sender_name: currentUser.full_name,
-            message: bookingData.description,
-            timestamp: new Date().toISOString()
-          }],
-          initial_notification_sent: true,
-          passenger_profile_picture_url: currentUser.profile_picture_url || null,
-          passenger_bio: currentUser.bio || null,
-          passenger_age: currentUser.age || null,
-          passenger_gender: currentUser.gender || null,
-          passenger_preferences_chattiness: currentUser.preferences_chattiness || null,
-          passenger_preferences_scents: currentUser.preferences_scents || null,
-          license_pending: !currentUser.drivers_license_verified,
-        });
-
-        // Send SMS to driver
-        try {
-          await sendSmsNotification({
-            userId: ride.driver_id,
-            message: `Cruise Hawaiʻi: ${currentUser.full_name} ${bookingData.is_price_offer ? 'requested a free ride' : 'booked your free ride'}! "${bookingData.description}" Log in to accept or decline: https://cruisekauai.org`
-          });
-        } catch (smsErr) {
-          console.error("SMS error:", smsErr);
-        }
-
-        window.location.href = `${window.location.origin}/bookingsuccess?booking_id=${booking.id}&payment=free`;
-        return;
-      }
-
-      // Paid ride — create Stripe checkout session
+      // Create Stripe checkout session (free rides pay only the $1.50 ID fee)
       const { data } = await createRideCheckout({
         ride_id: ride.id,
         seats_booked: parseInt(bookingData.seats_booked),
@@ -260,13 +208,13 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
 
   const rideAmount = (bookingData.seats_booked || 0) * pricePerSeat;
   const isFreeRide = rideAmount === 0;
-  // Free rides skip Stripe entirely — no connect fee, license fee, SMS fee, or card fee.
+  // Free rides: no connect fee or SMS fee, just the $1.50 ID fee (plus card fee).
   const connectFee = carpoolConnectFee(isLocal, rideAmount);
-  const licenseVerificationFee = (isFirstBooking && !isFreeRide) ? 1.50 : 0;
+  const licenseVerificationFee = (isFreeRide || isFirstBooking) ? 1.50 : 0;
   const smsFee = (currentUser?.sms_notifications_enabled && !isFreeRide) ? 0.50 : 0;
   const subtotal = rideAmount + connectFee + licenseVerificationFee + smsFee;
-  const creditCardFee = isFreeRide ? 0 : subtotal * 0.03;
-  const totalAmount = isFreeRide ? 0 : subtotal + creditCardFee;
+  const creditCardFee = subtotal * 0.03;
+  const totalAmount = subtotal + creditCardFee;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -455,18 +403,20 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                 <span className="text-gray-700">{bookingData.is_price_offer && bookingData.offered_price !== '' ? 'Ride cost (your offer):' : 'Price request:'}</span>
                 <span className="font-medium">${((bookingData.seats_booked || 0) * pricePerSeat).toFixed(2)}</span>
               </div>
-              <div className="space-y-0.5">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-700">Connect fee (flat per ride)</span>
-                  <span className="font-medium">${connectFee.toFixed(2)}</span>
-                </div>
-                <p className="text-xs text-gray-400 pl-0">Platform fee Cruise Hawaiʻi charges to maintain the app and process payments</p>
-              </div>
-
-              {isFirstBooking && (
+              {connectFee > 0 && (
                 <div className="space-y-0.5">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-700">License verification fee</span>
+                    <span className="text-gray-700">Connect fee (flat per ride)</span>
+                    <span className="font-medium">${connectFee.toFixed(2)}</span>
+                  </div>
+                  <p className="text-xs text-gray-400 pl-0">Platform fee Cruise Hawaiʻi charges to maintain the app and process payments</p>
+                </div>
+              )}
+
+              {licenseVerificationFee > 0 && (
+                <div className="space-y-0.5">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-700">{isFreeRide ? 'ID fee' : 'License verification fee'}</span>
                     <span className="font-medium">$1.50</span>
                   </div>
                   <p className="text-xs text-gray-400">One-time fee to cover the cost of verifying your driver's license or ID</p>
@@ -537,7 +487,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
                     <div className="p-3 bg-white border border-green-300 rounded-xl text-sm text-green-800 space-y-1">
                       {parseFloat(bookingData.offered_price) === 0 ? (
                         <>
-                          <p>🤙 This is a <strong>free ride</strong> — no payment needed.</p>
+                          <p>🤙 This is a <strong>free ride</strong> — you only pay the $1.50 ID fee.</p>
                           <p className="text-green-700">The driver can still <strong>accept</strong> or <strong>reject</strong> your request. If accepted, you'll be connected immediately.</p>
                         </>
                       ) : (
@@ -552,19 +502,17 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
               )}
             </div>
 
-            {!isFreeRide && (
-              <div className="flex items-center gap-3 py-2">
-                <CreditCard className="w-6 h-6 text-gray-700" />
-                <p className="text-base text-gray-700">
-                  You'll be redirected to Stripe to complete payment securely.
-                </p>
-              </div>
-            )}
+            <div className="flex items-center gap-3 py-2">
+              <CreditCard className="w-6 h-6 text-gray-700" />
+              <p className="text-base text-gray-700">
+                You'll be redirected to Stripe to complete payment securely.
+              </p>
+            </div>
             {isFreeRide && (
               <div className="flex items-center gap-3 py-2">
                 <HeartHandshake className="w-6 h-6 text-green-600" />
                 <p className="text-base text-green-800">
-                  Free ride — no payment or Stripe redirect needed.
+                  Free ride — only the $1.50 ID fee is charged.
                 </p>
               </div>
             )}

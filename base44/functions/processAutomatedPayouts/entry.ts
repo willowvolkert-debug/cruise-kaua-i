@@ -25,6 +25,9 @@ Deno.serve(async (req) => {
             // Stripe balance at the time) should re-attempt once balance is replenished.
             if ((transaction.payout_status !== 'pending' && transaction.payout_status !== 'failed') || transaction.transaction_status !== 'completed') continue;
 
+            // Free rides (ID fee only) have nothing to pay out to the driver
+            if (!(transaction.ride_amount > 0)) continue;
+
             const ride = allRides.find(r => r.id === transaction.ride_id);
             if (!ride) continue;
 
