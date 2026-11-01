@@ -37,7 +37,7 @@ Deno.serve(async (req) => {
 
   let sent = 0;
   for (const recipient of recipients) {
-    const firstName = recipient.full_name?.split(' ')[0] || 'there';
+    const firstName = recipient.username || recipient.full_name?.split(' ')[0] || 'there';
     const unsubscribeUrl = `https://www.cruisekauai.org/Unsubscribe?user_id=${recipient.id}`;
     const routeHint = routeHints[Math.floor(Math.random() * routeHints.length)];
 

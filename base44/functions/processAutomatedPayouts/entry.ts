@@ -73,7 +73,7 @@ Deno.serve(async (req) => {
                     await base44.asServiceRole.integrations.Core.SendEmail({
                         to: driver.email,
                         subject: '💰 Payout processed - Cruise Hawaiʻi',
-                        body: `Aloha ${driver.full_name},\n\nGreat news! Your payout of $${transaction.ride_amount.toFixed(2)} has been processed and is on its way to your bank account.\n\nIt should arrive within 2-3 business days.\n\nMahalo for driving with Cruise Hawaiʻi!\n\nCruise Hawaiʻi Team`
+                        body: `Aloha ${driver.username || driver.full_name},\n\nGreat news! Your payout of $${transaction.ride_amount.toFixed(2)} has been processed and is on its way to your bank account.\n\nIt should arrive within 2-3 business days.\n\nMahalo for driving with Cruise Hawaiʻi!\n\nCruise Hawaiʻi Team`
                     });
                 } catch (emailError) {
                     console.error('Email error:', emailError);

@@ -302,7 +302,7 @@ Deno.serve(async (req) => {
       emailType = 'basic';
     }
 
-    const firstName = user.full_name?.split(' ')[0] || 'there';
+    const firstName = user.username || user.full_name?.split(' ')[0] || 'there';
     const unsubscribeUrl = `${appUrl}/unsubscribe?user_id=${user.id}`;
 
     const logo = `<div style="text-align:center;margin-bottom:28px;">

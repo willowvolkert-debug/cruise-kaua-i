@@ -207,7 +207,7 @@ Deno.serve(async (req) => {
     for (let i = 0; i < recipients.length; i += BATCH) {
       const batch = recipients.slice(i, i + BATCH);
       const results = await Promise.allSettled(batch.map(u => {
-        const firstName = u.full_name?.split(' ')[0] || 'there';
+        const firstName = u.username || u.full_name?.split(' ')[0] || 'there';
         const body = buildEmailBody(firstName, newRides, newRequests, u.id);
         return base44.asServiceRole.integrations.Core.SendEmail({
           to: u.email,

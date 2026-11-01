@@ -79,7 +79,7 @@ Deno.serve(async (req) => {
       const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       for (const u of batch) {
         try {
-          const firstName = u.full_name ? u.full_name.split(' ')[0] : 'there';
+          const firstName = u.username || (u.full_name ? u.full_name.split(' ')[0] : 'there');
           await base44.asServiceRole.integrations.Core.SendEmail({
             to: u.email,
             from_name: "Cruise Hawaiʻi",

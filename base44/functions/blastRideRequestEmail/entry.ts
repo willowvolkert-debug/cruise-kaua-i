@@ -92,7 +92,7 @@ Deno.serve(async (req) => {
       for (let i = 0; i < drivers.length; i += BATCH_SIZE) {
         const batch = drivers.slice(i, i + BATCH_SIZE);
         await Promise.all(batch.map(async (u) => {
-          const firstName = u.full_name?.split(' ')[0] || 'there';
+          const firstName = u.username || u.full_name?.split(' ')[0] || 'there';
           const unsubUrl = APP_URL + '/Unsubscribe?user_id=' + u.id;
           const { subject, html } = buildLiveEmail(firstName, rideReq, unsubUrl);
           try {

@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
     const ride = allRides[0];
     if (!ride) return Response.json({ ok: false, reason: 'Ride not found' });
 
-    const driverFirstName = driver.full_name?.split(' ')[0] || 'there';
+    const driverFirstName = driver.username || driver.full_name?.split(' ')[0] || 'there';
     const riderUsername = booking.passenger_username || booking.passenger_name;
     const riderRealName = booking.passenger_name;
     const payoutAmount = `$${((booking.total_amount || 0) * 0.9).toFixed(2)}`;

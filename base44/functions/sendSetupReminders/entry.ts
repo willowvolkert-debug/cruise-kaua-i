@@ -84,7 +84,7 @@ Deno.serve(async (req) => {
                       </a>
                     </div>`;
 
-                    const firstName = u.full_name?.split(' ')[0] || 'there';
+                    const firstName = u.username || u.full_name?.split(' ')[0] || 'there';
                     const emailBody = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
 <body style="margin:0;padding:0;background-color:#f5f0e8;font-family:'Helvetica Neue',Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f0e8;padding:32px 16px;">

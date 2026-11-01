@@ -264,7 +264,7 @@ Deno.serve(async (req) => {
       return Response.json({ skipped: true, reason: 'already sent' });
     }
 
-    const firstName = targetUser.full_name?.split(' ')[0] || 'there';
+    const firstName = targetUser.username || targetUser.full_name?.split(' ')[0] || 'there';
     const unsubUrl = `${appUrl}/Unsubscribe?user_id=${targetUser.id}`;
 
     const emailFn = emails[emailType];

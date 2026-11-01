@@ -334,7 +334,7 @@ Deno.serve(async (req) => {
         let sc = 0, ec = 0;
         for (const u of eligible) {
           try {
-            const fn = u.full_name ? u.full_name.split(' ')[0] : 'there';
+            const fn = u.username || (u.full_name ? u.full_name.split(' ')[0] : 'there');
             await base44.asServiceRole.integrations.Core.SendEmail({
               to: u.email,
               from_name: "Cruise Hawaiʻi",
@@ -408,7 +408,7 @@ Deno.serve(async (req) => {
           emailType = 'license_submitted';
         }
         
-        const firstName = u.full_name?.split(' ')[0] || 'there';
+        const firstName = u.username || u.full_name?.split(' ')[0] || 'there';
         const unsubscribeUrl = `${appUrl}/Unsubscribe?user_id=${u.id}`;
         const userEmails = buildEmails(firstName, appUrl, unsubscribeUrl, logo, footer);
         const { subject, body } = userEmails[emailType];

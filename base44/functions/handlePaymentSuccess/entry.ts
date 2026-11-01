@@ -96,7 +96,7 @@ Deno.serve(async (req) => {
 
                     // Send notification email + SMS to driver
                     if (driver?.email) {
-                        const driverFirstName = driver.full_name?.split(' ')[0] || 'there';
+                        const driverFirstName = driver.username || driver.full_name?.split(' ')[0] || 'there';
                         const riderUsername = booking.passenger_username || booking.passenger_name;
                         const payoutAmount = `$${rideAmount.toFixed(2)}`;
                         const riderMessage = booking.description || 'No message provided';

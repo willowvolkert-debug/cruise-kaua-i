@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
       let sent = 0, errors = 0;
       for (const u of eligible) {
         try {
-          const fn = u.full_name ? u.full_name.split(' ')[0] : 'there';
+          const fn = u.username || (u.full_name ? u.full_name.split(' ')[0] : 'there');
           await base44.asServiceRole.integrations.Core.SendEmail({ to: u.email, from_name: "Cruise Hawaiʻi", subject: S, body: b(fn, AU + '/Unsubscribe?user_id=' + u.id) });
           sent++;
         } catch (e) { errors++; }

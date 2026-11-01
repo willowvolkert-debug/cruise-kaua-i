@@ -109,7 +109,7 @@ Deno.serve(async (req) => {
 
             // Send to driver
             if (driver?.email) {
-                const driverFirstName = driver.full_name?.split(' ')[0] || 'there';
+                const driverFirstName = driver.username || driver.full_name?.split(' ')[0] || 'there';
                 const passengerName = booking.passenger_name || passenger?.full_name || 'your rider';
                 await base44.asServiceRole.integrations.Core.SendEmail({
                     to: driver.email,
@@ -121,7 +121,7 @@ Deno.serve(async (req) => {
 
             // Send to passenger
             if (passenger?.email) {
-                const passengerFirstName = passenger.full_name?.split(' ')[0] || 'there';
+                const passengerFirstName = passenger.username || passenger.full_name?.split(' ')[0] || 'there';
                 const driverName = ride.driver_name || driver?.full_name || 'your driver';
                 await base44.asServiceRole.integrations.Core.SendEmail({
                     to: passenger.email,

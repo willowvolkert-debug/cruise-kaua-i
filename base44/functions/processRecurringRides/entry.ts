@@ -189,7 +189,7 @@ Deno.serve(async (req) => {
         <div style="background:#fff3cd;border-left:4px solid #e8742a;border-radius:8px;padding:14px 16px;margin-bottom:24px;">
           <p style="margin:0;font-weight:600;color:#d48806;font-size:0.9rem;">⏰ Action required</p>
         </div>
-        <h1 style="font-family:Georgia,serif;font-size:1.5rem;font-weight:700;color:#1a1a1a;margin:0 0 12px;">Aloha ${user.full_name}! 🤙</h1>
+        <h1 style="font-family:Georgia,serif;font-size:1.5rem;font-weight:700;color:#1a1a1a;margin:0 0 12px;">Aloha ${user.username || user.full_name}! 🤙</h1>
         <p style="font-size:0.95rem;line-height:1.7;color:#444;margin:0 0 24px;">Your recurring ride <strong>"${schedule.trip_name}"</strong> is auto-posted for <strong>${dateStr}</strong>. Please confirm you'll be making this trip — if not confirmed within 24 hours, the listing will be automatically removed.</p>
         <table width="100%" cellpadding="0" cellspacing="0">
           <tr><td align="center" style="padding:8px 0 24px;">

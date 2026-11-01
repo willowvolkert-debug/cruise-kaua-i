@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
         // Send the notification email
         if (user.email) {
           try {
-            const firstName = (user.full_name || '').split(' ')[0] || 'there';
+            const firstName = user.username || (user.full_name || '').split(' ')[0] || 'there';
             await base44.asServiceRole.integrations.Core.SendEmail({
               to: user.email,
               from_name: "Cruise Hawaiʻi",
