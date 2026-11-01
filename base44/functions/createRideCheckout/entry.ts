@@ -62,8 +62,8 @@ Deno.serve(async (req) => {
         const rideAmount = base_amount + (detour_fee || 0);
         const connectFee = carpoolConnectFee(user.has_hawaii_id === true, rideAmount);
         const isFreeRide = !(rideAmount > 0);
-        // Free rides always carry the $1.50 ID fee; paid rides only on the rider's first booking
-        const licenseVerificationFee = (isFreeRide || isFirstBooking) ? 1.50 : 0;
+        // $1.50 ID fee is tied to the rider's first booking only (paid or free)
+        const licenseVerificationFee = isFirstBooking ? 1.50 : 0;
         const smsFee = (user.sms_notifications_enabled && !isFreeRide) ? 0.50 : 0;
         const subtotal = rideAmount + connectFee + licenseVerificationFee + smsFee;
         const creditCardFee = subtotal * 0.03;
@@ -139,7 +139,7 @@ Deno.serve(async (req) => {
                     currency: 'usd',
                     product_data: {
                         name: 'ID Fee',
-                        description: isFreeRide ? 'ID verification fee for free rides' : 'One-time Stripe identity verification fee'
+                        description: 'One-time ID verification fee for your first ride'
                     },
                     unit_amount: Math.round(licenseVerificationFee * 100)
                 },
