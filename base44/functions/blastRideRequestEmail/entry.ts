@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
-const APP_URL = "https://cruisekauai.org";
+const APP_URL = "https://cruisehi.org";
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -34,7 +34,7 @@ const buildLiveEmail = (firstName, rideReq, unsubUrl) => {
         </td></tr>
         <tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:20px 32px;text-align:center;">
           <p style="font-family:Georgia,serif;font-size:0.95rem;color:#888;font-style:italic;margin:0 0 8px;">Mahalo nui loa 🌺</p>
-          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0 0 4px;">— Willow, Founder of Cruise Hawaiʻi · <a href="${APP_URL}" style="color:#2f7d52;text-decoration:none;">cruisekauai.org</a></p>
+          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0 0 4px;">— Willow, Founder of Cruise Hawaiʻi · <a href="${APP_URL}" style="color:#2f7d52;text-decoration:none;">cruisehi.org</a></p>
           <p style="font-size:0.75rem;margin:4px 0 0;"><a href="${unsubUrl}" style="color:#bbb;text-decoration:none;">unsubscribe</a></p>
         </td></tr>
       </table>

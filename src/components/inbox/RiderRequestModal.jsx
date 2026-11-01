@@ -94,7 +94,7 @@ export default function RiderRequestModal({ isOpen, onClose, booking, onAccept, 
       try {
         await sendSmsNotification({
           userId: booking.passenger_id,
-          message: `Cruise Hawaiʻi: ${driver.full_name} sent you a message: "${reminderMessage}" Log in to finish your profile: https://cruisekauai.org/account`
+          message: `Cruise Hawaiʻi: ${driver.full_name} sent you a message: "${reminderMessage}" Log in to finish your profile: https://cruisehi.org/account`
         });
       } catch (smsErr) { /* non-critical */ }
 

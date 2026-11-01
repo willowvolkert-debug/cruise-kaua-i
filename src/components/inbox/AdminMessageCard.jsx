@@ -73,7 +73,7 @@ export default function AdminMessageCard({ adminMessages = [], onMessageRead, on
 
   // Parse recurring ride confirmation URL from message text
   const parseConfirmationUrl = (message) => {
-    const match = message?.match(/https:\/\/cruisekauai\.org\/ConfirmRide\?schedule_id=([^&\s]+)&date=([^&\s]+)&trip_name=([^&\s]+)/);
+    const match = message?.match(/https:\/\/(?:www\.)?cruise(?:kauai|hi)\.org\/ConfirmRide\?schedule_id=([^&\s]+)&date=([^&\s]+)&trip_name=([^&\s]+)/);
     if (match) {
       return { schedule_id: decodeURIComponent(match[1]), date: decodeURIComponent(match[2]), trip_name: decodeURIComponent(match[3]) };
     }
@@ -136,7 +136,7 @@ export default function AdminMessageCard({ adminMessages = [], onMessageRead, on
                   {(() => {
                     const confData = parseConfirmationUrl(msg.message);
                     if (confData) {
-                      const cleanMessage = msg.message.replace(/\n*Tap here to confirm: https:\/\/cruisekauai\.org\/ConfirmRide\?[^\s]+/, '');
+                      const cleanMessage = msg.message.replace(/\n*Tap here to confirm: https:\/\/(?:www\.)?cruise(?:kauai|hi)\.org\/ConfirmRide\?[^\s]+/, '');
                       const isConfirmed = confirmedIds[msg.id];
                       const isConfirming = confirmingIds[msg.id];
                       return (

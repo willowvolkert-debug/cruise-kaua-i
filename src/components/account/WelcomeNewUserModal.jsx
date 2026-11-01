@@ -38,7 +38,7 @@ export default function WelcomeNewUserModal({ user, onStartQuiz, onDismiss }) {
     try {
       await sendSmsNotification({
         to: formatted,
-        message: "Aloha from Cruise Hawaiʻi! 🤙 Just a reminder to finish setting up your profile so you can start booking rides. Visit cruisekauai.org and head to your Account page. Mahalo!"
+        message: "Aloha from Cruise Hawaiʻi! 🤙 Just a reminder to finish setting up your profile so you can start booking rides. Visit cruisehi.org and head to your Account page. Mahalo!"
       });
     } catch (e) {
       // non-blocking

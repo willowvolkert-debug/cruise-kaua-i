@@ -61,7 +61,7 @@ export default function TermsOfServicePage() {
       ['13. User Conduct', 'Users must not engage in harassment, discrimination, or threats; use the platform for illegal purposes; misrepresent identity, insurance, or eligibility; or attempt to circumvent platform safeguards.'],
       ['14. Arbitration & Governing Law', "These Terms are governed by the laws of the State of Hawaii. Any dispute shall be resolved through binding arbitration conducted in Kaua'i County, Hawaii, except where prohibited by law."],
       ['15. Changes to Terms', 'Cruise LLC may modify these Terms at any time. Continued use of the platform after changes constitutes acceptance.'],
-      ['16. Contact Information', 'For questions regarding these Terms, please contact us through the Cruise LLC website at cruisekauai.org.'],
+      ['16. Contact Information', 'For questions regarding these Terms, please contact us through the Cruise LLC website at cruisehi.org.'],
     ];
 
     sections.forEach(([title, body]) => {

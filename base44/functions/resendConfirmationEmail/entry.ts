@@ -23,7 +23,7 @@ Deno.serve(async (req) => {
     const user = users.find(u => u.email === email);
     if (!user) return Response.json({ error: 'User not found' }, { status: 404 });
 
-    const confirmUrl = `https://cruisekauai.base44.app/ConfirmRide?schedule_id=${schedule.id}&date=${dateStr}`;
+    const confirmUrl = `https://cruisehi.org/ConfirmRide?schedule_id=${schedule.id}&date=${dateStr}`;
     await base44.asServiceRole.integrations.Core.SendEmail({
       to: user.email,
       subject: `⏰ Confirm your auto-posted ride on ${dateStr} - Cruise Hawaiʻi`,

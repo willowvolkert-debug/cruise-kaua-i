@@ -67,7 +67,7 @@ Deno.serve(async (req) => {
     // Best-effort email notification to the rider
     if (riderEmail) {
       try {
-        const appUrl = 'https://www.cruisekauai.org';
+        const appUrl = 'https://cruisehi.org';
         await base44.asServiceRole.integrations.Core.SendEmail({
           to: riderEmail,
           subject: `🌺 A driver responded to your ride request on Cruise Hawaiʻi!`,

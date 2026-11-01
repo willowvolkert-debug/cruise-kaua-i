@@ -1,7 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.44';
 
 const SUBJECT = "Community Update: After Lowell";
-const AU = "https://cruisekauai.org";
+const AU = "https://cruisehi.org";
 
 const buildBody = (name, unsubUrl) => `<html><body style="font-family:Arial,sans-serif;background:#f5f0e8;margin:0;padding:32px 16px;">
 <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;">

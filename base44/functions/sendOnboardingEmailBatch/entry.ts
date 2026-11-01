@@ -267,7 +267,7 @@ Deno.serve(async (req) => {
     const payload = await req.json().catch(() => ({}));
     const { send_previews, send_trips_update, send_trips_blast } = payload; // v2
 
-    const appUrl = 'https://cruisekauai.org';
+    const appUrl = 'https://cruisehi.org';
     const logo = `<div style="text-align:center;margin-bottom:28px;">
       <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Hawaiʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;" />
       <p style="margin:8px 0 0 0;font-weight:bold;color:#2f7d52;font-size:15px;letter-spacing:1px;">Cruise Hawaiʻi</p>
@@ -306,7 +306,7 @@ Deno.serve(async (req) => {
         </div>
         </div>
         <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;"><tr><td align="center">
-        <a href="https://cruisekauai.org/trips" style="display:inline-block;background:#2f7d52;color:#fff;text-decoration:none;font-weight:700;font-size:1rem;padding:15px 40px;border-radius:50px;">explore the new trips page</a>
+        <a href="https://cruisehi.org/trips" style="display:inline-block;background:#2f7d52;color:#fff;text-decoration:none;font-weight:700;font-size:1rem;padding:15px 40px;border-radius:50px;">explore the new trips page</a>
         </td></tr></table>
         <p style="font-size:0.92rem;line-height:1.7;color:#555;margin:0 0 20px;">Every ride shared reduces traffic, keeps money in our local economy, and makes Kauaʻi a better place. Mahalo. 🙏</p>
         <p style="margin:0 0 4px;color:#444;">Me ke aloha,</p>
@@ -314,7 +314,7 @@ Deno.serve(async (req) => {
         <p style="margin:0;font-size:0.82rem;color:#888;">Founder & CEO, Cruise Hawaiʻi</p>
         </td></tr>
         <tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:20px 32px;text-align:center;">
-        <p style="font-size:0.78rem;color:#aaa;margin:0 0 6px;">The Cruise Hawaiʻi Team &middot; <a href="https://cruisekauai.org" style="color:#2f7d52;">cruisekauai.org</a></p>
+        <p style="font-size:0.78rem;color:#aaa;margin:0 0 6px;">The Cruise Hawaiʻi Team &middot; <a href="https://cruisehi.org" style="color:#2f7d52;">cruisehi.org</a></p>
         <p style="font-size:0.75rem;color:#bbb;margin:0;"><a href="${unsubUrl}" style="color:#bbb;">unsubscribe</a></p>
         </td></tr></table></td></tr></table></body></html>`;
 
@@ -323,7 +323,7 @@ Deno.serve(async (req) => {
           to: 'willowvolkert@gmail.com',
           from_name: "Cruise Hawaiʻi",
           subject: '[PREVIEW] ' + tripsSubject,
-          body: buildTripsBody('Willow', 'https://cruisekauai.org/Unsubscribe?user_id=preview'),
+          body: buildTripsBody('Willow', 'https://cruisehi.org/Unsubscribe?user_id=preview'),
         });
         return Response.json({ ok: true, mode: 'trips_preview', to: 'willowvolkert@gmail.com' });
       }
@@ -339,7 +339,7 @@ Deno.serve(async (req) => {
               to: u.email,
               from_name: "Cruise Hawaiʻi",
               subject: tripsSubject,
-              body: buildTripsBody(fn, 'https://cruisekauai.org/Unsubscribe?user_id=' + u.id),
+              body: buildTripsBody(fn, 'https://cruisehi.org/Unsubscribe?user_id=' + u.id),
             });
             sc++;
           } catch (err) {

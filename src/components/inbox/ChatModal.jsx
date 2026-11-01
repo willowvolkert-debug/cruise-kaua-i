@@ -126,13 +126,13 @@ export default function ChatModal({ isOpen, onClose, booking, otherPartyName, ot
           </table>
           <table width="100%" cellpadding="0" cellspacing="0">
             <tr><td align="center" style="padding:8px 0;">
-              <a href="https://www.cruisekauai.org/Inbox" style="display:inline-block;background:#2d6a4f;color:#ffffff;text-decoration:none;font-weight:600;font-size:1rem;padding:14px 36px;border-radius:50px;">Reply in App →</a>
+              <a href="https://cruisehi.org/Inbox" style="display:inline-block;background:#2d6a4f;color:#ffffff;text-decoration:none;font-weight:600;font-size:1rem;padding:14px 36px;border-radius:50px;">Reply in App →</a>
             </td></tr>
           </table>
         </td></tr>
         <tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:20px 32px;text-align:center;">
           <p style="font-family:Georgia,serif;font-size:0.95rem;color:#888;font-style:italic;margin:0 0 8px;">Mahalo nui loa 🌺</p>
-          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0;">— The Cruise Hawaiʻi Team · <a href="https://cruisekauai.org/" style="color:#e8742a;text-decoration:none;">cruisekauai.org</a></p>
+          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0;">— The Cruise Hawaiʻi Team · <a href="https://cruisehi.org/" style="color:#e8742a;text-decoration:none;">cruisehi.org</a></p>
           <p style="font-size:0.72rem;color:#bbb;margin:8px 0 0;">Replies to this email are not monitored. Please use the app to respond.</p>
         </td></tr>
       </table>

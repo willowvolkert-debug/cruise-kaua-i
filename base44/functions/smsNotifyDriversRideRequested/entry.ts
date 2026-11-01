@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
     const seats = rideRequest.seats_needed || '?';
 
     const formattedDate = (() => { try { const d = new Date(date.includes('T') ? date : date + 'T00:00:00'); return isNaN(d) ? date : d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }); } catch { return date; } })();
-    const message = `Cruise Kauai: ${rider} needs ride ${loc} to ${dest}, ${formattedDate} ${time}, ${seats} seat(s). cruisekauai.org STOP=optout`;
+    const message = `Cruise Kauai: ${rider} needs ride ${loc} to ${dest}, ${formattedDate} ${time}, ${seats} seat(s). cruisehi.org STOP=optout`;
 
     const results = [];
     for (const driver of drivers) {

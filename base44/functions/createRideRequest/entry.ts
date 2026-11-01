@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
           await base44.asServiceRole.integrations.Core.SendEmail({
             to: driver.email,
             subject: "Ride request in your area!",
-            body: `Aloha! There is a ride request in your area!\n\n${payload.departure_location} → ${payload.destination}\nDate: ${payload.departure_date}\nTime: ${payload.departure_time}\n\nTo view the request, log onto https://cruisekauai.org and go to the post a ride feature.\n\nIf you need any help matching the request, please email willowvolkert@gmail.com.`
+            body: `Aloha! There is a ride request in your area!\n\n${payload.departure_location} → ${payload.destination}\nDate: ${payload.departure_date}\nTime: ${payload.departure_time}\n\nTo view the request, log onto https://cruisehi.org and go to the post a ride feature.\n\nIf you need any help matching the request, please email willowvolkert@gmail.com.`
           });
         } catch (e) { /* skip individual email failures */ }
       }
@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
             await base44.asServiceRole.integrations.Core.SendEmail({
               to: riderUser.email,
               subject: `🚗 We found ${matchedRides.length} ride${matchedRides.length > 1 ? 's' : ''} matching your request!`,
-              body: `Aloha ${payload.rider_name || 'there'}!\n\nGood news — there ${matchedRides.length > 1 ? 'are' : 'is'} ${matchedRides.length} ride${matchedRides.length > 1 ? 's' : ''} already posted that match your route:\n\n${rideList}\n\nLog in to view and book: https://cruisekauai.org/trips\n\nMahalo,\nCruise Hawaiʻi`
+              body: `Aloha ${payload.rider_name || 'there'}!\n\nGood news — there ${matchedRides.length > 1 ? 'are' : 'is'} ${matchedRides.length} ride${matchedRides.length > 1 ? 's' : ''} already posted that match your route:\n\n${rideList}\n\nLog in to view and book: https://cruisehi.org/trips\n\nMahalo,\nCruise Hawaiʻi`
             });
           } catch (e) { /* skip email failure */ }
         }

@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
     }
 
     const preview = lastMessage.message.substring(0, 100);
-    const message = `Cruise Hawaiʻi: ${senderName} sent you a message: "${preview}${lastMessage.message.length > 100 ? '...' : ''}" — log in to reply at cruisekauai.org`;
+    const message = `Cruise Hawaiʻi: ${senderName} sent you a message: "${preview}${lastMessage.message.length > 100 ? '...' : ''}" — log in to reply at cruisehi.org`;
 
     const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
     const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');

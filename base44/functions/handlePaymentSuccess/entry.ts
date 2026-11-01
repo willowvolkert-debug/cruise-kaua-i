@@ -138,14 +138,14 @@ Deno.serve(async (req) => {
           <p style="font-size:0.88rem;line-height:1.6;color:#666;margin:0 0 24px;background:#fff8f0;border-left:3px solid #e8742a;border-radius:0 8px 8px 0;padding:12px 16px;">Log in to <strong>accept or decline within 24 hours.</strong> If you don't respond, the request will expire and the rider will be refunded.</p>
           <table width="100%" cellpadding="0" cellspacing="0">
             <tr><td align="center" style="padding:8px 0;">
-              <a href="https://cruisekauai.org/" style="display:inline-block;background:#e8742a;color:#ffffff;text-decoration:none;font-weight:600;font-size:1rem;padding:14px 32px;border-radius:50px;margin:4px 8px;">Accept Ride →</a>
-              <a href="https://cruisekauai.org/" style="display:inline-block;background:transparent;color:#e8742a;text-decoration:none;font-weight:600;font-size:0.9rem;padding:12px 28px;border-radius:50px;border:2px solid #e8742a;margin:4px 8px;">View Details</a>
+              <a href="https://cruisehi.org/" style="display:inline-block;background:#e8742a;color:#ffffff;text-decoration:none;font-weight:600;font-size:1rem;padding:14px 32px;border-radius:50px;margin:4px 8px;">Accept Ride →</a>
+              <a href="https://cruisehi.org/" style="display:inline-block;background:transparent;color:#e8742a;text-decoration:none;font-weight:600;font-size:0.9rem;padding:12px 28px;border-radius:50px;border:2px solid #e8742a;margin:4px 8px;">View Details</a>
             </td></tr>
           </table>
         </td></tr>
         <tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:20px 32px;text-align:center;">
           <p style="font-family:Georgia,serif;font-size:0.95rem;color:#888;font-style:italic;margin:0 0 8px;">Mahalo nui loa 🌺</p>
-          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0;">— The Cruise Hawaiʻi Team · <a href="https://cruisekauai.org/" style="color:#e8742a;text-decoration:none;">cruisekauai.org</a></p>
+          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0;">— The Cruise Hawaiʻi Team · <a href="https://cruisehi.org/" style="color:#e8742a;text-decoration:none;">cruisehi.org</a></p>
         </td></tr>
       </table>
     </td></tr>
@@ -156,7 +156,7 @@ Deno.serve(async (req) => {
                     if (driver?.sms_notifications_enabled && driver?.phone_number) {
                         await base44.asServiceRole.functions.invoke('sendSmsNotification', {
                             userId: booking.driver_id,
-                            message: `Cruise Hawaiʻi: New ride request from ${booking.passenger_name}! Log in to accept or decline: https://cruisekauai.org`
+                            message: `Cruise Hawaiʻi: New ride request from ${booking.passenger_name}! Log in to accept or decline: https://cruisehi.org`
                         });
                     }
                 }

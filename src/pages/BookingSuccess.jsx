@@ -67,7 +67,7 @@ export default function BookingSuccess() {
               const { sendSmsNotification } = await import("@/functions/sendSmsNotification");
               await sendSmsNotification({
                 userId: me.id,
-                message: "Cruise Hawaiʻi: Your ride is booked! Before you can ride, finish your profile and upload your driver's license in your account: https://cruisekauai.org/account"
+                message: "Cruise Hawaiʻi: Your ride is booked! Before you can ride, finish your profile and upload your driver's license in your account: https://cruisehi.org/account"
               });
             } catch (smsErr) { /* non-critical */ }
             try {

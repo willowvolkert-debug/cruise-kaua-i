@@ -60,14 +60,14 @@ Deno.serve(async (req) => {
 <p style="margin-bottom:20px;">Open the app to view and book this ride!</p>
 
 <p style="margin-bottom:32px;">
-  <a href="https://cruisekauai.base44.app" style="background-color:#f97316;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block;">View & Book on Cruise Hawaiʻi →</a>
+  <a href="https://cruisehi.org" style="background-color:#f97316;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block;">View & Book on Cruise Hawaiʻi →</a>
 </p>
 
 <p style="margin-bottom:4px;">Mahalo,</p>
 <p style="margin:0;"><strong>The Cruise Hawaiʻi Team</strong></p>
 
 <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0;">
-<p style="font-size:13px;color:#666;margin-bottom:8px;">Not sure how to use the app? <a href="https://cruisekauai.base44.app/Welcome" style="color:#3b82f6;">Re-watch our welcome flow here</a>.</p>
+<p style="font-size:13px;color:#666;margin-bottom:8px;">Not sure how to use the app? <a href="https://cruisehi.org/Welcome" style="color:#3b82f6;">Re-watch our welcome flow here</a>.</p>
 <p style="font-size:12px;color:#999;margin:0;">Replies to this email are not monitored. Please use the Contact Us form on the app or email willowvolkert@gmail.com with any questions.</p>
 
 </body></html>`
@@ -103,14 +103,14 @@ Deno.serve(async (req) => {
 <p style="margin-bottom:20px;">If you're driving that route, open the app to connect with them!</p>
 
 <p style="margin-bottom:32px;">
-  <a href="https://cruisekauai.base44.app" style="background-color:#f97316;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block;">Open Cruise Hawaiʻi →</a>
+  <a href="https://cruisehi.org" style="background-color:#f97316;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block;">Open Cruise Hawaiʻi →</a>
 </p>
 
 <p style="margin-bottom:4px;">Mahalo,</p>
 <p style="margin:0;"><strong>The Cruise Hawaiʻi Team</strong></p>
 
 <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0;">
-<p style="font-size:13px;color:#666;margin-bottom:8px;">Not sure how to use the app? <a href="https://cruisekauai.base44.app/Welcome" style="color:#3b82f6;">Re-watch our welcome flow here</a>.</p>
+<p style="font-size:13px;color:#666;margin-bottom:8px;">Not sure how to use the app? <a href="https://cruisehi.org/Welcome" style="color:#3b82f6;">Re-watch our welcome flow here</a>.</p>
 <p style="font-size:12px;color:#999;margin:0;">Replies to this email are not monitored. Please use the Contact Us form on the app or email willowvolkert@gmail.com with any questions.</p>
 
 </body></html>`

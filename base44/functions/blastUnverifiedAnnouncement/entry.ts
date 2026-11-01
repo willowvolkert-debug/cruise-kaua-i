@@ -7,7 +7,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 //   count   — returns how many users would receive SMS vs email (no messages sent)
 //   blast   — sends to all eligible users in batches
 
-const appUrl = 'https://cruisekauai.org';
+const appUrl = 'https://cruisehi.org';
 
 const smsMessage = 'Great news from Cruise Kaua\u02bbi! You can now browse & request rides without a finished profile or license. Browse rides, request a seat, and simply finish your profile before you get in the car together. ' + appUrl + '/trips';
 
@@ -34,7 +34,7 @@ const buildEmailHtml = (name, unsubUrl) => '<!DOCTYPE html><html><body style="ma
   '<p style="margin:0;font-size:12px;color:#888;">Founder & CEO, Cruise Kaua\u02bbi</p>' +
   '</td></tr>' +
   '<tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:16px 28px;text-align:center;">' +
-  '<p style="font-size:12px;color:#aaa;margin:0 0 4px;">Cruise Kaua\u02bbi &middot; <a href="' + appUrl + '" style="color:#2f7d52;">cruisekauai.org</a></p>' +
+  '<p style="font-size:12px;color:#aaa;margin:0 0 4px;">Cruise Kaua\u02bbi &middot; <a href="' + appUrl + '" style="color:#2f7d52;">cruisehi.org</a></p>' +
   '<p style="font-size:11px;color:#bbb;margin:0;"><a href="' + unsubUrl + '" style="color:#bbb;">unsubscribe</a></p>' +
   '</td></tr>' +
   '</table></td></tr></table></body></html>';

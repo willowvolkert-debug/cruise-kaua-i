@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
     }
 
     const firstName = name?.split(' ')[0] || 'there';
-    const appUrl = 'https://cruisekauai.org';
+    const appUrl = 'https://cruisehi.org';
 
     const logo = `<div style="text-align:center;margin-bottom:28px;">
       <img src="https://media.base44.com/images/public/68d33be0c396daf5b7a57d59/98a38ac0b_cruisekauaiFINAL.jpg" alt="Cruise Hawaiʻi" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #2f7d52;" />

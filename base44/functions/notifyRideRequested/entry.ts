@@ -71,13 +71,13 @@ Deno.serve(async (req) => {
           <p style="font-size:0.95rem;line-height:1.7;color:#444;margin:0 0 24px;">If you're heading that direction, open the app to connect with them. Every shared ride helps us all.</p>
           <table width="100%" cellpadding="0" cellspacing="0">
             <tr><td align="center" style="padding:8px 0;">
-              <a href="https://cruisekauai.org/Trips" style="display:inline-block;background:#e8742a;color:#ffffff;text-decoration:none;font-weight:600;font-size:1rem;padding:14px 36px;border-radius:50px;">See Ride Requests →</a>
+              <a href="https://cruisehi.org/Trips" style="display:inline-block;background:#e8742a;color:#ffffff;text-decoration:none;font-weight:600;font-size:1rem;padding:14px 36px;border-radius:50px;">See Ride Requests →</a>
             </td></tr>
           </table>
         </td></tr>
         <tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:20px 32px;text-align:center;">
           <p style="font-family:Georgia,serif;font-size:0.95rem;color:#888;font-style:italic;margin:0 0 8px;">Mahalo nui loa 🌺</p>
-          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0;">— The Cruise Hawaiʻi Team · <a href="https://cruisekauai.org/" style="color:#e8742a;text-decoration:none;">cruisekauai.org</a></p>
+          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0;">— The Cruise Hawaiʻi Team · <a href="https://cruisehi.org/" style="color:#e8742a;text-decoration:none;">cruisehi.org</a></p>
         </td></tr>
       </table>
     </td></tr>
@@ -89,7 +89,7 @@ Deno.serve(async (req) => {
       // SMS to drivers with phone numbers
       await Promise.all(batch.map(u => {
         if (!u.phone_number) return Promise.resolve();
-        const smsText = `Cruise Hawaiʻi: New ride request! ${request.departure_location} → ${request.destination} on ${request.departure_date} at ${request.departure_time}. Open the app to connect: https://cruisekauai.org/Trips`;
+        const smsText = `Cruise Hawaiʻi: New ride request! ${request.departure_location} → ${request.destination} on ${request.departure_date} at ${request.departure_time}. Open the app to connect: https://cruisehi.org/Trips`;
         return sendSms(u.phone_number, smsText).catch(() => null);
       }));
 

@@ -367,7 +367,7 @@ export default function InboxPage() {
                 await sendBookingEmail({
                     userId: booking.passenger_id,
                     subject: `The driver wants the full price - Cruise Hawaiʻi`,
-                    body: `Aloha ${booking.passenger_name},\n\nThe driver has reviewed your price offer of $${booking.offered_price}/seat and is requesting the original price request for this ride.\n\nPlease log into Cruise Hawaiʻi to review the request. If you don't respond, your payment will be refunded.\n\nhttps://www.cruisekauai.org/home\n\nMahalo,\nCruise Hawaiʻi Team`
+                    body: `Aloha ${booking.passenger_name},\n\nThe driver has reviewed your price offer of $${booking.offered_price}/seat and is requesting the original price request for this ride.\n\nPlease log into Cruise Hawaiʻi to review the request. If you don't respond, your payment will be refunded.\n\nhttps://cruisehi.org/home\n\nMahalo,\nCruise Hawaiʻi Team`
                 });
             } catch (emailError) {
                 console.error("Error sending full price request email:", emailError);

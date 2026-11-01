@@ -183,7 +183,7 @@ const AuthenticatedApp = () => {
 
 // Redirect preview URL to live domain
 if (window.location.hostname === 'preview--ride-connect-b7a57d59.base44.app') {
-  window.location.replace('https://www.cruisekauai.org' + window.location.pathname + window.location.search);
+  window.location.replace('https://cruisehi.org' + window.location.pathname + window.location.search);
 }
 
 function App() {

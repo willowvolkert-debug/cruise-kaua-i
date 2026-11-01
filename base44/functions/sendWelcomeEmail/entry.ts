@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
       return Response.json({ skipped: true, reason: 'already sent' });
     }
 
-    const appUrl = 'https://cruisekauai.org';
+    const appUrl = 'https://cruisehi.org';
     const firstName = user.username || user.full_name?.split(' ')[0] || 'there';
     const unsubscribeUrl = `${appUrl}/unsubscribe?user_id=${user.id}`;
 

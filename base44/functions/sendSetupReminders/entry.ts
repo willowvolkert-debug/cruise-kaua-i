@@ -73,9 +73,9 @@ Deno.serve(async (req) => {
                     const needsAgreements = !u.terms_accepted || !u.privacy_policy_accepted || !u.community_agreement_accepted;
                     const needsVehicle = !u.vehicle_verified;
 
-                    const unsubscribeUrl = `https://cruisekauai.org/Unsubscribe?user_id=${u.id}`;
+                    const unsubscribeUrl = `https://cruisehi.org/Unsubscribe?user_id=${u.id}`;
 
-                    const appUrl = 'https://cruisekauai.org';
+                    const appUrl = 'https://cruisehi.org';
                     const setupUrl = `${appUrl}/account?reopen_quiz=true`;
                     const setupSteps = `
                     <div style="text-align: center; margin: 36px 0;">
@@ -123,7 +123,7 @@ Deno.serve(async (req) => {
 
               </table>
 
-              <p style="font-size:0.9rem;line-height:1.7;color:#666;margin:0 0 8px;">Not sure how to use the app? <a href="https://www.cruisekauai.org/Welcome?tutorial=true" style="color:#2f7d52;font-weight:600;">Re-watch the welcome tutorial →</a></p>
+              <p style="font-size:0.9rem;line-height:1.7;color:#666;margin:0 0 8px;">Not sure how to use the app? <a href="https://cruisehi.org/Welcome?tutorial=true" style="color:#2f7d52;font-weight:600;">Re-watch the welcome tutorial →</a></p>
             </td></tr>
           </table>
         </td></tr>

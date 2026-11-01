@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
     const todayStr = today.toISOString().split('T')[0];
     const in48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
     const in24h = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-    const appUrl = 'https://cruisekauai.org';
+    const appUrl = 'https://cruisehi.org';
 
     // ── Collect all work to be done ──
     const ridesToCreate = [];

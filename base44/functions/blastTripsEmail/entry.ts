@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
       '</div>' +
       '</div>' +
       '<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;"><tr><td align="center">' +
-      '<a href="https://cruisekauai.org/trips" style="display:inline-block;background:#2f7d52;color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:14px 36px;border-radius:50px;">explore the new trips page</a>' +
+      '<a href="https://cruisehi.org/trips" style="display:inline-block;background:#2f7d52;color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:14px 36px;border-radius:50px;">explore the new trips page</a>' +
       '</td></tr></table>' +
       '<p style="font-size:13px;line-height:1.7;color:#555;margin:0 0 16px;">Every ride shared keeps money in our local economy and makes Kauaʻi a better place. Mahalo for being a part of the movement. 🙏</p>' +
       '<p style="margin:0 0 3px;color:#444;font-size:13px;">Me ke aloha,</p>' +
@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
       '<p style="margin:0;font-size:12px;color:#888;">Founder & CEO, Cruise Hawaiʻi</p>' +
       '</td></tr>' +
       '<tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:16px 28px;text-align:center;">' +
-      '<p style="font-size:12px;color:#aaa;margin:0 0 4px;">Cruise Hawaiʻi &middot; <a href="https://cruisekauai.org" style="color:#2f7d52;">cruisekauai.org</a></p>' +
+      '<p style="font-size:12px;color:#aaa;margin:0 0 4px;">Cruise Hawaiʻi &middot; <a href="https://cruisehi.org" style="color:#2f7d52;">cruisehi.org</a></p>' +
       '<p style="font-size:11px;color:#bbb;margin:0;"><a href="' + unsub + '" style="color:#bbb;">unsubscribe</a></p>' +
       '</td></tr>' +
       '</table></td></tr></table></body></html>';
@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
         to: 'willowvolkert@gmail.com',
         from_name: "Cruise Hawaiʻi",
         subject: '[PREVIEW] ' + subject,
-        body: buildHtml('Willow', 'https://cruisekauai.org/Unsubscribe?user_id=preview'),
+        body: buildHtml('Willow', 'https://cruisehi.org/Unsubscribe?user_id=preview'),
       });
       return Response.json({ ok: true, mode: 'preview', to: 'willowvolkert@gmail.com' });
     }
@@ -84,7 +84,7 @@ Deno.serve(async (req) => {
             to: u.email,
             from_name: "Cruise Hawaiʻi",
             subject,
-            body: buildHtml(firstName, 'https://cruisekauai.org/Unsubscribe?user_id=' + u.id),
+            body: buildHtml(firstName, 'https://cruisehi.org/Unsubscribe?user_id=' + u.id),
           });
           sent++;
           await sleep(3000);

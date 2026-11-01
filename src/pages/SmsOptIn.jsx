@@ -186,7 +186,7 @@ export default function SmsOptIn() {
         <div className="bg-white border border-gray-200 rounded-2xl p-6 text-sm text-gray-600 space-y-2">
           <h3 className="font-bold text-gray-800 text-base mb-3">SMS Program Terms &amp; Disclosures</h3>
           <p><strong>Program name:</strong> Cruise Hawaiʻi Ride Notifications</p>
-          <p><strong>Message sender:</strong> Cruise Hawaiʻi (cruisekauai.org)</p>
+          <p><strong>Message sender:</strong> Cruise Hawaiʻi (cruisehi.org)</p>
           <p><strong>Message types:</strong> Transactional — ride confirmations, reminders, payment receipts, account alerts.</p>
           <p><strong>Message frequency:</strong> Varies based on account activity. Typically 1–5 messages per booking event.</p>
           <p><strong>Cost:</strong> Message &amp; data rates may apply. Check with your mobile carrier.</p>

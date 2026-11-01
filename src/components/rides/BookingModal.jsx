@@ -195,7 +195,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         try {
           await sendSmsNotification({
             userId: ride.driver_id,
-            message: `Cruise Hawaiʻi: ${currentUser.full_name} ${bookingData.is_price_offer ? 'requested a free ride' : 'booked your free ride'}! "${bookingData.description}" Log in to accept or decline: https://cruisekauai.org`
+            message: `Cruise Hawaiʻi: ${currentUser.full_name} ${bookingData.is_price_offer ? 'requested a free ride' : 'booked your free ride'}! "${bookingData.description}" Log in to accept or decline: https://cruisehi.org`
           });
         } catch (smsErr) {
           console.error("SMS error:", smsErr);

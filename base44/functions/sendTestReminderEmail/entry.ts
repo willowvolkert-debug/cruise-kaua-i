@@ -67,7 +67,7 @@ Deno.serve(async (req) => {
 
     <hr style="border: none; border-top: 1px solid #ddd; margin: 40px 0;">
 
-    <p style="font-size: 12px; color: #666; margin-bottom: 12px;">If you'd like to stop receiving these setup reminders, <a href="https://cruisekauai.base44.app/unsubscribe?user_id=test123" style="color: #0066cc;">click here</a>.</p>
+    <p style="font-size: 12px; color: #666; margin-bottom: 12px;">If you'd like to stop receiving these setup reminders, <a href="https://cruisehi.org/unsubscribe?user_id=test123" style="color: #0066cc;">click here</a>.</p>
 
     <p style="font-size: 12px; color: #666;">Replies to this email are not monitored. Please fill out the contact us form on the Cruise Hawaiʻi website, or email willowvolkert@gmail.com, with any questions or concerns.</p>
     </body>

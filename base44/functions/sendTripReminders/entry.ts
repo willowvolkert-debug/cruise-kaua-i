@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
   let sent = 0;
   for (const recipient of recipients) {
     const firstName = recipient.username || recipient.full_name?.split(' ')[0] || 'there';
-    const unsubscribeUrl = `https://www.cruisekauai.org/Unsubscribe?user_id=${recipient.id}`;
+    const unsubscribeUrl = `https://cruisehi.org/Unsubscribe?user_id=${recipient.id}`;
     const routeHint = routeHints[Math.floor(Math.random() * routeHints.length)];
 
     await base44.asServiceRole.integrations.Core.SendEmail({
@@ -78,14 +78,14 @@ Deno.serve(async (req) => {
           <p style="font-size:0.95rem;line-height:1.7;color:#444;margin:0 0 24px;">Whether you're heading <strong>${routeHint}</strong> or anywhere in between — someone on this island is probably going your way. Post your drive, find a ride, and help us keep Kaua'i moving together.</p>
           <table width="100%" cellpadding="0" cellspacing="0">
             <tr><td align="center" style="padding:8px 0 24px;">
-              <a href="https://cruisekauai.org/" style="display:inline-block;background:#e8742a;color:#ffffff;text-decoration:none;font-weight:600;font-size:1rem;padding:14px 36px;border-radius:50px;letter-spacing:0.02em;">See What's Available →</a>
+              <a href="https://cruisehi.org/" style="display:inline-block;background:#e8742a;color:#ffffff;text-decoration:none;font-weight:600;font-size:1rem;padding:14px 36px;border-radius:50px;letter-spacing:0.02em;">See What's Available →</a>
             </td></tr>
           </table>
           <p style="font-size:0.82rem;color:#aaa;text-align:center;margin:0;line-height:1.6;">Every shared ride = less traffic on the bypass, more money in local pockets.<br>Mahalo for being part of this.</p>
         </td></tr>
         <tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:20px 32px;text-align:center;">
           <p style="font-family:Georgia,serif;font-size:0.95rem;color:#888;font-style:italic;margin:0 0 8px;">Mahalo nui loa 🌺</p>
-          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0;">— The Cruise Hawaiʻi Team<br><a href="${unsubscribeUrl}" style="color:#e8742a;text-decoration:none;">Unsubscribe</a> · <a href="https://cruisekauai.org/" style="color:#e8742a;text-decoration:none;">cruisekauai.org</a></p>
+          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0;">— The Cruise Hawaiʻi Team<br><a href="${unsubscribeUrl}" style="color:#e8742a;text-decoration:none;">Unsubscribe</a> · <a href="https://cruisehi.org/" style="color:#e8742a;text-decoration:none;">cruisehi.org</a></p>
         </td></tr>
       </table>
     </td></tr>

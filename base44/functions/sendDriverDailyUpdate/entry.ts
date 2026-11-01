@@ -15,8 +15,8 @@ const formatRideDate = (dateStr, timeStr) => {
 };
 
 const buildDriverEmail = (firstName, rideRequests, recentRides, recipientId) => {
-  const unsubscribeUrl = `https://www.cruisekauai.org/Unsubscribe?user_id=${recipientId}`;
-  const postRideUrl = `https://www.cruisekauai.org/trips?action=post_ride`;
+  const unsubscribeUrl = `https://cruisehi.org/Unsubscribe?user_id=${recipientId}`;
+  const postRideUrl = `https://cruisehi.org/trips?action=post_ride`;
 
   const requestRows = rideRequests.slice(0, 8).map(r => `
     <tr>
@@ -87,8 +87,8 @@ const buildDriverEmail = (firstName, rideRequests, recentRides, recipientId) => 
           <p style="font-size:0.82rem;color:#aaa;text-align:center;margin:0;line-height:1.6;">Every shared ride = less traffic, more $$ in our local economy, &amp; more aloha. Mahalo for being a part of the movement! 🌺</p>
         </td></tr>
         <tr><td style="background:#faf7f2;border-top:1px solid #ede5d4;padding:20px 32px;text-align:center;">
-          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0 0 6px;">— The Cruise Hawaiʻi Team · <a href="${unsubscribeUrl}" style="color:#e8742a;text-decoration:none;">Unsubscribe</a> · <a href="https://cruisekauai.org/" style="color:#e8742a;text-decoration:none;">cruisekauai.org</a></p>
-          <p style="font-size:0.75rem;color:#bbb;margin:0;">Receiving too many emails? <a href="https://cruisekauai.org/account" style="color:#e8742a;text-decoration:none;">Update frequency here</a></p>
+          <p style="font-size:0.78rem;color:#aaa;line-height:1.6;margin:0 0 6px;">— The Cruise Hawaiʻi Team · <a href="${unsubscribeUrl}" style="color:#e8742a;text-decoration:none;">Unsubscribe</a> · <a href="https://cruisehi.org/" style="color:#e8742a;text-decoration:none;">cruisehi.org</a></p>
+          <p style="font-size:0.75rem;color:#bbb;margin:0;">Receiving too many emails? <a href="https://cruisehi.org/account" style="color:#e8742a;text-decoration:none;">Update frequency here</a></p>
         </td></tr>
       </table>
     </td></tr>

@@ -183,7 +183,7 @@ export default function JoinPage() {
         if (msg.toLowerCase().includes("password") || msg.toLowerCase().includes("credential")) {
           setLoginRetryError("that password didn't match. try again, or use \"forgot password\" below.");
         } else {
-          setLoginRetryError("couldn't log in. try again, or go to cruisekauai.org and log in directly.");
+          setLoginRetryError("couldn't log in. try again, or go to cruisehi.org and log in directly.");
         }
         setLoginRetryLoading(false);
         return;
@@ -200,7 +200,7 @@ export default function JoinPage() {
       if (msg.toLowerCase().includes("password") || msg.toLowerCase().includes("credential")) {
         setLoginRetryError("that password didn't match. try again, or use \"forgot password\" below.");
       } else {
-        setLoginRetryError("couldn't log in. try again, or go to cruisekauai.org and log in directly.");
+        setLoginRetryError("couldn't log in. try again, or go to cruisehi.org and log in directly.");
       }
     }
     setLoginRetryLoading(false);

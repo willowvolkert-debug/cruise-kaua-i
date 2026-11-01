@@ -71,9 +71,9 @@ Deno.serve(async (req) => {
         <p style="text-align: center; font-size: 16px; color: #333; margin: 24px 0;"><strong>What would you like to do?</strong></p>
         
         <div class="button-container">
-            <a href="https://www.cruisekauai.org/inbox?action=accept_offer&booking_id=booking_123" class="button btn-accept">✓ Accept Offer</a>
-            <a href="https://www.cruisekauai.org/inbox?action=request_full_fare&booking_id=booking_123" class="button btn-request">$ Request Full Fare</a>
-            <a href="https://www.cruisekauai.org/inbox?action=deny_request&booking_id=booking_123" class="button btn-deny">✕ Deny Request</a>
+            <a href="https://cruisehi.org/inbox?action=accept_offer&booking_id=booking_123" class="button btn-accept">✓ Accept Offer</a>
+            <a href="https://cruisehi.org/inbox?action=request_full_fare&booking_id=booking_123" class="button btn-request">$ Request Full Fare</a>
+            <a href="https://cruisehi.org/inbox?action=deny_request&booking_id=booking_123" class="button btn-deny">✕ Deny Request</a>
         </div>
         
         <div class="rider-message">

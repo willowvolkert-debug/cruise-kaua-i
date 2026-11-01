@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
     const seats = ride.seats_available || '?';
 
     const formattedDate = (() => { try { const d = new Date(date.includes('T') ? date : date + 'T00:00:00'); return isNaN(d) ? date : d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }); } catch { return date; } })();
-    const message = `Cruise Kauai - last min ride! ${driver} - ${loc} to ${dest}, ${formattedDate} ${time}, ${seats} seat(s). cruisekauai.org STOP=optout`;
+    const message = `Cruise Kauai - last min ride! ${driver} - ${loc} to ${dest}, ${formattedDate} ${time}, ${seats} seat(s). cruisehi.org STOP=optout`;
 
     // Deduplicate by phone number
     const seenPhones = new Set();

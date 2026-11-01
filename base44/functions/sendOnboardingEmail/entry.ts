@@ -251,7 +251,7 @@ Deno.serve(async (req) => {
     const payload = await req.json().catch(() => ({}));
     const { preview_email, preview_type } = payload;
 
-    const appUrl = 'https://cruisekauai.org';
+    const appUrl = 'https://cruisehi.org';
 
     // Preview mode (admin only) — send a test email without touching user state
     if (preview_email && user.role === 'admin') {

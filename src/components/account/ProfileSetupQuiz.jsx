@@ -600,7 +600,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
                     ["5. Your Rights", "You have the right to access, correct, or request deletion of your data; opt out of marketing; and export your data. Contact us through the Contact Us page."],
                     ["6. Children's Privacy", "Cruise Hawaiʻi is only available to users 18 and older. We do not knowingly collect information from minors."],
                     ["7. Changes", "We may update this Privacy Policy periodically and will notify users of significant changes through the app or email."],
-                    ["8. Contact", "For privacy questions, please use our Contact Us page at cruisekauai.org."],
+                    ["8. Contact", "For privacy questions, please use our Contact Us page at cruisehi.org."],
                   ].map(([title, body]) => (
                     <div key={title}>
                       <p className="font-semibold text-secondary">{title}</p>
