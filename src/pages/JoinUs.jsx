@@ -138,7 +138,7 @@ export default function JoinUs() {
         <p className="text-center text-xs text-gray-400 mt-4">
           already have an account?{" "}
           <button
-            onClick={() => base44.auth.redirectToLogin("/trips")}
+            onClick={() => base44.auth.redirectToLogin("/home")}
             className="text-primary underline underline-offset-2 font-medium"
           >
             log in →

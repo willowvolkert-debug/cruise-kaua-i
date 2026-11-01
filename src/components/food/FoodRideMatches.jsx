@@ -15,7 +15,7 @@ export default function FoodRideMatches({ request, rides }) {
           {matchScore(request, r) === 2 ? " · full route" : ""}
         </p>
       ))}
-      <Link to="/trips" className="text-primary font-bold text-sm select-none">see these rides in carpool →</Link>
+      <Link to="/home?view=view_week" className="text-primary font-bold text-sm select-none">see these rides in carpool →</Link>
     </div>
   );
 }

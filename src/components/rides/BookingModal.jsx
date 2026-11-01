@@ -222,7 +222,7 @@ export default function BookingModal({ isOpen, onClose, ride, onConfirmBooking }
         driver_id: ride.driver_id,
         driver_username: ride.driver_username || '',
         success_url: window.location.origin + '/bookingsuccess',
-        cancel_url: window.location.origin + '/trips'
+        cancel_url: window.location.origin + '/home'
       });
 
       if (data.error) {

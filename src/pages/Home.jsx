@@ -1,5 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import Trips from "@/pages/Trips";
 import { ChevronLeft } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
@@ -20,6 +21,8 @@ export default function Home() {
   }, []);
 
   const skies = useSkies();
+  const location = useLocation();
+  const hasView = new URLSearchParams(location.search).has("view");
 
   const sections = [
     { emoji: "👤", label: "account", desc: "Edit your profile, verify your license & vehicle, and manage payouts and settings.", to: createPageUrl("Account") },
@@ -40,6 +43,8 @@ export default function Home() {
     sections.push({ emoji: "🛡️", label: "admin", desc: "Manage users, bookings, transactions, and platform-wide messages.", to: createPageUrl("Admin") });
   }
 
+  if (hasView) return <Trips key={location.search} />;
+
   if (skies === "grey") return <GreySkies user={user} />;
 
   return (
@@ -55,7 +60,7 @@ export default function Home() {
         {/* Primary CTAs: demand-first + supply-first */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
           <Link
-            to="/trips?view=view_week"
+            to="/home?view=view_week"
             className="flex flex-col items-center gap-1.5 p-6 rounded-3xl bg-primary text-primary-foreground hover:bg-primary/90 transition-all select-none text-center"
           >
             <span className="text-4xl">🔍</span>
@@ -63,7 +68,7 @@ export default function Home() {
             <span className="text-sm opacity-90">browse rides this week by date and route</span>
           </Link>
           <Link
-            to="/trips?view=post"
+            to="/home?view=post"
             className="flex flex-col items-center gap-1.5 p-6 rounded-3xl border-2 border-primary bg-card hover:bg-primary/10 transition-all select-none text-center"
           >
             <span className="text-4xl">🚗</span>

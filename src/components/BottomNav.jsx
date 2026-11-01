@@ -19,7 +19,7 @@ export default function BottomNav() {
     >
       {TABS.map(({ path, label, icon: Icon }) => {
         const active = path === "/home"
-          ? ["/", "/home", "/trips"].includes(location.pathname.toLowerCase())
+          ? ["/", "/home"].includes(location.pathname.toLowerCase())
           : location.pathname.toLowerCase().startsWith(path);
         return (
           <Link

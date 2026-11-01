@@ -30,7 +30,7 @@ export default function SignupPromptModal({ isOpen, onClose }) {
 
   const handleBrowse = () => {
     handleDismiss();
-    navigate("/trips?explore=true");
+    navigate("/home?explore=true&view=view_week");
   };
 
   return (

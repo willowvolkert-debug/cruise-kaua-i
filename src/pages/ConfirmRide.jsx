@@ -77,7 +77,7 @@ export default function ConfirmRidePage() {
               yes, i'll be making this trip ✓
             </Button>
             <button
-              onClick={() => navigate(createPageUrl("Trips"))}
+              onClick={() => navigate("/home")}
               className="text-sm text-gray-400 hover:text-gray-600 underline"
             >
               i won't be making this trip
@@ -99,7 +99,7 @@ export default function ConfirmRidePage() {
             <p className="text-gray-600">
               your {tripName && <strong>{tripName}</strong>} ride on <strong>{date}</strong> is confirmed. mahalo!
             </p>
-            <Button onClick={() => navigate(createPageUrl("Trips"))} className="w-full rounded-2xl bg-primary">
+            <Button onClick={() => navigate("/home")} className="w-full rounded-2xl bg-primary">
               back to trips
             </Button>
           </div>
@@ -110,7 +110,7 @@ export default function ConfirmRidePage() {
             <XCircle className="w-12 h-12 text-red-400 mx-auto" />
             <h1 className="text-2xl font-bold text-secondary">something went wrong</h1>
             <p className="text-gray-500 text-sm">this confirmation link may be invalid or expired.</p>
-            <Button onClick={() => navigate(createPageUrl("Trips"))} variant="outline" className="w-full rounded-2xl">
+            <Button onClick={() => navigate("/home")} variant="outline" className="w-full rounded-2xl">
               back to trips
             </Button>
           </div>

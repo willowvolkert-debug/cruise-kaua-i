@@ -193,7 +193,7 @@ export default function DriverSignupFlow() {
   };
 
   const handleExplore = () => {
-    navigate(createPageUrl("Trips"));
+    navigate("/home");
   };
 
   return (

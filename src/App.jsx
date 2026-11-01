@@ -7,7 +7,7 @@ import { queryClientInstance } from '@/lib/query-client'
 import VisualEditAgent from '@/lib/VisualEditAgent'
 import NavigationTracker from '@/lib/NavigationTracker'
 import { pagesConfig } from './pages.config'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import DriverSignupFlow from './pages/DriverSignupFlow';
 import RiderSignupFlow from './pages/RiderSignupFlow';
@@ -120,7 +120,7 @@ const AuthenticatedApp = () => {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
       // Only redirect to login if not on a public page (Welcome, JoinUs, etc.)
-      const publicPaths = ['/', '/welcome', '/joinus', '/join', '/account', '/trips', '/aboutus', '/about-us', '/contactus', '/contact-us', '/sms-opt-in', '/forgot-password', '/reset-password'];
+      const publicPaths = ['/', '/welcome', '/joinus', '/join', '/account', '/aboutus', '/about-us', '/contactus', '/contact-us', '/sms-opt-in', '/forgot-password', '/reset-password'];
       const isPublicPath = publicPaths.some(p => window.location.pathname.toLowerCase() === p);
       if (!isPublicPath) {
         navigateToLogin();
@@ -136,7 +136,8 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route path="/" element={isAuthenticated ? <LayoutWrapper currentPageName="Home"><Home /></LayoutWrapper> : <Welcome />} />
-      <Route path="/welcome" element={<Welcome />} />
+      <Route path="/welcome" element={isAuthenticated ? <Navigate to="/home" replace /> : <Welcome />} />
+      <Route path="/trips" element={<Navigate to={`/home${window.location.search}`} replace />} />
       <Route path="/home" element={<LayoutWrapper currentPageName="Home"><Home /></LayoutWrapper>} />
       <Route path="/termsofservice" element={<Plain><TermsOfService /></Plain>} />
       <Route path="/privacypolicy" element={<Plain><PrivacyPolicy /></Plain>} />

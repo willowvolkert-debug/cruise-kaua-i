@@ -162,7 +162,7 @@ export default function RiderSignupFlow() {
   };
 
   const handleExplore = () => {
-    navigate(createPageUrl("Trips") + "?explore=true");
+    navigate("/home?explore=true&view=view_week");
   };
 
   return (

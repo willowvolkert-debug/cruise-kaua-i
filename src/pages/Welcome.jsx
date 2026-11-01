@@ -54,12 +54,12 @@ export default function WelcomePage() {
   }, {});
 
   const handleSignUp = () => navigate("/join");
-  const handleExplore = () => navigate(createPageUrl("Trips") + "?explore=true&view=view_week");
+  const handleExplore = () => navigate("/home?explore=true&view=view_week");
 
   return (
     <div className="min-h-screen bg-[#F1EDE1] overflow-x-hidden">
       <WelcomeHero
-        onLogin={() => navigate(`/join?next=${encodeURIComponent('/trips')}&login=true`)}
+        onLogin={() => navigate(`/join?next=${encodeURIComponent('/home')}&login=true`)}
         onSignUp={handleSignUp}
         onExplore={handleExplore} />
       <MissionSlide />
