@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { sendOnboardingEmail } from "@/functions/sendOnboardingEmail";
+import WelcomeTutorialModal from "@/components/tutorial/WelcomeTutorialModal";
 import { sendUserLifecycleEmail } from "@/functions/sendUserLifecycleEmail";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -398,41 +399,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
   }
 
   if (showRiderTips) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-        <div className="bg-card rounded-3xl shadow-2xl border-2 border-foreground/10 max-w-md w-full overflow-hidden max-h-[90vh] flex flex-col">
-          <div className="bg-primary p-6 text-white text-center">
-            <div className="text-4xl mb-2">🌺</div>
-            <h2 className="text-xl font-bold">here's how cruise hawaiʻi works!</h2>
-            <p className="text-white/80 text-sm mt-1">if you ever forget, you can rewatch the welcome tutorial in your account.</p>
-          </div>
-          <div className="overflow-y-auto flex-1 p-6 space-y-4">
-            {[
-              { icon: "🔍", title: "find a ride", desc: "Go to Trips → Find a Ride. Browse available rides by date. Filter by island, date, and route." },
-              { icon: "📋", title: "book a seat", desc: "Tap a ride card → click 'Book Ride'. Tell the driver why you need the ride and pay securely in the app." },
-              { icon: "⏳", title: "wait for confirmation", desc: "The driver will accept or decline within a few hours. You'll get a notification either way." },
-              { icon: "🗺️", title: "meet your driver", desc: "Once confirmed, coordinate pickup details in the Inbox. Show up on time!" },
-              { icon: "⭐", title: "rate your experience", desc: "After the ride, rate your driver. It helps keep our community safe and trustworthy." },
-              { icon: "🙋", title: "request a ride", desc: "Can't find a ride? Post a Ride Request under Trips → Request a Ride. Drivers who see it may reach out." },
-              { icon: "✅", title: "stay safe", desc: "Always verify who you're riding with. Check their profile, ratings, and photos before booking." },
-            ].map(({ icon, title, desc }) => (
-              <div key={title} className="flex gap-3 items-start">
-                <span className="text-2xl shrink-0">{icon}</span>
-                <div>
-                  <p className="font-bold text-secondary text-sm">{title}</p>
-                  <p className="text-muted-foreground text-xs mt-0.5 leading-relaxed">{desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="p-4 border-t border-gray-100">
-            <Button onClick={handleRiderTipsDone} className="w-full bg-primary hover:bg-primary/90 rounded-full py-5 font-bold text-base">
-              <MapPin className="w-4 h-4 mr-2" /> view all rides →
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
+    return <WelcomeTutorialModal isOpen onClose={handleRiderTipsDone} />;
   }
 
   if (showFoundersScreen) {
