@@ -264,12 +264,14 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
     // Upload only newly-selected photos; fall back to already-persisted URLs so a
     // returning user who changes just one photo doesn't lose the others, and we
     // never try to upload a null file (which would throw and break the save).
-    const uploadIfPresent = (file) => file ? base44.integrations.Core.UploadPrivateFile({ file }).then(r => r.file_uri) : Promise.resolve(null);
-    const [extUrl, ...intUrls] = await Promise.all([
+    // Each upload times out after 45s so a stalled upload shows an error instead of loading forever.
+    const withTimeout = (p) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('upload timed out')), 45000))]);
+    const uploadIfPresent = (file) => file ? withTimeout(base44.integrations.Core.UploadPrivateFile({ file })).then(r => r.file_uri) : Promise.resolve(null);
+    const [extUrl, insUrl, ...intUrls] = await Promise.all([
       uploadIfPresent(vehicleExterior),
+      uploadIfPresent(insurancePhoto),
       ...vehicleInterior.map(f => uploadIfPresent(f)),
     ]);
-    const insUrl = await uploadIfPresent(insurancePhoto);
     await base44.auth.updateMe({
       vehicle_make: vehicleInfo.make, vehicle_model: vehicleInfo.model, vehicle_year: vehicleInfo.year,
       vehicle_color: vehicleInfo.color, license_plate: vehicleInfo.license_plate,
@@ -320,7 +322,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
         await saveVehicle();
         setVehicleSaved(true);
       } catch (e) {
-        setError("couldn't save your vehicle photos — please check your connection and try again.");
+        setError("couldn't save your vehicle photos — please check your connection and try again. Smaller photos upload faster.");
         setSaving(false);
         return; // stay on this step so they can retry
       }
