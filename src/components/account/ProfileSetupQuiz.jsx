@@ -379,7 +379,7 @@ export default function ProfileSetupQuiz({ user, onComplete, initialStep = 0, dr
       eventName: "profile_setup_completed",
       properties: { path: "rider", island: answers.preferred_island || "Kauai" }
     });
-    navigate(createPageUrl("Trips"));
+    navigate("/home");
     onComplete();
   };
 

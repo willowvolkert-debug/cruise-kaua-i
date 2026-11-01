@@ -13,7 +13,7 @@ export default function PostSignupCard({ user, onFinishProfile, onViewTutorial }
     try {
       await base44.auth.updateMe({ has_seen_post_signup_card: true });
     } catch (e) { /* non-critical */ }
-    navigate("/trips");
+    navigate("/home");
   };
 
   const handleFinishProfile = async () => {
