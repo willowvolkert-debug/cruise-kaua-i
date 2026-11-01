@@ -49,7 +49,7 @@ export default function CommunityAgreementPage() {
 
         <Card className="shadow-none border-0 bg-white rounded-none">
           <CardHeader>
-            <CardTitle className="text-2xl text-secondary text-center">cruise hawaiʻi values</CardTitle>
+            <CardTitle className="text-2xl text-secondary text-center">cruise llc values</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
@@ -184,7 +184,7 @@ export default function CommunityAgreementPage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <span>Respecting the Cruise Hawaiʻi platform and fellow community members</span>
+                    <span>Respecting the Cruise LLC platform and fellow community members</span>
                   </li>
                 </ul>
               </CardContent>
@@ -213,7 +213,7 @@ export default function CommunityAgreementPage() {
         </Card>
 
         <footer className="pt-6 border-t border-border text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} Cruise Hawaiʻi. All rights reserved.
+          © {new Date().getFullYear()} Cruise LLC. All rights reserved.
         </footer>
       </div>
     </div>

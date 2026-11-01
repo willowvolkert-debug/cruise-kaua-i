@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -132,7 +131,7 @@ export default function PrivacyPolicyPage() {
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">9. Children's Privacy</h3>
-                  <p>Cruise Hawaiʻi is only available to users 18 years and older. We do not knowingly collect information from children under 18.</p>
+                  <p>Cruise LLC is only available to users 18 years and older. We do not knowingly collect information from children under 18.</p>
                 </section>
 
                 <section>
@@ -177,7 +176,7 @@ export default function PrivacyPolicyPage() {
         </Card>
 
         <footer className="pt-6 border-t border-border text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} Cruise Hawaiʻi. All rights reserved.
+          © {new Date().getFullYear()} Cruise LLC. All rights reserved.
         </footer>
       </div>
     </div>

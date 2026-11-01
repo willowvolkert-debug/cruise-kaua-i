@@ -74,23 +74,23 @@ export default function DriverAgreementPage() {
       if (extraAfter > 0) { checkPage(extraAfter); y += extraAfter; }
     };
 
-    addText('Cruise Kauai', 22, true, [34, 85, 55], 6);
+    addText('Cruise LLC', 22, true, [34, 85, 55], 6);
     addText('Driver Participation Agreement', 18, true, [30, 80, 120], 4);
     addText(`Last Updated: ${new Date().toLocaleDateString()}`, 10, false, [120, 120, 120], 10);
-    addText('This Driver Participation Agreement ("Agreement") is entered into between you ("Driver") and Cruise Kauai.', 10, false, [40, 40, 40], 18);
+    addText('This Driver Participation Agreement ("Agreement") is entered into between you ("Driver") and Cruise LLC.', 10, false, [40, 40, 40], 18);
 
     const sections = [
-      ['1. Agreement to Terms', 'By registering as a driver or offering rides through Cruise Kauai, you confirm that you have read, understand, and agree to this Agreement, the Cruise Kauai Terms of Service, and all applicable Hawaii laws and regulations. If you do not agree, you may not use the platform as a driver.'],
-      ['2. Independent Status', 'You are not an employee, agent, partner, or contractor of Cruise Kauai. You act solely as an independent individual. Cruise Kauai does not control how, when, or whether you provide rides. You are solely responsible for your conduct, vehicle, and compliance with law.'],
+      ['1. Agreement to Terms', 'By registering as a driver or offering rides through Cruise LLC, you confirm that you have read, understand, and agree to this Agreement, the Cruise LLC Terms of Service, and all applicable Hawaii laws and regulations. If you do not agree, you may not use the platform as a driver.'],
+      ['2. Independent Status', 'You are not an employee, agent, partner, or contractor of Cruise LLC. You act solely as an independent individual. Cruise LLC does not control how, when, or whether you provide rides. You are solely responsible for your conduct, vehicle, and compliance with law.'],
       ['3. Non-Commercial, Cost-Sharing Use Only', 'All rides are voluntary and incidental to your own travel. Any amounts requested from passengers are limited to reasonable cost-sharing. You will not generate profit, wages, or compensation. You will not provide transportation for hire or commercial ride services. Violation of this section may result in immediate removal.'],
       ['4. Driver Eligibility & Legal Compliance', "You represent and warrant that you hold a valid Hawaii driver's license, are legally permitted to operate a motor vehicle, comply with all traffic and safety laws, and will not operate while impaired, fatigued, or distracted."],
       ['5. Vehicle Standards', 'Your vehicle is legally registered and in safe, roadworthy condition, meets all Hawaii safety and inspection requirements, and is not a taxicab, limousine, or for-hire vehicle. You agree to remove your vehicle from the platform if it becomes unsafe or non-compliant.'],
-      ['6. Insurance Acknowledgment', 'Drivers are responsible for maintaining legally required insurance coverage, and Cruise Kauai encourages all users to confirm their coverage related to carpooling activities. Cruise Kauai does not provide insurance coverage, and we encourage you to confirm with your insurer that carpooling activities are covered.'],
-      ['7. Shared Responsibility', 'Cruise Kauai serves as a coordination platform connecting independent community members for voluntary cost-sharing carpools. As a driver, you acknowledge responsibility for safe operation of your motor vehicle, your interactions with passengers, and compliance with all applicable laws and safety standards.'],
-      ['8. Indemnification', 'You agree to defend, indemnify, and hold harmless Cruise Kauai from any claims, damages, losses, liabilities, or expenses arising from your driving, vehicle condition, insurance coverage, or violations of law or this Agreement.'],
-      ['9. Safety Standards & Community Responsibility', 'Cruise Kauai is actively evaluating operational best practices and safety standards appropriate for community-based carpool coordination. We require license verification for all drivers and are committed to continuously improving our community safety processes. Users are encouraged to exercise good judgment when connecting with other community members.'],
+      ['6. Insurance Acknowledgment', 'Drivers are responsible for maintaining legally required insurance coverage, and Cruise LLC encourages all users to confirm their coverage related to carpooling activities. Cruise LLC does not provide insurance coverage, and we encourage you to confirm with your insurer that carpooling activities are covered.'],
+      ['7. Shared Responsibility', 'Cruise LLC serves as a coordination platform connecting independent community members for voluntary cost-sharing carpools. As a driver, you acknowledge responsibility for safe operation of your motor vehicle, your interactions with passengers, and compliance with all applicable laws and safety standards.'],
+      ['8. Indemnification', 'You agree to defend, indemnify, and hold harmless Cruise LLC from any claims, damages, losses, liabilities, or expenses arising from your driving, vehicle condition, insurance coverage, or violations of law or this Agreement.'],
+      ['9. Safety Standards & Community Responsibility', 'Cruise LLC is actively evaluating operational best practices and safety standards appropriate for community-based carpool coordination. We require license verification for all drivers and are committed to continuously improving our community safety processes. Users are encouraged to exercise good judgment when connecting with other community members.'],
       ['10. Keep quiet places quiet', 'I agree not to disclose special spots to visitors, and only recommend people to check out well known tourist destinations.'],
-      ['11. Suspension or Termination', 'Cruise Kauai may suspend or terminate your access at any time for safety, compliance, or legal concerns.'],
+      ['11. Suspension or Termination', 'Cruise LLC may suspend or terminate your access at any time for safety, compliance, or legal concerns.'],
       ['12. Governing Law', 'This Agreement is governed by the laws of the State of Hawaii.'],
       ['13. Electronic Acceptance', 'By clicking "I Agree," you acknowledge this Agreement has the same legal effect as a written signature.'],
     ];
@@ -100,7 +100,7 @@ export default function DriverAgreementPage() {
       addText(body, 10, false, [40, 40, 40], 12);
     });
 
-    doc.save('CruiseKauai-DriverAgreement.pdf');
+    doc.save('CruiseLLC-DriverAgreement.pdf');
   };
 
   const handleAccept = async () => {
@@ -137,7 +137,7 @@ export default function DriverAgreementPage() {
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-secondary mb-2">Driver Agreement</h1>
-          <p className="text-gray-600 mb-3">Required for all drivers on Cruise Hawaiʻi</p>
+          <p className="text-gray-600 mb-3">Required for all drivers on Cruise LLC</p>
           <Button variant="outline" size="sm" onClick={handleDownloadPDF} className="rounded-2xl">
             <Download className="w-4 h-4 mr-2" /> Download PDF
           </Button>
@@ -157,15 +157,15 @@ export default function DriverAgreementPage() {
                   Driver Participation Agreement
                 </p>
                 <p className="mb-4">
-                  This Driver Participation Agreement ("Agreement") is entered into between you ("Driver") and Cruise Hawaiʻi.
+                  This Driver Participation Agreement ("Agreement") is entered into between you ("Driver") and Cruise LLC.
                 </p>
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">1. Agreement to Terms</h3>
-                  <p className="mb-2">By registering as a driver or offering rides through Cruise Hawaiʻi, you confirm that you have read, understand, and agree to:</p>
+                  <p className="mb-2">By registering as a driver or offering rides through Cruise LLC, you confirm that you have read, understand, and agree to:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
                     <li>This Agreement</li>
-                    <li>Cruise Hawaiʻi Terms of Service</li>
+                    <li>Cruise LLC Terms of Service</li>
                     <li>All applicable Hawaii laws and regulations</li>
                   </ul>
                   <p className="mt-2">If you do not agree, you may not use the platform as a driver.</p>
@@ -175,9 +175,9 @@ export default function DriverAgreementPage() {
                   <h3 className="font-bold text-lg text-secondary mb-2">2. Independent Status</h3>
                   <p className="mb-2">You acknowledge and agree that:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li>You are not an employee, agent, partner, or contractor of Cruise Hawaiʻi</li>
+                    <li>You are not an employee, agent, partner, or contractor of Cruise LLC</li>
                     <li>You act solely as an independent individual</li>
-                    <li>Cruise Hawaiʻi does not control how, when, or whether you provide rides</li>
+                    <li>Cruise LLC does not control how, when, or whether you provide rides</li>
                     <li>You are solely responsible for your conduct, vehicle, and compliance with law</li>
                   </ul>
                 </section>
@@ -218,9 +218,9 @@ export default function DriverAgreementPage() {
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">6. Insurance Acknowledgment</h3>
-                  <p className="mb-2">Drivers are responsible for maintaining legally required insurance coverage, and Cruise Hawaiʻi encourages all users to confirm their coverage related to carpooling activities. You acknowledge and agree that:</p>
+                  <p className="mb-2">Drivers are responsible for maintaining legally required insurance coverage, and Cruise LLC encourages all users to confirm their coverage related to carpooling activities. You acknowledge and agree that:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li>Cruise Hawaiʻi does not provide insurance coverage</li>
+                    <li>Cruise LLC does not provide insurance coverage</li>
                     <li>You are responsible for maintaining legally required auto insurance</li>
                     <li>We encourage you to confirm with your insurer that carpooling activities are covered</li>
                   </ul>
@@ -229,7 +229,7 @@ export default function DriverAgreementPage() {
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">7. Shared Responsibility</h3>
-                  <p className="mb-2">Cruise Hawaiʻi serves as a coordination platform connecting independent community members for voluntary cost-sharing carpools. As a driver, you acknowledge responsibility for:</p>
+                  <p className="mb-2">Cruise LLC serves as a coordination platform connecting independent community members for voluntary cost-sharing carpools. As a driver, you acknowledge responsibility for:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
                     <li>Safe operation of your motor vehicle</li>
                     <li>Your interactions with passengers and platform users</li>
@@ -239,7 +239,7 @@ export default function DriverAgreementPage() {
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">8. Indemnification</h3>
-                  <p className="mb-2">You agree to defend, indemnify, and hold harmless Cruise Hawaiʻi from any claims, damages, losses, liabilities, or expenses arising from:</p>
+                  <p className="mb-2">You agree to defend, indemnify, and hold harmless Cruise LLC from any claims, damages, losses, liabilities, or expenses arising from:</p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
                     <li>Your driving</li>
                     <li>Vehicle condition</li>
@@ -250,7 +250,7 @@ export default function DriverAgreementPage() {
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">9. Safety Standards & Community Responsibility</h3>
-                  <p>Cruise Hawaiʻi is actively evaluating operational best practices and safety standards appropriate for community-based carpool coordination. We require license verification for all drivers and are committed to continuously improving our community safety processes. Users are encouraged to exercise good judgment when connecting with other community members.</p>
+                  <p>Cruise LLC is actively evaluating operational best practices and safety standards appropriate for community-based carpool coordination. We require license verification for all drivers and are committed to continuously improving our community safety processes. Users are encouraged to exercise good judgment when connecting with other community members.</p>
                 </section>
 
                 <section>
@@ -260,7 +260,7 @@ export default function DriverAgreementPage() {
 
                 <section>
                   <h3 className="font-bold text-lg text-secondary mb-2">11. Suspension or Termination</h3>
-                  <p>Cruise Hawaiʻi may suspend or terminate your access at any time for safety, compliance, or legal concerns.</p>
+                  <p>Cruise LLC may suspend or terminate your access at any time for safety, compliance, or legal concerns.</p>
                 </section>
 
                 <section>
@@ -282,7 +282,7 @@ export default function DriverAgreementPage() {
                 <p className="font-semibold text-secondary mb-3">By checking all boxes below, I certify that:</p>
                 <div className="space-y-2">
                   {[
-                    { key: 'notTransportProvider', label: 'I understand Cruise Hawaiʻi is not a transportation provider' },
+                    { key: 'notTransportProvider', label: 'I understand Cruise LLC is not a transportation provider' },
                     { key: 'notEmployee', label: 'I understand I am not an employee or agent' },
                     { key: 'solelyResponsible', label: 'I understand I am solely responsible for my actions' },
                     { key: 'incidentalTravel', label: 'My rides are incidental to my own travel' },
@@ -293,15 +293,15 @@ export default function DriverAgreementPage() {
                     { key: 'vehicleSafe', label: 'My vehicle is safe and roadworthy' },
                     { key: 'willRemoveUnsafe', label: 'I will remove my vehicle if unsafe' },
                     { key: 'hasInsurance', label: 'I maintain legally required auto insurance' },
-                    { key: 'noInsuranceProvided', label: 'I understand Cruise Hawaiʻi does not provide insurance coverage' },
+                    { key: 'noInsuranceProvided', label: 'I understand Cruise LLC does not provide insurance coverage' },
                     { key: 'insuranceDenial', label: 'I understand I should confirm carpooling coverage with my insurer' },
                     { key: 'confirmedCoverage', label: 'I have reviewed my insurance coverage in relation to carpooling' },
                     { key: 'inherentRisk', label: 'Driving involves inherent risk' },
                     { key: 'passengersIndependent', label: 'Passengers are independent individuals' },
                     { key: 'accidentsMayOccur', label: 'Accidents and injuries may occur' },
-                    { key: 'noBackgroundChecks', label: 'I understand that Cruise Hawaiʻi is actively evaluating safety standards for community carpool coordination and I agree to exercise good judgment in my interactions' },
+                    { key: 'noBackgroundChecks', label: 'I understand that Cruise LLC is actively evaluating safety standards for community carpool coordination and I agree to exercise good judgment in my interactions' },
                     { key: 'responsibleInteractions', label: 'I am responsible for my interactions with passengers' },
-                    { key: 'indemnify', label: 'I understand I may be required to indemnify Cruise Hawaiʻi' },
+                    { key: 'indemnify', label: 'I understand I may be required to indemnify Cruise LLC' },
                     { key: 'financialResponsibility', label: 'I accept financial responsibility for my actions' },
                     { key: 'accurateInfo', label: 'All information I provided is accurate' },
                     { key: 'violationRemoval', label: 'I understand violations may result in removal' },
@@ -347,7 +347,7 @@ export default function DriverAgreementPage() {
         </Card>
 
         <footer className="pt-6 border-t border-border text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} Cruise Hawaiʻi. All rights reserved.
+          © {new Date().getFullYear()} Cruise LLC. All rights reserved.
         </footer>
       </div>
     </div>
