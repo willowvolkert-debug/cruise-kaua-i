@@ -136,7 +136,7 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route path="/" element={isAuthenticated ? <LayoutWrapper currentPageName="Home"><Home /></LayoutWrapper> : <Welcome />} />
-      <Route path="/welcome" element={isAuthenticated ? <Navigate to="/home" replace /> : <Welcome />} />
+      <Route path="/welcome" element={<Welcome />} />
       <Route path="/trips" element={<Navigate to={`/home${window.location.search}`} replace />} />
       <Route path="/home" element={<LayoutWrapper currentPageName="Home"><Home /></LayoutWrapper>} />
       <Route path="/termsofservice" element={<Plain><TermsOfService /></Plain>} />
