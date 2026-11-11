@@ -36,6 +36,7 @@ import OpioSignup from './pages/OpioSignup';
 import KupunaSignup from './pages/KupunaSignup';
 import DriverVerificationChart from './pages/DriverVerificationChart';
 import ForgotPassword from './pages/ForgotPassword';
+import BetaPage from './pages/BetaPage';
 import ResetPassword from './pages/ResetPassword';
 import LaunchAnnouncementPopup from './components/LaunchAnnouncementPopup';
 import BrandHeader from '@/components/BrandHeader';
@@ -167,6 +168,7 @@ const AuthenticatedApp = () => {
       <Route path="/RiderSignupFlow" element={<Plain><RiderSignupFlow /></Plain>} />
       <Route path="/joinus" element={<Plain><JoinUs /></Plain>} />
       <Route path="/join" element={<Plain><JoinPage /></Plain>} />
+      <Route path="/beta" element={<Plain><BetaPage /></Plain>} />
       <Route path="/forgot-password" element={<Plain><ForgotPassword /></Plain>} />
       <Route path="/reset-password" element={<Plain><ResetPassword /></Plain>} />
       <Route path="/communityforum" element={<LayoutWrapper currentPageName="Community Forum"><CommunityForum /></LayoutWrapper>} />
