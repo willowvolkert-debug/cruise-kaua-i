@@ -52,9 +52,6 @@ export default function BetaComparison() {
     <section className="pb-6">
       <h2 className="text-3xl text-primary lowercase text-center">why cruise · the comparison</h2>
       <h3 className="text-2xl text-secondary lowercase tracking-widest text-center mt-1">feature comparison, with sources</h3>
-      <p className="text-lg mt-2">
-        <span className="font-bold">TL;DR</span> Each cell is either our own rule or a sourced fact (linked, with the date it was checked: 10 Nov 2026). Where we do not know, the cell says so. These change, so re-check before launch and add a dated screenshot quote for the same trip in each app.
-      </p>
       <div className="overflow-x-auto mt-3 border-2 border-foreground rounded-2xl bg-card">
         <table className="min-w-[900px] w-full text-left text-base align-top">
           <thead>

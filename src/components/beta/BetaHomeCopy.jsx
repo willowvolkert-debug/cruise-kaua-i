@@ -2,7 +2,7 @@ import React from "react";
 import { ISLAND_TRUCK_URL } from "@/components/welcome/WelcomeHero";
 
 const promises = [
-  { t: "fair prices, no surge 🚗", d: "Drivers set their own price per seat, inside a cap for the route. You see the full total, fees included, before you pay, and it does not jump when it rains or when everyone leaves at once." },
+  { t: "fair prices, no surge 🚗", d: "Drivers set their own price per seat, inside a cap for the route. You see the total, fees, included, before you pay, and the price won't change." },
   { t: "drivers keep the ride money 💚", d: "We charge a small flat fee per booking, never a cut of the fare. The driver is paid the full ride price after the ride." },
   { t: "made here, for here 🌺", d: "Cruise only works in Hawaiʻi. We are building it island by island, starting on Kauaʻi, with the people who live here." },
 ];
@@ -27,9 +27,9 @@ export default function BetaHomeCopy() {
     <>
       <section className="text-center pt-4 pb-6">
         <img src={ISLAND_TRUCK_URL} alt="cruise hawaiʻi" className="w-28 h-28 object-contain mx-auto" />
-        <h1 className="text-4xl text-primary lowercase mt-2">get around kauaʻi. keep it aloha. 🤙</h1>
+        <h1 className="text-4xl text-primary lowercase mt-2">get around kauaʻi.</h1>
         <p className="text-xl mt-3">
-          cruise hawaiʻi is a community carpool app made on kauaʻi, for kauaʻi. share a ride with a neighbor, split the gas, skip the surge.
+          cruise hawaiʻi is a community carpool app made on kauaʻi, for kauaʻi. share a ride with a neighbor, split the gas, skip the gridlock.
         </p>
       </section>
 
