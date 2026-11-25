@@ -196,6 +196,34 @@ if (window.location.hostname === 'preview--ride-connect-b7a57d59.base44.app') {
   window.location.replace('https://cruisehi.org' + window.location.pathname + window.location.search);
 }
 
+// Admins get the full app; everyone else only sees /beta (plus login pages)
+const AdminGate = () => {
+  const [isAdmin, setIsAdmin] = React.useState(null);
+  React.useEffect(() => {
+    base44.auth.me()
+      .then(u => setIsAdmin(u?.role === 'admin'))
+      .catch(() => setIsAdmin(false));
+  }, []);
+
+  if (isAdmin === null) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-white">
+        <TruckLoader label="cruise hawaiʻi" />
+      </div>
+    );
+  }
+  if (isAdmin) return <AuthenticatedApp />;
+  return (
+    <Routes>
+      <Route path="/beta" element={<Plain><BetaPage /></Plain>} />
+      <Route path="/join" element={<Plain><JoinPage /></Plain>} />
+      <Route path="/forgot-password" element={<Plain><ForgotPassword /></Plain>} />
+      <Route path="/reset-password" element={<Plain><ResetPassword /></Plain>} />
+      <Route path="*" element={<Navigate to="/beta" replace />} />
+    </Routes>
+  );
+};
+
 function App() {
   // Always use the light theme
   React.useEffect(() => {
@@ -215,11 +243,7 @@ function App() {
         <Router>
           <NavigationTracker />
           {showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}
-          {/* Only /beta is reachable, for everyone (logged in or not) */}
-          <Routes>
-            <Route path="/beta" element={<Plain><BetaPage /></Plain>} />
-            <Route path="*" element={<Navigate to="/beta" replace />} />
-          </Routes>
+          <AdminGate />
         </Router>
         <Toaster />
         <VisualEditAgent />
