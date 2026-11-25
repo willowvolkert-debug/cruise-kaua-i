@@ -215,8 +215,11 @@ function App() {
         <Router>
           <NavigationTracker />
           {showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}
-          <AuthenticatedApp />
-          <LaunchAnnouncementPopup />
+          {/* Only /beta is reachable, for everyone (logged in or not) */}
+          <Routes>
+            <Route path="/beta" element={<Plain><BetaPage /></Plain>} />
+            <Route path="*" element={<Navigate to="/beta" replace />} />
+          </Routes>
         </Router>
         <Toaster />
         <VisualEditAgent />
