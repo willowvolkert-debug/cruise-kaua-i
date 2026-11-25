@@ -7,7 +7,7 @@ import { queryClientInstance } from '@/lib/query-client'
 import VisualEditAgent from '@/lib/VisualEditAgent'
 import NavigationTracker from '@/lib/NavigationTracker'
 import { pagesConfig } from './pages.config'
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import DriverSignupFlow from './pages/DriverSignupFlow';
 import RiderSignupFlow from './pages/RiderSignupFlow';
@@ -55,6 +55,7 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin } = useAuth();
   const [isCheckingAuth, setIsCheckingAuth] = React.useState(true);
+  const location = useLocation();
 
   // Check auth status on mount to determine landing page
   React.useEffect(() => {
@@ -131,6 +132,13 @@ const AuthenticatedApp = () => {
     } else if (authError.type === 'unknown') {
       // Network/load error — still render the app, pages handle their own auth
     }
+  }
+
+  // Public view is limited to /beta (plus login/password/unsubscribe pages so existing users can still sign in)
+  const openPaths = ['/beta', '/join', '/forgot-password', '/reset-password', '/unsubscribe'];
+  const path = location.pathname.toLowerCase();
+  if (!isAuthenticated && !openPaths.some(p => path === p || path.startsWith(p + '/'))) {
+    return <Navigate to="/beta" replace />;
   }
 
   // Render the main app
