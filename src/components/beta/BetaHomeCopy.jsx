@@ -1,5 +1,6 @@
 import React from "react";
 import { ISLAND_TRUCK_URL } from "@/components/welcome/WelcomeHero";
+import BetaBanner from "@/components/beta/BetaBanner";
 
 const promises = [
   { t: "fair prices, no surge 🚗", d: "Drivers set their own price per seat, inside a cap for the route. You see the total, fees, included, before you pay, and the price won't change." },
@@ -33,11 +34,13 @@ export default function BetaHomeCopy() {
         </p>
       </section>
 
+<BetaBanner />
       <section className="space-y-3 pb-6">
         <h2 className="text-2xl text-secondary lowercase tracking-widest text-center">three promises</h2>
         {promises.map((p) => <Card key={p.t} {...p} />)}
       </section>
 
+<BetaBanner />
       <section className="space-y-3 pb-6">
         <h2 className="text-2xl text-secondary lowercase tracking-widest text-center">more than rides</h2>
         {more.map((p) => <Card key={p.t} {...p} />)}
@@ -46,6 +49,7 @@ export default function BetaHomeCopy() {
         </p>
       </section>
 
+<BetaBanner />
       <section className="space-y-2 pb-6">
         <h2 className="text-2xl text-secondary lowercase tracking-widest text-center">why cruise instead of the big apps</h2>
         <p className="text-lg">
@@ -53,6 +57,7 @@ export default function BetaHomeCopy() {
         </p>
       </section>
 
+<BetaBanner />
       <section className="space-y-2 pb-6">
         <h2 className="text-2xl text-secondary lowercase tracking-widest text-center">keeping it local</h2>
         <p className="text-lg">

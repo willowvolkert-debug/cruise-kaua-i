@@ -1,18 +1,16 @@
 import React from "react";
 import BetaHomeCopy from "@/components/beta/BetaHomeCopy";
 import BetaComparison from "@/components/beta/BetaComparison";
+import BetaBanner from "@/components/beta/BetaBanner";
 
 export default function BetaPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 pb-16">
-      <a
-        href="https://app.cruisehi.org"
-        className="block bg-primary text-primary-foreground text-center rounded-2xl border-2 border-foreground px-4 py-3 mt-4 text-xl font-bold"
-      >
-        we have a new home! sign up at app.cruisehi.org →
-      </a>
+      <BetaBanner />
       <BetaHomeCopy />
+      <BetaBanner />
       <BetaComparison />
+      <BetaBanner />
 
       <section className="space-y-2 pb-6">
         <h2 className="text-2xl text-secondary lowercase tracking-widest text-center">a worked price example</h2>
